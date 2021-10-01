@@ -114,7 +114,6 @@ const components: ComponentDefaultProps = {
 };
 
 const shadows = {
-    // outline: '0 0 0 3px #f98fffCC',
     outline: 'none',
 };
 
