@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Web UI PR Build
+    name: sb-web PR check
     runs-on: ubuntu-latest
 
     steps:
