@@ -2,15 +2,23 @@ name: sb-web PR check
 
 on:
   pull_request:
+    types: ['opened', 'edited', 'reopened', 'synchronize']
     paths:
       - sb-web/**
   workflow_dispatch:
 
 jobs:
-  build:
-    name: sb-web PR check
+  pull_request_validator:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dylanvann/check-pull-request-title@v1
+        with:
+          pattern: '[SBIT-\d*]:'
 
+  
+  build:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
