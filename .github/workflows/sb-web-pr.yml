@@ -1,4 +1,4 @@
-name: sb-web PR check
+name: sb-web PR
 
 on:
   pull_request:
@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: dylanvann/check-pull-request-title@v1
+      - uses: deepakputhraya/action-pr-title@master
         with:
-          pattern: '[SBIT-\d*]:'
+          pattern: '\[SBIT-\d\]: \w'
 
   
   build:
