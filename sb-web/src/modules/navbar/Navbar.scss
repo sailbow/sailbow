@@ -1,0 +1,10 @@
+@import 'theme/base';
+
+.sb-navbar {
+    height: $sb-navbar-height;
+
+    .logo {
+        height: 40px !important;
+        width: 40px !important;
+    }
+}
