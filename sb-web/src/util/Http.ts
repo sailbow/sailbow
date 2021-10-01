@@ -1,4 +1,4 @@
-import axios, { Method } from 'axios';
+import axios from 'axios';
 
 export const LS = localStorage;
 
