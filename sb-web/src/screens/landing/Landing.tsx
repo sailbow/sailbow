@@ -46,7 +46,7 @@ export const Landing: FunctionComponent = () => {
                                     <Text pr="3.5">Continue with Facebook</Text>
                                 </Button>
                                 <Text fontSize="8px" pt="4">
-                                    Copyright © 2021 Sailboat
+                                    Copyright © 2021 Sailboat App
                                 </Text>
                             </VStack>
                         </VStack>
