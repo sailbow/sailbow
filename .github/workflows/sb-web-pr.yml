@@ -1,0 +1,28 @@
+name: sb-web PR check
+
+on:
+  pull_request:
+    paths:
+      - sb-web/**
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: sb-web PR check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        working-directory: ./sb-web
+        run: yarn install
+      - name: Lint code
+        working-directory: ./sb-web
+        run: yarn lint
+      - name: Test code
+        working-directory: ./sb-web
+        run: yarn test
