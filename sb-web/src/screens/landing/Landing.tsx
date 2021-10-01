@@ -12,7 +12,7 @@ export const Landing: FunctionComponent = () => {
     return (
         <Box className="sb-landing">
             <Flex justifyContent="center" alignItems="center" h="100%">
-                <Box boxShadow="xl" bg="white" p="16" borderRadius="xl">
+                <Box boxShadow="xl" bg="white" p="12" pb="4" borderRadius="xl">
                     <VStack spacing="32">
                         <Flex textAlign="center" justifyContent="center" flexDir="column">
                             <LogoType />
@@ -45,6 +45,9 @@ export const Landing: FunctionComponent = () => {
                                 >
                                     <Text pr="3.5">Continue with Facebook</Text>
                                 </Button>
+                                <Text fontSize="8px" pt="4">
+                                    Copyright © 2021 Sailboat
+                                </Text>
                             </VStack>
                         </VStack>
                     </VStack>
