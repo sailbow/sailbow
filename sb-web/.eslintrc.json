@@ -48,6 +48,12 @@
                 "tsx": "never",
                 "test.tsx": "never"
             }
+        ],
+        "prettier/prettier": [
+            "error",
+            {
+              "endOfLine": "auto"
+            }
         ]
     },
     "settings": {
