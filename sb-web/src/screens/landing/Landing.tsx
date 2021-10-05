@@ -24,7 +24,7 @@ export const Landing: FunctionComponent = () => {
                         <Box textAlign="center">
                             <Heading fontSize="md">Start Sailing!</Heading>
                             <Center>
-                                <Divider pt="1" width="20%" />
+                                <Divider pt="1" width="20%" borderColor="gray.500" />
                             </Center>
                         </Box>
                         <VStack spacing="4">
