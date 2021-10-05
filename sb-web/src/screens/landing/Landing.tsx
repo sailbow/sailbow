@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react';
+
 import { Box, Button, Center, Divider, Flex, Heading, Text, VStack } from '@chakra-ui/react';
 import { FcGoogle as GoogleIcon } from 'react-icons/fc';
 import { HiArrowRight as RightIcon } from 'react-icons/hi';

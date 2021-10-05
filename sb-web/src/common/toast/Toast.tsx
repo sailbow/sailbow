@@ -118,7 +118,7 @@ export const ToastBar = (): JSX.Element | null => {
 
     if (!message || !message.type) return null;
 
-    const Container = ({ children }: any) => <div>{children}</div>;
+    const Container: FunctionComponent = ({ children }: any) => <>{children}</>;
 
     switch (message.type) {
         case ToastType.Success: {
