@@ -13,7 +13,7 @@ export const parameters = {
 export const decorators = [
     (Story) => (
         <Suspense fallback={null}>
-            <ChakraProvider>
+            <ChakraProvider theme={theme}>
                 <Story />
             </ChakraProvider>
         </Suspense>
