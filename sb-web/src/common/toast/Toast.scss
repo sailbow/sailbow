@@ -1,18 +1,55 @@
 @import 'theme/base';
 
+$toast-border-radius: 8px;
+$toast-left-border-width: 36px;
+
 .sb-toast {
     .success {
-        border-radius: 8px;
+        border-radius: $toast-border-radius;
+        padding: 0;
+
+        &::before {
+            bottom: 0;
+            left: 0;
+            content: '';
+            width: $toast-left-border-width;
+            height: 100%;
+            position: absolute;
+            display: inline-block;
+            background-color: $sb-success;
+            z-index: 1;
+        }
+    }
+
+    .warning {
+        border-radius: $toast-border-radius;
+        padding: 0;
 
         &::after {
             bottom: 0;
             left: 0;
             content: '';
-            width: 7px;
+            width: $toast-left-border-width;
             height: 100%;
             position: absolute;
             display: inline-block;
-            background-color: $sb-green-500;
+            background-color: $sb-warning;
+        }
+    }
+
+    .error {
+        border-radius: $toast-border-radius;
+        padding: 0;
+
+        &::after {
+            bottom: 0;
+            left: 0;
+            content: '';
+            width: $toast-left-border-width;
+            height: 100%;
+            position: absolute;
+            display: inline-block;
+            background-color: $sb-error;
         }
     }
 }

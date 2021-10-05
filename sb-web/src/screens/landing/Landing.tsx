@@ -37,7 +37,10 @@ export const Landing: FunctionComponent = () => {
                                 leftIcon={<GoogleIcon />}
                                 rightIcon={<RightIcon />}
                                 onClick={() => {
-                                    dispatch({ type: ToastActionType.ShowSuccess, text: 'is done no' });
+                                    dispatch({
+                                        type: ToastActionType.ShowError,
+                                        text: 'This is a long toast message just to test',
+                                    });
                                 }}
                             >
                                 <Text pr="8">Continue with Google</Text>

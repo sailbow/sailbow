@@ -1,13 +1,16 @@
 import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
 
 import { Box, Flex, Icon, Text } from '@chakra-ui/react';
-import { FiCheck as Checkmark } from 'react-icons/fi';
+import { BsExclamation as Exclamation } from 'react-icons/bs';
+import { IoCloseOutline as Close, IoCheckmarkOutline as Checkmark } from 'react-icons/io5';
 import { ToastContainer, toast } from 'react-toastify';
 
 import { Log } from 'util/Logger';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'common/toast/Toast.scss';
+
+const TOAST_DURATION = 5000;
 
 enum ToastType {
     Success = 'MESSAGE_SUCCESS',
@@ -112,7 +115,6 @@ export const useToast = (): [Toast, Dispatch<ToastAction>] => {
 
 export const ToastBar = (): JSX.Element | null => {
     const [message, dispatch] = useToast() as [Toast, Dispatch<ToastAction>];
-    const DURATION = 5000;
 
     if (!message || !message.type) return null;
 
@@ -123,8 +125,10 @@ export const ToastBar = (): JSX.Element | null => {
             toast(
                 <Container>
                     <Flex alignItems="center">
-                        <Icon as={Checkmark} w={6} h={6} color="green.500" />
-                        <Text pl="2">{message.text}</Text>
+                        <Icon as={Checkmark} w={6} h={6} zIndex="2" color="white" />
+                        <Text pl="4" fontSize="sm">
+                            {message.text}
+                        </Text>
                     </Flex>
                 </Container>,
                 { toastId: 'success-toast', className: 'success' },
@@ -132,9 +136,31 @@ export const ToastBar = (): JSX.Element | null => {
             break;
         }
         case ToastType.Error: {
+            toast(
+                <Container>
+                    <Flex alignItems="center">
+                        <Icon as={Close} w={6} h={6} zIndex="2" color="white" />
+                        <Text pl="4" fontSize="sm">
+                            {message.text}
+                        </Text>
+                    </Flex>
+                </Container>,
+                { toastId: 'error-toast', className: 'error' },
+            );
             break;
         }
         case ToastType.Warning: {
+            toast(
+                <Container>
+                    <Flex alignItems="center">
+                        <Icon as={Exclamation} w={6} h={6} zIndex="2" color="white" />
+                        <Text pl="4" fontSize="sm">
+                            {message.text}
+                        </Text>
+                    </Flex>
+                </Container>,
+                { toastId: 'warning-toast', className: 'warning' },
+            );
             break;
         }
         default:
@@ -142,7 +168,13 @@ export const ToastBar = (): JSX.Element | null => {
     }
     return (
         <>
-            <ToastContainer hideProgressBar className="sb-toast" autoClose={100000000} />
+            <ToastContainer
+                hideProgressBar
+                className="sb-toast"
+                autoClose={TOAST_DURATION}
+                position="bottom-left"
+                closeButton={false}
+            />
         </>
     );
 };
