@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="960" height="1075" viewBox="0 0 960 1075">
   <defs>
-    <clipPath id="clip-background1">
+    <clipPath id="clip-background-right">
       <rect width="960" height="1075"/>
     </clipPath>
   </defs>
-  <g id="background1" clip-path="url(#clip-background1)">
+  <g id="background-right" clip-path="url(#clip-background-right)">
     <rect width="960" height="1075" fill="#fff"/>
-    <g id="background1-2" data-name="background1" transform="translate(-1145 9)">
-      <circle id="Ellipse_2" data-name="Ellipse 2" cx="124" cy="124" r="124" transform="translate(1939 919)" fill="#fbb6ce"/>
+    <g id="background1" transform="translate(-1145 9)">
+      <circle id="Ellipse_2" data-name="Ellipse 2" cx="124" cy="124" r="124" transform="translate(1914 927)" fill="#fbb6ce"/>
       <circle id="Ellipse_3" data-name="Ellipse 3" cx="151" cy="151" r="151" transform="translate(1662 117)" fill="#feebc8"/>
-      <circle id="Ellipse_1" data-name="Ellipse 1" cx="220" cy="220" r="220" transform="translate(925 846)" fill="#a6eae1"/>
+      <circle id="Ellipse_1" data-name="Ellipse 1" cx="220" cy="220" r="220" transform="translate(977 894)" fill="#a6eae1"/>
     </g>
     <g id="Group_18" data-name="Group 18" transform="translate(231.956 194.336)">
       <path id="Path_41" data-name="Path 41" d="M154.343,11.58s-2.716-13.551-20.168-8.388c0,0,15.8-8.444,21.253,5.57,0,0,2-1.891,3.652.222a21.265,21.265,0,0,1,21.457-1.27s-16.368-2.354-21.651,5C158.885,12.71,156.623,15.259,154.343,11.58Z" transform="translate(27.486 46.255)" fill="#4a5568"/>
