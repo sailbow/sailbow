@@ -7,6 +7,7 @@ An application to make planning easier for friend groups.
 ## Applications
 
 - `sb-web`: Web UI
+- `sb-backend`: Backend server libraries, APIs, and database operations
 
 ## Code Guidelines
 
