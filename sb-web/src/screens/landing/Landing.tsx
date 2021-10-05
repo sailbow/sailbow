@@ -5,11 +5,14 @@ import { HiArrowRight as RightIcon } from 'react-icons/hi';
 import { ImFacebook as FacebookIcon } from 'react-icons/im';
 
 import { ReactComponent as LogoType } from 'assets/sb-gradient-logo-type.svg';
+import { ToastActionType, useToast } from 'common/toast/Toast';
 
 import 'screens/landing/Landing.scss';
 
 export const Landing: FunctionComponent = () => {
     const LandingCard: FunctionComponent = () => {
+        const [message, dispatch] = useToast();
+
         return (
             <Box boxShadow="xl" bg="white" p="12" pb="4" borderRadius="xl">
                 <VStack spacing="32">
@@ -33,6 +36,9 @@ export const Landing: FunctionComponent = () => {
                                 colorScheme="gray"
                                 leftIcon={<GoogleIcon />}
                                 rightIcon={<RightIcon />}
+                                onClick={() => {
+                                    dispatch({ type: ToastActionType.ShowSuccess, text: 'is done no' });
+                                }}
                             >
                                 <Text pr="8">Continue with Google</Text>
                             </Button>

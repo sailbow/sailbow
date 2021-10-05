@@ -1,0 +1,18 @@
+@import 'theme/base';
+
+.sb-toast {
+    .success {
+        border-radius: 8px;
+
+        &::after {
+            bottom: 0;
+            left: 0;
+            content: '';
+            width: 7px;
+            height: 100%;
+            position: absolute;
+            display: inline-block;
+            background-color: $sb-green-500;
+        }
+    }
+}
