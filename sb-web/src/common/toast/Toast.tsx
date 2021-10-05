@@ -1,6 +1,6 @@
 import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
 
-import { Box, Flex, Icon, Text } from '@chakra-ui/react';
+import { Flex, Icon, Text } from '@chakra-ui/react';
 import { BsExclamation as Exclamation } from 'react-icons/bs';
 import { IoCloseOutline as Close, IoCheckmarkOutline as Checkmark } from 'react-icons/io5';
 import { ToastContainer, toast } from 'react-toastify';
@@ -114,7 +114,7 @@ export const useToast = (): [Toast, Dispatch<ToastAction>] => {
 };
 
 export const ToastBar = (): JSX.Element | null => {
-    const [message, dispatch] = useToast() as [Toast, Dispatch<ToastAction>];
+    const [message] = useToast() as [Toast, Dispatch<ToastAction>];
 
     if (!message || !message.type) return null;
 
