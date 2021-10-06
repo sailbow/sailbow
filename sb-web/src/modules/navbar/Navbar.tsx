@@ -5,6 +5,7 @@ import { HiArrowRight as RightIcon } from 'react-icons/hi';
 import { CgMenuRight as Menu } from 'react-icons/cg';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
+import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
 
 import 'modules/navbar/Navbar.scss';
 
@@ -57,21 +58,28 @@ export const Navbar: FunctionComponent<Props> = () => {
                     FAQ
                 </Button>
                 {navbarBg ? (
-                    <Button size="sm" rightIcon={<RightIcon />}>
-                        Start
+                    <Button
+                        size="sm"
+                        borderRadius="xl"
+                        rightIcon={<RightIcon />}
+                        onClick={() => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                    >
+                        Start Sailing
                     </Button>
                 ) : (
                     <></>
                 )}
             </HStack>
             <Box display={{ base: 'block', sm: 'none' }}>
-                <Button size="sm" rightIcon={<RightIcon />}>
+                <Button size="sm" borderRadius="xl" rightIcon={<RightIcon />}>
                     Start
                 </Button>
                 <Box
                     bg="white"
                     w="100%"
-                    top={menuOpen ? '68px' : '-400px'}
+                    top={menuOpen ? NAVBAR_HEIGHT : '-400px'}
                     position="absolute"
                     left="0"
                     px="3"

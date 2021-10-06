@@ -4,6 +4,7 @@ import { Box, Flex, Heading, Input, Stack, StackDivider, Text, Link, Button } fr
 
 import { ReactComponent as IconLogoType } from 'assets/icon-logo-type.svg';
 import { SingleSelect } from 'components/select/Select';
+import { Subscribe } from './Subscribe';
 
 const Languages = [
     {
@@ -42,20 +43,7 @@ export const Footer: FunctionComponent = () => {
                                 <Link href="/">License</Link>
                             </Flex>
                         </Box>
-                        <Box>
-                            <Heading size="sm" textTransform="uppercase" letterSpacing="wider" color="gray.400">
-                                Subscribe to our newsletter
-                            </Heading>
-                            <Flex textAlign="start" flexDir="column" pt="4">
-                                <Text fontWeight="normal">Get notified when we have exciting news for you.</Text>
-                                <Flex alignItems="center" mt="2">
-                                    <Input placeholder="Enter your email" />
-                                    <Button px="8" variant="outline" ml="2">
-                                        Subscribe
-                                    </Button>
-                                </Flex>
-                            </Flex>
-                        </Box>
+                        <Subscribe />
                     </Stack>
                 </Stack>
                 <Stack
