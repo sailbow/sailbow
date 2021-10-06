@@ -22,13 +22,13 @@ export const Footer: FunctionComponent = () => {
                     <Box flex="1">
                         <IconLogoType width="150px" />
                         <HStack spacing="4">
-                            <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl">
+                            <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl" borderRadius="xl">
                                 <Instagram />
                             </IconButton>
-                            <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl">
+                            <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl" borderRadius="xl">
                                 <Facebook />
                             </IconButton>
-                            <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl">
+                            <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl" borderRadius="xl">
                                 <GitHub />
                             </IconButton>
                         </HStack>
@@ -64,8 +64,12 @@ export const Footer: FunctionComponent = () => {
                     alignItems="center"
                 >
                     <Text fontSize="sm">&copy; {new Date().getFullYear()} Sailboat, Inc. All rights reserved.</Text>
-                    <Stack direction={{ base: 'column-reverse', md: 'row' }}>
-                        <Flex alignItems="center">
+                    <Stack
+                        direction={{ base: 'column-reverse', md: 'row' }}
+                        justifyContent="space-between"
+                        alignItems="center"
+                    >
+                        <Flex alignItems="center" fontSize="sm">
                             <Text pr="2">Language & Region: </Text>
                             <SingleSelect
                                 isSearchable={false}
@@ -76,7 +80,7 @@ export const Footer: FunctionComponent = () => {
                                 }}
                             />
                         </Flex>
-                        <Flex alignItems="center" pl="4">
+                        <Flex alignItems="center" fontSize="sm">
                             <Text pr="2">Status</Text>
                             <Tooltip label="Active">
                                 <Box h="10px" w="10px" bg="brand.success" borderRadius="50%" />

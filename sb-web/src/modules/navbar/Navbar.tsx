@@ -19,7 +19,7 @@ export const Navbar: FunctionComponent<Props> = () => {
 
     useEffect(() => {
         document.addEventListener('scroll', () => {
-            if (window.scrollY < 25) {
+            if (window.scrollY < 10) {
                 setNavbarBg(false);
             } else {
                 setNavbarBg(true);
@@ -79,15 +79,16 @@ export const Navbar: FunctionComponent<Props> = () => {
                 <Box
                     bg="white"
                     w="100%"
-                    top={menuOpen ? NAVBAR_HEIGHT : '-400px'}
+                    h={menuOpen ? '150px' : '0px'}
                     position="absolute"
+                    top="68px"
                     left="0"
                     px="3"
                     overflow="hidden"
-                    transition="top 0.5s ease-in-out"
+                    transition="all 0.2s ease-in-out"
                     boxShadow="sm"
                     zIndex="-1"
-                    py="4"
+                    py={menuOpen ? '4' : '0'}
                 >
                     <VStack spacing="8">
                         <Button variant="link">About</Button>
