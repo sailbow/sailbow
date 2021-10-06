@@ -38,6 +38,15 @@ const styles = {
     },
 };
 
+const colors = {
+    brand: {
+        dark: ChakraTheme.colors.gray[600],
+        success: ChakraTheme.colors.green[300],
+        warning: ChakraTheme.colors.orange[300],
+        error: ChakraTheme.colors.red[300],
+    },
+};
+
 const components: ComponentDefaultProps = {
     Button: {
         baseStyle: {
@@ -117,4 +126,4 @@ const shadows = {
     outline: 'none',
 };
 
-export const theme = extendTheme({ config, styles, fonts, fontWeights, breakpoints, components, shadows });
+export const theme = extendTheme({ config, styles, fonts, fontWeights, breakpoints, components, shadows, colors });
