@@ -71,7 +71,7 @@ export const Footer: FunctionComponent = () => {
                             options={Languages}
                             defaultValue={Languages[0]}
                             onChange={(e: any) => {
-                                console.log('Language Selected');
+                                console.log('Language Selected', e.label);
                             }}
                         />
                     </Flex>
