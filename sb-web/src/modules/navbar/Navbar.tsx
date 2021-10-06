@@ -81,7 +81,7 @@ export const Navbar: FunctionComponent<Props> = () => {
                     w="100%"
                     h={menuOpen ? '150px' : '0px'}
                     position="absolute"
-                    top="68px"
+                    top={NAVBAR_HEIGHT}
                     left="0"
                     px="3"
                     overflow="hidden"

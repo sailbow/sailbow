@@ -70,7 +70,9 @@ export const Footer: FunctionComponent = () => {
                         alignItems="center"
                     >
                         <Flex alignItems="center" fontSize="sm">
-                            <Text pr="2">Language & Region: </Text>
+                            <Text pr="2" fontWeight="normal">
+                                Language & Region:{' '}
+                            </Text>
                             <SingleSelect
                                 isSearchable={false}
                                 options={Languages}
@@ -80,8 +82,10 @@ export const Footer: FunctionComponent = () => {
                                 }}
                             />
                         </Flex>
-                        <Flex alignItems="center" fontSize="sm">
-                            <Text pr="2">Status</Text>
+                        <Flex alignItems="center" fontSize="sm" pl={{ base: '0', md: '2' }}>
+                            <Text pr="2" fontWeight="normal">
+                                Status
+                            </Text>
                             <Tooltip label="Active">
                                 <Box h="10px" w="10px" bg="brand.success" borderRadius="50%" />
                             </Tooltip>
