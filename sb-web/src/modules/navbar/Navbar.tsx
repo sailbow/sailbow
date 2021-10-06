@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Flex, Text, Button, HStack, IconButton, VStack, Box } from '@chakra-ui/react';
+import { Flex, Button, HStack, IconButton, VStack, Box } from '@chakra-ui/react';
 import { HiArrowRight as RightIcon } from 'react-icons/hi';
 import { CgMenuRight as Menu } from 'react-icons/cg';
 
