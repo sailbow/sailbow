@@ -13,7 +13,7 @@ export const PublicContent: FunctionComponent = () => {
     return (
         <>
             <Navbar isAuth={false} />
-            <Box className="sb-content">
+            <Box className="sb-public-content">
                 <Suspense fallback={null}>
                     <Switch>
                         <Route exact path={Routes.Public.Landing}>

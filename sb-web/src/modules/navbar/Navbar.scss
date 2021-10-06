@@ -2,6 +2,9 @@
 
 .sb-navbar {
     height: $sb-navbar-height;
+    position: fixed;
+    width: 100%;
+    z-index: 99;
 
     .logo {
         height: 40px !important;
