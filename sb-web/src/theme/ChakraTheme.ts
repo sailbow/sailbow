@@ -88,11 +88,6 @@ const components: ComponentDefaultProps = {
             }),
         },
     },
-    Text: {
-        baseStyle: {
-            fontWeight: 'normal',
-        },
-    },
     Input: {
         defaultProps: {
             focusBorderColor: 'teal.200',

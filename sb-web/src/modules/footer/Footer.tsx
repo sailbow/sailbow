@@ -1,8 +1,16 @@
 import React, { FunctionComponent } from 'react';
 
-import { Box, Flex, Heading, Input, Stack, StackDivider, Text, Link, HStack, Button } from '@chakra-ui/react';
+import { Box, Flex, Heading, Input, Stack, StackDivider, Text, Link, Button } from '@chakra-ui/react';
 
 import { ReactComponent as IconLogoType } from 'assets/icon-logo-type.svg';
+import { SingleSelect } from 'components/select/Select';
+
+const Languages = [
+    {
+        label: 'English (US)',
+        value: 'en_US',
+    },
+];
 
 export const Footer: FunctionComponent = () => {
     return (
@@ -20,7 +28,8 @@ export const Footer: FunctionComponent = () => {
                             <Flex textAlign="start" flexDir="column" pt="4">
                                 <Link href="/">About Us</Link>
                                 <Link href="/">How it works</Link>
-                                <Link href="/">Use Cases</Link>
+                                <Link href="/">FAQ</Link>
+                                <Link href="/">Contact</Link>
                             </Flex>
                         </Box>
                         <Box>
@@ -38,11 +47,13 @@ export const Footer: FunctionComponent = () => {
                                 Subscribe to our newsletter
                             </Heading>
                             <Flex textAlign="start" flexDir="column" pt="4">
-                                <Text>Get notified when we have exciting news for you.</Text>
-                                <HStack>
-                                    <Input placeholder="Enter your email" mt="2" />
-                                    <Button px="8">Subscribe</Button>
-                                </HStack>
+                                <Text fontWeight="normal">Get notified when we have exciting news for you.</Text>
+                                <Flex alignItems="center" mt="2">
+                                    <Input placeholder="Enter your email" />
+                                    <Button px="8" variant="outline" ml="2">
+                                        Subscribe
+                                    </Button>
+                                </Flex>
                             </Flex>
                         </Box>
                     </Stack>
@@ -53,8 +64,17 @@ export const Footer: FunctionComponent = () => {
                     alignItems="center"
                 >
                     <Text fontSize="sm">&copy; {new Date().getFullYear()} Sailboat, Inc. All rights reserved.</Text>
-                    {/* <Copyright />
-                    <SocialMediaLinks /> */}
+                    <Flex alignItems="center">
+                        <Text pr="2">Language & Region: </Text>
+                        <SingleSelect
+                            isSearchable={false}
+                            options={Languages}
+                            defaultValue={Languages[0]}
+                            onChange={(e: any) => {
+                                console.log('Language Selected');
+                            }}
+                        />
+                    </Flex>
                 </Stack>
             </Stack>
         </Box>
