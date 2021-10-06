@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-import { Box, Flex, Heading, Stack, StackDivider, Text, Link, HStack, IconButton } from '@chakra-ui/react';
+import { Box, Flex, Heading, Stack, StackDivider, Text, Link, HStack, IconButton, Tooltip } from '@chakra-ui/react';
 import { IoLogoInstagram as Instagram, IoLogoGithub as GitHub, IoLogoFacebook as Facebook } from 'react-icons/io5';
 
 import { ReactComponent as IconLogoType } from 'assets/icon-logo-type.svg';
@@ -64,17 +64,25 @@ export const Footer: FunctionComponent = () => {
                     alignItems="center"
                 >
                     <Text fontSize="sm">&copy; {new Date().getFullYear()} Sailboat, Inc. All rights reserved.</Text>
-                    <Flex alignItems="center">
-                        <Text pr="2">Language & Region: </Text>
-                        <SingleSelect
-                            isSearchable={false}
-                            options={Languages}
-                            defaultValue={Languages[0]}
-                            onChange={(e: any) => {
-                                console.log('Language Selected', e.label);
-                            }}
-                        />
-                    </Flex>
+                    <Stack direction={{ base: 'column-reverse', md: 'row' }}>
+                        <Flex alignItems="center">
+                            <Text pr="2">Language & Region: </Text>
+                            <SingleSelect
+                                isSearchable={false}
+                                options={Languages}
+                                defaultValue={Languages[0]}
+                                onChange={(e: any) => {
+                                    console.log('Language Selected', e.label);
+                                }}
+                            />
+                        </Flex>
+                        <Flex alignItems="center" pl="4">
+                            <Text pr="2">Status</Text>
+                            <Tooltip label="Active">
+                                <Box h="10px" w="10px" bg="brand.success" borderRadius="50%" />
+                            </Tooltip>
+                        </Flex>
+                    </Stack>
                 </Stack>
             </Stack>
         </Box>
