@@ -1,10 +1,11 @@
 import React, { FunctionComponent } from 'react';
 
-import { Box, Flex, Heading, Input, Stack, StackDivider, Text, Link, Button } from '@chakra-ui/react';
+import { Box, Flex, Heading, Stack, StackDivider, Text, Link, HStack, IconButton } from '@chakra-ui/react';
+import { IoLogoInstagram as Instagram, IoLogoGithub as GitHub, IoLogoFacebook as Facebook } from 'react-icons/io5';
 
 import { ReactComponent as IconLogoType } from 'assets/icon-logo-type.svg';
 import { SingleSelect } from 'components/select/Select';
-import { Subscribe } from './Subscribe';
+import { Subscribe } from 'modules/footer/Subscribe';
 
 const Languages = [
     {
@@ -20,6 +21,17 @@ export const Footer: FunctionComponent = () => {
                 <Stack direction={{ base: 'column', lg: 'row' }} spacing={{ base: '10', lg: '28' }}>
                     <Box flex="1">
                         <IconLogoType width="150px" />
+                        <HStack spacing="4">
+                            <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl">
+                                <Instagram />
+                            </IconButton>
+                            <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl">
+                                <Facebook />
+                            </IconButton>
+                            <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl">
+                                <GitHub />
+                            </IconButton>
+                        </HStack>
                     </Box>
                     <Stack direction={{ base: 'column', md: 'row' }} spacing={{ base: '10', md: '20' }}>
                         <Box>
