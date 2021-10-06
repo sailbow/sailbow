@@ -126,7 +126,7 @@ export const ToastBar = (): JSX.Element | null => {
                 <Container>
                     <Flex alignItems="center">
                         <Icon as={Checkmark} w={6} h={6} zIndex="2" color="white" />
-                        <Text pl="4" fontSize="sm">
+                        <Text pl="4" fontSize="sm" fontWeight="normal">
                             {message.text}
                         </Text>
                     </Flex>
@@ -140,7 +140,7 @@ export const ToastBar = (): JSX.Element | null => {
                 <Container>
                     <Flex alignItems="center">
                         <Icon as={Close} w={6} h={6} zIndex="2" color="white" />
-                        <Text pl="4" fontSize="sm">
+                        <Text pl="4" fontSize="sm" fontWeight="normal">
                             {message.text}
                         </Text>
                     </Flex>
@@ -154,7 +154,7 @@ export const ToastBar = (): JSX.Element | null => {
                 <Container>
                     <Flex alignItems="center">
                         <Icon as={Exclamation} w={6} h={6} zIndex="2" color="white" />
-                        <Text pl="4" fontSize="sm">
+                        <Text pl="4" fontSize="sm" fontWeight="normal">
                             {message.text}
                         </Text>
                     </Flex>

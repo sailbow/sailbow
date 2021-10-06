@@ -2,8 +2,9 @@ import React, { FunctionComponent, lazy, Suspense } from 'react';
 import { Switch, Route, Redirect as RouterRedirect } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
 
-import { Routes } from 'util/Routing';
+import { Footer } from 'modules/footer/Footer';
 import { Navbar } from 'modules/navbar/Navbar';
+import { Routes } from 'util/Routing';
 
 import 'screens/content/Content.scss';
 
@@ -24,6 +25,7 @@ export const PublicContent: FunctionComponent = () => {
                         </Route>
                     </Switch>
                 </Suspense>
+                <Footer />
             </Box>
         </>
     );
