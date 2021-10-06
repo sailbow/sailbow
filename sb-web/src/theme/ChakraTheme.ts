@@ -51,9 +51,10 @@ const colors = {
 };
 
 const components: ComponentDefaultProps = {
-    IconButton: {
-        defaultProps: {
-            colorScheme: 'gray',
+    Link: {
+        baseStyle: {
+            color: 'gray.600',
+            fontWeight: 'semibold',
         },
     },
     Button: {
@@ -87,34 +88,19 @@ const components: ComponentDefaultProps = {
             }),
         },
     },
+    Text: {
+        baseStyle: {
+            fontWeight: 'normal',
+        },
+    },
     Input: {
-        baseStyle: {},
         defaultProps: {
-            focusBorderColor: 'pink.500',
+            focusBorderColor: 'teal.200',
         },
     },
     Textarea: {
         defaultProps: {
-            focusBorderColor: 'pink.400',
-        },
-    },
-    Link: {
-        variants: {
-            primary: () => ({
-                color: 'white',
-                _hover: {
-                    color: 'white',
-                },
-            }),
-            secondary: () => ({
-                color: 'gray.200',
-                _hover: {
-                    color: 'gray.50',
-                },
-            }),
-        },
-        defaultProps: {
-            variant: 'primary',
+            focusBorderColor: 'TEAL.200',
         },
     },
     Badge: {
