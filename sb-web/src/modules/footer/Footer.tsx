@@ -75,7 +75,9 @@ export const Footer: FunctionComponent = () => {
                             </Heading>
                             <Flex textAlign="start" flexDir="column" pt="4">
                                 {ProductRoutes.map((route) => (
-                                    <Link href={route.href}>{route.label}</Link>
+                                    <Link href={route.href} key={route.label}>
+                                        {route.label}
+                                    </Link>
                                 ))}
                             </Flex>
                         </Box>
@@ -85,7 +87,9 @@ export const Footer: FunctionComponent = () => {
                             </Heading>
                             <Flex textAlign="start" flexDir="column" pt="4">
                                 {LegalRoutes.map((route) => (
-                                    <Link href={route.href}>{route.label}</Link>
+                                    <Link href={route.href} key={route.label}>
+                                        {route.label}
+                                    </Link>
                                 ))}
                             </Flex>
                         </Box>

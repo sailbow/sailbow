@@ -43,8 +43,8 @@ export const BaseNavbar: FunctionComponent = () => {
 export const Base: FunctionComponent<Props> = ({ title, children, subtitle }) => {
     return (
         <>
-            <Box p="8" className="container">
-                <Heading>{title}</Heading>
+            <Box className="container" my="20">
+                <Heading fontSize="5xl">{title}</Heading>
                 {subtitle && <Text fontWeight="normal">{subtitle}</Text>}
                 <Box pt="16">{children}</Box>
             </Box>
