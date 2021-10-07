@@ -2,9 +2,9 @@ import React, { FunctionComponent } from 'react';
 
 import { Icon, Flex, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
-import { IoCheckmarkOutline as Checkmark } from 'react-icons/io5';
 
 import { customStyles } from 'theme/SelectStyles';
+import { Checkmark } from 'util/Icons';
 
 interface Option {
     value: string | number | boolean;

@@ -1,8 +1,7 @@
 import React from 'react';
 
 import { Button, Table, Thead, Tbody, Tr, Th, Td, IconButton } from '@chakra-ui/react';
-import { HiArrowRight as RightIcon } from 'react-icons/hi';
-import { IoImageOutline as Image } from 'react-icons/io5';
+import { RightIcon, Image } from 'util/Icons';
 
 export default {
     title: 'Components/Button',

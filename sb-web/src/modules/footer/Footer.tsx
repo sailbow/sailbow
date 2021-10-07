@@ -1,16 +1,51 @@
 import React, { FunctionComponent } from 'react';
 
 import { Box, Flex, Heading, Stack, StackDivider, Text, Link, HStack, IconButton, Tooltip } from '@chakra-ui/react';
-import { IoLogoInstagram as Instagram, IoLogoGithub as GitHub, IoLogoFacebook as Facebook } from 'react-icons/io5';
 
 import { ReactComponent as IconLogoType } from 'assets/icon-logo-type.svg';
 import { SingleSelect } from 'components/select/Select';
 import { Subscribe } from 'modules/footer/Subscribe';
+import { Facebook, Instagram, GitHub } from 'util/Icons';
+import { Routes } from 'util/Routing';
 
 const Languages = [
     {
         label: 'English (US)',
         value: 'en_US',
+    },
+];
+
+const ProductRoutes = [
+    {
+        label: 'About Us',
+        href: Routes.Whitelisted.AboutUs,
+    },
+    {
+        label: 'How it works',
+        href: Routes.Whitelisted.HowItWorks,
+    },
+    {
+        label: 'FAQ',
+        href: Routes.Whitelisted.FAQ,
+    },
+    {
+        label: 'Contact',
+        href: Routes.Whitelisted.Contact,
+    },
+];
+
+const LegalRoutes = [
+    {
+        label: 'Privacy',
+        href: Routes.Whitelisted.Privacy,
+    },
+    {
+        label: 'Terms',
+        href: Routes.Whitelisted.Terms,
+    },
+    {
+        label: 'License',
+        href: Routes.Whitelisted.License,
     },
 ];
 
@@ -39,10 +74,9 @@ export const Footer: FunctionComponent = () => {
                                 Product
                             </Heading>
                             <Flex textAlign="start" flexDir="column" pt="4">
-                                <Link href="/">About Us</Link>
-                                <Link href="/">How it works</Link>
-                                <Link href="/">FAQ</Link>
-                                <Link href="/">Contact</Link>
+                                {ProductRoutes.map((route) => (
+                                    <Link href={route.href}>{route.label}</Link>
+                                ))}
                             </Flex>
                         </Box>
                         <Box>
@@ -50,9 +84,9 @@ export const Footer: FunctionComponent = () => {
                                 Legal
                             </Heading>
                             <Flex textAlign="start" flexDir="column" pt="4">
-                                <Link href="/">Privacy</Link>
-                                <Link href="/">Terms</Link>
-                                <Link href="/">License</Link>
+                                {LegalRoutes.map((route) => (
+                                    <Link href={route.href}>{route.label}</Link>
+                                ))}
                             </Flex>
                         </Box>
                         <Subscribe />

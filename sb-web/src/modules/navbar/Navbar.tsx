@@ -1,11 +1,10 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { Flex, Button, HStack, IconButton, VStack, Box } from '@chakra-ui/react';
-import { HiArrowRight as RightIcon } from 'react-icons/hi';
-import { CgMenuRight as Menu } from 'react-icons/cg';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
+import { RightIcon, Menu } from 'util/Icons';
 
 import 'modules/navbar/Navbar.scss';
 

@@ -11,6 +11,7 @@ import 'screens/content/Content.scss';
 
 const Landing = lazy(() => import('screens/landing/Landing').then((module) => ({ default: module.Landing })));
 const AboutUs = lazy(() => import('screens/whitelisted/AboutUs').then((module) => ({ default: module.AboutUs })));
+const NotFound = lazy(() => import('screens/not-found/NotFound').then((module) => ({ default: module.NotFound })));
 
 export const WhitelistedContent: FunctionComponent = () => {
     return (
@@ -21,6 +22,9 @@ export const WhitelistedContent: FunctionComponent = () => {
                     <Switch>
                         <Route path={Routes.Whitelisted.AboutUs}>
                             <AboutUs />
+                        </Route>
+                        <Route path="*">
+                            <NotFound />
                         </Route>
                     </Switch>
                 </Suspense>
