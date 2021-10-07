@@ -12,3 +12,10 @@
         z-index: 98;
     }
 }
+
+.sb-base {
+    .contact-input {
+        border-top-left-radius: 6px !important;
+        border-bottom-left-radius: 6px !important;
+    }
+}

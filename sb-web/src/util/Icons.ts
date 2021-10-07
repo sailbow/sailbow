@@ -1,4 +1,4 @@
-export { BsExclamation as Exclamation } from 'react-icons/bs';
+export { BsExclamation as Exclamation, BsEnvelope as Envelope, BsChatRightText as ChatRight } from 'react-icons/bs';
 export {
     IoCloseOutline as Close,
     IoCheckmarkOutline as Checkmark,
@@ -10,3 +10,4 @@ export {
 export { HiArrowRight as RightIcon } from 'react-icons/hi';
 export { CgMenuRight as Menu } from 'react-icons/cg';
 export { FcGoogle as Google } from 'react-icons/fc';
+export { BiErrorCircle as ErrorCircle } from 'react-icons/bi';

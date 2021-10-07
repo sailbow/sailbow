@@ -27,8 +27,6 @@ export const BaseNavbar: FunctionComponent = () => {
         >
             <Logo className="logo" />
             <Button
-                size="sm"
-                borderRadius="xl"
                 rightIcon={<RightIcon />}
                 onClick={() => {
                     window.location.href = Routes.Public.Landing;
@@ -43,7 +41,7 @@ export const BaseNavbar: FunctionComponent = () => {
 export const Base: FunctionComponent<Props> = ({ title, children, subtitle }) => {
     return (
         <>
-            <Box className="container" my="20">
+            <Box className="container sb-base" my="20">
                 <Heading fontSize="5xl">{title}</Heading>
                 {subtitle && <Text fontWeight="normal">{subtitle}</Text>}
                 <Box pt="16">{children}</Box>

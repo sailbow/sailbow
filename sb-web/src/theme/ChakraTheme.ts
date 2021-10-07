@@ -63,7 +63,7 @@ const components: ComponentDefaultProps = {
             colorScheme: 'brand',
         },
         baseStyle: {
-            borderRadius: '16px',
+            borderRadius: '12px',
             fontWeight: 'semibold',
         },
         variants: {
@@ -73,7 +73,7 @@ const components: ComponentDefaultProps = {
                         ...ChakraTheme.components.Button.variants.solid(props),
                         color: 'brand.dark',
                         _hover: {
-                            color: 'gray.100',
+                            color: 'white',
                         },
                     };
                 }
@@ -83,7 +83,7 @@ const components: ComponentDefaultProps = {
             },
             outline: (props: any) => ({
                 ...ChakraTheme.components.Button.variants.outline(props),
-                borderRadius: '16px',
+                borderRadius: '12px',
                 color: 'brand.dark',
                 borderColor: 'brand.dark',
                 borderWidth: '2px',
@@ -102,12 +102,49 @@ const components: ComponentDefaultProps = {
     },
     Input: {
         defaultProps: {
-            focusBorderColor: 'brand.teal',
+            focusBorderColor: 'transparent',
+        },
+        variants: {
+            brand: (props: any) => {
+                // console.log(ChakraTheme.components.Input.variants.filled(props));
+                return {
+                    field: {
+                        ...ChakraTheme.components.Input.variants.filled(props).field,
+                        backgroundColor: 'transparent',
+                        fontWeight: 'normal',
+                        _hover: {
+                            backgroundColor: 'gray.50',
+                        },
+                        _focus: {
+                            backgroundColor: 'gray.50',
+                        },
+                        _invalid: {
+                            borderColor: 'none',
+                            bg: 'red.50',
+                        },
+                    },
+                    addon: {
+                        ...ChakraTheme.components.Input.variants.filled(props).addon,
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        pl: '0',
+                    },
+                };
+            },
         },
     },
     Textarea: {
         defaultProps: {
-            focusBorderColor: 'brand.teal',
+            focusBorderColor: 'transparent',
+        },
+        baseStyle: {
+            fontWeight: 'normal',
+            _hover: {
+                backgroundColor: 'gray.50',
+            },
+            _focus: {
+                backgroundColor: 'gray.50',
+            },
         },
     },
     Badge: {
