@@ -16,8 +16,7 @@ import { Form, Formik, Field } from 'formik';
 
 import { Base } from 'screens/whitelisted/Base';
 import { ChatRight, Envelope, ErrorCircle } from 'util/Icons';
-
-const EmailRegExp = new RegExp(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/);
+import { EmailRegExp } from 'util/Variables';
 
 export const Contact: FunctionComponent = () => {
     const [contactForm, setContactForm] = useState<{ email: string; body: string }>({ email: '', body: '' });
@@ -64,7 +63,6 @@ export const Contact: FunctionComponent = () => {
                                                 id="email"
                                                 placeholder="Enter your email *"
                                                 className="contact-input"
-                                                autoFocus
                                             />
                                             {form.errors.email && form.touched.email ? (
                                                 <Tooltip label="Please enter a valid email address!">
@@ -86,7 +84,7 @@ export const Contact: FunctionComponent = () => {
                                             </InputLeftAddon>
                                             <Textarea
                                                 {...field}
-                                                rows="6"
+                                                rows="5"
                                                 id="body"
                                                 placeholder="Pour your heart out! *"
                                                 className="contact-input"

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, lazy, Suspense } from 'react';
-import { Switch, Route, Redirect as RouterRedirect } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
 
 import { Footer } from 'modules/footer/Footer';
@@ -54,6 +54,7 @@ export const WhitelistedContent: FunctionComponent = () => {
                         </Route>
                     </Switch>
                 </Suspense>
+                <Footer />
             </Box>
         </>
     );
@@ -70,7 +71,7 @@ export const PublicContent: FunctionComponent = () => {
                             <Landing />
                         </Route>
                         <Route path="*">
-                            <RouterRedirect to={Routes.Public.Landing} />
+                            <NotFound />
                         </Route>
                     </Switch>
                 </Suspense>

@@ -3,7 +3,6 @@ import React, { FunctionComponent, ReactElement } from 'react';
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
-import { Footer } from 'modules/footer/Footer';
 import { RightIcon } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
@@ -46,7 +45,6 @@ export const Base: FunctionComponent<Props> = ({ title, children, subtitle }) =>
                 {subtitle && <Text fontWeight="normal">{subtitle}</Text>}
                 <Box pt="16">{children}</Box>
             </Box>
-            <Footer />
         </>
     );
 };

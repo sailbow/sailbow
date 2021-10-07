@@ -3,19 +3,22 @@ import React, { FunctionComponent } from 'react';
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 
 import { ReactComponent as NotFoundSVG } from 'assets/404.svg';
-import { Footer } from 'modules/footer/Footer';
 import { RightIcon } from 'util/Icons';
 import { Routes } from 'util/Routing';
+import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
+import { BaseNavbar } from 'screens/whitelisted/Base';
 
 export const NotFound: FunctionComponent = () => {
     return (
         <>
+            <BaseNavbar />
             <Flex
                 className="container"
                 justifyContent="center"
                 alignItems="center"
                 flexDir={{ base: 'column', md: 'row' }}
                 my="20"
+                paddingTop={NAVBAR_HEIGHT}
             >
                 <Box>
                     <Heading>Page Not Found :(</Heading>
@@ -37,7 +40,6 @@ export const NotFound: FunctionComponent = () => {
                     <NotFoundSVG width="100%" />
                 </Box>
             </Flex>
-            <Footer />
         </>
     );
 };
