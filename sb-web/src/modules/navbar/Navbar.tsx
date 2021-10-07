@@ -32,7 +32,7 @@ export const Navbar: FunctionComponent<Props> = () => {
             className="sb-navbar"
             justifyContent="space-between"
             alignItems="center"
-            px={{ base: '3', sm: '8' }}
+            px={{ base: '4', sm: '8' }}
             bg={navbarBg ? 'white' : 'transparent'}
             transition="all 0.25s ease-in-out"
             boxShadow={navbarBg ? 'sm' : 'none'}

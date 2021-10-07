@@ -4,6 +4,7 @@ import { Box } from '@chakra-ui/react';
 
 import { Footer } from 'modules/footer/Footer';
 import { Navbar } from 'modules/navbar/Navbar';
+import { BaseNavbar } from 'screens/whitelisted/Base';
 import { Routes } from 'util/Routing';
 
 import 'screens/content/Content.scss';
@@ -14,7 +15,7 @@ const AboutUs = lazy(() => import('screens/whitelisted/AboutUs').then((module) =
 export const WhitelistedContent: FunctionComponent = () => {
     return (
         <>
-            <Navbar isAuth={false} />
+            <BaseNavbar />
             <Box className="sb-whitelisted-content">
                 <Suspense fallback={null}>
                     <Switch>
