@@ -3,3 +3,8 @@
 .sb-public-content {
     height: 100%;
 }
+
+.sb-whitelisted-content {
+    padding-top: $sb-navbar-height;
+    height: calc(100% - $sb-navbar-height);
+}

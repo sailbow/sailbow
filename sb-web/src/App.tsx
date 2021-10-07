@@ -3,11 +3,25 @@ import React, { FunctionComponent } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { ToastBar, ToastProvider } from 'common/toast/Toast';
-import { PublicContent } from 'screens/content/Content';
+import { PublicContent, WhitelistedContent } from 'screens/content/Content';
 
 import './App.scss';
+import { WhitelistedRoutes } from 'util/Routing';
 
 export const App: FunctionComponent = () => {
+    if (WhitelistedRoutes.includes(window.location.pathname)) {
+        return (
+            <>
+                <ToastProvider>
+                    <ToastBar />
+                    <BrowserRouter>
+                        <WhitelistedContent />
+                    </BrowserRouter>
+                </ToastProvider>
+            </>
+        );
+    }
+
     return (
         <>
             <ToastProvider>

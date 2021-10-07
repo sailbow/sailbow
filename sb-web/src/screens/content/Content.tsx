@@ -9,6 +9,24 @@ import { Routes } from 'util/Routing';
 import 'screens/content/Content.scss';
 
 const Landing = lazy(() => import('screens/landing/Landing').then((module) => ({ default: module.Landing })));
+const AboutUs = lazy(() => import('screens/whitelisted/AboutUs').then((module) => ({ default: module.AboutUs })));
+
+export const WhitelistedContent: FunctionComponent = () => {
+    return (
+        <>
+            <Navbar isAuth={false} />
+            <Box className="sb-whitelisted-content">
+                <Suspense fallback={null}>
+                    <Switch>
+                        <Route path={Routes.Whitelisted.AboutUs}>
+                            <AboutUs />
+                        </Route>
+                    </Switch>
+                </Suspense>
+            </Box>
+        </>
+    );
+};
 
 export const PublicContent: FunctionComponent = () => {
     return (
