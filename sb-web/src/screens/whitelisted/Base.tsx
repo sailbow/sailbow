@@ -27,6 +27,8 @@ export const BaseNavbar: FunctionComponent = () => {
         >
             <Logo className="logo" />
             <Button
+                size="sm"
+                borderRadius="xl"
                 rightIcon={<RightIcon />}
                 onClick={() => {
                     window.location.href = Routes.Public.Landing;
