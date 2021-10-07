@@ -11,6 +11,14 @@ import 'screens/content/Content.scss';
 
 const Landing = lazy(() => import('screens/landing/Landing').then((module) => ({ default: module.Landing })));
 const AboutUs = lazy(() => import('screens/whitelisted/AboutUs').then((module) => ({ default: module.AboutUs })));
+const HowItWorks = lazy(() =>
+    import('screens/whitelisted/HowItWorks').then((module) => ({ default: module.HowItWorks })),
+);
+const FAQ = lazy(() => import('screens/whitelisted/FAQ').then((module) => ({ default: module.FAQ })));
+const Contact = lazy(() => import('screens/whitelisted/Contact').then((module) => ({ default: module.Contact })));
+const Terms = lazy(() => import('screens/whitelisted/Terms').then((module) => ({ default: module.Terms })));
+const Privacy = lazy(() => import('screens/whitelisted/Privacy').then((module) => ({ default: module.Privacy })));
+const License = lazy(() => import('screens/whitelisted/License').then((module) => ({ default: module.License })));
 const NotFound = lazy(() => import('screens/not-found/NotFound').then((module) => ({ default: module.NotFound })));
 
 export const WhitelistedContent: FunctionComponent = () => {
@@ -22,6 +30,24 @@ export const WhitelistedContent: FunctionComponent = () => {
                     <Switch>
                         <Route path={Routes.Whitelisted.AboutUs}>
                             <AboutUs />
+                        </Route>
+                        <Route path={Routes.Whitelisted.HowItWorks}>
+                            <HowItWorks />
+                        </Route>
+                        <Route path={Routes.Whitelisted.FAQ}>
+                            <FAQ />
+                        </Route>
+                        <Route path={Routes.Whitelisted.Contact}>
+                            <Contact />
+                        </Route>
+                        <Route path={Routes.Whitelisted.Privacy}>
+                            <Privacy />
+                        </Route>
+                        <Route path={Routes.Whitelisted.Terms}>
+                            <Terms />
+                        </Route>
+                        <Route path={Routes.Whitelisted.License}>
+                            <License />
                         </Route>
                         <Route path="*">
                             <NotFound />
