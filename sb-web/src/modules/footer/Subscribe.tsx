@@ -52,7 +52,7 @@ export const Subscribe: FunctionComponent = () => {
                         <Form>
                             <Flex alignItems="center" mt="2">
                                 <Field name="email" validate={emailValidation}>
-                                    {({ form }: any) => (
+                                    {({ field, form }: any) => (
                                         <FormControl
                                             isInvalid={form.errors.email && form.touched.email}
                                             onChange={setForm}
@@ -62,6 +62,7 @@ export const Subscribe: FunctionComponent = () => {
                                                     <Envelope />
                                                 </InputLeftAddon>
                                                 <Input
+                                                    {...field}
                                                     id="email"
                                                     placeholder="Enter your email *"
                                                     className="contact-input"
