@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
+import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
 
 import { Base } from 'screens/whitelisted/Base';
 import { FAQData } from 'screens/whitelisted/Data';
