@@ -6,23 +6,22 @@ import { ReactComponent as NotFoundSVG } from 'assets/404.svg';
 import { RightIcon } from 'util/Icons';
 import { Routes } from 'util/Routing';
 import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
-import { BaseNavbar } from 'screens/whitelisted/Base';
 
 export const NotFound: FunctionComponent = () => {
     return (
         <>
-            <BaseNavbar />
+            <Box h="60px" />
             <Flex
                 className="container"
                 justifyContent="center"
                 alignItems="center"
                 flexDir={{ base: 'column', md: 'row' }}
-                my="20"
+                pb="10"
                 paddingTop={NAVBAR_HEIGHT}
             >
-                <Box>
+                <Box textAlign={{ base: 'center', md: 'start' }}>
                     <Heading>Page Not Found :(</Heading>
-                    <Text fontWeight="normal" pt="4">
+                    <Text fontWeight="normal" pt="2">
                         Looks like the page you are looking for does not exist.
                     </Text>
                     <Button
