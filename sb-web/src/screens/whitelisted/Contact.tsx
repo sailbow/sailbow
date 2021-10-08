@@ -16,7 +16,7 @@ import { Form, Formik, Field } from 'formik';
 
 import { Base } from 'screens/whitelisted/Base';
 import { ChatRight, Envelope, ErrorCircle } from 'util/Icons';
-import { EmailRegExp } from 'util/Variables';
+import { validateEmail } from 'util/Utils';
 
 export const Contact: FunctionComponent = () => {
     const [contactForm, setContactForm] = useState<{ email: string; body: string }>({ email: '', body: '' });
@@ -32,12 +32,12 @@ export const Contact: FunctionComponent = () => {
         });
     };
 
-    const validateEmail = (value: string) => {
-        if (value) return !EmailRegExp.test(value);
+    const emailValidation = (value: string) => {
+        if (value) return !validateEmail(value);
         return true;
     };
 
-    const validateBody = (value: string) => {
+    const bodyValidation = (value: string) => {
         if (value.length < 10) return true;
         return false;
     };
@@ -51,7 +51,7 @@ export const Contact: FunctionComponent = () => {
                 {(props) => (
                     <Form>
                         <VStack spacing="4">
-                            <Field name="email" validate={validateEmail}>
+                            <Field name="email" validate={emailValidation}>
                                 {({ field, form }: any) => (
                                     <FormControl isInvalid={form.errors.email && form.touched.email} onChange={setForm}>
                                         <InputGroup variant="brand">
@@ -75,7 +75,7 @@ export const Contact: FunctionComponent = () => {
                                     </FormControl>
                                 )}
                             </Field>
-                            <Field name="body" validate={validateBody}>
+                            <Field name="body" validate={bodyValidation}>
                                 {({ field, form }: any) => (
                                     <FormControl isInvalid={form.errors.body && form.touched.body} onChange={setForm}>
                                         <InputGroup variant="brand">

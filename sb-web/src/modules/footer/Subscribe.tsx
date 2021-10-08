@@ -17,7 +17,7 @@ import { Form, Formik, Field } from 'formik';
 
 import { ToastActionType, useToast } from 'common/toast/Toast';
 import { Envelope, ErrorCircle } from 'util/Icons';
-import { EmailRegExp } from 'util/Variables';
+import { validateEmail } from 'util/Utils';
 
 export const Subscribe: FunctionComponent = () => {
     const [, dispatch] = useToast();
@@ -28,8 +28,8 @@ export const Subscribe: FunctionComponent = () => {
         console.log(emailForm);
     };
 
-    const validateEmail = (value: string) => {
-        if (value) return !EmailRegExp.test(value);
+    const emailValidation = (value: string) => {
+        if (value) return !validateEmail(value);
         return true;
     };
 
@@ -51,7 +51,7 @@ export const Subscribe: FunctionComponent = () => {
                     {() => (
                         <Form>
                             <Flex alignItems="center" mt="2">
-                                <Field name="email" validate={validateEmail}>
+                                <Field name="email" validate={emailValidation}>
                                     {({ form }: any) => (
                                         <FormControl
                                             isInvalid={form.errors.email && form.touched.email}
