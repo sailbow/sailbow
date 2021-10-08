@@ -12,3 +12,4 @@ export { CgMenuRight as Menu } from 'react-icons/cg';
 export { FcGoogle as Google } from 'react-icons/fc';
 export { FiPlus as Plus, FiMinus as Minus } from 'react-icons/fi';
 export { BiErrorCircle as ErrorCircle } from 'react-icons/bi';
+export { ReactComponent as Boat } from 'assets/icons/boat.svg';

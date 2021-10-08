@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16.306" height="17.467" viewBox="0 0 16.306 17.467">
+  <g id="Group_86" data-name="Group 86" transform="translate(-777.626 -60.524)">
+    <g id="boat" transform="translate(778.303 61.205)">
+      <path id="Path_1" data-name="Path 1" d="M172,0l.962,3.126a13.1,13.1,0,0,1-.407,8.84l-.261.635.653-.14a15.855,15.855,0,0,1,6.887.054l.373.086A13.1,13.1,0,0,0,172.472.212Z" transform="translate(-166.432)" fill="none" stroke="#495467" stroke-width="0.75"/>
+      <path id="Path_2" data-name="Path 2" d="M39.81,24l.325.568A11.187,11.187,0,0,1,40.1,35.723a5.207,5.207,0,0,0-4.1,0l.385-.769a33.749,33.749,0,0,0,2.854-8.21Z" transform="translate(-35.414 -23.121)" fill="none" stroke="#495467" stroke-width="0.75"/>
+      <path id="Path_3" data-name="Path 3" d="M20,360.879h4.575a13.878,13.878,0,0,0,3.119-.355l.733-.169A13.878,13.878,0,0,1,31.544,360h3.4L33.5,362.274a2.051,2.051,0,0,1-1.731.95H22.277a1.465,1.465,0,0,1-1.243-.689Z" transform="translate(-20 -346.812)" fill="none" stroke="#495467" stroke-width="0.75"/>
+    </g>
+  </g>
+</svg>

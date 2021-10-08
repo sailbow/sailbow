@@ -1,25 +1,36 @@
 import React, { FunctionComponent } from 'react';
 
-import { InputGroup, InputLeftAddon, Input as ChakraInput, InputRightElement, Tooltip } from '@chakra-ui/react';
+import {
+    InputGroup,
+    InputLeftAddon,
+    Input as ChakraInput,
+    InputRightElement,
+    Tooltip,
+    InputProps as ChakraInputProps,
+    TextareaProps as ChakraTextareaProps,
+    Textarea,
+} from '@chakra-ui/react';
 import { ErrorCircle } from 'util/Icons';
 
 import 'components/input/Input.scss';
 
 interface Props {
-    id: string;
-    placeholder?: string;
-    icon?: JSX.Element;
+    icon?: JSX.Element | null;
     field?: any;
     error?: boolean;
     errorLabel?: string;
     errorIcon?: JSX.Element;
 }
 
-export const Input: FunctionComponent<Props> = ({ icon, field, error, errorLabel, errorIcon, id, placeholder }) => {
+interface InputProps extends Props {
+    props: ChakraInputProps;
+}
+
+export const Input: FunctionComponent<InputProps> = ({ icon, field, error, errorLabel, errorIcon, props }) => {
     return (
-        <InputGroup variant="brand">
-            <InputLeftAddon>{icon}</InputLeftAddon>
-            <ChakraInput {...field} id={id} placeholder={placeholder} className="sb-input" />
+        <InputGroup variant="brand" alignItems="center">
+            {icon && <InputLeftAddon>{icon}</InputLeftAddon>}
+            <ChakraInput {...field} {...props} className="sb-input" />
             {error ? (
                 <Tooltip label={errorLabel}>
                     <InputRightElement color="brand.error">{errorIcon}</InputRightElement>
@@ -30,10 +41,35 @@ export const Input: FunctionComponent<Props> = ({ icon, field, error, errorLabel
 };
 
 Input.defaultProps = {
-    icon: <></>,
+    icon: null,
     field: {},
     error: false,
     errorLabel: '',
     errorIcon: <ErrorCircle />,
-    placeholder: '',
+};
+
+interface TextareaProps extends Props {
+    props: ChakraTextareaProps;
+}
+
+export const TextArea: FunctionComponent<TextareaProps> = ({ icon, field, error, errorLabel, errorIcon, props }) => {
+    return (
+        <InputGroup variant="brand">
+            {icon && <InputLeftAddon>{icon}</InputLeftAddon>}
+            <Textarea {...field} {...props} className="sb-input" />
+            {error ? (
+                <Tooltip label={errorLabel}>
+                    <InputRightElement color="brand.error">{errorIcon}</InputRightElement>
+                </Tooltip>
+            ) : null}
+        </InputGroup>
+    );
+};
+
+TextArea.defaultProps = {
+    icon: null,
+    field: {},
+    error: false,
+    errorLabel: '',
+    errorIcon: <ErrorCircle />,
 };
