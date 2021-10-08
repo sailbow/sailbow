@@ -1,8 +1,7 @@
 import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
 
 import { Flex, Icon, Text } from '@chakra-ui/react';
-import { BsExclamation as Exclamation } from 'react-icons/bs';
-import { IoCloseOutline as Close, IoCheckmarkOutline as Checkmark } from 'react-icons/io5';
+import { Exclamation, Close, Checkmark } from 'util/Icons';
 import { ToastContainer, toast } from 'react-toastify';
 
 import { Log } from 'util/Logger';
