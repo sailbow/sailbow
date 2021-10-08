@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement } from 'react';
+import React, { FunctionComponent, ReactElement, useEffect } from 'react';
 
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 
@@ -11,6 +11,7 @@ import 'screens/whitelisted/Base.scss';
 interface Props {
     children: ReactElement | ReactElement[];
     title: string;
+    docTitle?: string;
     subtitle?: string;
 }
 
@@ -37,11 +38,16 @@ export const BaseNavbar: FunctionComponent = () => {
     );
 };
 
-export const Base: FunctionComponent<Props> = ({ title, children, subtitle }) => {
+export const Base: FunctionComponent<Props> = ({ title, children, subtitle, docTitle }) => {
+    useEffect(() => {
+        const dt = document.title;
+        document.title = `${dt} | ${docTitle || title}`;
+    });
+
     return (
         <>
-            <Box className="container sb-base" my="20">
-                <Heading fontSize="5xl">{title}</Heading>
+            <Box className="container sb-base" my={{ base: '10', md: '12' }}>
+                <Heading fontSize={{ base: '4xl', md: '5xl' }}>{title}</Heading>
                 {subtitle && <Text fontWeight="normal">{subtitle}</Text>}
                 <Box pt="16">{children}</Box>
             </Box>
@@ -51,4 +57,5 @@ export const Base: FunctionComponent<Props> = ({ title, children, subtitle }) =>
 
 Base.defaultProps = {
     subtitle: '',
+    docTitle: '',
 };
