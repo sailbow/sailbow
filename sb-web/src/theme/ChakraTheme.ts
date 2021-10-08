@@ -106,7 +106,6 @@ const components: ComponentDefaultProps = {
         },
         variants: {
             brand: (props: any) => {
-                // console.log(ChakraTheme.components.Input.variants.filled(props));
                 return {
                     field: {
                         ...ChakraTheme.components.Input.variants.filled(props).field,

@@ -15,37 +15,44 @@ const Languages = [
     },
 ];
 
-const ProductRoutes = [
+const FooterSections = [
     {
-        label: 'About Us',
-        href: Routes.Whitelisted.AboutUs,
+        heading: 'Product',
+        content: [
+            {
+                label: 'About Us',
+                href: Routes.Whitelisted.AboutUs,
+            },
+            {
+                label: 'How it works',
+                href: Routes.Whitelisted.HowItWorks,
+            },
+            {
+                label: 'FAQ',
+                href: Routes.Whitelisted.FAQ,
+            },
+            {
+                label: 'Contact',
+                href: Routes.Whitelisted.Contact,
+            },
+        ],
     },
     {
-        label: 'How it works',
-        href: Routes.Whitelisted.HowItWorks,
-    },
-    {
-        label: 'FAQ',
-        href: Routes.Whitelisted.FAQ,
-    },
-    {
-        label: 'Contact',
-        href: Routes.Whitelisted.Contact,
-    },
-];
-
-const LegalRoutes = [
-    {
-        label: 'Privacy',
-        href: Routes.Whitelisted.Privacy,
-    },
-    {
-        label: 'Terms',
-        href: Routes.Whitelisted.Terms,
-    },
-    {
-        label: 'License',
-        href: Routes.Whitelisted.License,
+        heading: 'Legal',
+        content: [
+            {
+                label: 'Privacy',
+                href: Routes.Whitelisted.Privacy,
+            },
+            {
+                label: 'Terms',
+                href: Routes.Whitelisted.Terms,
+            },
+            {
+                label: 'License',
+                href: Routes.Whitelisted.License,
+            },
+        ],
     },
 ];
 
@@ -69,30 +76,20 @@ export const Footer: FunctionComponent = () => {
                         </HStack>
                     </Box>
                     <Stack direction={{ base: 'column', md: 'row' }} spacing={{ base: '10', md: '20' }}>
-                        <Box>
-                            <Heading size="sm" textTransform="uppercase" letterSpacing="wider" color="gray.400">
-                                Product
-                            </Heading>
-                            <Flex textAlign="start" flexDir="column" pt="4">
-                                {ProductRoutes.map((route) => (
-                                    <Link href={route.href} key={route.label}>
-                                        {route.label}
-                                    </Link>
-                                ))}
-                            </Flex>
-                        </Box>
-                        <Box>
-                            <Heading size="sm" textTransform="uppercase" letterSpacing="wider" color="gray.400">
-                                Legal
-                            </Heading>
-                            <Flex textAlign="start" flexDir="column" pt="4">
-                                {LegalRoutes.map((route) => (
-                                    <Link href={route.href} key={route.label}>
-                                        {route.label}
-                                    </Link>
-                                ))}
-                            </Flex>
-                        </Box>
+                        {FooterSections.map((section) => (
+                            <Box key={section.heading}>
+                                <Heading size="sm" textTransform="uppercase" letterSpacing="wider" color="gray.400">
+                                    {section.heading}
+                                </Heading>
+                                <Flex textAlign="start" flexDir="column" pt="4">
+                                    {section.content.map((route) => (
+                                        <Link href={route.href} key={route.label}>
+                                            {route.label}
+                                        </Link>
+                                    ))}
+                                </Flex>
+                            </Box>
+                        ))}
                         <Subscribe />
                     </Stack>
                 </Stack>
