@@ -8,7 +8,7 @@ import { Minus, Plus } from 'util/Icons';
 
 export const FAQ: FunctionComponent = () => {
     return (
-        <Base title="Frequently Asked Questions">
+        <Base title="Frequently Asked Questions" docTitle="FAQ">
             {FAQData.map((data) => (
                 <Accordion allowMultiple key={data.question}>
                     <AccordionItem>
