@@ -1,0 +1,17 @@
+@import 'theme/base';
+
+.sb-banner {
+    position: relative;
+    height: 200px !important;
+    overflow: hidden;
+
+    &-image {
+        height: 100%;
+    }
+
+    &-button {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+    }
+}

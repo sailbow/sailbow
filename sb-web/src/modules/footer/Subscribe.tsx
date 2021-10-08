@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { Form, Formik, Field } from 'formik';
 
-import { ToastActionType, useToast } from 'common/toast/Toast';
+import { ToastActionType, useToast } from 'contexts/toast/Toast';
 import { Envelope, ErrorCircle } from 'util/Icons';
 import { validateEmail } from 'util/Utils';
 

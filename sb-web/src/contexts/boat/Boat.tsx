@@ -1,11 +1,12 @@
 import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
+import { Color } from 'theme/Colors';
 
 import { Log } from 'util/Logger';
 
 export interface BoatState {
     name: string;
     description: string;
-    bannerColor: string;
+    bannerColor: Color;
     bannerLink: string;
 }
 
@@ -25,7 +26,7 @@ interface BoatProviderProps {
 const initialBoatState: BoatState = {
     name: '',
     description: '',
-    bannerColor: '',
+    bannerColor: Color.Orange100,
     bannerLink: '',
 };
 

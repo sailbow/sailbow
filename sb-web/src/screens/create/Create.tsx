@@ -2,8 +2,9 @@ import React, { ChangeEvent, FunctionComponent, useState } from 'react';
 
 import { Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
-import { BoatActionType, useBoat } from 'common/boat/Boat';
+import { BoatActionType, useBoat } from 'contexts/boat/Boat';
 import { Input, TextArea } from 'components/input/Input';
+import { Banner } from 'modules/banner/Banner';
 import { Boat, ChatRight } from 'util/Icons';
 
 import 'screens/create/Create.scss';
@@ -32,6 +33,7 @@ export const Create: FunctionComponent = () => {
                 </Heading>
 
                 <Stack spacing="2">
+                    <Banner />
                     <Input
                         icon={<Boat />}
                         props={{
