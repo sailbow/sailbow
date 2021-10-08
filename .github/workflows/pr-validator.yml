@@ -20,4 +20,4 @@ jobs:
       - uses: deepakputhraya/action-pr-title@master
         name: PR title validation
         with:
-          regex: '\[SBIT-\d\]: \w'
+          regex: '\[SBIT-\d\]:*'
