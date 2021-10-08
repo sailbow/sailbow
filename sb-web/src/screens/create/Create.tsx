@@ -1,13 +1,29 @@
-import React, { FunctionComponent } from 'react';
+import React, { ChangeEvent, FunctionComponent, useState } from 'react';
 
-import { Box, Flex, Heading, Stack, Textarea } from '@chakra-ui/react';
+import { Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
+import { BoatActionType, useBoat } from 'common/boat/Boat';
 import { Input, TextArea } from 'components/input/Input';
 import { Boat, ChatRight } from 'util/Icons';
 
 import 'screens/create/Create.scss';
 
 export const Create: FunctionComponent = () => {
+    const [, dispatch] = useBoat();
+    const [boatForm, setBoatForm] = useState<{ name: string; description: string }>({ name: '', description: '' });
+
+    const onFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setBoatForm({
+            ...boatForm,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const onSubmit = () => {
+        console.log(boatForm);
+        dispatch({ type: BoatActionType.SetDetails, payload: boatForm });
+    };
+
     return (
         <Flex flexDir="column" className="sb-create" px={{ base: '4', md: '8' }}>
             <Stack spacing="4">
@@ -19,22 +35,29 @@ export const Create: FunctionComponent = () => {
                     <Input
                         icon={<Boat />}
                         props={{
+                            onChange: onFormChange,
                             fontSize: '4xl',
                             placeholder: 'Boat name...',
                             fontWeight: 'semibold',
                             id: 'name',
-                            py: '6',
+                            name: 'name',
+                            py: '8',
+                            autoFocus: true,
                         }}
                     />
                     <TextArea
                         icon={<ChatRight />}
                         props={{
+                            onChange: onFormChange,
+                            name: 'description',
+                            id: 'description',
                             rows: 4,
                             variant: 'brand',
                             placeholder: 'What is your boat about?',
                         }}
                     />
                 </Stack>
+                <Button onClick={onSubmit}>Submit</Button>
             </Stack>
         </Flex>
     );

@@ -7,6 +7,7 @@ import { PublicContent, WhitelistedContent } from 'screens/content/Content';
 
 import './App.scss';
 import { WhitelistedRoutes } from 'util/Routing';
+import { BoatProvider } from 'common/boat/Boat';
 
 export const App: FunctionComponent = () => {
     if (WhitelistedRoutes.includes(window.location.pathname)) {
@@ -25,10 +26,12 @@ export const App: FunctionComponent = () => {
     return (
         <>
             <ToastProvider>
-                <ToastBar />
-                <BrowserRouter>
-                    <PublicContent />
-                </BrowserRouter>
+                <BoatProvider>
+                    <ToastBar />
+                    <BrowserRouter>
+                        <PublicContent />
+                    </BrowserRouter>
+                </BoatProvider>
             </ToastProvider>
         </>
     );
