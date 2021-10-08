@@ -5,19 +5,17 @@ import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { ReactComponent as NotFoundSVG } from 'assets/404.svg';
 import { RightIcon } from 'util/Icons';
 import { Routes } from 'util/Routing';
-import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
 
 export const NotFound: FunctionComponent = () => {
     return (
         <>
-            <Box h="60px" />
             <Flex
                 className="container"
                 justifyContent="center"
                 alignItems="center"
                 flexDir={{ base: 'column', md: 'row' }}
                 pb="10"
-                paddingTop={NAVBAR_HEIGHT}
+                pt="36"
             >
                 <Box textAlign={{ base: 'center', md: 'start' }}>
                     <Heading>Page Not Found :(</Heading>
