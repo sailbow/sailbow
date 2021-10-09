@@ -6,8 +6,7 @@ import { Log } from 'util/Logger';
 export interface BoatState {
     name: string;
     description: string;
-    bannerColor: Color;
-    bannerLink: string;
+    banner: string | Color;
 }
 
 export enum BoatActionType {
@@ -26,8 +25,7 @@ interface BoatProviderProps {
 const initialBoatState: BoatState = {
     name: '',
     description: '',
-    bannerColor: Color.Orange100,
-    bannerLink: '',
+    banner: Color.Orange100,
 };
 
 const BoatStateContext = createContext<BoatState | undefined>(undefined);

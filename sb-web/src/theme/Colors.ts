@@ -108,5 +108,4 @@ export const BannerColors = [
     Color.Blue100,
     Color.Gray100,
     Color.Yellow100,
-    Brand.Dark,
 ];
