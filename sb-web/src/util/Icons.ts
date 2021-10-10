@@ -10,6 +10,7 @@ export {
     IoLogoInstagram as Instagram,
     IoLogoGithub as GitHub,
     IoLogoFacebook as Facebook,
+    IoSearchOutline as Search,
 } from 'react-icons/io5';
 export { HiArrowRight as RightIcon, HiOutlinePencil as Pencil } from 'react-icons/hi';
 export { CgMenuRight as Menu } from 'react-icons/cg';

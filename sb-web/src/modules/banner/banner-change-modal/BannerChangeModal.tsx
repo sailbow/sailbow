@@ -19,11 +19,13 @@ import {
     Tab,
     TabPanel,
 } from '@chakra-ui/react';
+
+import { BannerType } from 'contexts/boat/BoatConstants';
+import { ColorBox } from 'modules/banner/banner-change-modal/color-box/ColorBox';
+
 import { BannerColors, Color } from 'theme/Colors';
 
-import 'modules/banner/banner-select-modal/BannerSelectModal.scss';
-import { Checkmark } from 'util/Icons';
-import { BannerType } from 'contexts/boat/BoatConstants';
+import 'modules/banner/banner-change-modal/BannerChangeModal.scss';
 
 interface Props {
     isOpen: boolean;
@@ -35,37 +37,7 @@ interface Props {
     };
 }
 
-interface ColorBoxProps {
-    color: Color;
-    selected?: boolean;
-}
-
-export const BannerSelectModal: FunctionComponent<Props> = ({ isOpen, onClose, onChange, banner }) => {
-    const ColorBox: FunctionComponent<ColorBoxProps> = ({ color, selected }) => {
-        return (
-            <Box
-                bg={color.toString()}
-                borderRadius="lg"
-                mr="4"
-                my="3"
-                className={`color-box ${selected ? 'selected' : ''}`}
-                onClick={() => {
-                    onChange(BannerType.Color, color.toString());
-                }}
-            >
-                {selected && (
-                    <Box className="check">
-                        <Checkmark />
-                    </Box>
-                )}
-            </Box>
-        );
-    };
-
-    ColorBox.defaultProps = {
-        selected: false,
-    };
-
+export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, onChange, banner }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="4xl">
             <ModalOverlay />
@@ -76,7 +48,7 @@ export const BannerSelectModal: FunctionComponent<Props> = ({ isOpen, onClose, o
                 <ModalCloseButton mt="5" />
 
                 <ModalBody className="sb-banner-select-modal">
-                    <Tabs colorScheme="teal">
+                    <Tabs colorScheme="teal" defaultIndex={1}>
                         <TabList>
                             <Tab fontWeight="semibold">Our Picks</Tab>
                             <Tab fontWeight="semibold">Search Images</Tab>
@@ -91,6 +63,7 @@ export const BannerSelectModal: FunctionComponent<Props> = ({ isOpen, onClose, o
                                                 color={color}
                                                 key={color.toString()}
                                                 selected={color.toString() === banner.value}
+                                                onChange={onChange}
                                             />
                                         );
                                     })}

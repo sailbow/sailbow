@@ -4,7 +4,7 @@ import { Box, Image, Button } from '@chakra-ui/react';
 
 import { BoatActionType, useBoat } from 'contexts/boat/Boat';
 import { BannerType } from 'contexts/boat/BoatConstants';
-import { BannerSelectModal } from 'modules/banner/banner-select-modal/BannerSelectModal';
+import { BannerChangeModal } from 'modules/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
 import { Pencil } from 'util/Icons';
 
@@ -21,7 +21,7 @@ export const Banner: FunctionComponent = () => {
 
     return (
         <>
-            <BannerSelectModal
+            <BannerChangeModal
                 isOpen={isBannerSelectOpen}
                 onClose={() => setIsBannerSelectOpen(!isBannerSelectOpen)}
                 onChange={onSubmit}
