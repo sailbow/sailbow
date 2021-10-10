@@ -1,12 +1,16 @@
 import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
 import { Color } from 'theme/Colors';
 
+import { BannerType } from 'contexts/boat/BoatConstants';
 import { Log } from 'util/Logger';
 
 export interface BoatState {
     name: string;
     description: string;
-    banner: string | Color;
+    banner: {
+        type: BannerType;
+        value: string;
+    };
 }
 
 export enum BoatActionType {
@@ -25,7 +29,10 @@ interface BoatProviderProps {
 const initialBoatState: BoatState = {
     name: '',
     description: '',
-    banner: Color.Orange100,
+    banner: {
+        type: BannerType.Color,
+        value: Color.Orange100,
+    },
 };
 
 const BoatStateContext = createContext<BoatState | undefined>(undefined);

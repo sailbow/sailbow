@@ -3,6 +3,7 @@ import React, { FunctionComponent, useState } from 'react';
 import { Box, Image, Button } from '@chakra-ui/react';
 
 import { BoatActionType, useBoat } from 'contexts/boat/Boat';
+import { BannerType } from 'contexts/boat/BoatConstants';
 import { BannerSelectModal } from 'modules/banner/banner-select-modal/BannerSelectModal';
 import { Color } from 'theme/Colors';
 import { Pencil } from 'util/Icons';
@@ -13,9 +14,9 @@ export const Banner: FunctionComponent = () => {
     const [boat, dispatch] = useBoat();
     const [isBannerSelectOpen, setIsBannerSelectOpen] = useState<boolean>(false);
 
-    const onSubmit = (value: string | Color) => {
+    const onSubmit = (type: BannerType, value: string | Color) => {
         console.log(typeof value, value);
-        dispatch({ type: BoatActionType.SetDetails, payload: { ...boat, banner: value } });
+        dispatch({ type: BoatActionType.SetDetails, payload: { ...boat, banner: { type, value } } });
     };
 
     return (
@@ -24,7 +25,7 @@ export const Banner: FunctionComponent = () => {
                 isOpen={isBannerSelectOpen}
                 onClose={() => setIsBannerSelectOpen(!isBannerSelectOpen)}
                 onChange={onSubmit}
-                current={boat.banner}
+                banner={boat.banner}
             />
             <Box className="sb-banner" borderRadius="xl" overflow="hidden">
                 <Button
@@ -35,7 +36,7 @@ export const Banner: FunctionComponent = () => {
                 >
                     Change Banner
                 </Button>
-                <Box bg={boat.banner} className="sb-banner-image" />
+                <Box bg={boat.banner.value} className="sb-banner-image" />
             </Box>
         </>
     );
