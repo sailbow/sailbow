@@ -102,7 +102,7 @@ const components: ComponentDefaultProps = {
     },
     Input: {
         defaultProps: {
-            focusBorderColor: 'transparent',
+            focusBorderColor: 'brand.teal',
         },
         variants: {
             brand: (props: any) => {

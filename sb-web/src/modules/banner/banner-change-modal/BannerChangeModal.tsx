@@ -22,6 +22,7 @@ import {
 
 import { BannerType } from 'contexts/boat/BoatConstants';
 import { ColorBox } from 'modules/banner/banner-change-modal/color-box/ColorBox';
+import { ImageSearch } from 'modules/banner/banner-change-modal/image-search/ImageSearch';
 
 import { BannerColors, Color } from 'theme/Colors';
 
@@ -48,14 +49,14 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
                 <ModalCloseButton mt="5" />
 
                 <ModalBody className="sb-banner-select-modal">
-                    <Tabs colorScheme="teal" defaultIndex={1}>
+                    <Tabs colorScheme="teal" defaultIndex={banner.type}>
                         <TabList>
                             <Tab fontWeight="semibold">Our Picks</Tab>
                             <Tab fontWeight="semibold">Search Images</Tab>
                         </TabList>
 
                         <TabPanels>
-                            <TabPanel>
+                            <TabPanel p="0">
                                 <Flex d="inline-flex" flexWrap="wrap">
                                     {BannerColors.map((color) => {
                                         return (
@@ -69,9 +70,9 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
                                     })}
                                 </Flex>
                             </TabPanel>
-                            <TabPanel>
-                                <Box>
-                                    <Heading size="sm">Unsplash Images</Heading>
+                            <TabPanel p="0">
+                                <Box pt="4">
+                                    <ImageSearch onChange={onChange} />
                                 </Box>
                             </TabPanel>
                         </TabPanels>

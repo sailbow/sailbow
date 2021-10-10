@@ -36,7 +36,11 @@ export const Banner: FunctionComponent = () => {
                 >
                     Change Banner
                 </Button>
-                <Box bg={boat.banner.value} className="sb-banner-image" />
+                {boat.banner.type === BannerType.Color ? (
+                    <Box bg={boat.banner.value} className="sb-banner-image" />
+                ) : (
+                    <Image src={boat.banner.value} className="sb-banner-image" />
+                )}
             </Box>
         </>
     );

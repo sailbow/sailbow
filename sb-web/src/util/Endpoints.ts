@@ -19,3 +19,10 @@ export const AuthEndpoints: Record<string, Endpoint> = {
         url: 'api/auth/refresh',
     },
 };
+
+export const ImageSearchEndpoints: Record<string, Endpoint> = {
+    Search: {
+        method: 'GET',
+        url: 'https://api.pexels.com/v1/search',
+    },
+};
