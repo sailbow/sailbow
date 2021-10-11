@@ -57,7 +57,7 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
                 </ModalHeader>
 
                 <ModalBody className="sb-banner-select-modal">
-                    <Tabs colorScheme="teal" defaultIndex={banner.type}>
+                    <Tabs colorScheme="teal">
                         <TabList>
                             <Tab fontWeight="semibold">Our Picks</Tab>
                             <Tab fontWeight="semibold">Search Images</Tab>
