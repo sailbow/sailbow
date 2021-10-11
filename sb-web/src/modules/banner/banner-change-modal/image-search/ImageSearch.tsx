@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FunctionComponent, useState, useCallback } from 'react';
 
-import { Box, Input, InputRightElement, InputGroup, Image } from '@chakra-ui/react';
+import { Box, Input, InputRightElement, InputGroup, Image, Flex, Spinner } from '@chakra-ui/react';
 import axios, { AxiosResponse } from 'axios';
 
 import { BannerType } from 'contexts/boat/BoatConstants';
@@ -30,9 +30,12 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
     const [searchValue, setSearchValue] = useState<string>('');
     const [selected, setSelected] = useState<string>('');
     const [page, setPage] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const getImages = useCallback(
         async (value = searchValue, newPage = page): Promise<Photo[]> => {
+            setLoading(true);
+            
             const { data }: AxiosResponse = await axios({
                 method: ImageSearchEndpoints.Search.method,
                 url: ImageSearchEndpoints.Search.url,
@@ -58,6 +61,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
                 });
             });
 
+            setLoading(false);
             return photos;
         },
         [page, searchValue],
@@ -130,7 +134,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
             </InputGroup>
             <Box
                 id="img-results"
-                maxH="360px"
+                h="360px"
                 overflow="auto"
                 onScroll={(e: any) => {
                     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -139,6 +143,11 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
                     }
                 }}
             >
+                {loading && (
+                    <Flex justifyContent="center" alignItems="center" h="100%">
+                        <Spinner />
+                    </Flex>
+                )}
                 <Gallery renderImage={imageRenderer} photos={images} />
             </Box>
         </Box>

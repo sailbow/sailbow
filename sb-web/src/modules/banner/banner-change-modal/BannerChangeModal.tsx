@@ -57,7 +57,7 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
 
                         <TabPanels>
                             <TabPanel p="0">
-                                <Flex d="inline-flex" flexWrap="wrap">
+                                <Flex d="inline-flex" flexWrap="wrap" mt="4">
                                     {BannerColors.map((color) => {
                                         return (
                                             <ColorBox

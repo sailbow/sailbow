@@ -57,8 +57,10 @@ export const Banner: FunctionComponent = () => {
             />
             <Box className="sb-banner" borderRadius="xl" overflow="hidden">
                 <Button
+                    size="sm"
                     className="sb-banner-button"
                     colorScheme="gray"
+                    borderRadius="lg"
                     leftIcon={<Pencil />}
                     onClick={() => setIsBannerSelectOpen(!isBannerSelectOpen)}
                 >
