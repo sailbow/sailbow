@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
 
-import { Box, Image as ChakraImage, Button, IconButton } from '@chakra-ui/react';
+import { Box, Image, Button, IconButton } from '@chakra-ui/react';
 
 import { BoatActionType, useBoat } from 'contexts/boat/Boat';
 import { BannerType } from 'contexts/boat/BoatConstants';
@@ -13,27 +13,38 @@ import 'modules/banner/Banner.scss';
 export const Banner: FunctionComponent = () => {
     const [boat, dispatch] = useBoat();
     const [isBannerSelectOpen, setIsBannerSelectOpen] = useState<boolean>(false);
-    const [bannerPosition, setBannerPosition] = useState<number>(50);
+    const [bannerPosition, setBannerPosition] = useState<number>(boat.banner.position || 50);
 
     const onSubmit = (type: BannerType, value: string | Color) => {
-        dispatch({ type: BoatActionType.SetDetails, payload: { ...boat, banner: { type, value } } });
+        dispatch({
+            type: BoatActionType.SetDetails,
+            payload: { ...boat, banner: { type, value, position: bannerPosition } },
+        });
     };
 
     const setPosition = (dir: 'up' | 'down') => {
+        let newPosition = bannerPosition;
+
         switch (dir) {
             case 'down':
                 if (bannerPosition < 90) {
-                    setBannerPosition(bannerPosition + 10);
+                    newPosition = bannerPosition + 10;
                 }
                 break;
             case 'up':
                 if (bannerPosition > 10) {
-                    setBannerPosition(bannerPosition - 10);
+                    newPosition = bannerPosition - 10;
                 }
                 break;
             default:
                 throw new Error(`Invalid direction - ${dir}`);
         }
+
+        setBannerPosition(newPosition);
+        dispatch({
+            type: BoatActionType.SetDetails,
+            payload: { ...boat, banner: { ...boat.banner, position: newPosition } },
+        });
     };
 
     return (
@@ -79,7 +90,7 @@ export const Banner: FunctionComponent = () => {
                         >
                             <ArrowDown />
                         </IconButton>
-                        <ChakraImage
+                        <Image
                             draggable="true"
                             cursor="grab"
                             objectPosition={`left ${bannerPosition}%`}

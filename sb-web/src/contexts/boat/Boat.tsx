@@ -10,6 +10,7 @@ export interface BoatState {
     banner: {
         type: BannerType;
         value: string;
+        position?: number;
     };
 }
 
@@ -32,6 +33,7 @@ const initialBoatState: BoatState = {
     banner: {
         type: BannerType.Color,
         value: Color.Orange100,
+        position: 50,
     },
 };
 

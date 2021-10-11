@@ -31,32 +31,41 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
     const [selected, setSelected] = useState<string>('');
     const [page, setPage] = useState<number>(1);
 
+    const getImages = useCallback(
+        async (value = searchValue, newPage = page): Promise<Photo[]> => {
+            const { data }: AxiosResponse = await axios({
+                method: ImageSearchEndpoints.Search.method,
+                url: ImageSearchEndpoints.Search.url,
+                headers: {
+                    Authorization: process.env.REACT_APP_PEXELS_API_KEY,
+                },
+                params: {
+                    query: value,
+                    per_page: 10,
+                    page: newPage,
+                },
+            });
+
+            const photos: Photo[] = [];
+
+            data.photos.forEach((photo: any) => {
+                photos.push({
+                    src: photo.src.landscape,
+                    width: 3,
+                    height: 2,
+                    photographer: photo.photographer,
+                    photographerUrl: photo.photographer_url,
+                });
+            });
+
+            return photos;
+        },
+        [page, searchValue],
+    );
+
     const onPaginate = async (newPage: number): Promise<void> => {
         setPage(newPage);
-        const { data }: AxiosResponse = await axios({
-            method: ImageSearchEndpoints.Search.method,
-            url: ImageSearchEndpoints.Search.url,
-            headers: {
-                Authorization: process.env.REACT_APP_PEXELS_API_KEY,
-            },
-            params: {
-                query: searchValue,
-                per_page: 10,
-                page: newPage,
-            },
-        });
-
-        const photos: Photo[] = [];
-
-        data.photos.forEach((photo: any) => {
-            photos.push({
-                src: photo.src.landscape,
-                width: 3,
-                height: 2,
-                photographer: photo.photographer,
-                photographerUrl: photo.photographer_url,
-            });
-        });
+        const photos = await getImages(searchValue, newPage);
 
         const newImages = [...images];
         newImages.push(...photos);
@@ -74,30 +83,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
             setImages([]);
 
             if (value) {
-                const { data }: AxiosResponse = await axios({
-                    method: ImageSearchEndpoints.Search.method,
-                    url: ImageSearchEndpoints.Search.url,
-                    headers: {
-                        Authorization: process.env.REACT_APP_PEXELS_API_KEY,
-                    },
-                    params: {
-                        query: value,
-                        per_page: 10,
-                        page: 1,
-                    },
-                });
-
-                const photos: Photo[] = [];
-
-                data.photos.forEach((photo: any) => {
-                    photos.push({
-                        src: photo.src.landscape,
-                        width: 3,
-                        height: 2,
-                        photographer: photo.photographer,
-                        photographerUrl: photo.photographer_url,
-                    });
-                });
+                const photos = await getImages(value, 1);
 
                 setImages(photos);
             }
@@ -137,8 +123,8 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
     return (
         <Box className="sb-image-search">
             <InputGroup mb="2">
-                <Input variant="outline" placeholder="Search images..." onChange={onSearch} />
-                <InputRightElement>
+                <Input variant="outline" placeholder="Search images..." onChange={onSearch} fontWeight="normal" />
+                <InputRightElement fontSize="xl">
                     <Search />
                 </InputRightElement>
             </InputGroup>
