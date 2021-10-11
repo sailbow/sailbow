@@ -17,4 +17,16 @@
         bottom: 16px;
         background-color: white;
     }
+
+    .edit-button-up {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+    }
+
+    .edit-button-down {
+        position: absolute;
+        top: 50px;
+        right: 16px;
+    }
 }

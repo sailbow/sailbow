@@ -26,7 +26,7 @@ export const Create: FunctionComponent = () => {
     };
 
     return (
-        <Flex flexDir="column" className="sb-create" px={{ base: '4', md: '8' }}>
+        <Flex flexDir="column" className="sb-create container" px={{ base: '4', md: '8' }}>
             <Stack spacing="4">
                 <Heading size="xs" textTransform="uppercase" letterSpacing="wider" color="gray.400">
                     Start a boat
