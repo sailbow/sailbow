@@ -1,7 +1,7 @@
 import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
-import { Color } from 'theme/Colors';
 
 import { BannerType } from 'contexts/boat/BoatConstants';
+import { Color } from 'theme/Colors';
 import { Log } from 'util/Logger';
 
 export interface BoatState {
