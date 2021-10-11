@@ -31,9 +31,9 @@ const initialBoatState: BoatState = {
     name: '',
     description: '',
     banner: {
-        type: BannerType.Link,
-        value: 'https://images.pexels.com/photos/1796730/pexels-photo-1796730.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
-        position: 40,
+        type: BannerType.Color,
+        value: Color.Orange100,
+        position: 50,
     },
 };
 
