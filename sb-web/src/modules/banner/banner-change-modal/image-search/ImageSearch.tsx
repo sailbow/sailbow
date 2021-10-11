@@ -2,13 +2,12 @@ import React, { ChangeEvent, FunctionComponent, useState, useCallback } from 're
 
 import { Box, Input, InputRightElement, InputGroup, Image, Flex, Spinner, Text } from '@chakra-ui/react';
 import axios, { AxiosResponse } from 'axios';
+import Gallery from 'react-photo-gallery';
 
 import { BannerType } from 'contexts/boat/BoatConstants';
 import { Checkmark, Search } from 'util/Icons';
 import { useDebounce } from 'util/Input';
 import { ImageSearchEndpoints } from 'util/Endpoints';
-
-import Gallery from 'react-photo-gallery';
 
 import 'modules/banner/banner-change-modal/image-search/ImageSearch.scss';
 
