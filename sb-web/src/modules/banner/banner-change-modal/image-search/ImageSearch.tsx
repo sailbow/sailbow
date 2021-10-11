@@ -35,7 +35,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
     const getImages = useCallback(
         async (value = searchValue, newPage = page): Promise<Photo[]> => {
             setLoading(true);
-            
+
             const { data }: AxiosResponse = await axios({
                 method: ImageSearchEndpoints.Search.method,
                 url: ImageSearchEndpoints.Search.url,
