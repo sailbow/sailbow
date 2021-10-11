@@ -107,7 +107,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
                         objectFit="cover"
                         borderRadius="md"
                         src={props.photo.src}
-                        onClick={() => onSelect()}
+                        onClick={onSelect}
                         height={props.photo.height}
                         width={props.photo.width}
                         style={{ margin: '2px', display: 'block' }}

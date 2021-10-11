@@ -32,7 +32,7 @@ export const Create: FunctionComponent = () => {
                     Start a boat
                 </Heading>
 
-                <Stack spacing="2">
+                <Stack spacing="4">
                     <Banner />
                     <Input
                         icon={<Boat />}
@@ -59,7 +59,9 @@ export const Create: FunctionComponent = () => {
                         }}
                     />
                 </Stack>
-                <Button onClick={onSubmit}>Submit</Button>
+                <Button onClick={onSubmit} variant="outline">
+                    Submit
+                </Button>
             </Stack>
         </Flex>
     );

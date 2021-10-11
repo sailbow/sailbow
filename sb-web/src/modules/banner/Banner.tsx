@@ -93,8 +93,7 @@ export const Banner: FunctionComponent = () => {
                             <ArrowDown />
                         </IconButton>
                         <Image
-                            draggable="true"
-                            cursor="grab"
+                            draggable="false"
                             objectPosition={`left ${bannerPosition}%`}
                             src={boat.banner.value}
                             className="sb-banner-image"

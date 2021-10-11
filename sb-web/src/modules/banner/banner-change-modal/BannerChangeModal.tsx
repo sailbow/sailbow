@@ -11,20 +11,20 @@ import {
     ModalHeader,
     ModalFooter,
     ModalBody,
-    ModalCloseButton,
-    Icon,
     Tabs,
     TabList,
     TabPanels,
     Tab,
     TabPanel,
+    IconButton,
+    Text,
 } from '@chakra-ui/react';
 
 import { BannerType } from 'contexts/boat/BoatConstants';
 import { ColorBox } from 'modules/banner/banner-change-modal/color-box/ColorBox';
 import { ImageSearch } from 'modules/banner/banner-change-modal/image-search/ImageSearch';
-
 import { BannerColors, Color } from 'theme/Colors';
+import { Checkmark, Close } from 'util/Icons';
 
 import 'modules/banner/banner-change-modal/BannerChangeModal.scss';
 
@@ -43,10 +43,18 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
         <Modal isOpen={isOpen} onClose={onClose} size="4xl">
             <ModalOverlay />
             <ModalContent py="4">
-                <ModalHeader>
+                <ModalHeader d="flex" justifyContent="space-between" alignItems="center">
                     <Heading fontSize="3xl">Change Banner</Heading>
+                    <IconButton
+                        aria-label="modal-close"
+                        variant="ghost"
+                        colorScheme="gray"
+                        fontSize="xl"
+                        onClick={onClose}
+                    >
+                        <Close />
+                    </IconButton>
                 </ModalHeader>
-                <ModalCloseButton mt="5" />
 
                 <ModalBody className="sb-banner-select-modal">
                     <Tabs colorScheme="teal" defaultIndex={banner.type}>
@@ -80,8 +88,8 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button variant="link" mr={3} onClick={onClose}>
-                        Done
+                    <Button onClick={onClose} rightIcon={<Checkmark />}>
+                        <Text pr="4">Done</Text>
                     </Button>
                 </ModalFooter>
             </ModalContent>
