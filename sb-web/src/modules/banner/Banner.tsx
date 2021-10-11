@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
 
-import { Box, Image, Button, IconButton } from '@chakra-ui/react';
+import { Box, Image, Button, IconButton, Text } from '@chakra-ui/react';
 
 import { BoatActionType, useBoat } from 'contexts/boat/Boat';
 import { BannerType } from 'contexts/boat/BoatConstants';
@@ -61,10 +61,10 @@ export const Banner: FunctionComponent = () => {
                     className="sb-banner-button"
                     colorScheme="gray"
                     borderRadius="lg"
-                    leftIcon={<Pencil />}
+                    rightIcon={<Pencil />}
                     onClick={() => setIsBannerSelectOpen(!isBannerSelectOpen)}
                 >
-                    Change Banner
+                    <Text pr="2">Change Banner</Text>
                 </Button>
                 {boat.banner.type === BannerType.Color ? (
                     <Box bg={boat.banner.value} className="sb-banner-image" />

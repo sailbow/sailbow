@@ -88,7 +88,7 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button onClick={onClose} rightIcon={<Checkmark />}>
+                    <Button onClick={onClose} rightIcon={<Checkmark />} mt="4">
                         <Text pr="4">Done</Text>
                     </Button>
                 </ModalFooter>
