@@ -16,7 +16,14 @@ export const customStyles: StylesConfig<any, true> = {
             color: 'gray.600',
             cursor: 'pointer',
             fontWeight: 'normal',
+            width: 'auto',
             borderRadius: theme.radii.md,
+        };
+    },
+    groupHeading: (provided: CSSObject): CSSObject => {
+        return {
+            ...provided,
+            display: 'none',
         };
     },
     menu: (provided: CSSObject): CSSObject => {
@@ -33,12 +40,16 @@ export const customStyles: StylesConfig<any, true> = {
         };
     },
     option: (provided: CSSObject, state: any): CSSObject => {
+        const { data } = state;
+
         return {
             ...provided,
             background: 'white',
             color: 'gray.600',
             cursor: 'pointer',
+            fontWeight: 'normal',
             '&:hover': {
+                backgroundColor: data.color ? `${theme.colors.gray[100]} !important` : 'none',
                 background: state.isSelected ? 'none' : theme.colors.teal[100],
             },
         };
@@ -60,13 +71,8 @@ export const customStyles: StylesConfig<any, true> = {
     placeholder: (provided: CSSObject): CSSObject => {
         return {
             ...provided,
+            fontWeight: 'normal',
             color: theme.colors.gray[400],
         };
     },
-    // valueContainer: (provided: CSSObject, state: ControlProps<any, true>): CSSObject => {
-    //     return {
-    //         ...provided,
-    //         padding: state.hasValue ? '0 8px' : '0 16px',
-    //     };
-    // },
 };
