@@ -2,11 +2,12 @@ import React, { FunctionComponent } from 'react';
 
 import { BrowserRouter } from 'react-router-dom';
 
-import { ToastBar, ToastProvider } from 'common/toast/Toast';
+import { ToastBar, ToastProvider } from 'contexts/toast/Toast';
 import { PublicContent, WhitelistedContent } from 'screens/content/Content';
 
 import './App.scss';
 import { WhitelistedRoutes } from 'util/Routing';
+import { BoatProvider } from 'contexts/boat/Boat';
 
 export const App: FunctionComponent = () => {
     if (WhitelistedRoutes.includes(window.location.pathname)) {
@@ -25,10 +26,12 @@ export const App: FunctionComponent = () => {
     return (
         <>
             <ToastProvider>
-                <ToastBar />
-                <BrowserRouter>
-                    <PublicContent />
-                </BrowserRouter>
+                <BoatProvider>
+                    <ToastBar />
+                    <BrowserRouter>
+                        <PublicContent />
+                    </BrowserRouter>
+                </BoatProvider>
             </ToastProvider>
         </>
     );

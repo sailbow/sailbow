@@ -1,13 +1,13 @@
 import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
 
 import { Flex, Icon, Text } from '@chakra-ui/react';
-import { Exclamation, Close, Checkmark } from 'util/Icons';
 import { ToastContainer, toast } from 'react-toastify';
 
+import { Exclamation, Close, Checkmark } from 'util/Icons';
 import { Log } from 'util/Logger';
 
 import 'react-toastify/dist/ReactToastify.css';
-import 'common/toast/Toast.scss';
+import 'contexts/toast/Toast.scss';
 
 const TOAST_DURATION = 5000;
 

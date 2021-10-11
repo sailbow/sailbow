@@ -45,6 +45,7 @@ const colors = {
         warning: ChakraTheme.colors.orange[300],
         error: ChakraTheme.colors.red[300],
         teal: ChakraTheme.colors.teal[200],
+        muted: ChakraTheme.colors.gray[500],
         500: ChakraTheme.colors.teal[200],
         600: ChakraTheme.colors.teal[300],
         700: ChakraTheme.colors.teal[400],
@@ -68,6 +69,7 @@ const components: ComponentDefaultProps = {
         },
         variants: {
             solid: (props: any) => {
+                console.log(ChakraTheme.components.Button);
                 if (props.colorScheme === 'brand') {
                     return {
                         ...ChakraTheme.components.Button.variants.solid(props),
@@ -102,7 +104,7 @@ const components: ComponentDefaultProps = {
     },
     Input: {
         defaultProps: {
-            focusBorderColor: 'transparent',
+            focusBorderColor: 'brand.teal',
         },
         variants: {
             brand: (props: any) => {

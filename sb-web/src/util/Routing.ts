@@ -7,6 +7,7 @@ interface Route {
 export const Routes: Route = {
     Public: {
         Landing: '/',
+        Create: '/start-a-boat',
     },
     Private: {
         Home: '/',

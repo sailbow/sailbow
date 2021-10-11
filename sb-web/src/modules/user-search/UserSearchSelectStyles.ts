@@ -3,27 +3,29 @@ import { StylesConfig, ControlProps } from 'react-select';
 import { CSSObject } from '@emotion/react';
 
 export const customStyles: StylesConfig<any, true> = {
+    container: (provided: CSSObject): CSSObject => {
+        return {
+            ...provided,
+            transition: 'all 0.2s ease-in-out',
+            width: '100%',
+        };
+    },
     control: (provided: CSSObject, state: ControlProps<any, true>): CSSObject => {
         return {
             ...provided,
+            transition: 'all 0.2s ease-in-out',
             '&:hover': {
-                border: `1px solid ${theme.colors.teal[200]}`,
+                backgroundColor: theme.colors.gray[50],
             },
+            backgroundColor: state.isFocused ? theme.colors.gray[50] : 'none',
             outline: '0 0 0 3px #f98fffCC',
             boxSizing: 'border-box',
-            border: state.isFocused ? `1px solid ${theme.colors.teal[300]}` : `1px solid ${theme.colors.gray[200]}`,
+            border: 'none',
             boxShadow: 'none',
             color: 'gray.600',
-            cursor: 'pointer',
+            cursor: 'text',
             fontWeight: 'normal',
-            width: '128px',
             borderRadius: theme.radii.md,
-        };
-    },
-    groupHeading: (provided: CSSObject): CSSObject => {
-        return {
-            ...provided,
-            display: 'none',
         };
     },
     menu: (provided: CSSObject): CSSObject => {
@@ -31,6 +33,7 @@ export const customStyles: StylesConfig<any, true> = {
             ...provided,
             border: 'none',
             boxShadow: '0 0 5px #efefef',
+            width: 'auto',
         };
     },
     input: (provided: CSSObject): CSSObject => {
@@ -40,16 +43,13 @@ export const customStyles: StylesConfig<any, true> = {
         };
     },
     option: (provided: CSSObject, state: any): CSSObject => {
-        const { data } = state;
-
         return {
             ...provided,
             background: 'white',
             color: 'gray.600',
             cursor: 'pointer',
-            fontWeight: 'normal',
+            width: 'auto',
             '&:hover': {
-                backgroundColor: data.color ? `${theme.colors.gray[100]} !important` : 'none',
                 background: state.isSelected ? 'none' : theme.colors.teal[100],
             },
         };
@@ -65,13 +65,12 @@ export const customStyles: StylesConfig<any, true> = {
     indicatorsContainer: (provided: CSSObject): CSSObject => {
         return {
             ...provided,
-            cursor: 'pointer',
+            display: 'none',
         };
     },
     placeholder: (provided: CSSObject): CSSObject => {
         return {
             ...provided,
-            fontWeight: 'normal',
             color: theme.colors.gray[400],
         };
     },
