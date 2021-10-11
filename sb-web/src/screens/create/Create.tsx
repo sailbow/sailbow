@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FunctionComponent, useState } from 'react';
 
-import { Box, Text, Button, Flex, Heading, Stack, Divider, Icon } from '@chakra-ui/react';
+import { Box, Text, Button, Flex, Heading, Stack, Divider } from '@chakra-ui/react';
 
 import { BoatActionType, useBoat } from 'contexts/boat/Boat';
 import { Input, TextArea } from 'components/input/Input';
