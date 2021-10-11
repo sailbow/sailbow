@@ -1,11 +1,16 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 
-import { Avatar, Flex, Icon, IconButton, Text } from '@chakra-ui/react';
+import { Avatar, Box, Flex, Icon, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
 import { Role } from 'components/role/Role';
 import { customStyles } from 'theme/SelectStyles';
-import { Checkmark, Close } from 'util/Icons';
+import { Checkmark } from 'util/Icons';
+
+interface Option {
+    label: string;
+    value: Role;
+}
 
 export const GatherCrewRoleOptions = [
     {
@@ -19,6 +24,11 @@ export const GatherCrewRoleOptions = [
 ];
 
 export const UserCard: FunctionComponent = () => {
+    const [selectedRole, setSelectedRole] = useState<Option>({
+        label: 'Sailor',
+        value: Role.Sailor,
+    });
+
     const RoleOption: FunctionComponent = (props: any) => {
         const { data, isSelected } = props;
         const { color, label } = data;
@@ -35,22 +45,27 @@ export const UserCard: FunctionComponent = () => {
 
     return (
         <Flex justifyContent="space-between">
-            <Flex alignItems="center">
+            <Flex alignItems="center" overflow="hidden">
                 <Avatar variant="square" name="Hrishikesh Paul" size="sm" />
-                <Text fontWeight="normal" pl="4">
-                    Hrishikesh Paul
+                <Text fontWeight="normal" pl="4" isTruncated>
+                    Name goes here
                 </Text>
             </Flex>
-            <Select
-                onChange={(e) => console.log(e)}
-                isSearchable={false}
-                styles={customStyles}
-                options={GatherCrewRoleOptions}
-                components={{
-                    IndicatorSeparator: () => null,
-                    Option: RoleOption,
-                }}
-            />
+            <Box pl="4">
+                <Select
+                    onChange={(role: any) => {
+                        setSelectedRole({ label: role.label, value: role.value });
+                    }}
+                    value={selectedRole}
+                    isSearchable={false}
+                    styles={customStyles}
+                    options={GatherCrewRoleOptions}
+                    components={{
+                        IndicatorSeparator: () => null,
+                        Option: RoleOption,
+                    }}
+                />
+            </Box>
         </Flex>
     );
 };

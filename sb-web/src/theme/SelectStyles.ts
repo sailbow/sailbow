@@ -16,7 +16,7 @@ export const customStyles: StylesConfig<any, true> = {
             color: 'gray.600',
             cursor: 'pointer',
             fontWeight: 'normal',
-            width: 'auto',
+            width: '128px',
             borderRadius: theme.radii.md,
         };
     },
