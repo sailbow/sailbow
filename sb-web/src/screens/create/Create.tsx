@@ -1,10 +1,11 @@
 import React, { ChangeEvent, FunctionComponent, useState } from 'react';
 
-import { Button, Flex, Heading, Stack } from '@chakra-ui/react';
+import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
 import { BoatActionType, useBoat } from 'contexts/boat/Boat';
 import { Input, TextArea } from 'components/input/Input';
 import { Banner } from 'modules/banner/Banner';
+import { UserSearch } from 'modules/user-search/UserSearch';
 import { Boat, ChatRight } from 'util/Icons';
 
 import 'screens/create/Create.scss';
@@ -32,8 +33,10 @@ export const Create: FunctionComponent = () => {
                     Start a boat
                 </Heading>
 
-                <Stack spacing="4">
-                    <Banner />
+                <Stack spacing="2">
+                    <Box pb="4">
+                        <Banner />
+                    </Box>
                     <Input
                         icon={<Boat />}
                         props={{
@@ -53,15 +56,24 @@ export const Create: FunctionComponent = () => {
                             onChange: onFormChange,
                             name: 'description',
                             id: 'description',
-                            rows: 4,
+                            rows: 3,
                             variant: 'brand',
                             placeholder: 'What is your boat about?',
                         }}
                     />
+                    <Stack spacing="4" pt="8">
+                        <Box>
+                            <Heading fontSize="xl">Gather your crew</Heading>
+                            <Text fontWeight="normal" fontSize="sm" color="brand.muted">
+                                If you haven’t gone on a voyage with a sailor before, use the link to invite them!
+                            </Text>
+                        </Box>
+                        <UserSearch />
+                    </Stack>
                 </Stack>
-                <Button onClick={onSubmit} variant="outline">
+                {/* <Button onClick={onSubmit} variant="outline">
                     Submit
-                </Button>
+                </Button> */}
             </Stack>
         </Flex>
     );

@@ -11,6 +11,7 @@ export {
     IoLogoGithub as GitHub,
     IoLogoFacebook as Facebook,
     IoSearchOutline as Search,
+    IoPersonOutline as Person,
 } from 'react-icons/io5';
 export {
     HiArrowRight as RightIcon,
