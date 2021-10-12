@@ -58,6 +58,7 @@ export const Navbar: FunctionComponent<Props> = () => {
                 </Button>
                 {navbarBg ? (
                     <Button
+                        data-aos="fade"
                         size="sm"
                         borderRadius="xl"
                         rightIcon={<RightIcon />}
