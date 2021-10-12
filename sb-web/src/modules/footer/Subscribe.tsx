@@ -46,7 +46,9 @@ export const Subscribe: FunctionComponent = () => {
                 Subscribe to our newsletter
             </Heading>
             <Flex textAlign="start" flexDir="column" pt="4">
-                <Text fontWeight="normal">Get notified when we have exciting news for you.</Text>
+                <Text fontWeight="normal" fontSize="sm">
+                    Get notified when we have exciting news for you.
+                </Text>
                 <Formik initialValues={emailForm} onSubmit={onSubmit}>
                     {() => (
                         <Form>

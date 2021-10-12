@@ -27,6 +27,7 @@ const fontWeights = {
 const config: ThemeConfig = {
     initialColorMode: 'light',
     useSystemColorMode: false,
+    cssVarPrefix: 'sailboat',
 };
 
 const styles = {
