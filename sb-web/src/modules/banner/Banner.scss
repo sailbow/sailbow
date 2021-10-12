@@ -1,0 +1,32 @@
+@import 'theme/base';
+
+.sb-banner {
+    position: relative;
+    height: 240px !important;
+    overflow: hidden;
+
+    &-image {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    &-button {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        background-color: white;
+    }
+
+    .edit-button-up {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+    }
+
+    .edit-button-down {
+        position: absolute;
+        top: 50px;
+        right: 16px;
+    }
+}

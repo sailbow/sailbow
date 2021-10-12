@@ -1,14 +1,13 @@
 import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
 
 import { Flex, Icon, Text } from '@chakra-ui/react';
-import { BsExclamation as Exclamation } from 'react-icons/bs';
-import { IoCloseOutline as Close, IoCheckmarkOutline as Checkmark } from 'react-icons/io5';
 import { ToastContainer, toast } from 'react-toastify';
 
+import { Exclamation, Close, Checkmark } from 'util/Icons';
 import { Log } from 'util/Logger';
 
 import 'react-toastify/dist/ReactToastify.css';
-import 'common/toast/Toast.scss';
+import 'contexts/toast/Toast.scss';
 
 const TOAST_DURATION = 5000;
 
@@ -126,7 +125,7 @@ export const ToastBar = (): JSX.Element | null => {
                 <Container>
                     <Flex alignItems="center">
                         <Icon as={Checkmark} w={6} h={6} zIndex="2" color="white" />
-                        <Text pl="4" fontSize="sm">
+                        <Text pl="4" fontSize="sm" fontWeight="normal">
                             {message.text}
                         </Text>
                     </Flex>
@@ -140,7 +139,7 @@ export const ToastBar = (): JSX.Element | null => {
                 <Container>
                     <Flex alignItems="center">
                         <Icon as={Close} w={6} h={6} zIndex="2" color="white" />
-                        <Text pl="4" fontSize="sm">
+                        <Text pl="4" fontSize="sm" fontWeight="normal">
                             {message.text}
                         </Text>
                     </Flex>
@@ -154,7 +153,7 @@ export const ToastBar = (): JSX.Element | null => {
                 <Container>
                     <Flex alignItems="center">
                         <Icon as={Exclamation} w={6} h={6} zIndex="2" color="white" />
-                        <Text pl="4" fontSize="sm">
+                        <Text pl="4" fontSize="sm" fontWeight="normal">
                             {message.text}
                         </Text>
                     </Flex>

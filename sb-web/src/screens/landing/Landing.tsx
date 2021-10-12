@@ -1,11 +1,9 @@
 import React, { FunctionComponent } from 'react';
 
 import { Box, Button, Center, Divider, Flex, Heading, Text, VStack } from '@chakra-ui/react';
-import { FcGoogle as GoogleIcon } from 'react-icons/fc';
-import { HiArrowRight as RightIcon } from 'react-icons/hi';
-import { ImFacebook as FacebookIcon } from 'react-icons/im';
 
 import { ReactComponent as LogoType } from 'assets/sb-gradient-logo-type.svg';
+import { RightIcon, Facebook, Google } from 'util/Icons';
 
 import 'screens/landing/Landing.scss';
 
@@ -32,7 +30,7 @@ export const Landing: FunctionComponent = () => {
                             <Button
                                 variant="outline"
                                 colorScheme="gray"
-                                leftIcon={<GoogleIcon />}
+                                leftIcon={<Google />}
                                 rightIcon={<RightIcon />}
                             >
                                 <Text pr="8">Continue with Google</Text>
@@ -40,7 +38,7 @@ export const Landing: FunctionComponent = () => {
                             <Button
                                 variant="outline"
                                 colorScheme="gray"
-                                leftIcon={<FacebookIcon />}
+                                leftIcon={<Facebook />}
                                 rightIcon={<RightIcon />}
                             >
                                 <Text pr="3.5">Continue with Facebook</Text>

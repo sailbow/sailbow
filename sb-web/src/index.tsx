@@ -6,6 +6,7 @@ import { theme } from 'theme/ChakraTheme';
 import { App } from './App';
 import { reportWebVitals } from './reportWebVitals';
 
+import 'aos/dist/aos.css';
 import './index.scss';
 
 ReactDOM.render(
