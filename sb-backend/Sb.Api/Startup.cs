@@ -30,11 +30,11 @@ namespace Sb.Api
                     // Return unauthorized by default
                     opts.LoginPath = "/api/auth/unauthorized";
                 })
-                .AddGoogle(options =>
+                .AddGoogle(opts =>
                 {
-                    options.ClientId = Configuration["Authentication:Google:ClientId"];
-                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                    options.SaveTokens = true;
+                    opts.ClientId = Configuration["Authentication:Google:ClientId"];
+                    opts.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                    opts.SaveTokens = true;
                 })
                 .AddFacebook(opts =>
                 {
