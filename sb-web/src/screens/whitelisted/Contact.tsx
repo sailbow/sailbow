@@ -1,12 +1,13 @@
 import React, { FunctionComponent, ChangeEvent, useState } from 'react';
 
-import { VStack, Button, FormControl, Flex } from '@chakra-ui/react';
+import { Button, FormControl, Flex, Text, VStack } from '@chakra-ui/react';
 import { Form, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
 import { Input, TextArea } from 'components/input/Input';
 import { Base } from 'screens/whitelisted/Base';
 import { ChatRight, Envelope, ErrorCircle } from 'util/Icons';
+import { CheckmarkIcon } from 'components/button/ButtonIcons';
 
 interface FormValues {
     email: string;
@@ -70,12 +71,12 @@ export const Contact: FunctionComponent = () => {
                                     }}
                                 />
                             </FormControl>
-                            <Flex justifyContent="flex-end" w="100%">
-                                <Button isLoading={isSubmitting} type="submit" variant="outline">
-                                    Submit
-                                </Button>
-                            </Flex>
                         </VStack>
+                        <Flex justifyContent="flex-end" w="100%" mt="8">
+                            <Button isLoading={isSubmitting} type="submit" variant="outline" rightIcon={CheckmarkIcon}>
+                                <Text>Submit</Text>
+                            </Button>
+                        </Flex>
                     </Form>
                 )}
             </Formik>
