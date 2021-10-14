@@ -1,25 +1,25 @@
 import React, { FunctionComponent, ChangeEvent, useState } from 'react';
 
-import {
-    Input,
-    InputGroup,
-    InputLeftAddon,
-    Textarea,
-    VStack,
-    Button,
-    FormControl,
-    InputRightElement,
-    Tooltip,
-    Flex,
-} from '@chakra-ui/react';
-import { Form, Formik, Field } from 'formik';
+import { VStack, Button, FormControl, Flex } from '@chakra-ui/react';
+import { Form, Formik, FormikProps } from 'formik';
+import * as Yup from 'yup';
 
+import { Input, TextArea } from 'components/input/Input';
 import { Base } from 'screens/whitelisted/Base';
 import { ChatRight, Envelope, ErrorCircle } from 'util/Icons';
-import { validateEmail } from 'util/Utils';
+
+interface FormValues {
+    email: string;
+    body: string;
+}
+
+const FormSchema = Yup.object().shape({
+    email: Yup.string().email('Please enter a valid email!').required('This is a required field!'),
+    body: Yup.string().min(1, 'Please enter something!').required('This is a required field!'),
+});
 
 export const Contact: FunctionComponent = () => {
-    const [contactForm, setContactForm] = useState<{ email: string; body: string }>({ email: '', body: '' });
+    const [contactForm, setContactForm] = useState<FormValues>({ email: '', body: '' });
 
     const onSubmit = () => {
         console.log(contactForm);
@@ -32,76 +32,46 @@ export const Contact: FunctionComponent = () => {
         });
     };
 
-    const emailValidation = (value: string) => {
-        if (value) return !validateEmail(value);
-        return true;
-    };
-
-    const bodyValidation = (value: string) => {
-        if (value.length < 10) return true;
-        return false;
-    };
-
     return (
         <Base
             title="Contact Us"
             subtitle="We would love to hear from you! Please let us know if you've come across any issues or would like some additional function, or if you just want to drop by and say hi!"
         >
-            <Formik initialValues={contactForm} onSubmit={onSubmit}>
-                {(props) => (
+            <Formik initialValues={contactForm} onSubmit={onSubmit} validationSchema={FormSchema}>
+                {({ errors, touched, isSubmitting, getFieldProps }: FormikProps<FormValues>) => (
                     <Form>
                         <VStack spacing="4">
-                            <Field name="email" validate={emailValidation}>
-                                {({ field, form }: any) => (
-                                    <FormControl isInvalid={form.errors.email && form.touched.email} onChange={setForm}>
-                                        <InputGroup variant="brand">
-                                            <InputLeftAddon>
-                                                <Envelope />
-                                            </InputLeftAddon>
-                                            <Input
-                                                {...field}
-                                                id="email"
-                                                placeholder="Enter your email *"
-                                                className="contact-input"
-                                            />
-                                            {form.errors.email && form.touched.email ? (
-                                                <Tooltip label="Please enter a valid email address!">
-                                                    <InputRightElement color="brand.error">
-                                                        <ErrorCircle />
-                                                    </InputRightElement>
-                                                </Tooltip>
-                                            ) : null}
-                                        </InputGroup>
-                                    </FormControl>
-                                )}
-                            </Field>
-                            <Field name="body" validate={bodyValidation}>
-                                {({ field, form }: any) => (
-                                    <FormControl isInvalid={form.errors.body && form.touched.body} onChange={setForm}>
-                                        <InputGroup variant="brand">
-                                            <InputLeftAddon>
-                                                <ChatRight />
-                                            </InputLeftAddon>
-                                            <Textarea
-                                                {...field}
-                                                rows="5"
-                                                id="body"
-                                                placeholder="Pour your heart out! *"
-                                                className="contact-input"
-                                            />
-                                            {form.errors.body && form.touched.body ? (
-                                                <Tooltip label="Please type something!">
-                                                    <InputRightElement color="brand.error">
-                                                        <ErrorCircle />
-                                                    </InputRightElement>
-                                                </Tooltip>
-                                            ) : null}
-                                        </InputGroup>
-                                    </FormControl>
-                                )}
-                            </Field>
+                            <FormControl isInvalid={Boolean(errors.email && touched.email)} onChange={setForm}>
+                                <Input
+                                    icon={<Envelope />}
+                                    field={{ ...getFieldProps('email') }}
+                                    error={Boolean(errors.email && touched.email)}
+                                    errorLabel={errors.email}
+                                    errorIcon={<ErrorCircle />}
+                                    props={{
+                                        name: 'email',
+                                        id: 'email',
+                                        placeholder: 'Enter your email *',
+                                    }}
+                                />
+                            </FormControl>
+                            <FormControl isInvalid={Boolean(errors.body && touched.body)} onChange={setForm}>
+                                <TextArea
+                                    icon={<ChatRight />}
+                                    field={{ ...getFieldProps('body') }}
+                                    error={Boolean(errors.body && touched.body)}
+                                    errorLabel={errors.body}
+                                    errorIcon={<ErrorCircle />}
+                                    props={{
+                                        name: 'body',
+                                        id: 'body',
+                                        placeholder: 'Pour your heat out *',
+                                        rows: 5,
+                                    }}
+                                />
+                            </FormControl>
                             <Flex justifyContent="flex-end" w="100%">
-                                <Button isLoading={props.isSubmitting} type="submit" variant="outline">
+                                <Button isLoading={isSubmitting} type="submit" variant="outline">
                                     Submit
                                 </Button>
                             </Flex>
