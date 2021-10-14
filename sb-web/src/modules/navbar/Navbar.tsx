@@ -1,12 +1,13 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Flex, Button, HStack, IconButton, VStack, Box } from '@chakra-ui/react';
+import { Flex, Button, HStack, IconButton, VStack, Box, Text } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
 import { RightIcon, Menu } from 'util/Icons';
 
 import 'modules/navbar/Navbar.scss';
+import { Routes } from 'util/Routing';
 
 interface Props {
     isAuth: boolean;
@@ -58,15 +59,13 @@ export const Navbar: FunctionComponent<Props> = () => {
                 </Button>
                 {navbarBg ? (
                     <Button
-                        data-aos="fade"
-                        size="sm"
-                        borderRadius="xl"
                         rightIcon={<RightIcon />}
                         onClick={() => {
+                            window.location.href = Routes.Public.Landing;
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
                     >
-                        Start Sailing
+                        <Text>Start Sailing</Text>
                     </Button>
                 ) : (
                     <></>

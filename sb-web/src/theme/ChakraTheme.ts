@@ -58,6 +58,9 @@ const components: ComponentDefaultProps = {
         baseStyle: {
             color: 'gray.600',
             fontWeight: 'semibold',
+            _active: {
+                color: 'brand.700',
+            },
         },
     },
     Button: {

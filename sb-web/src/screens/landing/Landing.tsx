@@ -26,7 +26,7 @@ export const Landing: FunctionComponent = () => {
                                 <Divider pt="1" width="20%" borderColor="gray.500" />
                             </Center>
                         </Box>
-                        <VStack spacing="5">
+                        <VStack spacing="5" pb="8">
                             <Button
                                 variant="outline"
                                 colorScheme="gray"
@@ -43,9 +43,6 @@ export const Landing: FunctionComponent = () => {
                             >
                                 <Text pr="3.5">Log In with Facebook</Text>
                             </Button>
-                            <Text fontSize="8px" pt="4">
-                                Copyright © 2021 Sailboat
-                            </Text>
                         </VStack>
                     </VStack>
                 </VStack>
