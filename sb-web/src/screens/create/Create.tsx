@@ -78,7 +78,7 @@ export const Create: FunctionComponent = () => {
                     Cancel
                 </Button>
                 <Button onClick={onSubmit} isFullWidth={false} rightIcon={<Checkmark />}>
-                    <Text pr="6">Submit</Text>
+                    <Text>Start Boat</Text>
                 </Button>
             </Flex>
         </Flex>
