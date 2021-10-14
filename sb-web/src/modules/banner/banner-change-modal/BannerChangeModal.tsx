@@ -29,7 +29,7 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
             size="4xl"
             positiveButton={
                 <Button onClick={onClose} rightIcon={<Checkmark />} mt="4">
-                    <Text pr="4">Done</Text>
+                    <Text>Done</Text>
                 </Button>
             }
             title="Change Banner"

@@ -70,6 +70,7 @@ const components: ComponentDefaultProps = {
         },
         variants: {
             solid: (props: any) => {
+                console.log(ChakraTheme.components.Button);
                 if (props.colorScheme === 'brand') {
                     return {
                         ...ChakraTheme.components.Button.variants.solid(props),

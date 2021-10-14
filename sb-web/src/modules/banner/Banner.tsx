@@ -57,14 +57,12 @@ export const Banner: FunctionComponent = () => {
             />
             <Box className="sb-banner" borderRadius="xl" overflow="hidden">
                 <Button
-                    size="sm"
                     className="sb-banner-button"
                     colorScheme="gray"
-                    borderRadius="lg"
                     rightIcon={<Pencil />}
                     onClick={() => setIsBannerSelectOpen(!isBannerSelectOpen)}
                 >
-                    <Text pr="2">Change Banner</Text>
+                    <Text>Change Banner</Text>
                 </Button>
                 {boat.banner.type === BannerType.Color ? (
                     <Box bg={boat.banner.value} className="sb-banner-image" />

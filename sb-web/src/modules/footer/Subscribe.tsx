@@ -13,24 +13,27 @@ import {
     Tooltip,
     FormControl,
 } from '@chakra-ui/react';
-import { Form, Formik, Field } from 'formik';
+import { Form, Formik, FormikProps } from 'formik';
+import * as Yup from 'yup';
 
 import { ToastActionType, useToast } from 'contexts/toast/Toast';
 import { Envelope, ErrorCircle } from 'util/Icons';
-import { validateEmail } from 'util/Utils';
+
+interface FormValues {
+    email: string;
+}
+
+const FormSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Required'),
+});
 
 export const Subscribe: FunctionComponent = () => {
     const [, dispatch] = useToast();
-    const [emailForm, setEmailForm] = useState<{ email: string }>({ email: '' });
+    const [emailForm, setEmailForm] = useState<FormValues>({ email: '' });
 
     const onSubmit = () => {
         dispatch({ type: ToastActionType.ShowSuccess, text: 'Added to the subscription list!' });
         console.log(emailForm);
-    };
-
-    const emailValidation = (value: string) => {
-        if (value) return !validateEmail(value);
-        return true;
     };
 
     const setForm = (e: ChangeEvent<HTMLInputElement>) => {
@@ -49,37 +52,32 @@ export const Subscribe: FunctionComponent = () => {
                 <Text fontWeight="normal" fontSize="sm">
                     Get notified when we have exciting news for you.
                 </Text>
-                <Formik initialValues={emailForm} onSubmit={onSubmit}>
-                    {() => (
+                <Formik initialValues={emailForm} onSubmit={onSubmit} validationSchema={FormSchema}>
+                    {({ errors, values, touched, getFieldProps }: FormikProps<FormValues>) => (
                         <Form>
                             <Flex alignItems="center" mt="2">
-                                <Field name="email" validate={emailValidation}>
-                                    {({ field, form }: any) => (
-                                        <FormControl
-                                            isInvalid={form.errors.email && form.touched.email}
-                                            onChange={setForm}
-                                        >
-                                            <InputGroup variant="brand" size="sm">
-                                                <InputLeftAddon>
-                                                    <Envelope />
-                                                </InputLeftAddon>
-                                                <Input
-                                                    {...field}
-                                                    id="email"
-                                                    placeholder="Enter your email *"
-                                                    className="contact-input"
-                                                />
-                                                {form.errors.email && form.touched.email ? (
-                                                    <Tooltip label="Please enter a valid email address!">
-                                                        <InputRightElement color="brand.error">
-                                                            <ErrorCircle />
-                                                        </InputRightElement>
-                                                    </Tooltip>
-                                                ) : null}
-                                            </InputGroup>
-                                        </FormControl>
-                                    )}
-                                </Field>
+                                <FormControl isInvalid={Boolean(errors.email && touched.email)} onChange={setForm}>
+                                    <InputGroup variant="brand" size="sm">
+                                        <InputLeftAddon>
+                                            <Envelope />
+                                        </InputLeftAddon>
+                                        <Input
+                                            {...getFieldProps('email')}
+                                            value={values.email}
+                                            name="email"
+                                            id="email"
+                                            placeholder="Enter your email *"
+                                            className="contact-input"
+                                        />
+                                        {errors.email && touched.email ? (
+                                            <Tooltip label="Please enter a valid email address!">
+                                                <InputRightElement color="brand.error">
+                                                    <ErrorCircle />
+                                                </InputRightElement>
+                                            </Tooltip>
+                                        ) : null}
+                                    </InputGroup>
+                                </FormControl>
                                 <Button size="sm" px="6" colorScheme="gray" ml="2" type="submit">
                                     Subscribe
                                 </Button>
