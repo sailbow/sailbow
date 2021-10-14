@@ -2,11 +2,12 @@ import React, { ChangeEvent, FunctionComponent, useState } from 'react';
 
 import { Box, Text, Button, Flex, Heading, Stack, Divider } from '@chakra-ui/react';
 
+import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { BoatActionType, useBoat } from 'contexts/boat/Boat';
 import { Input, TextArea } from 'components/input/Input';
 import { Banner } from 'modules/banner/Banner';
 import { UserSearch } from 'modules/user-search/UserSearch';
-import { Boat, ChatRight, Checkmark } from 'util/Icons';
+import { Boat, ChatRight } from 'util/Icons';
 
 import 'screens/create/Create.scss';
 
@@ -77,7 +78,7 @@ export const Create: FunctionComponent = () => {
                 <Button variant="link" mr="8">
                     Cancel
                 </Button>
-                <Button onClick={onSubmit} isFullWidth={false} rightIcon={<Checkmark />}>
+                <Button onClick={onSubmit} rightIcon={CheckmarkIcon}>
                     <Text>Start Boat</Text>
                 </Button>
             </Flex>
