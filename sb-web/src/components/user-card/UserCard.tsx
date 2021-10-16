@@ -25,7 +25,7 @@ export const GatherCrewRoleOptions = [
 
 interface Props {
     showActions?: boolean;
-    user: any; // needs to change to user
+    user: any; // needs to change to user type
     onChange?: (value: number, _data: any) => void;
 }
 

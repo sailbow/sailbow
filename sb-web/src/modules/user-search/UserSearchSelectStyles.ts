@@ -80,4 +80,11 @@ export const customStyles: StylesConfig<any, true> = {
             color: theme.colors.gray[400],
         };
     },
+    noOptionsMessage: (provided: CSSObject): CSSObject => {
+        return {
+            ...provided,
+            padding: 0,
+            color: 'brand.dark',
+        };
+    },
 };

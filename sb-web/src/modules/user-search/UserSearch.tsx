@@ -1,13 +1,13 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Box, Button, Divider, Flex, InputGroup, InputLeftAddon, Stack, Text } from '@chakra-ui/react';
+import { Box, Divider, Flex, InputGroup, InputLeftAddon, Stack, Text } from '@chakra-ui/react';
 import { components } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import * as Yup from 'yup';
 
 import { UserCard } from 'components/user-card/UserCard';
 import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
-import { Envelope, Search } from 'util/Icons';
+import { Search } from 'util/Icons';
 import { Role, RoleAction } from 'components/role/Role';
 
 interface MockData {
@@ -19,7 +19,7 @@ const MOCK: MockData[] = [
     {
         label: 'Hrishikesh Paul',
         value: {
-            id: 1,
+            email: 'hrpaul@iu.edu',
             name: 'Hrishikesh Paul',
             info: 'Been with on 3 other boats',
         },
@@ -27,7 +27,7 @@ const MOCK: MockData[] = [
     {
         label: 'Zack Gilbert',
         value: {
-            id: 2,
+            email: 'zagilbert@iu.edu',
             name: 'Zack Gilbert',
             info: 'Been with on 2 other boats',
         },
@@ -40,7 +40,14 @@ const FormSchema = Yup.object().shape({
 
 export const UserSearch: FunctionComponent = () => {
     const [inputText, setInputText] = useState<string>('');
-    const [crewList, setCrewList] = useState<MockData[]>([]);
+    const [crewList, setCrewList] = useState<any[]>([]);
+
+    const onCrewSelect = (e: any) => {
+        setInputText('');
+        const updatedInvite = [{ ...e.value }, ...crewList];
+
+        setCrewList(updatedInvite);
+    };
 
     const NoSelectOption: FunctionComponent<any> = (props) => {
         const { selectProps } = props;
@@ -54,21 +61,32 @@ export const UserSearch: FunctionComponent = () => {
 
         return (
             <components.NoOptionsMessage {...props}>
-                <Box px="4" py="2" textAlign="left">
-                    <span>
-                        You have never sailed with <b>&lsquo;{inputValue}&lsquo;</b>
-                    </span>
-                    <Divider my="2" />
+                <Box textAlign="left" p="0">
                     {validEmail ? (
-                        <>
-                            <Button borderRadius="lg" size="sm" variant="outline" rightIcon={<Envelope />}>
-                                Send Invite
-                            </Button>
-                        </>
+                        <Box
+                            onClick={() =>
+                                onCrewSelect({
+                                    value: { email: inputValue, name: inputValue },
+                                })
+                            }
+                        >
+                            <components.Option {...props}>
+                                <UserCard
+                                    showActions={false}
+                                    user={{ email: inputValue, name: inputValue, info: 'Click to invite' }}
+                                />
+                            </components.Option>
+                        </Box>
                     ) : (
-                        <Text fontWeight="normal" fontSize="sm">
-                            Enter a valid email to invite them via mail!
-                        </Text>
+                        <>
+                            <span>
+                                You have never sailed with <b>{inputValue}</b>
+                            </span>
+                            <Divider my="2" />
+                            <Text fontWeight="normal" fontSize="sm">
+                                Enter a valid email and they will be invited to your Boat!
+                            </Text>
+                        </>
                     )}
                 </Box>
             </components.NoOptionsMessage>
@@ -110,7 +128,7 @@ export const UserSearch: FunctionComponent = () => {
                 break;
             }
             case RoleAction.Remove: {
-                const updatedList = crewList.filter((crew: any) => crew.id !== data.id);
+                const updatedList = crewList.filter((crew: any) => crew.email !== data.email);
                 setCrewList(updatedList);
                 break;
             }
@@ -127,6 +145,7 @@ export const UserSearch: FunctionComponent = () => {
                     <Search />
                 </InputLeftAddon>
                 <AsyncSelect
+                    menuIsOpen
                     cacheOptions
                     loadOptions={getCrewMockFunction}
                     blurInputOnSelect
@@ -141,17 +160,12 @@ export const UserSearch: FunctionComponent = () => {
                         if (action.action === 'input-change') setInputText(value);
                     }}
                     value=""
-                    onChange={(e: any) => {
-                        setInputText('');
-                        const updatedInvite = [{ ...e.value }, ...crewList];
-
-                        setCrewList(updatedInvite);
-                    }}
+                    onChange={onCrewSelect}
                     noOptionsMessage={({ inputValue }) => (!inputValue ? null : 'No results found')}
                 />
             </InputGroup>
             {crewList.map((crew: any) => (
-                <Flex key={crew.id}>
+                <Flex key={crew.email}>
                     <UserCard user={crew} onChange={onRoleChange} />
                 </Flex>
             ))}
