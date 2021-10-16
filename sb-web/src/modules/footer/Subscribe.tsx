@@ -53,7 +53,7 @@ export const Subscribe: FunctionComponent = () => {
                     Get notified when we have exciting news for you.
                 </Text>
                 <Formik initialValues={emailForm} onSubmit={onSubmit} validationSchema={FormSchema}>
-                    {({ errors, values, touched, getFieldProps }: FormikProps<FormValues>) => (
+                    {({ errors, touched, getFieldProps }: FormikProps<FormValues>) => (
                         <Form>
                             <Flex alignItems="center" mt="2">
                                 <FormControl isInvalid={Boolean(errors.email && touched.email)} onChange={setForm}>
@@ -63,7 +63,6 @@ export const Subscribe: FunctionComponent = () => {
                                         </InputLeftAddon>
                                         <Input
                                             {...getFieldProps('email')}
-                                            value={values.email}
                                             name="email"
                                             id="email"
                                             placeholder="Enter your email *"

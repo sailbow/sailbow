@@ -23,7 +23,16 @@ export const GatherCrewRoleOptions = [
     { label: 'Remove', value: -1, color: 'brand.error' },
 ];
 
-export const UserCard: FunctionComponent = () => {
+interface Props {
+    showActions?: boolean;
+    name: string;
+    image?: string;
+    _data?: any;
+    info?: string;
+    remove?: (id: number) => void;
+}
+
+export const UserCard: FunctionComponent<Props> = ({ showActions, name, remove, info, _data, image }) => {
     const [selectedRole, setSelectedRole] = useState<Option>({
         label: 'Sailor',
         value: Role.Sailor,
@@ -44,16 +53,26 @@ export const UserCard: FunctionComponent = () => {
     };
 
     return (
-        <Flex justifyContent="space-between">
+        <Flex justifyContent="space-between" w="100%">
             <Flex alignItems="center" overflow="hidden">
-                <Avatar variant="square" name="Hrishikesh Paul" size="sm" />
-                <Text fontWeight="normal" pl="4" isTruncated>
-                    Name goes here
-                </Text>
+                <Avatar variant="square" name={name} size="sm" />
+                <Box>
+                    <Text fontWeight="normal" pl="4" isTruncated>
+                        {name}
+                    </Text>
+                    <Text fontWeight="normal" pl="4" isTruncated fontSize="sm">
+                        {info}
+                    </Text>
+                </Box>
             </Flex>
-            <Box pl="4">
+            <Box pl="4" display={showActions ? 'block' : 'none'}>
                 <Select
                     onChange={(role: any) => {
+                        if (role.label === 'Remove') {
+                            if (remove) {
+                                remove(_data.value.id);
+                            }
+                        }
                         setSelectedRole({ label: role.label, value: role.value });
                     }}
                     value={selectedRole}
@@ -68,4 +87,12 @@ export const UserCard: FunctionComponent = () => {
             </Box>
         </Flex>
     );
+};
+
+UserCard.defaultProps = {
+    showActions: true,
+    _data: null,
+    image: '',
+    info: '',
+    remove: () => null,
 };

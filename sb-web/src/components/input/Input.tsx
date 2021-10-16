@@ -9,12 +9,14 @@ import {
     InputProps as ChakraInputProps,
     TextareaProps as ChakraTextareaProps,
     Textarea,
+    Spinner,
 } from '@chakra-ui/react';
 import { ErrorCircle } from 'util/Icons';
 
 import 'components/input/Input.scss';
 
 interface Props {
+    loading?: boolean;
     icon?: JSX.Element | null;
     field?: any;
     error?: boolean;
@@ -26,11 +28,16 @@ interface InputProps extends Props {
     props: ChakraInputProps;
 }
 
-export const Input: FunctionComponent<InputProps> = ({ icon, field, error, errorLabel, errorIcon, props }) => {
+export const Input: FunctionComponent<InputProps> = ({ icon, field, error, errorLabel, errorIcon, props, loading }) => {
     return (
         <InputGroup variant="brand" alignItems="center">
             {icon && <InputLeftAddon>{icon}</InputLeftAddon>}
             <ChakraInput {...field} {...props} className="sb-input" />
+            {loading && (
+                <InputRightElement color="brand.error">
+                    <Spinner size="sm" color="brand.dark" />
+                </InputRightElement>
+            )}
             {error ? (
                 <Tooltip label={errorLabel}>
                     <InputRightElement color="brand.error">{errorIcon}</InputRightElement>
@@ -41,6 +48,7 @@ export const Input: FunctionComponent<InputProps> = ({ icon, field, error, error
 };
 
 Input.defaultProps = {
+    loading: false,
     icon: null,
     field: {},
     error: false,
@@ -67,6 +75,7 @@ export const TextArea: FunctionComponent<TextareaProps> = ({ icon, field, error,
 };
 
 TextArea.defaultProps = {
+    loading: false,
     icon: null,
     field: {},
     error: false,

@@ -62,7 +62,13 @@ export const customStyles: StylesConfig<any, true> = {
             color: theme.colors.black,
         };
     },
-    indicatorsContainer: (provided: CSSObject): CSSObject => {
+    dropdownIndicator: (provided: CSSObject): CSSObject => {
+        return {
+            ...provided,
+            display: 'none',
+        };
+    },
+    indicatorSeparator: (provided: CSSObject): CSSObject => {
         return {
             ...provided,
             display: 'none',
