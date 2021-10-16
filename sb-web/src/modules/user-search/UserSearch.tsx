@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import { UserCard } from 'components/user-card/UserCard';
 import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
 import { Envelope, Search } from 'util/Icons';
+import { Role, RoleAction } from 'components/role/Role';
 
 interface MockData {
     label: string;
@@ -39,9 +40,7 @@ const FormSchema = Yup.object().shape({
 
 export const UserSearch: FunctionComponent = () => {
     const [inputText, setInputText] = useState<string>('');
-    const [invitedCrew, setInvitedCrew] = useState<MockData[]>([]);
-
-    console.log({ inputText });
+    const [crewList, setCrewList] = useState<MockData[]>([]);
 
     const NoSelectOption: FunctionComponent<any> = (props) => {
         const { selectProps } = props;
@@ -81,7 +80,7 @@ export const UserSearch: FunctionComponent = () => {
 
         return (
             <components.Option {...props}>
-                <UserCard name={data.label} info={data.value.info} showActions={false} />
+                <UserCard user={data.value} showActions={false} />
             </components.Option>
         );
     };
@@ -100,9 +99,25 @@ export const UserSearch: FunctionComponent = () => {
         });
     };
 
-    const removeFromList = (id: number) => {
-        const updatedList = invitedCrew.filter((item) => item.value.id !== id);
-        setInvitedCrew(updatedList);
+    const onRoleChange = (role: number, data: any) => {
+        switch (role) {
+            case Role.Assistant: {
+                console.log('change to assistant');
+                break;
+            }
+            case Role.Sailor: {
+                console.log('change to Sailor');
+                break;
+            }
+            case RoleAction.Remove: {
+                const updatedList = crewList.filter((crew: any) => crew.id !== data.id);
+                setCrewList(updatedList);
+                break;
+            }
+            default: {
+                throw new Error(`Invalid role -- ${role}`);
+            }
+        }
     };
 
     return (
@@ -128,16 +143,16 @@ export const UserSearch: FunctionComponent = () => {
                     value=""
                     onChange={(e: any) => {
                         setInputText('');
-                        const updatedInvite = [{ ...e }, ...invitedCrew];
+                        const updatedInvite = [{ ...e.value }, ...crewList];
 
-                        setInvitedCrew(updatedInvite);
+                        setCrewList(updatedInvite);
                     }}
                     noOptionsMessage={({ inputValue }) => (!inputValue ? null : 'No results found')}
                 />
             </InputGroup>
-            {invitedCrew.map((crew) => (
-                <Flex key={crew.value.id} w="100%">
-                    <UserCard name={crew.label} _data={crew} remove={removeFromList} />
+            {crewList.map((crew: any) => (
+                <Flex key={crew.id}>
+                    <UserCard user={crew} onChange={onRoleChange} />
                 </Flex>
             ))}
         </Stack>

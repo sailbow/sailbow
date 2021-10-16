@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FunctionComponent, useState } from 'react';
 
-import { Box, Text, Button, Flex, Heading, Stack, Divider } from '@chakra-ui/react';
+import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { BoatActionType, useBoat } from 'contexts/boat/Boat';
@@ -64,17 +64,16 @@ export const Create: FunctionComponent = () => {
                     />
                     <Stack spacing="4" pt="8">
                         <Box>
-                            <Heading fontSize="xl">Gather your crew</Heading>
+                            <Heading fontSize="lg">Gather your crew</Heading>
                             <Text fontWeight="normal" fontSize="sm" color="brand.muted">
                                 If you haven’t gone on a voyage with a sailor before, use the link to invite them!
                             </Text>
                         </Box>
                         <UserSearch />
-                        <Divider />
                     </Stack>
                 </Stack>
             </Stack>
-            <Flex mt="8" justifyContent="flex-end">
+            <Flex mt="32" justifyContent="flex-end">
                 <Button variant="link" mr="8">
                     Cancel
                 </Button>
