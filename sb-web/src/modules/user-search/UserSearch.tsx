@@ -5,10 +5,10 @@ import { components } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import * as Yup from 'yup';
 
+import { Role, RoleAction } from 'components/role/Role';
 import { UserCard } from 'components/user-card/UserCard';
 import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
 import { Search } from 'util/Icons';
-import { Role, RoleAction } from 'components/role/Role';
 
 interface MockData {
     label: string;
