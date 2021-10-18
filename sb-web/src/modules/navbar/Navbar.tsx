@@ -77,7 +77,6 @@ export const Navbar: FunctionComponent<Props> = () => {
                     <Button
                         rightIcon={<RightIcon />}
                         onClick={() => {
-                            window.location.href = Routes.Public.Landing;
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
                     >
