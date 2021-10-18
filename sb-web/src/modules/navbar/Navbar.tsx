@@ -46,7 +46,12 @@ export const Navbar: FunctionComponent<Props> = () => {
                 onClick={() => setMenuOpen(!menuOpen)}
                 display={{ base: 'block', sm: 'none' }}
             />
-            <Logo className="logo" />
+            <Logo
+                className="logo"
+                onClick={() => {
+                    window.location.href = Routes.Public.Landing;
+                }}
+            />
             <HStack spacing="8" display={{ base: 'none', sm: 'flex' }}>
                 <Button variant="link" display={{ base: 'none', sm: 'block' }}>
                     About
