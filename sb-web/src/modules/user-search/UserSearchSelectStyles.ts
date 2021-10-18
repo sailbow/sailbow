@@ -72,6 +72,7 @@ export const customStyles: StylesConfig<any, true> = {
         return {
             ...provided,
             display: 'none',
+            opacity: '0',
         };
     },
     placeholder: (provided: CSSObject): CSSObject => {
