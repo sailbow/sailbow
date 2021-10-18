@@ -79,7 +79,7 @@ export const PublicContent: FunctionComponent = () => {
                         </Route>
                     </Switch>
                 </Suspense>
-                <Footer />
+                {/* <Footer /> */}
             </Box>
         </>
     );

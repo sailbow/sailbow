@@ -3,3 +3,7 @@ export enum Role {
     Assistant,
     Sailor,
 }
+
+export enum RoleAction {
+    Remove = -1,
+}
