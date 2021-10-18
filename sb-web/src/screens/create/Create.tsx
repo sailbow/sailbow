@@ -64,7 +64,9 @@ export const Create: FunctionComponent = () => {
                     />
                     <Stack spacing="4" pt="8">
                         <Box>
-                            <Heading fontSize="lg">Gather your crew</Heading>
+                            <Text fontSize="lg" fontWeight="semibold">
+                                Gather your crew
+                            </Text>
                             <Text fontWeight="normal" fontSize="sm" color="brand.muted">
                                 If you haven’t gone on a voyage with a sailor before, use the link to invite them!
                             </Text>
