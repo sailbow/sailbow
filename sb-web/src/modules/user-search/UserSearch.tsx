@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState, useRef } from 'react';
 
 import { Box, Divider, Flex, InputGroup, InputLeftAddon, Stack, Text } from '@chakra-ui/react';
 import { components } from 'react-select';
@@ -39,6 +39,7 @@ const FormSchema = Yup.object().shape({
 });
 
 export const UserSearch: FunctionComponent = () => {
+    const selectRef = useRef<any>(null);
     const [inputText, setInputText] = useState<string>('');
     const [crewList, setCrewList] = useState<any[]>([]);
 
@@ -47,12 +48,12 @@ export const UserSearch: FunctionComponent = () => {
         const updatedInvite = [{ ...e.value }, ...crewList];
 
         setCrewList(updatedInvite);
+        selectRef.current.focus();
     };
 
     const NoSelectOption: FunctionComponent<any> = (props) => {
         const { selectProps } = props;
         const { inputValue } = selectProps;
-
         const [validEmail, setValidEmail] = useState<boolean>(false);
 
         useEffect(() => {
@@ -140,12 +141,11 @@ export const UserSearch: FunctionComponent = () => {
 
     return (
         <Stack spacing="4">
-            <InputGroup variant="brand" alignItems="center">
+            <InputGroup variant="brand" alignItems="center" ref={selectRef}>
                 <InputLeftAddon>
                     <Search />
                 </InputLeftAddon>
                 <AsyncSelect
-                    menuIsOpen
                     cacheOptions
                     loadOptions={getCrewMockFunction}
                     blurInputOnSelect
