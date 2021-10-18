@@ -79,7 +79,7 @@ export const UserSearch: FunctionComponent = () => {
                             </components.Option>
                         </Box>
                     ) : (
-                        <>
+                        <Box p="4">
                             <span>
                                 You have never sailed with <b>{inputValue}</b>
                             </span>
@@ -87,7 +87,7 @@ export const UserSearch: FunctionComponent = () => {
                             <Text fontWeight="normal" fontSize="sm">
                                 Enter a valid email and they will be invited to your Boat!
                             </Text>
-                        </>
+                        </Box>
                     )}
                 </Box>
             </components.NoOptionsMessage>
