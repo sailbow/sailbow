@@ -73,7 +73,7 @@ export const Contact: FunctionComponent = () => {
                             </FormControl>
                         </VStack>
                         <Flex justifyContent="flex-end" w="100%" mt="8">
-                            <Button isLoading={isSubmitting} type="submit" variant="outline" rightIcon={CheckmarkIcon}>
+                            <Button isLoading={isSubmitting} type="submit" rightIcon={CheckmarkIcon}>
                                 <Text>Submit</Text>
                             </Button>
                         </Flex>
