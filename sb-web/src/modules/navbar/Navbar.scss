@@ -10,5 +10,9 @@
         height: 30px !important;
         width: 30px !important;
         z-index: 98;
+
+        &:hover {
+            cursor: pointer;
+        }
     }
 }
