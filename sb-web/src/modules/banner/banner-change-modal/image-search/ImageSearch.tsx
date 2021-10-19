@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FunctionComponent, useState, useCallback } from 'react';
 
-import { Box, Input, InputRightElement, InputGroup, Image, Flex, Spinner, Text } from '@chakra-ui/react';
+import { Box, Input, InputGroup, Image, Flex, Spinner, Text, InputLeftAddon } from '@chakra-ui/react';
 import axios, { AxiosResponse } from 'axios';
 import Gallery from 'react-photo-gallery';
 
@@ -125,13 +125,13 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
 
     return (
         <Box className="sb-image-search">
-            <InputGroup>
-                <Input variant="outline" placeholder="Search images..." onChange={onSearch} fontWeight="normal" />
-                <InputRightElement fontSize="xl">
+            <InputGroup variant="brand">
+                <InputLeftAddon p="0" position="absolute">
                     <Search />
-                </InputRightElement>
+                </InputLeftAddon>
+                <Input paddingLeft="24px" placeholder="Search images..." onChange={onSearch} fontWeight="normal" />
             </InputGroup>
-            <Text fontSize="xx-small" textAlign="right">
+            <Text fontSize="xx-small" textAlign="right" pt="1">
                 Powered by Pexels
             </Text>
             <Box
