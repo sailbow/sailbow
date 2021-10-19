@@ -1,7 +1,6 @@
 import { theme } from 'theme/ChakraTheme';
 import { StylesConfig, ControlProps } from 'react-select';
 import { CSSObject } from '@emotion/react';
-import { ContainerProps } from '@chakra-ui/layout';
 
 export const customStyles: StylesConfig<any, true> = {
     container: (provided: CSSObject, state: any): CSSObject => {
@@ -15,13 +14,13 @@ export const customStyles: StylesConfig<any, true> = {
             borderRight: '0',
             borderRadius: '0',
             paddingLeft: '24px',
-            borderColor: state.isFocused ? theme.colors.brand.dark : theme.colors.gray[200],
+            borderColor: state.isFocused ? theme.colors.brand.muted : theme.colors.gray[200],
             '&:hover': {
-                borderColor: theme.colors.brand.dark,
+                borderColor: theme.colors.brand.muted,
             },
         };
     },
-    control: (provided: CSSObject, state: ControlProps<any, true>): CSSObject => {
+    control: (provided: CSSObject): CSSObject => {
         return {
             ...provided,
             transition: 'all 0.2s ease-in-out',
@@ -62,18 +61,10 @@ export const customStyles: StylesConfig<any, true> = {
             },
         };
     },
-    valueContainer: (provided: CSSObject, state: any): CSSObject => {
+    valueContainer: (provided: CSSObject): CSSObject => {
         return {
             ...provided,
             padding: '0',
-            borderColor: state.isFocused ? theme.colors.brand.dark : theme.colors.gray[200],
-        };
-    },
-    multiValueRemove: (provided: CSSObject): CSSObject => {
-        return {
-            ...provided,
-            cursor: 'pointer',
-            color: theme.colors.black,
         };
     },
     dropdownIndicator: (provided: CSSObject): CSSObject => {

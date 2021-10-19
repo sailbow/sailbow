@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState, useRef } from 'react';
 
-import { Box, Divider, Flex, InputGroup, InputLeftAddon, Stack, Text, Textarea } from '@chakra-ui/react';
-import { components, GroupBase, InputProps } from 'react-select';
+import { Box, Divider, Flex, InputGroup, InputLeftAddon, Stack, Text } from '@chakra-ui/react';
+import { components } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import * as Yup from 'yup';
 
@@ -41,7 +41,6 @@ const FormSchema = Yup.object().shape({
 });
 
 export const UserSearch: FunctionComponent = () => {
-    const selectRef = useRef<any>(null);
     const [inputText, setInputText] = useState<string>('');
     const [crewList, setCrewList] = useState<any[]>([]);
 
@@ -50,7 +49,6 @@ export const UserSearch: FunctionComponent = () => {
         const updatedInvite = [{ ...e.value }, ...crewList];
 
         setCrewList(updatedInvite);
-        // selectRef.current.focus();
     };
 
     const NoSelectOption: FunctionComponent<any> = (props) => {

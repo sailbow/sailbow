@@ -106,12 +106,8 @@ const components: ComponentDefaultProps = {
         },
     },
     Input: {
-        defaultProps: {
-            // focusBorderColor: 'brand.teal',
-        },
         variants: {
             brand: (props: any) => {
-                console.log(ChakraTheme.components.Input.variants.outline(props));
                 return {
                     field: {
                         ...ChakraTheme.components.Input.variants.outline(props).field,
@@ -125,11 +121,11 @@ const components: ComponentDefaultProps = {
                         transition: 'border 0.25s ease-in-out',
                         _hover: {
                             backgroundColor: 'transparent',
-                            borderColor: 'brand.dark',
+                            borderColor: 'brand.muted',
                         },
                         _focus: {
                             backgroundColor: 'transparent',
-                            borderColor: 'brand.dark',
+                            borderColor: 'brand.muted',
                         },
                         _invalid: {
                             borderColor: 'brand.error',
@@ -155,11 +151,11 @@ const components: ComponentDefaultProps = {
             transition: 'border 0.25s ease-in-out',
             _hover: {
                 backgroundColor: 'transparent',
-                borderColor: 'brand.dark',
+                borderColor: 'brand.muted',
             },
             _focus: {
                 backgroundColor: 'transparent',
-                borderColor: 'brand.dark',
+                borderColor: 'brand.muted',
             },
             _invalid: {
                 borderColor: 'brand.error',

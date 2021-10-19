@@ -58,7 +58,7 @@ export const Subscribe: FunctionComponent = () => {
                             <Flex alignItems="center" mt="2">
                                 <FormControl isInvalid={Boolean(errors.email && touched.email)} onChange={setForm}>
                                     <InputGroup variant="brand" size="sm">
-                                        <InputLeftAddon>
+                                        <InputLeftAddon position="absolute" p="0">
                                             <Envelope />
                                         </InputLeftAddon>
                                         <Input
@@ -67,6 +67,7 @@ export const Subscribe: FunctionComponent = () => {
                                             id="email"
                                             placeholder="Enter your email *"
                                             className="contact-input"
+                                            paddingLeft="24px"
                                         />
                                         {errors.email && touched.email ? (
                                             <Tooltip label="Please enter a valid email address!">

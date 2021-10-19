@@ -46,7 +46,7 @@ export const Create: FunctionComponent = () => {
                             fontWeight: 'semibold',
                             id: 'name',
                             name: 'name',
-                            pt: '6',
+                            pt: '5',
                             pb: '6',
                             autoFocus: true,
                         }}
