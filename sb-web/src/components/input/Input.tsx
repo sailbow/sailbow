@@ -79,12 +79,12 @@ export const TextArea: FunctionComponent<TextareaProps> = ({ label, field, error
     return (
         <Box className="sb-input-wrapper">
             {label && (
-                <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
+                <Text fontSize="sm" fontWeight="semibold" className="sb-input-label" pb="1">
                     {label}
                 </Text>
             )}
             <InputGroup variant="brand">
-                <Textarea p="0" {...field} {...props} className="sb-input" borderRadius="0" />
+                <Textarea px="0" {...field} {...props} className="sb-input" borderRadius="0" />
                 {error ? (
                     <Tooltip label={errorLabel}>
                         <InputRightElement color="brand.error" h="0">

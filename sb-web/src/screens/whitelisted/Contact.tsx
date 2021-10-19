@@ -40,7 +40,7 @@ export const Contact: FunctionComponent = () => {
             <Formik initialValues={contactForm} onSubmit={onSubmit} validationSchema={FormSchema}>
                 {({ errors, touched, isSubmitting, getFieldProps }: FormikProps<FormValues>) => (
                     <Form>
-                        <VStack spacing="4">
+                        <VStack spacing="6">
                             <FormControl isInvalid={Boolean(errors.email && touched.email)} onChange={setForm}>
                                 <Input
                                     label="Email"

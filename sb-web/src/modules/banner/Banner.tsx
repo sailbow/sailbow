@@ -55,7 +55,7 @@ export const Banner: FunctionComponent = () => {
                 onChange={onSubmit}
                 banner={boat.banner}
             />
-            <Box className="sb-banner" borderRadius="xl" overflow="hidden">
+            <Box className="sb-banner" borderRadius="xl" overflow="hidden" height={{ base: '180px', md: '240px' }}>
                 <Button
                     size="sm"
                     borderRadius="lg"
