@@ -1,5 +1,5 @@
 import { theme } from 'theme/ChakraTheme';
-import { StylesConfig, ControlProps } from 'react-select';
+import { StylesConfig } from 'react-select';
 import { CSSObject } from '@emotion/react';
 
 export const customStyles: StylesConfig<any, true> = {

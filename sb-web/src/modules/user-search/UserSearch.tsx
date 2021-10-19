@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState, useRef } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { Box, Divider, Flex, InputGroup, InputLeftAddon, Stack, Text } from '@chakra-ui/react';
 import { components } from 'react-select';
@@ -9,8 +9,6 @@ import { Role, RoleAction } from 'components/role/Role';
 import { UserCard } from 'components/user-card/UserCard';
 import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
 import { Search } from 'util/Icons';
-
-import 'modules/user-search/UserSearch.scss';
 
 interface MockData {
     label: string;
@@ -147,7 +145,7 @@ export const UserSearch: FunctionComponent = () => {
                 </InputLeftAddon>
                 <AsyncSelect
                     cacheOptions
-                    classNamePrefix="sb-select-"
+                    classNamePrefix="sb-select"
                     loadOptions={getCrewMockFunction}
                     blurInputOnSelect
                     placeholder="Type name or email..."
