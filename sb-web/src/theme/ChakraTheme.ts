@@ -107,31 +107,33 @@ const components: ComponentDefaultProps = {
     },
     Input: {
         defaultProps: {
-            focusBorderColor: 'brand.teal',
+            // focusBorderColor: 'brand.teal',
         },
         variants: {
             brand: (props: any) => {
                 return {
                     field: {
-                        ...ChakraTheme.components.Input.variants.filled(props).field,
+                        ...ChakraTheme.components.Input.variants.outline(props).field,
                         backgroundColor: 'transparent',
+                        borderTopWidth: '0',
+                        borderLeftWidth: '0',
+                        borderRightWidth: '0',
+                        borderRadius: '0',
+                        borderBottomWidth: '2px',
                         fontWeight: 'normal',
+                        transition: 'border 0.25s ease-in-out',
                         _hover: {
-                            backgroundColor: 'gray.50',
+                            backgroundColor: 'transparent',
+                            borderColor: 'brand.dark',
                         },
                         _focus: {
-                            backgroundColor: 'gray.50',
+                            backgroundColor: 'transparent',
+                            borderColor: 'brand.dark',
                         },
                         _invalid: {
                             borderColor: 'none',
-                            bg: 'red.50',
+                            bg: 'transparent',
                         },
-                    },
-                    addon: {
-                        ...ChakraTheme.components.Input.variants.filled(props).addon,
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        pl: '0',
                     },
                 };
             },
@@ -142,12 +144,25 @@ const components: ComponentDefaultProps = {
             focusBorderColor: 'transparent',
         },
         baseStyle: {
+            backgroundColor: 'transparent',
+            borderTopWidth: '0',
+            borderLeftWidth: '0',
+            borderRightWidth: '0',
+            borderRadius: '0',
+            borderBottomWidth: '2px',
             fontWeight: 'normal',
+            transition: 'border 0.25s ease-in-out',
             _hover: {
-                backgroundColor: 'gray.50',
+                backgroundColor: 'transparent',
+                borderColor: 'brand.dark',
             },
             _focus: {
-                backgroundColor: 'gray.50',
+                backgroundColor: 'transparent',
+                borderColor: 'brand.dark',
+            },
+            _invalid: {
+                borderColor: 'none',
+                bg: 'transparent',
             },
         },
     },

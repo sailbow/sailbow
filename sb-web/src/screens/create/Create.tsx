@@ -7,7 +7,6 @@ import { BoatActionType, useBoat } from 'contexts/boat/Boat';
 import { Input, TextArea } from 'components/input/Input';
 import { Banner } from 'modules/banner/Banner';
 import { UserSearch } from 'modules/user-search/UserSearch';
-import { Boat, ChatRight } from 'util/Icons';
 
 import 'screens/create/Create.scss';
 
@@ -34,25 +33,25 @@ export const Create: FunctionComponent = () => {
                     Start a boat
                 </Heading>
 
-                <Stack spacing="2">
-                    <Box pb="4">
+                <Stack spacing="6">
+                    <Box>
                         <Banner />
                     </Box>
                     <Input
-                        icon={<Boat />}
+                        label="Name"
                         props={{
                             onChange: onFormChange,
                             fontSize: '4xl',
                             placeholder: 'Boat name...',
-                            fontWeight: 'semibold',
+                            fontWeight: 'normal',
                             id: 'name',
                             name: 'name',
-                            py: '8',
+                            py: '6',
                             autoFocus: true,
                         }}
                     />
                     <TextArea
-                        icon={<ChatRight />}
+                        label="Description"
                         props={{
                             onChange: onFormChange,
                             name: 'description',

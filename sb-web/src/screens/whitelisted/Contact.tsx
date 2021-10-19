@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 
 import { Input, TextArea } from 'components/input/Input';
 import { Base } from 'screens/whitelisted/Base';
-import { ChatRight, Envelope, ErrorCircle } from 'util/Icons';
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
 
 interface FormValues {
@@ -44,11 +43,10 @@ export const Contact: FunctionComponent = () => {
                         <VStack spacing="4">
                             <FormControl isInvalid={Boolean(errors.email && touched.email)} onChange={setForm}>
                                 <Input
-                                    icon={<Envelope />}
+                                    label="Email"
                                     field={{ ...getFieldProps('email') }}
                                     error={Boolean(errors.email && touched.email)}
                                     errorLabel={errors.email}
-                                    errorIcon={<ErrorCircle />}
                                     props={{
                                         name: 'email',
                                         id: 'email',
@@ -58,11 +56,10 @@ export const Contact: FunctionComponent = () => {
                             </FormControl>
                             <FormControl isInvalid={Boolean(errors.body && touched.body)} onChange={setForm}>
                                 <TextArea
-                                    icon={<ChatRight />}
+                                    label="Message"
                                     field={{ ...getFieldProps('body') }}
                                     error={Boolean(errors.body && touched.body)}
                                     errorLabel={errors.body}
-                                    errorIcon={<ErrorCircle />}
                                     props={{
                                         name: 'body',
                                         id: 'body',
