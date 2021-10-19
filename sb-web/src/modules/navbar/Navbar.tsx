@@ -110,9 +110,11 @@ export const Navbar: FunctionComponent<Props> = () => {
                     py={menuOpen ? '4' : '0'}
                 >
                     <VStack spacing="8">
-                        <Button variant="link">About</Button>
-                        <Button variant="link">Contact</Button>
-                        <Button variant="link">FAQ</Button>
+                        {PublicNavItems.map((item) => (
+                            <Button variant="link" key={item.name} onClick={() => onRoute(item.path)}>
+                                {item.name}
+                            </Button>
+                        ))}
                     </VStack>
                 </Box>
             </Box>
