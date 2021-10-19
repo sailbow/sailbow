@@ -4,10 +4,10 @@ import { Button, FormControl, Flex, Text, VStack } from '@chakra-ui/react';
 import { Form, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
+import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { Input, TextArea } from 'components/input/Input';
 import { Base } from 'screens/whitelisted/Base';
 import { ChatRight, Envelope, ErrorCircle } from 'util/Icons';
-import { CheckmarkIcon } from 'components/button/ButtonIcons';
 
 interface FormValues {
     email: string;
@@ -73,7 +73,7 @@ export const Contact: FunctionComponent = () => {
                             </FormControl>
                         </VStack>
                         <Flex justifyContent="flex-end" w="100%" mt="8">
-                            <Button isLoading={isSubmitting} type="submit" variant="outline" rightIcon={CheckmarkIcon}>
+                            <Button isLoading={isSubmitting} type="submit" rightIcon={CheckmarkIcon}>
                                 <Text>Submit</Text>
                             </Button>
                         </Flex>

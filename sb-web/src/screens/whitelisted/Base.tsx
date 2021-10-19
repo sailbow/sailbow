@@ -16,6 +16,10 @@ interface Props {
 }
 
 export const BaseNavbar: FunctionComponent = () => {
+    const toHome = () => {
+        window.location.href = Routes.Public.Landing;
+    };
+
     return (
         <Flex
             bg="white"
@@ -25,13 +29,8 @@ export const BaseNavbar: FunctionComponent = () => {
             className="sb-base-navbar"
             boxShadow="sm"
         >
-            <Logo className="logo" />
-            <Button
-                rightIcon={<RightIcon />}
-                onClick={() => {
-                    window.location.href = Routes.Public.Landing;
-                }}
-            >
+            <Logo className="logo" onClick={toHome} />
+            <Button rightIcon={<RightIcon />} onClick={toHome}>
                 <Text pr="4">Start Sailing</Text>
             </Button>
         </Flex>
