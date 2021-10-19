@@ -68,7 +68,12 @@ export const Navbar: FunctionComponent<Props> = () => {
             <Logo className="logo" onClick={() => onRoute(Routes.Public.Landing)} />
             <HStack spacing="8" display={{ base: 'none', sm: 'flex' }}>
                 {PublicNavItems.map((item) => (
-                    <Button variant="link" display={{ base: 'none', sm: 'block' }} onClick={() => onRoute(item.path)}>
+                    <Button
+                        variant="link"
+                        display={{ base: 'none', sm: 'block' }}
+                        key={item.name}
+                        onClick={() => onRoute(item.path)}
+                    >
                         {item.name}
                     </Button>
                 ))}

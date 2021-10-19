@@ -1,31 +1,38 @@
 import { theme } from 'theme/ChakraTheme';
 import { StylesConfig, ControlProps } from 'react-select';
 import { CSSObject } from '@emotion/react';
+import { ContainerProps } from '@chakra-ui/layout';
 
 export const customStyles: StylesConfig<any, true> = {
-    container: (provided: CSSObject): CSSObject => {
+    container: (provided: CSSObject, state: any): CSSObject => {
         return {
             ...provided,
             transition: 'all 0.2s ease-in-out',
             width: '100%',
+            border: `1px solid ${theme.colors.gray[200]}`,
+            borderTop: '0',
+            borderLeft: '0',
+            borderRight: '0',
+            borderRadius: '0',
+            paddingLeft: '24px',
+            borderColor: state.isFocused ? theme.colors.brand.dark : theme.colors.gray[200],
+            '&:hover': {
+                borderColor: theme.colors.brand.dark,
+            },
         };
     },
     control: (provided: CSSObject, state: ControlProps<any, true>): CSSObject => {
         return {
             ...provided,
             transition: 'all 0.2s ease-in-out',
-            '&:hover': {
-                backgroundColor: theme.colors.gray[50],
-            },
-            backgroundColor: state.isFocused ? theme.colors.gray[50] : 'none',
+            backgroundColor: 'transparent',
             outline: '0 0 0 3px #f98fffCC',
             boxSizing: 'border-box',
-            border: 'none',
             boxShadow: 'none',
             color: 'gray.600',
             cursor: 'text',
             fontWeight: 'normal',
-            borderRadius: theme.radii.md,
+            border: 'none',
         };
     },
     menu: (provided: CSSObject): CSSObject => {
@@ -36,10 +43,11 @@ export const customStyles: StylesConfig<any, true> = {
             width: 'auto',
         };
     },
-    input: (provided: CSSObject): CSSObject => {
+    input: (provided: CSSObject, state: any): CSSObject => {
         return {
             ...provided,
             color: theme.colors.teal,
+            borderColor: state.isFocused ? theme.colors.brand.dark : theme.colors.gray[200],
         };
     },
     option: (provided: CSSObject, state: any): CSSObject => {
@@ -54,7 +62,13 @@ export const customStyles: StylesConfig<any, true> = {
             },
         };
     },
-
+    valueContainer: (provided: CSSObject, state: any): CSSObject => {
+        return {
+            ...provided,
+            padding: '0',
+            borderColor: state.isFocused ? theme.colors.brand.dark : theme.colors.gray[200],
+        };
+    },
     multiValueRemove: (provided: CSSObject): CSSObject => {
         return {
             ...provided,

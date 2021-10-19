@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState, useRef } from 'react';
 
-import { Box, Divider, Flex, InputGroup, InputLeftAddon, Stack, Text } from '@chakra-ui/react';
-import { components } from 'react-select';
+import { Box, Divider, Flex, InputGroup, InputLeftAddon, Stack, Text, Textarea } from '@chakra-ui/react';
+import { components, GroupBase, InputProps } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import * as Yup from 'yup';
 
@@ -9,6 +9,8 @@ import { Role, RoleAction } from 'components/role/Role';
 import { UserCard } from 'components/user-card/UserCard';
 import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
 import { Search } from 'util/Icons';
+
+import 'modules/user-search/UserSearch.scss';
 
 interface MockData {
     label: string;
@@ -48,7 +50,7 @@ export const UserSearch: FunctionComponent = () => {
         const updatedInvite = [{ ...e.value }, ...crewList];
 
         setCrewList(updatedInvite);
-        selectRef.current.focus();
+        // selectRef.current.focus();
     };
 
     const NoSelectOption: FunctionComponent<any> = (props) => {
@@ -140,13 +142,14 @@ export const UserSearch: FunctionComponent = () => {
     };
 
     return (
-        <Stack spacing="4">
-            <InputGroup variant="brand" alignItems="center" ref={selectRef}>
-                <InputLeftAddon>
+        <Stack spacing="4" className="sb-user-search">
+            <InputGroup variant="brand" alignItems="center">
+                <InputLeftAddon pl="0" position="absolute">
                     <Search />
                 </InputLeftAddon>
                 <AsyncSelect
                     cacheOptions
+                    classNamePrefix="sb-select-"
                     loadOptions={getCrewMockFunction}
                     blurInputOnSelect
                     placeholder="Type name or email..."

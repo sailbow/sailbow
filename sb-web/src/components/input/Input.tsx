@@ -22,7 +22,7 @@ interface Props {
     error?: boolean;
     errorLabel?: string;
     errorIcon?: JSX.Element;
-    label: string;
+    label?: string;
 }
 
 interface InputProps extends Props {
@@ -40,11 +40,13 @@ export const Input: FunctionComponent<InputProps> = ({
 }) => {
     return (
         <Box className="sb-input-wrapper">
-            <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
-                {label}
-            </Text>
+            {label && (
+                <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
+                    {label}
+                </Text>
+            )}
             <InputGroup variant="brand" alignItems="center" className="sb-input">
-                <ChakraInput p="0" {...field} {...props} variant="brand" />
+                <ChakraInput p="0" {...field} {...props} />
                 {loading && (
                     <InputRightElement color="brand.error">
                         <Spinner size="sm" color="brand.dark" />
@@ -66,6 +68,7 @@ Input.defaultProps = {
     error: false,
     errorLabel: '',
     errorIcon: <ErrorCircle />,
+    label: '',
 };
 
 interface TextareaProps extends Props {
@@ -75,14 +78,18 @@ interface TextareaProps extends Props {
 export const TextArea: FunctionComponent<TextareaProps> = ({ label, field, error, errorLabel, errorIcon, props }) => {
     return (
         <Box className="sb-input-wrapper">
-            <Text fontSize="sm" fontWeight="semibold" className="sb-input-label" pb="2">
-                {label}
-            </Text>
+            {label && (
+                <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
+                    {label}
+                </Text>
+            )}
             <InputGroup variant="brand">
                 <Textarea p="0" {...field} {...props} className="sb-input" borderRadius="0" />
                 {error ? (
                     <Tooltip label={errorLabel}>
-                        <InputRightElement color="brand.error">{errorIcon}</InputRightElement>
+                        <InputRightElement color="brand.error" h="0">
+                            {errorIcon}
+                        </InputRightElement>
                     </Tooltip>
                 ) : null}
             </InputGroup>
@@ -96,4 +103,5 @@ TextArea.defaultProps = {
     error: false,
     errorLabel: '',
     errorIcon: <ErrorCircle />,
+    label: '',
 };

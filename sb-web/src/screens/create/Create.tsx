@@ -41,12 +41,13 @@ export const Create: FunctionComponent = () => {
                         label="Name"
                         props={{
                             onChange: onFormChange,
-                            fontSize: '4xl',
+                            fontSize: '3xl',
                             placeholder: 'Boat name...',
-                            fontWeight: 'normal',
+                            fontWeight: 'semibold',
                             id: 'name',
                             name: 'name',
-                            py: '6',
+                            pt: '6',
+                            pb: '6',
                             autoFocus: true,
                         }}
                     />

@@ -1,0 +1,21 @@
+@import 'theme/base';
+
+.sb-user-search {
+    // .input {
+    //     border-bottom: 1px solid $sb-gray-300;
+    //     transition: all 0.25s ease-in-out;
+
+    //     &:hover {
+    //         border-bottom: 1px solid $sb-dark;
+    //     }
+
+    //     &:focus {
+    //         border-bottom: 1px solid $sb-dark !important;
+    //     }
+    // }
+
+    .value-container {
+        padding: 0;
+        width: 100%;
+    }
+}
