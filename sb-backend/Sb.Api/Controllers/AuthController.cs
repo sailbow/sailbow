@@ -26,31 +26,46 @@ namespace Sb.Api.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly IConfiguration _config;
         private readonly GoogleOAuth2Client _googleClient;
+        private readonly FacebookOAuth2Client _fbClient;
 
-        public AuthController(ILogger<AuthController> logger, IConfiguration config, GoogleOAuth2Client googleClient)
+        public AuthController(ILogger<AuthController> logger, IConfiguration config, GoogleOAuth2Client googleClient, FacebookOAuth2Client fbClient)
         {
             _logger = logger;
             _config = config;
             _googleClient = googleClient;
+            _fbClient = fbClient;
         }
 
         [HttpGet("login")]
-        public string Login(IdentityProvider provider, string redirectUri)
+        public string Login(IdentityProvider provider, [FromQuery] string redirectUri)
         {
             return provider == IdentityProvider.Google
                 ? _googleClient.GetAuthorizationEndpoint("https://www.googleapis.com/auth/userinfo.profile", redirectUri)
-                : FacebookDefaults.AuthorizationEndpoint;
+                : _fbClient.GetAuthorizationEndpoint("public_profile", redirectUri);
         }
 
         [HttpGet("authorize")]
         public async Task<IActionResult> Authorize(IdentityProvider provider, string code, string redirectUri)
         {
-            GenerateTokenResponse tokens;
-            GoogleUserInfo userInfo;
             try
             {
-                tokens = await _googleClient.GenerateAccessTokensAsync(code, redirectUri);
-                userInfo = await _googleClient.GetUserInfo(tokens.AccessToken);
+                object response;
+                if (provider == IdentityProvider.Google)
+                {
+                    GenerateTokenResponse tokens = await _googleClient.GenerateAccessTokensAsync(code, redirectUri);
+                    GoogleUserInfo userInfo = await _googleClient.GetUserInfo(tokens.AccessToken);
+                    response = new { Tokens = tokens, User = userInfo };
+                }
+                else
+                {
+                    GenerateTokenResponse tokens = await _fbClient.GenerateAccessTokensAsync(code, redirectUri);
+                    FacebookUserInfo userInfo = await _fbClient.GetUserInfo(tokens.AccessToken);
+                    response = new { Tokens = tokens, User = userInfo };
+                }
+                
+                var claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity));
+                return Ok(response);
             }
             catch (OAuth2Exception e)
             {
@@ -65,13 +80,6 @@ namespace Sb.Api.Controllers
                     providerResponseContent = e.Content
                 });
             }
-            var claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity));
-            return Ok(new
-            {
-                Tokens = tokens,
-                User = userInfo
-            });
         }
 
         [HttpPost("logout")]

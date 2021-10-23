@@ -25,10 +25,7 @@ namespace Sb.OAuth2
                 .AddHeader("Authorization", $"Bearer {authToken}");
 
             IRestResponse res = await client.ExecuteAsync(request);
-            if (!res.IsSuccessful)
-            {
-                throw new OAuth2Exception(res.StatusCode, res.Content);
-            }
+            EnsureSuccess(res);
             return JsonConvert.DeserializeObject<GoogleUserInfo>(res.Content);
         }
     }

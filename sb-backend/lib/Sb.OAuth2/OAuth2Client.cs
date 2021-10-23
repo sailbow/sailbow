@@ -8,17 +8,6 @@ using RestSharp;
 
 namespace Sb.OAuth2
 {
-    public class GoogleUserInfo
-    {
-        [JsonProperty("sub")]
-        public string Id { get; set; }
-        [JsonProperty("given_name")]
-        public string FirstName { get; set; }
-        [JsonProperty("family_name")]
-        public string LastName { get; set; }
-        [JsonProperty("email")]
-        public string Email { get; set; }
-    }
     public abstract class OAuth2Client
     {
         public ParameterKeys ParameterKeys { get; } = new();
@@ -85,5 +74,13 @@ namespace Sb.OAuth2
 
         protected virtual Dictionary<string, string> GetAdditionalAuthorizationParameters()
             => new();
+
+        protected void EnsureSuccess(IRestResponse res)
+        {
+            if (!res.IsSuccessful)
+            {
+                throw new OAuth2Exception(res.StatusCode, res.Content);
+            }
+        }
     }
 }

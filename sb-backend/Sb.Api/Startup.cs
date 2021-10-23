@@ -62,6 +62,8 @@ namespace Sb.Api
 
             services.AddGoogleOAuth2Client(new ClientCredentials(Configuration["Authentication:Google:ClientId"], Configuration["Authentication:Google:ClientSecret"]));
 
+            services.AddFacebookOAuth2Client(new ClientCredentials(Configuration["Authentication:Facebook:AppId"], Configuration["Authentication:Facebook:AppSecret"]));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sailboat API", Version = "V1" });
