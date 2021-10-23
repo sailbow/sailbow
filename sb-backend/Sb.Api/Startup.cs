@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +9,9 @@ using Microsoft.OpenApi.Models;
 
 using System;
 using System.Collections.Generic;
+
+using Sb.OAuth2;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Sb.Api
 {
@@ -25,23 +28,25 @@ namespace Sb.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddAuthentication(AuthenticationSchemes.SbUser)
-                .AddCookie(AuthenticationSchemes.SbUser, opts =>
+                .AddAuthentication(opts =>
                 {
-                    // Return unauthorized by default
-                    opts.LoginPath = "/api/auth/unauthorized";
+                    opts.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    opts.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    opts.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie(opts =>
+                {
+                    opts.LoginPath = "/unauthorized";
                 })
                 .AddGoogle(opts =>
                 {
                     opts.ClientId = Configuration["Authentication:Google:ClientId"];
                     opts.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                    opts.SaveTokens = true;
                 })
                 .AddFacebook(opts =>
                 {
                     opts.AppId = Configuration["Authentication:Facebook:AppId"];
                     opts.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-                    opts.SaveTokens = true;
                 });
 
             services.AddAuthorization();
@@ -49,14 +54,13 @@ namespace Sb.Api
             {
                 opts.AddDefaultPolicy(p =>
                 {
-                    p.AllowAnyOrigin();
+                    p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 });
             });
 
-            services
-                .AddControllers()
-                .AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson();
 
+            services.AddGoogleOAuth2Client(new ClientCredentials(Configuration["Authentication:Google:ClientId"], Configuration["Authentication:Google:ClientSecret"]));
 
             services.AddSwaggerGen(c =>
             {
@@ -102,6 +106,11 @@ namespace Sb.Api
             {
                 endpoints.MapSwagger();
                 endpoints.MapControllers();
+                endpoints.MapGet("/unauthorized", context =>
+                {
+                    context.Response.StatusCode = 401;
+                    return System.Threading.Tasks.Task.CompletedTask;
+                });
             });
         }
     }
