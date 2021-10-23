@@ -1,16 +1,32 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Flex, Button, HStack, IconButton, VStack, Box } from '@chakra-ui/react';
+import { Flex, Button, HStack, IconButton, VStack, Box, Text } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
 import { RightIcon, Menu } from 'util/Icons';
+import { Routes } from 'util/Routing';
 
 import 'modules/navbar/Navbar.scss';
 
 interface Props {
     isAuth: boolean;
 }
+
+const PublicNavItems = [
+    {
+        name: 'About',
+        path: Routes.Whitelisted.AboutUs,
+    },
+    {
+        name: 'Contact',
+        path: Routes.Whitelisted.Contact,
+    },
+    {
+        name: 'FAQ',
+        path: Routes.Whitelisted.FAQ,
+    },
+];
 
 export const Navbar: FunctionComponent<Props> = () => {
     const [navbarBg, setNavbarBg] = useState<boolean>(false);
@@ -25,6 +41,10 @@ export const Navbar: FunctionComponent<Props> = () => {
             }
         });
     }, []);
+
+    const onRoute = (path: string) => {
+        window.location.href = path;
+    };
 
     return (
         <Flex
@@ -45,28 +65,27 @@ export const Navbar: FunctionComponent<Props> = () => {
                 onClick={() => setMenuOpen(!menuOpen)}
                 display={{ base: 'block', sm: 'none' }}
             />
-            <Logo className="logo" />
+            <Logo className="logo" onClick={() => onRoute(Routes.Public.Landing)} />
             <HStack spacing="8" display={{ base: 'none', sm: 'flex' }}>
-                <Button variant="link" display={{ base: 'none', sm: 'block' }}>
-                    About
-                </Button>
-                <Button variant="link" display={{ base: 'none', sm: 'block' }}>
-                    Contact
-                </Button>
-                <Button variant="link" display={{ base: 'none', sm: 'block' }}>
-                    FAQ
-                </Button>
+                {PublicNavItems.map((item) => (
+                    <Button
+                        variant="link"
+                        display={{ base: 'none', sm: 'block' }}
+                        key={item.name}
+                        onClick={() => onRoute(item.path)}
+                    >
+                        {item.name}
+                    </Button>
+                ))}
+
                 {navbarBg ? (
                     <Button
-                        data-aos="fade"
-                        size="sm"
-                        borderRadius="xl"
                         rightIcon={<RightIcon />}
                         onClick={() => {
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
                     >
-                        Start Sailing
+                        <Text>Start Sailing</Text>
                     </Button>
                 ) : (
                     <></>

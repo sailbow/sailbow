@@ -1,12 +1,12 @@
 import React, { ChangeEvent, FunctionComponent, useState } from 'react';
 
-import { Box, Text, Button, Flex, Heading, Stack, Divider } from '@chakra-ui/react';
+import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
+import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { BoatActionType, useBoat } from 'contexts/boat/Boat';
 import { Input, TextArea } from 'components/input/Input';
 import { Banner } from 'modules/banner/Banner';
 import { UserSearch } from 'modules/user-search/UserSearch';
-import { Boat, ChatRight, Checkmark } from 'util/Icons';
 
 import 'screens/create/Create.scss';
 
@@ -33,25 +33,25 @@ export const Create: FunctionComponent = () => {
                     Start a boat
                 </Heading>
 
-                <Stack spacing="2">
-                    <Box pb="4">
+                <Stack spacing="6">
+                    <Box>
                         <Banner />
                     </Box>
                     <Input
-                        icon={<Boat />}
+                        label="Name"
                         props={{
                             onChange: onFormChange,
-                            fontSize: '4xl',
+                            fontSize: '3xl',
                             placeholder: 'Boat name...',
                             fontWeight: 'semibold',
                             id: 'name',
                             name: 'name',
-                            py: '8',
+                            py: '7',
                             autoFocus: true,
                         }}
                     />
                     <TextArea
-                        icon={<ChatRight />}
+                        label="Description"
                         props={{
                             onChange: onFormChange,
                             name: 'description',
@@ -63,22 +63,23 @@ export const Create: FunctionComponent = () => {
                     />
                     <Stack spacing="4" pt="8">
                         <Box>
-                            <Heading fontSize="xl">Gather your crew</Heading>
+                            <Text fontSize="lg" fontWeight="semibold">
+                                Gather your crew
+                            </Text>
                             <Text fontWeight="normal" fontSize="sm" color="brand.muted">
                                 If you haven’t gone on a voyage with a sailor before, use the link to invite them!
                             </Text>
                         </Box>
                         <UserSearch />
-                        <Divider />
                     </Stack>
                 </Stack>
             </Stack>
-            <Flex mt="8" justifyContent="flex-end">
+            <Flex mt="32" justifyContent="flex-end">
                 <Button variant="link" mr="8">
                     Cancel
                 </Button>
-                <Button onClick={onSubmit} isFullWidth={false} rightIcon={<Checkmark />}>
-                    <Text pr="6">Submit</Text>
+                <Button onClick={onSubmit} rightIcon={CheckmarkIcon}>
+                    <Text>Start Boat</Text>
                 </Button>
             </Flex>
         </Flex>

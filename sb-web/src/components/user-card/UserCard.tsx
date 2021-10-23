@@ -3,7 +3,7 @@ import React, { FunctionComponent, useState } from 'react';
 import { Avatar, Box, Flex, Icon, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
-import { Role } from 'components/role/Role';
+import { Role, RoleAction } from 'components/role/Role';
 import { customStyles } from 'theme/SelectStyles';
 import { Checkmark } from 'util/Icons';
 
@@ -20,10 +20,16 @@ export const GatherCrewRoleOptions = [
             { label: 'Sailor', value: Role.Sailor },
         ],
     },
-    { label: 'Remove', value: -1, color: 'brand.error' },
+    { label: 'Remove', value: RoleAction.Remove, color: 'brand.error' },
 ];
 
-export const UserCard: FunctionComponent = () => {
+interface Props {
+    showActions?: boolean;
+    user: any; // needs to change to user type
+    onChange?: (value: number, _data: any) => void;
+}
+
+export const UserCard: FunctionComponent<Props> = ({ showActions, user, onChange }) => {
     const [selectedRole, setSelectedRole] = useState<Option>({
         label: 'Sailor',
         value: Role.Sailor,
@@ -44,16 +50,25 @@ export const UserCard: FunctionComponent = () => {
     };
 
     return (
-        <Flex justifyContent="space-between">
+        <Flex justifyContent="space-between" w="100%">
             <Flex alignItems="center" overflow="hidden">
-                <Avatar variant="square" name="Hrishikesh Paul" size="sm" />
-                <Text fontWeight="normal" pl="4" isTruncated>
-                    Name goes here
-                </Text>
+                <Avatar variant="square" name={user.name} size="sm" />
+                <Box>
+                    <Text fontWeight="normal" pl="4" isTruncated>
+                        {user.name}
+                    </Text>
+                    <Text fontWeight="normal" pl="4" isTruncated fontSize="xs">
+                        {user.info}
+                    </Text>
+                </Box>
             </Flex>
-            <Box pl="4">
+            <Box pl="4" display={showActions ? 'block' : 'none'}>
                 <Select
                     onChange={(role: any) => {
+                        if (onChange) {
+                            onChange(role.value, user);
+                        }
+
                         setSelectedRole({ label: role.label, value: role.value });
                     }}
                     value={selectedRole}
@@ -68,4 +83,9 @@ export const UserCard: FunctionComponent = () => {
             </Box>
         </Flex>
     );
+};
+
+UserCard.defaultProps = {
+    showActions: true,
+    onChange: () => null,
 };

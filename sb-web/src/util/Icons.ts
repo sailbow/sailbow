@@ -6,7 +6,6 @@ export {
 } from 'react-icons/bs';
 export {
     IoCloseOutline as Close,
-    IoCheckmarkOutline as Checkmark,
     IoLogoInstagram as Instagram,
     IoLogoGithub as GitHub,
     IoLogoFacebook as Facebook,
@@ -15,12 +14,12 @@ export {
 } from 'react-icons/io5';
 export {
     HiArrowRight as RightIcon,
-    HiOutlinePencil as Pencil,
+    HiPencil as Pencil,
     HiArrowUp as ArrowUp,
     HiArrowDown as ArrowDown,
 } from 'react-icons/hi';
 export { CgMenuRight as Menu } from 'react-icons/cg';
 export { FcGoogle as Google } from 'react-icons/fc';
-export { FiPlus as Plus, FiMinus as Minus } from 'react-icons/fi';
+export { FiPlus as Plus, FiMinus as Minus, FiCheck as Checkmark } from 'react-icons/fi';
 export { BiErrorCircle as ErrorCircle } from 'react-icons/bi';
 export { ReactComponent as Boat } from 'assets/icons/boat.svg';

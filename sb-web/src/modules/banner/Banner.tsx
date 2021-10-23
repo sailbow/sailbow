@@ -1,12 +1,12 @@
 import React, { FunctionComponent, useState } from 'react';
 
-import { Box, Image, Button, IconButton, Text } from '@chakra-ui/react';
+import { Box, Image, Button, IconButton } from '@chakra-ui/react';
 
 import { BoatActionType, useBoat } from 'contexts/boat/Boat';
 import { BannerType } from 'contexts/boat/BoatConstants';
 import { BannerChangeModal } from 'modules/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
-import { ArrowDown, ArrowUp, Pencil } from 'util/Icons';
+import { ArrowDown, ArrowUp } from 'util/Icons';
 
 import 'modules/banner/Banner.scss';
 
@@ -55,16 +55,16 @@ export const Banner: FunctionComponent = () => {
                 onChange={onSubmit}
                 banner={boat.banner}
             />
-            <Box className="sb-banner" borderRadius="xl" overflow="hidden">
+            <Box className="sb-banner" borderRadius="xl" overflow="hidden" height={{ base: '180px', md: '240px' }}>
                 <Button
                     size="sm"
+                    borderRadius="lg"
                     className="sb-banner-button"
                     colorScheme="gray"
-                    borderRadius="lg"
-                    rightIcon={<Pencil />}
+                    boxShadow="sm"
                     onClick={() => setIsBannerSelectOpen(!isBannerSelectOpen)}
                 >
-                    <Text pr="2">Change Banner</Text>
+                    Change Banner
                 </Button>
                 {boat.banner.type === BannerType.Color ? (
                     <Box bg={boat.banner.value} className="sb-banner-image" />
@@ -75,6 +75,7 @@ export const Banner: FunctionComponent = () => {
                             aria-label="edit-button-up"
                             className="edit-button-up"
                             size="xs"
+                            boxShadow="sm"
                             colorScheme="gray"
                             borderRadius="md"
                             onClick={() => setPosition('up')}
@@ -86,6 +87,7 @@ export const Banner: FunctionComponent = () => {
                             aria-label="edit-button-down"
                             className="edit-button-down"
                             size="xs"
+                            boxShadow="sm"
                             colorScheme="gray"
                             borderRadius="md"
                             onClick={() => setPosition('down')}
