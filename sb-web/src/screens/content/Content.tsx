@@ -1,4 +1,5 @@
 import React, { FunctionComponent, lazy, Suspense } from 'react';
+
 import { Switch, Route } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
 
@@ -10,6 +11,8 @@ import { Routes } from 'util/Routing';
 import 'screens/content/Content.scss';
 
 const Landing = lazy(() => import('screens/landing/Landing').then((module) => ({ default: module.Landing })));
+const Redirect = lazy(() => import('screens/redirect/Redirect').then((module) => ({ default: module.Redirect })));
+
 const AboutUs = lazy(() => import('screens/whitelisted/AboutUs').then((module) => ({ default: module.AboutUs })));
 const HowItWorks = lazy(() =>
     import('screens/whitelisted/HowItWorks').then((module) => ({ default: module.HowItWorks })),
@@ -20,6 +23,7 @@ const Terms = lazy(() => import('screens/whitelisted/Terms').then((module) => ({
 const Privacy = lazy(() => import('screens/whitelisted/Privacy').then((module) => ({ default: module.Privacy })));
 const License = lazy(() => import('screens/whitelisted/License').then((module) => ({ default: module.License })));
 const NotFound = lazy(() => import('screens/not-found/NotFound').then((module) => ({ default: module.NotFound })));
+
 const Create = lazy(() => import('screens/create/Create').then((module) => ({ default: module.Create })));
 
 export const WhitelistedContent: FunctionComponent = () => {
@@ -73,6 +77,9 @@ export const PublicContent: FunctionComponent = () => {
                         </Route>
                         <Route path={Routes.Public.Create}>
                             <Create />
+                        </Route>
+                        <Route path={Routes.Public.Login}>
+                            <Redirect />
                         </Route>
                         <Route path="*">
                             <NotFound />

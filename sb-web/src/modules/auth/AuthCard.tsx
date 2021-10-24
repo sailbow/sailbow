@@ -1,12 +1,12 @@
 import React, { FunctionComponent } from 'react';
 
 import { Box, Button, Center, Divider, Flex, Heading, Text, VStack } from '@chakra-ui/react';
+import { AxiosResponse } from 'axios';
 
 import { ReactComponent as LogoType } from 'assets/sb-gradient-logo-type.svg';
-import { RightIcon, Facebook as FacebookLogo, Google as GoogleLogo } from 'util/Icons';
-import { Http } from 'util/Http';
-import { AxiosResponse } from 'axios';
 import { AuthEndpoints } from 'util/Endpoints';
+import { Http } from 'util/Http';
+import { RightIcon, Facebook as FacebookLogo, Google as GoogleLogo } from 'util/Icons';
 
 enum Providers {
     Google,
@@ -23,6 +23,8 @@ export const AuthCard: FunctionComponent = () => {
                 provider,
             },
         });
+
+        console.log(response);
     };
 
     return (

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const LS = localStorage;
 
-export const BASE_URL = 'http://localhost:5001';
+export const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export interface RedirectResponse {
     accessToken: string;
