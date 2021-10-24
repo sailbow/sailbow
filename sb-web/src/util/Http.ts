@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const LS = localStorage;
 
-export const BASE_URL = 'http://localhost:8080';
+export const BASE_URL = 'http://localhost:5001';
 
 export interface RedirectResponse {
     accessToken: string;
@@ -49,5 +49,4 @@ export const resetLocalStorage = (): void => {
 
 export const Http = axios.create({
     baseURL: BASE_URL,
-    withCredentials: true,
 });
