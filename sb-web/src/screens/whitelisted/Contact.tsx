@@ -47,10 +47,11 @@ export const Contact: FunctionComponent = () => {
                                     field={{ ...getFieldProps('email') }}
                                     error={Boolean(errors.email && touched.email)}
                                     errorLabel={errors.email}
+                                    required
                                     props={{
                                         name: 'email',
                                         id: 'email',
-                                        placeholder: 'Enter your email *',
+                                        placeholder: 'Enter your email',
                                     }}
                                 />
                             </FormControl>
@@ -60,10 +61,12 @@ export const Contact: FunctionComponent = () => {
                                     field={{ ...getFieldProps('body') }}
                                     error={Boolean(errors.body && touched.body)}
                                     errorLabel={errors.body}
+                                    required
                                     props={{
                                         name: 'body',
+
                                         id: 'body',
-                                        placeholder: 'Pour your heat out *',
+                                        placeholder: 'Pour your heat out',
                                         rows: 5,
                                     }}
                                 />

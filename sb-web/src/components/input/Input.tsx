@@ -23,6 +23,7 @@ interface Props {
     errorLabel?: string;
     errorIcon?: JSX.Element;
     label?: string;
+    required?: boolean;
 }
 
 interface InputProps extends Props {
@@ -37,12 +38,14 @@ export const Input: FunctionComponent<InputProps> = ({
     errorIcon,
     props,
     loading,
+    required,
 }) => {
     return (
         <Box className="sb-input-wrapper">
             {label && (
                 <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
                     {label}
+                    {required && <span className="required">*</span>}
                 </Text>
             )}
             <InputGroup variant="brand" alignItems="center" className="sb-input">
@@ -69,18 +72,28 @@ Input.defaultProps = {
     errorLabel: '',
     errorIcon: <ErrorCircle />,
     label: '',
+    required: false,
 };
 
 interface TextareaProps extends Props {
     props: ChakraTextareaProps;
 }
 
-export const TextArea: FunctionComponent<TextareaProps> = ({ label, field, error, errorLabel, errorIcon, props }) => {
+export const TextArea: FunctionComponent<TextareaProps> = ({
+    label,
+    field,
+    error,
+    errorLabel,
+    errorIcon,
+    props,
+    required,
+}) => {
     return (
         <Box className="sb-input-wrapper">
             {label && (
-                <Text fontSize="sm" fontWeight="semibold" className="sb-input-label" pb="1">
+                <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
                     {label}
+                    {required && <span className="required">*</span>}
                 </Text>
             )}
             <InputGroup variant="brand">
@@ -104,4 +117,5 @@ TextArea.defaultProps = {
     errorLabel: '',
     errorIcon: <ErrorCircle />,
     label: '',
+    required: false,
 };

@@ -39,6 +39,7 @@ export const Create: FunctionComponent = () => {
                     </Box>
                     <Input
                         label="Name"
+                        required
                         props={{
                             onChange: onFormChange,
                             fontSize: '3xl',

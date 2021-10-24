@@ -4,5 +4,10 @@
     
     .sb-input-label {
         color: $sb-muted;
+
+        .required {
+            color: $sb-error;
+            padding-left: 4px;
+        }
     }
 }
