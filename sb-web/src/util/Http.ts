@@ -2,8 +2,6 @@ import axios from 'axios';
 
 export const LS = localStorage;
 
-export const BASE_URL = process.env.REACT_APP_BASE_URL;
-
 export interface RedirectResponse {
     accessToken: string;
     refreshToken: string;
@@ -48,5 +46,5 @@ export const resetLocalStorage = (): void => {
 };
 
 export const Http = axios.create({
-    baseURL: BASE_URL,
+    baseURL: process.env.REACT_APP_BASE_URL,
 });

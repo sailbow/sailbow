@@ -15,16 +15,16 @@ enum Providers {
 
 export const AuthCard: FunctionComponent = () => {
     const onLogin = async (provider: Providers) => {
-        const response: AxiosResponse = await Http({
+        const { data }: AxiosResponse = await Http({
             method: AuthEndpoints.Login.method,
             url: AuthEndpoints.Login.url,
             params: {
-                redirectUri: process.env.REACT_APP_REDIRECT_URI,
                 provider,
             },
         });
 
-        console.log(response);
+        // window.open(data, '_self');
+        console.log(data);
     };
 
     return (
