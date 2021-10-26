@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 using RestSharp;
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace Sb.OAuth2
 {
@@ -26,7 +27,7 @@ namespace Sb.OAuth2
         public virtual string GetAuthorizationEndpoint(string scope, string redirectUri, string accessType = "offline")
         {
             string endpoint =
-                $"{_authUrl}?{ParameterKeys.RedirectUri}={redirectUri}&{ParameterKeys.ClientId}={_clientCredentials.ClientId}&scope={scope}&access_type={accessType}&{ParameterKeys.ResponseType}=code";
+                $"{_authUrl}?{ParameterKeys.RedirectUri}={HttpUtility.UrlEncode(redirectUri)}&{ParameterKeys.ClientId}={_clientCredentials.ClientId}&scope={scope}&access_type={accessType}&{ParameterKeys.ResponseType}=code";
             foreach (KeyValuePair<string,string> kvp in GetAdditionalAuthorizationParameters())
             {
                 endpoint += $"&{kvp.Key}={kvp.Value}";
