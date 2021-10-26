@@ -7,11 +7,11 @@ interface Route {
 export const Routes: Route = {
     Public: {
         Landing: '/',
-        Create: '/start-a-boat',
         Login: '/login',
     },
     Private: {
         Home: '/',
+        Create: '/start-a-boat',
     },
     Whitelisted: {
         AboutUs: '/about-us',

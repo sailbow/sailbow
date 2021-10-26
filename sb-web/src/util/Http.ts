@@ -22,6 +22,7 @@ export enum TokenStorageKeys {
     AT = 'sb-at',
     RT = 'sb-rt',
     EXP = 'sb-exp',
+    TYP = 'sb-typ',
 }
 
 export const buildHeaders = (): any => ({
@@ -30,11 +31,17 @@ export const buildHeaders = (): any => ({
     [TokenStorageKeys.EXP]: LS.getItem(TokenStorageKeys.EXP) || '',
 });
 
-export const setHeadersToLocalStorage = (accessToken: string, refreshToken: string, exp: number): Promise<void> => {
+export const setHeadersToLocalStorage = (
+    accessToken: string,
+    refreshToken: string,
+    exp: number,
+    type: string,
+): Promise<void> => {
     return new Promise((resolve) => {
         LS.setItem(TokenStorageKeys.AT, accessToken);
         LS.setItem(TokenStorageKeys.RT, refreshToken);
         LS.setItem(TokenStorageKeys.EXP, exp.toString());
+        LS.setItem(TokenStorageKeys.TYP, type);
         resolve();
     });
 };

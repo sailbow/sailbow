@@ -8,10 +8,15 @@ import { AuthEndpoints } from 'util/Endpoints';
 import { Http } from 'util/Http';
 import { RightIcon, Facebook as FacebookLogo, Google as GoogleLogo } from 'util/Icons';
 
-enum Providers {
+export enum Providers {
     Google,
     Facebook,
 }
+
+export const ProviderToUriMapper: Record<string, string> = {
+    [Providers.Google]: process.env.REACT_APP_GOOGLE_REDIRECT_URI!,
+    [Providers.Facebook]: process.env.REACT_APP_FACEBOOK_REDIRECT_URI!,
+};
 
 export const AuthCard: FunctionComponent = () => {
     const onLogin = async (provider: Providers) => {
@@ -20,10 +25,11 @@ export const AuthCard: FunctionComponent = () => {
             url: AuthEndpoints.Login.url,
             params: {
                 provider,
+                redirectUri: ProviderToUriMapper[provider],
             },
         });
 
-        // window.open(data, '_self');
+        window.open(data, '_self');
         console.log(data);
     };
 
