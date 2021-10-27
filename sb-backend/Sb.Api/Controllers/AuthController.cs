@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 using Sb.OAuth2;
 
-
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -46,23 +46,30 @@ namespace Sb.Api.Controllers
         {
             try
             {
-                object response;
+                GenerateTokenResponse tokens;
+                object user;
                 if (provider == IdentityProvider.Google)
                 {
-                    GenerateTokenResponse tokens = await _googleClient.GenerateAccessTokensAsync(code, redirectUri);
-                    GoogleUserInfo userInfo = await _googleClient.GetUserInfo(tokens.AccessToken);
-                    response = new { Tokens = tokens, User = userInfo };
+                    tokens = await _googleClient.GenerateAccessTokensAsync(code, redirectUri);
+                    user = await _googleClient.GetUserInfo(tokens.AccessToken);
                 }
                 else
                 {
-                    GenerateTokenResponse tokens = await _fbClient.GenerateAccessTokensAsync(code, redirectUri);
-                    FacebookUserInfo userInfo = await _fbClient.GetUserInfo(tokens.AccessToken);
-                    response = new { Tokens = tokens, User = userInfo };
+                    tokens = await _fbClient.GenerateAccessTokensAsync(code, redirectUri);
+                    user = await _fbClient.GetUserInfo(tokens.AccessToken);
                 }
 
                 var claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity));
-                return Ok(response);
+                await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties
+                {
+                    AllowRefresh = true,
+                    ExpiresUtc = DateTimeOffset.FromUnixTimeSeconds(long.Parse(tokens.ExpiresIn))
+                });
+                return Ok(new
+                {
+                    tokens,
+                    user
+                });
             }
             catch (OAuth2Exception e)
             {
@@ -85,14 +92,5 @@ namespace Sb.Api.Controllers
             await HttpContext.SignOutAsync();
             return Ok();
         }
-    }
-
-    public class User
-    {
-        public int Id { get; set; }
-        public double IdentityProviderId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
     }
 }
