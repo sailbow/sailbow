@@ -42,7 +42,7 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet("authorize")]
-        public async Task<IActionResult> Authorize(IdentityProvider provider, string code, string redirectUri)
+        public async Task<IActionResult> Authorize(IdentityProvider provider, [FromQuery] string code, [FromQuery] string redirectUri)
         {
             try
             {
