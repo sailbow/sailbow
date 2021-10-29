@@ -1,17 +1,12 @@
 ﻿
-using Newtonsoft.Json;
-
 namespace Sb.OAuth2
 {
-    public class GoogleUserInfo
+    public class GoogleUserInfo : AuthorizedUser
     {
-        [JsonProperty("sub")]
-        public string Id { get; set; }
-        [JsonProperty("given_name")]
         public string FirstName { get; set; }
-        [JsonProperty("family_name")]
         public string LastName { get; set; }
-        [JsonProperty("email")]
-        public string Email { get; set; }
+        public string Picture { get; set; }
+
+        public override string GetProfilePicture() => Picture;
     }
 }

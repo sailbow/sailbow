@@ -13,6 +13,11 @@ namespace Sb.OAuth2
     public abstract class OAuth2Client
     {
         public ParameterKeys ParameterKeys { get; } = new();
+        protected JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() }
+        };
+
         private readonly Uri _authUrl;
         private readonly Uri _tokenUrl;
         private readonly Uri _tokenRefreshUrl;
@@ -52,10 +57,7 @@ namespace Sb.OAuth2
             {
                 throw new OAuth2Exception(res.StatusCode, res.Content);
             }
-            return JsonConvert.DeserializeObject<GenerateTokenResponse>(res.Content, new JsonSerializerSettings
-            {
-                ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() }
-            });
+            return JsonConvert.DeserializeObject<GenerateTokenResponse>(res.Content, SerializerSettings);
         }
 
         public async Task<RefreshTokenResponse> RefreshTokenAsync(string refreshToken)
@@ -74,8 +76,10 @@ namespace Sb.OAuth2
             {
                 throw new OAuth2Exception(res.StatusCode, res.Content);
             }
-            return JsonConvert.DeserializeObject<RefreshTokenResponse>(res.Content);
+            return JsonConvert.DeserializeObject<RefreshTokenResponse>(res.Content, SerializerSettings);
         }
+
+        public abstract Task<AuthorizedUser> GetAuthorizedUserAsync(string accessToken);
 
         protected virtual Dictionary<string, string> GetAdditionalAuthorizationParameters()
             => new();

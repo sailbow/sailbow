@@ -38,9 +38,11 @@ namespace Sb.Api.Controllers
         public string Login(IdentityProvider provider, [FromQuery] string redirectUri)
         {
             return provider == IdentityProvider.Google
-                ? _googleClient.GetAuthorizationEndpoint(HttpUtility.UrlEncode("https://www.googleapis.com/auth/userinfo.profile"), redirectUri)
+                ? _googleClient.GetAuthorizationEndpoint(HttpUtility.UrlEncode("https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"), redirectUri)
                 : _fbClient.GetAuthorizationEndpoint("public_profile", redirectUri);
         }
+
+
 
         [HttpGet("authorize")]
         public async Task<IActionResult> Authorize(IdentityProvider provider, [FromQuery] string code, [FromQuery] string redirectUri)
@@ -51,6 +53,17 @@ namespace Sb.Api.Controllers
                     ? await _googleClient.GenerateAccessTokensAsync(code, redirectUri)
                     : await _fbClient.GenerateAccessTokensAsync(code, redirectUri);
 
+                AuthorizedUser user = provider == IdentityProvider.Google
+                    ? await _googleClient.GetAuthorizedUserAsync(tokenResponse.AccessToken)
+                    : await _fbClient.GetAuthorizedUserAsync(tokenResponse.AccessToken);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim("picture", user.GetProfilePicture()),
+                    new Claim("provider", provider.ToString())
+                };
                 var claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                 var tokens = new List<AuthenticationToken>
                 {
