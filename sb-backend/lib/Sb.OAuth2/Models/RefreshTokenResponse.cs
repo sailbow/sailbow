@@ -2,6 +2,6 @@
 {
     public class RefreshTokenResponse : TokenResponseBase
     {
-        public string IdToken { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 using RestSharp;
 
@@ -51,7 +52,10 @@ namespace Sb.OAuth2
             {
                 throw new OAuth2Exception(res.StatusCode, res.Content);
             }
-            return JsonConvert.DeserializeObject<GenerateTokenResponse>(res.Content);
+            return JsonConvert.DeserializeObject<GenerateTokenResponse>(res.Content, new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() }
+            });
         }
 
         public async Task<RefreshTokenResponse> RefreshTokenAsync(string refreshToken)

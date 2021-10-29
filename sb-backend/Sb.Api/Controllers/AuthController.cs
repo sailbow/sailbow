@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Sb.OAuth2;
 
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -46,30 +47,29 @@ namespace Sb.Api.Controllers
         {
             try
             {
-                GenerateTokenResponse tokens;
-                object user;
-                if (provider == IdentityProvider.Google)
-                {
-                    tokens = await _googleClient.GenerateAccessTokensAsync(code, redirectUri);
-                    user = await _googleClient.GetUserInfo(tokens.AccessToken);
-                }
-                else
-                {
-                    tokens = await _fbClient.GenerateAccessTokensAsync(code, redirectUri);
-                    user = await _fbClient.GetUserInfo(tokens.AccessToken);
-                }
+                GenerateTokenResponse tokenResponse = provider == IdentityProvider.Google
+                    ? await _googleClient.GenerateAccessTokensAsync(code, redirectUri)
+                    : await _fbClient.GenerateAccessTokensAsync(code, redirectUri);
 
                 var claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties
+                var tokens = new List<AuthenticationToken>
                 {
-                    AllowRefresh = true,
-                    ExpiresUtc = DateTimeOffset.FromUnixTimeSeconds(long.Parse(tokens.ExpiresIn))
-                });
-                return Ok(new
+                    new AuthenticationToken { Name = "accessToken", Value = tokenResponse.AccessToken },
+                    new AuthenticationToken { Name = "refreshToken", Value = tokenResponse.RefreshToken },
+                    new AuthenticationToken { Name = "idToken", Value = tokenResponse.IdToken }
+                };
+
+                AuthenticationProperties authProps = new()
                 {
-                    tokens,
-                    user
-                });
+                    ExpiresUtc = tokenResponse.ExpiresIn.HasValue
+                        ? DateTimeOffset.UtcNow.AddSeconds(tokenResponse.ExpiresIn.Value)
+                        : null,
+                    AllowRefresh = true
+                };
+                authProps.StoreTokens(tokens);
+
+                await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), authProps);
+                return Ok(tokenResponse);
             }
             catch (OAuth2Exception e)
             {
