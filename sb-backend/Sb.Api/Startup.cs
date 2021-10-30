@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
+using Sb.Api.Services;
 using Sb.OAuth2;
 
 using System;
@@ -64,8 +65,8 @@ namespace Sb.Api
             });
 
             services.AddGoogleOAuth2Client(new ClientCredentials(Configuration["Authentication:Google:ClientId"], Configuration["Authentication:Google:ClientSecret"]));
-
             services.AddFacebookOAuth2Client(new ClientCredentials(Configuration["Authentication:Facebook:AppId"], Configuration["Authentication:Facebook:AppSecret"]));
+            services.AddSingleton<OAuth2ClientFactory>();
 
             services.AddSwaggerGen(c =>
             {

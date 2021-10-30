@@ -16,6 +16,7 @@ namespace Sb.OAuth2
             new Uri("https://www.googleapis.com/oauth2/v4/token"),
             credentials)
         {
+            Defaults.Scope = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
         }
 
         public override async Task<AuthorizedUser> GetAuthorizedUserAsync(string token)

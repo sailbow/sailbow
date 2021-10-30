@@ -17,6 +17,7 @@ namespace Sb.OAuth2
             new Uri("https://graph.facebook.com/v12.0/oauth/access_token"),
             credentials)
         {
+            Defaults.Scope = "public_profile";
         }
 
         public override async Task<AuthorizedUser> GetAuthorizedUserAsync(string token)
