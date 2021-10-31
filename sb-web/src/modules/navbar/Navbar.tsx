@@ -1,9 +1,10 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Flex, Button, HStack, IconButton, VStack, Box, Text, Avatar, Stack, Tag, TagLabel } from '@chakra-ui/react';
+import { Flex, Button, HStack, IconButton, VStack, Box, Text, Avatar } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
-import { RightIcon, Menu, Plus, Boat, Bell, LogoType, Memories } from 'util/Icons';
+import { RightIcon, Menu, Plus, Boat, Bell, Memories } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
 import 'modules/navbar/Navbar.scss';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
+    const history = useHistory();
     const [navbarBg, setNavbarBg] = useState<boolean>(false);
 
     useEffect(() => {
@@ -27,7 +29,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
     }, []);
 
     const onRoute = (path: string) => {
-        window.location.href = path;
+        history.push(path);
     };
 
     return (

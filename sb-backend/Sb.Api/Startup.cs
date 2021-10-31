@@ -78,7 +78,7 @@ namespace Sb.Api
                             TokenUrl = new Uri(GoogleDefaults.TokenEndpoint),
                             Scopes = new Dictionary<string, string>
                             {
-                                { "https://www.googleapis.com/auth/userinfo.profile", "Basic profile information" }
+                                { "https://www.googleapis.com/auth/spreadsheets", "See, edit, create, and delete your spreadsheets in Google Drive" }
                             }
                         }
                     }
