@@ -1,4 +1,4 @@
-﻿namespace Sb.Api.Controllers
+﻿namespace Sb.Api.Models
 {
     public enum IdentityProvider
     {

@@ -7,11 +7,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using Sb.OAuth2;
+using Sb.Api.Models;
 
-
+using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using Sb.Api.Services;
+using System.Linq;
 
 namespace Sb.Api.Controllers
 {
@@ -22,47 +26,33 @@ namespace Sb.Api.Controllers
     {
         private readonly ILogger<AuthController> _logger;
         private readonly IConfiguration _config;
-        private readonly GoogleOAuth2Client _googleClient;
-        private readonly FacebookOAuth2Client _fbClient;
+        private readonly OAuth2ClientFactory _clientFactory;
 
-        public AuthController(ILogger<AuthController> logger, IConfiguration config, GoogleOAuth2Client googleClient, FacebookOAuth2Client fbClient)
+        public AuthController(ILogger<AuthController> logger, IConfiguration config, OAuth2ClientFactory clientFactory)
         {
             _logger = logger;
             _config = config;
-            _googleClient = googleClient;
-            _fbClient = fbClient;
+            _clientFactory = clientFactory;
         }
 
         [HttpGet("login")]
         public string Login(IdentityProvider provider, [FromQuery] string redirectUri)
         {
-            return provider == IdentityProvider.Google
-                ? _googleClient.GetAuthorizationEndpoint(HttpUtility.UrlEncode("https://www.googleapis.com/auth/userinfo.profile"), redirectUri)
-                : _fbClient.GetAuthorizationEndpoint("public_profile", redirectUri);
+            return _clientFactory.GetClient(provider).GetAuthorizationEndpoint(redirectUri);
         }
 
+
+
         [HttpGet("authorize")]
-        public async Task<IActionResult> Authorize(IdentityProvider provider, string code, string redirectUri)
+        public async Task<IActionResult> Authorize(IdentityProvider provider, [FromQuery] string code, [FromQuery] string redirectUri)
         {
             try
             {
-                object response;
-                if (provider == IdentityProvider.Google)
-                {
-                    GenerateTokenResponse tokens = await _googleClient.GenerateAccessTokensAsync(code, redirectUri);
-                    GoogleUserInfo userInfo = await _googleClient.GetUserInfo(tokens.AccessToken);
-                    response = new { Tokens = tokens, User = userInfo };
-                }
-                else
-                {
-                    GenerateTokenResponse tokens = await _fbClient.GenerateAccessTokensAsync(code, redirectUri);
-                    FacebookUserInfo userInfo = await _fbClient.GetUserInfo(tokens.AccessToken);
-                    response = new { Tokens = tokens, User = userInfo };
-                }
-
-                var claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity));
-                return Ok(response);
+                OAuth2Client client = _clientFactory.GetClient(provider);
+                GenerateTokenResponse tokenResponse = await client.GenerateAccessTokensAsync(code, redirectUri);
+                AuthorizedUser user = await client.GetAuthorizedUserAsync(tokenResponse.AccessToken);
+                await SignInAsync(provider, tokenResponse, user);
+                return Ok(tokenResponse);
             }
             catch (OAuth2Exception e)
             {
@@ -85,14 +75,39 @@ namespace Sb.Api.Controllers
             await HttpContext.SignOutAsync();
             return Ok();
         }
-    }
 
-    public class User
-    {
-        public int Id { get; set; }
-        public double IdentityProviderId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
+        private async Task SignInAsync(IdentityProvider provider, GenerateTokenResponse token, AuthorizedUser user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("picture", user.GetProfilePicture()),
+                new Claim("provider", provider.ToString())
+            };
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var tokens = new List<AuthenticationToken>();
+            AddTokenIfValid(tokens, "accessToken", token.AccessToken);
+            AddTokenIfValid(tokens, "refreshToken", token.RefreshToken);
+            AddTokenIfValid(tokens, "idToken", token.IdToken);
+            AuthenticationProperties authProps = new()
+            {
+                ExpiresUtc = token.ExpiresIn.HasValue
+                    ? DateTimeOffset.UtcNow.AddSeconds(token.ExpiresIn.Value)
+                    : null,
+                AllowRefresh = true
+            };
+            authProps.StoreTokens(tokens);
+
+            await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), authProps);
+        }
+
+        private void AddTokenIfValid(IEnumerable<AuthenticationToken> tokens, string name, string token)
+        {
+            if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(token))
+            {
+                tokens.Append(new AuthenticationToken { Name = name, Value = token });
+            }
+        }
     }
 }
