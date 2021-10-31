@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 using RestSharp;
 
@@ -16,19 +17,20 @@ namespace Sb.OAuth2
             new Uri("https://graph.facebook.com/v12.0/oauth/access_token"),
             credentials)
         {
+            Defaults.Scope = "public_profile";
         }
 
-        public async Task<FacebookUserInfo> GetUserInfo(string authToken)
+        public override async Task<AuthorizedUser> GetAuthorizedUserAsync(string token)
         {
             var client = new RestClient("https://graph.facebook.com/me");
             client.Timeout = -1;
             var request = new RestRequest(Method.GET)
-                .AddQueryParameter("access_token", authToken)
+                .AddQueryParameter("access_token", token)
                 .AddQueryParameter("fields", "id,name,email,picture");
 
             IRestResponse res = await client.ExecuteAsync(request);
             EnsureSuccess(res);
-            return JsonConvert.DeserializeObject<FacebookUserInfo>(res.Content);
+            return JsonConvert.DeserializeObject<FacebookUserInfo>(res.Content, SerializerSettings);
         }
 
         protected override Dictionary<string, string> GetAdditionalAuthorizationParameters()

@@ -1,17 +1,17 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
+using Sb.Api.Services;
+using Sb.OAuth2;
+
 using System;
 using System.Collections.Generic;
-
-using Sb.OAuth2;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Sb.Api
 {
@@ -36,6 +36,7 @@ namespace Sb.Api
                 })
                 .AddCookie(opts =>
                 {
+                    opts.Cookie.Name = "sb-api-cookie";
                     opts.LoginPath = "/unauthorized";
                 })
                 .AddGoogle(opts =>
@@ -58,11 +59,14 @@ namespace Sb.Api
                 });
             });
 
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson(settings =>
+            {
+                settings.UseCamelCasing(true);
+            });
 
             services.AddGoogleOAuth2Client(new ClientCredentials(Configuration["Authentication:Google:ClientId"], Configuration["Authentication:Google:ClientSecret"]));
-
             services.AddFacebookOAuth2Client(new ClientCredentials(Configuration["Authentication:Facebook:AppId"], Configuration["Authentication:Facebook:AppSecret"]));
+            services.AddSingleton<OAuth2ClientFactory>();
 
             services.AddSwaggerGen(c =>
             {
