@@ -1,21 +1,22 @@
 ﻿
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
-using Sb.OAuth2;
+using Newtonsoft.Json;
+
 using Sb.Api.Models;
+using Sb.Api.Services;
+using Sb.OAuth2;
 
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using Sb.Api.Services;
-using System.Linq;
 
 namespace Sb.Api.Controllers
 {
@@ -24,15 +25,13 @@ namespace Sb.Api.Controllers
     [AllowAnonymous]
     public partial class AuthController : ControllerBase
     {
-        private readonly ILogger<AuthController> _logger;
-        private readonly IConfiguration _config;
         private readonly OAuth2ClientFactory _clientFactory;
+        private readonly JwtConfig _jwtConfig;
 
-        public AuthController(ILogger<AuthController> logger, IConfiguration config, OAuth2ClientFactory clientFactory)
+        public AuthController(IOptions<JwtConfig> jwtOptions, OAuth2ClientFactory clientFactory)
         {
-            _logger = logger;
-            _config = config;
             _clientFactory = clientFactory;
+            _jwtConfig = jwtOptions.Value;
         }
 
         [HttpGet("login")]
@@ -40,7 +39,6 @@ namespace Sb.Api.Controllers
         {
             return _clientFactory.GetClient(provider).GetAuthorizationEndpoint(redirectUri);
         }
-
 
 
         [HttpGet("authorize")]
@@ -51,8 +49,8 @@ namespace Sb.Api.Controllers
                 OAuth2Client client = _clientFactory.GetClient(provider);
                 GenerateTokenResponse tokenResponse = await client.GenerateAccessTokensAsync(code, redirectUri);
                 AuthorizedUser user = await client.GetAuthorizedUserAsync(tokenResponse.AccessToken);
-                await SignInAsync(provider, tokenResponse, user);
-                return Ok(tokenResponse);
+                JwtToken token = GenerateToken(provider, tokenResponse, user);
+                return Ok(token);
             }
             catch (OAuth2Exception e)
             {
@@ -69,6 +67,7 @@ namespace Sb.Api.Controllers
             }
         }
 
+
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -76,46 +75,37 @@ namespace Sb.Api.Controllers
             return Ok();
         }
 
-        private async Task SignInAsync(IdentityProvider provider, GenerateTokenResponse token, AuthorizedUser user)
+        private JwtToken GenerateToken(IdentityProvider provider, GenerateTokenResponse providerToken, AuthorizedUser user)
         {
+            var claims = new List<Claim>()
+                .AddIfValid(ClaimTypes.Name, user.Name)
+                .AddIfValid(ClaimTypes.Email, user.Email)
+                .AddIfValid(CustomClaimTypes.Picture, user.GetProfilePicture())
+                .AddIfValid(CustomClaimTypes.Id, user.Id)
+                .AddIfValid(CustomClaimTypes.Provider, provider.ToString())
+                .AddIfValid(CustomClaimTypes.ProviderTokens, JsonConvert.SerializeObject(providerToken));
 
-            var claims = new List<Claim>();
-            AddClaimIfValid(claims, ClaimTypes.Name, user.Name);
-            AddClaimIfValid(claims, ClaimTypes.Email, user.Email);
-            AddClaimIfValid(claims, "picture", user.GetProfilePicture());
-            AddClaimIfValid(claims, "provider", provider.ToString());
-            AddClaimIfValid(claims, "id", user.Id);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Key));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var tokens = new List<AuthenticationToken>();
-            AddTokenIfValid(tokens, "accessToken", token.AccessToken);
-            AddTokenIfValid(tokens, "refreshToken", token.RefreshToken);
-            AddTokenIfValid(tokens, "idToken", token.IdToken);
-            AuthenticationProperties authProps = new()
+            var handler = new JwtSecurityTokenHandler();
+            var tokenProperties = new SecurityTokenDescriptor
             {
-                ExpiresUtc = token.ExpiresIn.HasValue
-                    ? DateTimeOffset.UtcNow.AddSeconds(token.ExpiresIn.Value)
+                Subject = new ClaimsIdentity(claims),
+                Issuer = _jwtConfig.Issuer,
+                Audience = _jwtConfig.Audience,
+                Expires = providerToken.ExpiresIn.HasValue
+                    ? DateTime.UtcNow.AddSeconds(providerToken.ExpiresIn.Value)
                     : null,
-                AllowRefresh = true
+                IssuedAt = DateTime.UtcNow,
+                SigningCredentials = creds
             };
-            authProps.StoreTokens(tokens);
-
-            await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), authProps);
-        }
-
-        private void AddClaimIfValid(List<Claim> claims, string type, string value)
-        {
-            if (!string.IsNullOrWhiteSpace(type) && !string.IsNullOrWhiteSpace(value))
-                claims.Add(new Claim(type, value));
-        }
-
-
-        private void AddTokenIfValid(List<AuthenticationToken> tokens, string name, string token)
-        {
-            if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(token))
+            SecurityToken token = handler.CreateToken(tokenProperties);
+            return new JwtToken
             {
-                tokens.Add(new AuthenticationToken { Name = name, Value = token });
-            }
+                AccessToken = handler.WriteToken(token),
+                ExpiresAt = tokenProperties.Expires,
+            };
         }
     }
 }

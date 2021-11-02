@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using Sb.Api.Services;
@@ -12,6 +13,8 @@ using Sb.OAuth2;
 
 using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Sb.Api
 {
@@ -27,27 +30,39 @@ namespace Sb.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<JwtConfig>(Configuration.GetSection("Jwt"));
             services
                 .AddAuthentication(opts =>
                 {
-                    opts.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    opts.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    opts.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddCookie(opts =>
+                .AddJwtBearer(opts =>
                 {
-                    opts.Cookie.Name = "sb-api-cookie";
-                    opts.LoginPath = "/unauthorized";
-                })
-                .AddGoogle(opts =>
-                {
-                    opts.ClientId = Configuration["Authentication:Google:ClientId"];
-                    opts.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                })
-                .AddFacebook(opts =>
-                {
-                    opts.AppId = Configuration["Authentication:Facebook:AppId"];
-                    opts.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                    opts.SaveToken = true;
+                    opts.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = false,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    };
+                    opts.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            {
+                                context.Response.Headers.Add("Token-Expired", "true");
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             services.AddAuthorization();
@@ -64,8 +79,8 @@ namespace Sb.Api
                 settings.UseCamelCasing(true);
             });
 
-            services.AddGoogleOAuth2Client(new ClientCredentials(Configuration["Authentication:Google:ClientId"], Configuration["Authentication:Google:ClientSecret"]));
-            services.AddFacebookOAuth2Client(new ClientCredentials(Configuration["Authentication:Facebook:AppId"], Configuration["Authentication:Facebook:AppSecret"]));
+            services.AddGoogleOAuth2Client(new ClientCredentials(Configuration["Google:ClientId"], Configuration["Google:ClientSecret"]));
+            services.AddFacebookOAuth2Client(new ClientCredentials(Configuration["Facebook:AppId"], Configuration["Facebook:AppSecret"]));
             services.AddSingleton<OAuth2ClientFactory>();
 
             services.AddSwaggerGen(c =>
