@@ -78,13 +78,14 @@ namespace Sb.Api.Controllers
 
         private async Task SignInAsync(IdentityProvider provider, GenerateTokenResponse token, AuthorizedUser user)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim("picture", user.GetProfilePicture()),
-                new Claim("provider", provider.ToString())
-            };
+
+            var claims = new List<Claim>();
+            AddClaimIfValid(claims, ClaimTypes.Name, user.Name);
+            AddClaimIfValid(claims, ClaimTypes.Email, user.Email);
+            AddClaimIfValid(claims, "picture", user.GetProfilePicture());
+            AddClaimIfValid(claims, "provider", provider.ToString());
+            AddClaimIfValid(claims, "id", user.Id);
+
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var tokens = new List<AuthenticationToken>();
             AddTokenIfValid(tokens, "accessToken", token.AccessToken);
@@ -102,11 +103,18 @@ namespace Sb.Api.Controllers
             await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), authProps);
         }
 
-        private void AddTokenIfValid(IEnumerable<AuthenticationToken> tokens, string name, string token)
+        private void AddClaimIfValid(List<Claim> claims, string type, string value)
+        {
+            if (!string.IsNullOrWhiteSpace(type) && !string.IsNullOrWhiteSpace(value))
+                claims.Add(new Claim(type, value));
+        }
+
+
+        private void AddTokenIfValid(List<AuthenticationToken> tokens, string name, string token)
         {
             if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(token))
             {
-                tokens.Append(new AuthenticationToken { Name = name, Value = token });
+                tokens.Add(new AuthenticationToken { Name = name, Value = token });
             }
         }
     }
