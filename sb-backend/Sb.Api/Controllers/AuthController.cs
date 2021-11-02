@@ -20,10 +20,7 @@ using System.Threading.Tasks;
 
 namespace Sb.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [AllowAnonymous]
-    public partial class AuthController : ControllerBase
+    public partial class AuthController : ApiControllerBase
     {
         private readonly OAuth2ClientFactory _clientFactory;
         private readonly JwtConfig _jwtConfig;
@@ -35,6 +32,7 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet("login")]
+        [AllowAnonymous]
         public string Login(IdentityProvider provider, [FromQuery] string redirectUri)
         {
             return _clientFactory.GetClient(provider).GetAuthorizationEndpoint(redirectUri);
@@ -42,6 +40,7 @@ namespace Sb.Api.Controllers
 
 
         [HttpGet("authorize")]
+        [AllowAnonymous]
         public async Task<IActionResult> Authorize(IdentityProvider provider, [FromQuery] string code, [FromQuery] string redirectUri)
         {
             try
