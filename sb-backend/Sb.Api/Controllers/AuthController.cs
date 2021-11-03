@@ -87,21 +87,39 @@ namespace Sb.Api.Controllers
             }
         }
 
-        [HttpPost("refresh")]
+        [HttpGet("refresh")]
         public async Task<IActionResult> RefreshAsync([FromServices] IRepository<User> userRepository)
         {
-            IdentityProvider? provider = HttpContext.GetIdentityProvider();
-            if (provider.HasValue)
+            try
             {
-                TokenBase providerTokens = HttpContext.GetProviderTokens();
-                providerTokens = await _clientFactory
-                    .GetClient(provider.Value)
-                    .RefreshTokenAsync(providerTokens.RefreshToken);
-                string id = HttpContext.GetClaim(CustomClaimTypes.Id);
-                User user = await userRepository.GetByIdAsync(id);
-                JwtToken token = GenerateToken(provider.Value, providerTokens, user);
-                return Ok(token);
+                IdentityProvider? provider = HttpContext.GetIdentityProvider();
+                if (provider.HasValue)
+                {
+                    TokenBase providerTokens = HttpContext.GetProviderTokens();
+                    if (string.IsNullOrWhiteSpace(providerTokens.RefreshToken))
+                        return Unauthorized();
+
+                    providerTokens = await _clientFactory
+                        .GetClient(provider.Value)
+                        .RefreshTokenAsync(providerTokens.RefreshToken);
+                    string id = HttpContext.GetClaim(CustomClaimTypes.Id);
+                    User user = await userRepository.GetByIdAsync(id);
+                    JwtToken token = GenerateToken(provider.Value, providerTokens, user);
+                    return Ok(token);
+                }
             }
+            catch (OAuth2Exception e)
+            {
+                if (e.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    return Unauthorized();
+                }
+                return BadRequest(new
+                {
+                    message = e.Message
+                });
+            }
+            
             return BadRequest(new
             {
                 message = "Invalid identity provider"
