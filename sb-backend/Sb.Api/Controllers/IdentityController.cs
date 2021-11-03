@@ -10,8 +10,8 @@ namespace Sb.Api.Controllers
 {
     public class IdentityController : ApiControllerBase
     {
-        private readonly IMongoRepository<User> _userRepo;
-        public IdentityController(IMongoRepository<User> userRepository)
+        private readonly IRepository<User> _userRepo;
+        public IdentityController(IRepository<User> userRepository)
         {
             _userRepo = userRepository;
         }
@@ -20,7 +20,7 @@ namespace Sb.Api.Controllers
         public async Task<IActionResult> GetMe()
         {
             string id = HttpContext.GetClaim(CustomClaimTypes.Id);
-            User user = (await _userRepo.GetAsync(u => u.Id == id))?.FirstOrDefault();
+            User user = await _userRepo.GetByIdAsync(id);
             if (user is null)
                 return NotFound();
             return Ok(user);

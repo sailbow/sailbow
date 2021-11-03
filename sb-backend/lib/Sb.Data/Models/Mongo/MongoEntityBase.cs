@@ -1,11 +1,18 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using MongoDB.Bson;
 
 namespace Sb.Data.Models.Mongo
 {
     public class MongoEntityBase : EntityBase
     {
-        [BsonId]
-        public override string Id { get; set; }
-        protected MongoEntityBase() { }
+        public MongoEntityBase()
+        {
+            Id = ObjectId.GenerateNewId().ToString();
+        }
     }
 }

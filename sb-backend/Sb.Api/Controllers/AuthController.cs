@@ -48,7 +48,7 @@ namespace Sb.Api.Controllers
             IdentityProvider provider,
             [FromQuery] string code,
             [FromQuery] string redirectUri,
-            [FromServices] IMongoRepository<User> userRepository)
+            [FromServices] IRepository<User> userRepository)
         {
             try
             {
@@ -56,17 +56,20 @@ namespace Sb.Api.Controllers
                 TokenBase providerTokens = await client.GenerateAccessTokensAsync(code, redirectUri);
                 AuthorizedUser user = await client.GetAuthorizedUserAsync(providerTokens.AccessToken);
 
-                User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email)).FirstOrDefault();
+                User existingUser = (await userRepository.GetAsync(u => u.Provider == provider.ToString() && u.ProviderUserId == user.Id)).FirstOrDefault();
                 if  (existingUser is null)
                 {
-                    existingUser = await userRepository.InsertAsync(new User
+                    existingUser = new User
                     {
                         Name = user.Name,
                         Email = user.Email,
+                        Provider = provider.ToString(),
+                        ProviderUserId = user.Id,
                         DateCreated = DateTime.UtcNow
-                    });
+                    };
+                    existingUser = await userRepository.InsertAsync(existingUser);
                 }
-                JwtToken token = GenerateToken(provider, providerTokens, user);
+                JwtToken token = GenerateToken(provider, providerTokens, existingUser);
                 return Ok(token);
             }
             catch (OAuth2Exception e)
@@ -85,7 +88,7 @@ namespace Sb.Api.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshAsync()
+        public async Task<IActionResult> RefreshAsync([FromServices] IRepository<User> userRepository)
         {
             IdentityProvider? provider = HttpContext.GetIdentityProvider();
             if (provider.HasValue)
@@ -94,7 +97,8 @@ namespace Sb.Api.Controllers
                 providerTokens = await _clientFactory
                     .GetClient(provider.Value)
                     .RefreshTokenAsync(providerTokens.RefreshToken);
-                AuthorizedUser user = HttpContext.GetUserFromClaims();
+                string id = HttpContext.GetClaim(CustomClaimTypes.Id);
+                User user = await userRepository.GetByIdAsync(id);
                 JwtToken token = GenerateToken(provider.Value, providerTokens, user);
                 return Ok(token);
             }
@@ -112,12 +116,11 @@ namespace Sb.Api.Controllers
             return Ok();
         }
 
-        private JwtToken GenerateToken(IdentityProvider provider, TokenBase providerToken, AuthorizedUser user)
+        private JwtToken GenerateToken(IdentityProvider provider, TokenBase providerToken, User user)
         {
             var claims = new List<Claim>()
                 .AddIfValid(ClaimTypes.Name, user.Name)
                 .AddIfValid(ClaimTypes.Email, user.Email)
-                .AddIfValid(CustomClaimTypes.Picture, user.GetProfilePicture())
                 .AddIfValid(CustomClaimTypes.Id, user.Id)
                 .AddIfValid(CustomClaimTypes.Provider, provider.ToString())
                 .AddIfValid(CustomClaimTypes.ProviderTokens, JsonConvert.SerializeObject(providerToken));

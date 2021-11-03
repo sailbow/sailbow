@@ -22,14 +22,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 _services = services;
             }
 
-            public void AddMongo(Action<MongoConfiguration> configure)
+            public void AddMongo(Action<MongoConfiguration> configureAction)
             {
                 MongoConfiguration config = new();
-                configure(config);
-
-                _services.AddOptions();
-                _services.ConfigureOptions(config);
-                _services.AddTransient(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+                configureAction(config);
+                _services.AddSingleton(config);
+                _services.AddSingleton(typeof(IRepository<>), typeof(MongoRepository<>));
             }
         }
     }
