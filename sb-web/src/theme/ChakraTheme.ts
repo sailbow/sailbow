@@ -116,7 +116,7 @@ const components: ComponentDefaultProps = {
                         borderLeftWidth: '0',
                         borderRightWidth: '0',
                         borderRadius: '0',
-                        borderBottomWidth: '1px',
+                        borderBottomWidth: '2px',
                         fontWeight: 'normal',
                         transition: 'border 0.25s ease-in-out',
                         _hover: {
@@ -146,7 +146,7 @@ const components: ComponentDefaultProps = {
             borderLeftWidth: '0',
             borderRightWidth: '0',
             borderRadius: '0',
-            borderBottomWidth: '1px',
+            borderBottomWidth: '2px',
             fontWeight: 'normal',
             transition: 'border 0.25s ease-in-out',
             _hover: {
@@ -175,6 +175,27 @@ const components: ComponentDefaultProps = {
                 return {
                     borderRadius: 0,
                 };
+            },
+        },
+    },
+    Menu: {
+        parts: ['list', 'item', 'divider'],
+        baseStyle: {
+            list: {
+                border: 'none',
+                boxShadow: 'lg',
+                borderRadius: 'lg',
+            },
+            divider: {
+                opacity: 0.1,
+            },
+            groupTitle: {
+                paddingTop: '0.5rem',
+            },
+            item: {
+                fontWeight: 'normal',
+                lineHeight: 'normal',
+                padding: '0.75rem',
             },
         },
     },

@@ -7,7 +7,7 @@ import { Exclamation, Close, Checkmark } from 'util/Icons';
 import { Log } from 'util/Logger';
 
 import 'react-toastify/dist/ReactToastify.css';
-import 'contexts/toast/Toast.scss';
+import 'modules/toast/Toast.scss';
 
 const TOAST_DURATION = 5000;
 

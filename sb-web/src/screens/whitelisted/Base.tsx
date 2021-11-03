@@ -3,8 +3,8 @@ import React, { FunctionComponent, ReactElement, useEffect } from 'react';
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
+import { LS, TokenStorageKeys } from 'util/Http';
 import { RightIcon } from 'util/Icons';
-import { Routes } from 'util/Routing';
 
 import 'screens/whitelisted/Base.scss';
 
@@ -16,8 +16,15 @@ interface Props {
 }
 
 export const BaseNavbar: FunctionComponent = () => {
-    const toHome = () => {
-        window.location.href = Routes.Public.Landing;
+    const toHome = (): void => {
+        window.location.href = '/';
+    };
+
+    const displayLabel = (): string => {
+        if (LS.getItem(TokenStorageKeys.AT)) {
+            return 'Continue Sailing';
+        }
+        return 'Start Sailing';
     };
 
     return (
@@ -31,7 +38,7 @@ export const BaseNavbar: FunctionComponent = () => {
         >
             <Logo className="logo" onClick={toHome} />
             <Button rightIcon={<RightIcon />} onClick={toHome}>
-                <Text pr="4">Start Sailing</Text>
+                <Text pr="4">{displayLabel()}</Text>
             </Button>
         </Flex>
     );

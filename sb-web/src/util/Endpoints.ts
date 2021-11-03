@@ -5,7 +5,8 @@ interface Endpoint {
     url: string;
 }
 
-export const AuthEndpoints: Record<string, Endpoint> = {
+type AuthEndpointsLabels = 'Login' | 'Authorize' | 'Refresh' | 'Logout';
+export const AuthEndpoints: Record<AuthEndpointsLabels, Endpoint> = {
     Login: {
         method: 'GET',
         url: 'api/auth/login',
@@ -17,6 +18,18 @@ export const AuthEndpoints: Record<string, Endpoint> = {
     Refresh: {
         method: 'GET',
         url: 'api/auth/refresh',
+    },
+    Logout: {
+        method: 'POST',
+        url: 'api/auth/logout',
+    },
+};
+
+type ProfileEndpointLabels = 'Me';
+export const ProfileEndpoints: Record<ProfileEndpointLabels, Endpoint> = {
+    Me: {
+        method: 'GET',
+        url: 'api/identity/me',
     },
 };
 

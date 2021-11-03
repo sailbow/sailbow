@@ -2,13 +2,13 @@ import React, { FunctionComponent, useState } from 'react';
 
 import { Box, Image, Button, IconButton } from '@chakra-ui/react';
 
-import { BoatActionType, useBoat } from 'contexts/boat/Boat';
-import { BannerType } from 'contexts/boat/BoatConstants';
-import { BannerChangeModal } from 'modules/banner/banner-change-modal/BannerChangeModal';
+import { BoatActionType, useBoat } from 'boats/Boat';
+import { BannerType } from 'boats/BoatConstants';
+import { BannerChangeModal } from 'boats/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
 import { ArrowDown, ArrowUp } from 'util/Icons';
 
-import 'modules/banner/Banner.scss';
+import 'boats/banner/Banner.scss';
 
 export const Banner: FunctionComponent = () => {
     const [boat, dispatch] = useBoat();

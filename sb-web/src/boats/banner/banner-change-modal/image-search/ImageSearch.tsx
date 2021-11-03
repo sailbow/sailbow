@@ -4,12 +4,12 @@ import { Box, Input, InputGroup, Image, Flex, Spinner, Text, InputLeftAddon } fr
 import axios, { AxiosResponse } from 'axios';
 import Gallery from 'react-photo-gallery';
 
-import { BannerType } from 'contexts/boat/BoatConstants';
+import { BannerType } from 'boats/BoatConstants';
 import { ImageSearchEndpoints } from 'util/Endpoints';
 import { Checkmark, Search } from 'util/Icons';
 import { useDebounce } from 'util/Input';
 
-import 'modules/banner/banner-change-modal/image-search/ImageSearch.scss';
+import 'boats/banner/banner-change-modal/image-search/ImageSearch.scss';
 
 interface Photo {
     src: string;
