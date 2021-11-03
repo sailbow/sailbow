@@ -1,10 +1,9 @@
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 
 using Sb.Data;
 using Sb.Data.Models.Mongo;
-
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sb.Api.Controllers
 {

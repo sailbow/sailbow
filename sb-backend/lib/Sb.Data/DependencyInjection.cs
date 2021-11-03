@@ -1,9 +1,9 @@
 ﻿
+using System;
+
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 using Sb.Data.Mongo;
-
-using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

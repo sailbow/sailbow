@@ -1,4 +1,12 @@
 ﻿
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +20,6 @@ using Sb.Api.Services;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 using Sb.OAuth2;
-
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sb.Api.Controllers
 {
@@ -57,7 +57,7 @@ namespace Sb.Api.Controllers
                 AuthorizedUser user = await client.GetAuthorizedUserAsync(providerTokens.AccessToken);
 
                 User existingUser = (await userRepository.GetAsync(u => u.Provider == provider.ToString() && u.ProviderUserId == user.Id)).FirstOrDefault();
-                if  (existingUser is null)
+                if (existingUser is null)
                 {
                     existingUser = new User
                     {
@@ -119,7 +119,7 @@ namespace Sb.Api.Controllers
                     message = e.Message
                 });
             }
-            
+
             return BadRequest(new
             {
                 message = "Invalid identity provider"

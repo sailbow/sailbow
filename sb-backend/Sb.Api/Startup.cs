@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -10,11 +15,6 @@ using Microsoft.OpenApi.Models;
 
 using Sb.Api.Services;
 using Sb.OAuth2;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sb.Api
 {

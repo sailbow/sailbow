@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 using RestSharp;
 
@@ -10,7 +9,7 @@ namespace Sb.OAuth2
 {
     public class GoogleOAuth2Client : OAuth2Client
     {
-        public GoogleOAuth2Client(ClientCredentials credentials): base(
+        public GoogleOAuth2Client(ClientCredentials credentials) : base(
             new Uri("https://accounts.google.com/o/oauth2/v2/auth"),
             new Uri("https://www.googleapis.com/oauth2/v4/token"),
             new Uri("https://www.googleapis.com/oauth2/v4/token"),

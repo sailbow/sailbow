@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+
+using Microsoft.AspNetCore.Http;
 
 using Newtonsoft.Json;
 
 using Sb.Api.Models;
 using Sb.OAuth2;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 
 namespace Sb.Api
 {

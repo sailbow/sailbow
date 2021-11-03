@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
-using RestSharp;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+
+using RestSharp;
 
 namespace Sb.OAuth2
 {
@@ -48,7 +48,7 @@ namespace Sb.OAuth2
         {
             string endpoint =
                 $"{_authUrl}?{ParameterKeys.RedirectUri}={HttpUtility.UrlEncode(redirectUri)}&{ParameterKeys.ClientId}={_clientCredentials.ClientId}&scope={scope ?? Defaults.Scope}&access_type={accessType ?? Defaults.AccessType}&{ParameterKeys.ResponseType}=code";
-            foreach (KeyValuePair<string,string> kvp in GetAdditionalAuthorizationParameters())
+            foreach (KeyValuePair<string, string> kvp in GetAdditionalAuthorizationParameters())
             {
                 endpoint += $"&{kvp.Key}={kvp.Value}";
             }

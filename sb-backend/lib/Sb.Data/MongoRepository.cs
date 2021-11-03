@@ -1,18 +1,18 @@
 ﻿
-using MongoDB.Driver;
-
-using Sb.Data.Models;
-using Sb.Data.Models.Mongo;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using MongoDB.Driver;
+
+using Sb.Data.Models;
+using Sb.Data.Models.Mongo;
+
 namespace Sb.Data.Mongo
 {
-    public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity: EntityBase
+    public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
     {
         private readonly IMongoCollection<TEntity> _collection;
 
