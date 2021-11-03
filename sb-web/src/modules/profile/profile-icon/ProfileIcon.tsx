@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from 'react';
 
-import { Avatar, Menu, MenuButton, MenuItem, MenuList, MenuGroup, MenuDivider, Box } from '@chakra-ui/react';
+import { Avatar, Box, Menu, MenuButton, MenuItem, MenuGroup, MenuDivider, MenuList } from '@chakra-ui/react';
 
 import { useProfile } from 'modules/profile/Profile';
+import { resetLocalStorage } from 'util/Http';
 import { FAQ, Privacy, Terms, User, Logout, Envelope } from 'util/Icons';
+import { Routes } from 'util/Routing';
 
 import 'modules/profile/profile-icon/ProfileIcon.scss';
-import { resetLocalStorage } from 'util/Http';
-import { Routes } from 'util/Routing';
 
 const HelpOptions = [
     {
@@ -47,12 +47,12 @@ export const ProfileIcon: FunctionComponent = () => {
     return (
         <Box className="sb-profile-icon">
             <Menu>
-                <MenuButton>
+                <MenuButton className="button">
                     <Avatar name={profileContainer.profile?.name} size="sm" h="40px" w="40px" />
                 </MenuButton>
                 <MenuList fontWeight="normal">
                     <MenuGroup title="Profile">
-                        <MenuItem icon={<User height="20px" />}>My Account</MenuItem>
+                        <MenuItem icon={<User height="20px" />}>My Profile</MenuItem>
                     </MenuGroup>
                     <MenuDivider />
                     <MenuGroup title="Help">

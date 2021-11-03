@@ -1,15 +1,15 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Flex, Button, HStack, Avatar } from '@chakra-ui/react';
+import { Flex, Button, HStack } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
+import { ProfileIcon } from 'modules/profile/profile-icon/ProfileIcon';
 import { Plus } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
 import 'modules/navbar/Navbar.scss';
-import { ProfileIcon } from 'modules/profile/profile-icon/ProfileIcon';
 
 interface Props {
     isAuth: boolean;

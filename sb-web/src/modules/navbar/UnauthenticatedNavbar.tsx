@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
 
-import { Flex, Button, HStack, IconButton, VStack, Box, Text } from '@chakra-ui/react';
+import { Button, HStack, IconButton, VStack, Box, Text } from '@chakra-ui/react';
 
 import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
 import { RightIcon, Menu, Logo } from 'util/Icons';

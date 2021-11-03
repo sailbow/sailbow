@@ -108,6 +108,7 @@ const components: ComponentDefaultProps = {
     Input: {
         variants: {
             brand: (props: any) => {
+                console.log(ChakraTheme.components.Menu);
                 return {
                     field: {
                         ...ChakraTheme.components.Input.variants.outline(props).field,
@@ -179,12 +180,23 @@ const components: ComponentDefaultProps = {
         },
     },
     Menu: {
-        parts: ['menu', 'item'],
+        parts: ['list', 'item', 'divider'],
         baseStyle: {
+            list: {
+                border: 'none',
+                boxShadow: 'lg',
+                borderRadius: 'lg',
+            },
+            divider: {
+                opacity: 0.1,
+            },
+            groupTitle: {
+                paddingTop: '0.5rem',
+            },
             item: {
                 fontWeight: 'normal',
                 lineHeight: 'normal',
-                padding: '1rem',
+                padding: '0.75rem',
             },
         },
     },
