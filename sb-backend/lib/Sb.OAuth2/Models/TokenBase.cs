@@ -1,9 +1,10 @@
 ﻿namespace Sb.OAuth2
 {
-    public class TokenResponseBase
+    public class TokenBase
     {
-        internal TokenResponseBase() { }
+        internal TokenBase() { }
         public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
         public string IdToken { get; set; }
         public int? ExpiresIn { get; set; }
         public string Scope { get; set; }

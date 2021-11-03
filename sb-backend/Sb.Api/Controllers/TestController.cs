@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Sb.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class TestController : ControllerBase
+    public class TestController : ApiControllerBase
     {
         [HttpGet("helloworld")]
         public object HelloWorld()

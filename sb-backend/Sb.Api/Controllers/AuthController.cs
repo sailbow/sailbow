@@ -1,58 +1,76 @@
 ﻿
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-
-using Sb.OAuth2;
-using Sb.Api.Models;
-
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using Sb.Api.Services;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+
+using Newtonsoft.Json;
+
+using Sb.Api.Models;
+using Sb.Api.Services;
+using Sb.Data;
+using Sb.Data.Models.Mongo;
+using Sb.OAuth2;
 
 namespace Sb.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [AllowAnonymous]
-    public partial class AuthController : ControllerBase
+    public class AuthController : ApiControllerBase
     {
-        private readonly ILogger<AuthController> _logger;
-        private readonly IConfiguration _config;
         private readonly OAuth2ClientFactory _clientFactory;
+        private readonly JwtConfig _jwtConfig;
 
-        public AuthController(ILogger<AuthController> logger, IConfiguration config, OAuth2ClientFactory clientFactory)
+        public AuthController(IOptions<JwtConfig> jwtOptions, OAuth2ClientFactory clientFactory)
         {
-            _logger = logger;
-            _config = config;
             _clientFactory = clientFactory;
+            _jwtConfig = jwtOptions.Value;
         }
 
         [HttpGet("login")]
+        [AllowAnonymous]
         public string Login(IdentityProvider provider, [FromQuery] string redirectUri)
         {
             return _clientFactory.GetClient(provider).GetAuthorizationEndpoint(redirectUri);
         }
 
 
-
         [HttpGet("authorize")]
-        public async Task<IActionResult> Authorize(IdentityProvider provider, [FromQuery] string code, [FromQuery] string redirectUri)
+        [AllowAnonymous]
+        public async Task<IActionResult> Authorize(
+            IdentityProvider provider,
+            [FromQuery] string code,
+            [FromQuery] string redirectUri,
+            [FromServices] IRepository<User> userRepository)
         {
             try
             {
                 OAuth2Client client = _clientFactory.GetClient(provider);
-                GenerateTokenResponse tokenResponse = await client.GenerateAccessTokensAsync(code, redirectUri);
-                AuthorizedUser user = await client.GetAuthorizedUserAsync(tokenResponse.AccessToken);
-                await SignInAsync(provider, tokenResponse, user);
-                return Ok(tokenResponse);
+                TokenBase providerTokens = await client.GenerateAccessTokensAsync(code, redirectUri);
+                AuthorizedUser user = await client.GetAuthorizedUserAsync(providerTokens.AccessToken);
+
+                User existingUser = (await userRepository.GetAsync(u => u.Provider == provider.ToString() && u.ProviderUserId == user.Id)).FirstOrDefault();
+                if (existingUser is null)
+                {
+                    existingUser = new User
+                    {
+                        Name = user.Name,
+                        Email = user.Email,
+                        Provider = provider.ToString(),
+                        ProviderUserId = user.Id,
+                        DateCreated = DateTime.UtcNow
+                    };
+                    existingUser = await userRepository.InsertAsync(existingUser);
+                }
+                JwtToken token = GenerateToken(provider, providerTokens, existingUser);
+                return Ok(token);
             }
             catch (OAuth2Exception e)
             {
@@ -69,6 +87,46 @@ namespace Sb.Api.Controllers
             }
         }
 
+        [HttpGet("refresh")]
+        public async Task<IActionResult> RefreshAsync([FromServices] IRepository<User> userRepository)
+        {
+            try
+            {
+                IdentityProvider? provider = HttpContext.GetIdentityProvider();
+                if (provider.HasValue)
+                {
+                    TokenBase providerTokens = HttpContext.GetProviderTokens();
+                    if (string.IsNullOrWhiteSpace(providerTokens.RefreshToken))
+                        return Unauthorized();
+
+                    providerTokens = await _clientFactory
+                        .GetClient(provider.Value)
+                        .RefreshTokenAsync(providerTokens.RefreshToken);
+                    string id = HttpContext.GetClaim(CustomClaimTypes.Id);
+                    User user = await userRepository.GetByIdAsync(id);
+                    JwtToken token = GenerateToken(provider.Value, providerTokens, user);
+                    return Ok(token);
+                }
+            }
+            catch (OAuth2Exception e)
+            {
+                if (e.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    return Unauthorized();
+                }
+                return BadRequest(new
+                {
+                    message = e.Message
+                });
+            }
+
+            return BadRequest(new
+            {
+                message = "Invalid identity provider"
+            });
+        }
+
+
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -76,38 +134,36 @@ namespace Sb.Api.Controllers
             return Ok();
         }
 
-        private async Task SignInAsync(IdentityProvider provider, GenerateTokenResponse token, AuthorizedUser user)
+        private JwtToken GenerateToken(IdentityProvider provider, TokenBase providerToken, User user)
         {
-            var claims = new List<Claim>
+            var claims = new List<Claim>()
+                .AddIfValid(ClaimTypes.Name, user.Name)
+                .AddIfValid(ClaimTypes.Email, user.Email)
+                .AddIfValid(CustomClaimTypes.Id, user.Id)
+                .AddIfValid(CustomClaimTypes.Provider, provider.ToString())
+                .AddIfValid(CustomClaimTypes.ProviderTokens, JsonConvert.SerializeObject(providerToken));
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Key));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var handler = new JwtSecurityTokenHandler();
+            var tokenProperties = new SecurityTokenDescriptor
             {
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim("picture", user.GetProfilePicture()),
-                new Claim("provider", provider.ToString())
-            };
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var tokens = new List<AuthenticationToken>();
-            AddTokenIfValid(tokens, "accessToken", token.AccessToken);
-            AddTokenIfValid(tokens, "refreshToken", token.RefreshToken);
-            AddTokenIfValid(tokens, "idToken", token.IdToken);
-            AuthenticationProperties authProps = new()
-            {
-                ExpiresUtc = token.ExpiresIn.HasValue
-                    ? DateTimeOffset.UtcNow.AddSeconds(token.ExpiresIn.Value)
+                Subject = new ClaimsIdentity(claims),
+                Issuer = _jwtConfig.Issuer,
+                Audience = _jwtConfig.Audience,
+                Expires = providerToken.ExpiresIn.HasValue
+                    ? DateTime.UtcNow.AddSeconds(providerToken.ExpiresIn.Value)
                     : null,
-                AllowRefresh = true
+                IssuedAt = DateTime.UtcNow,
+                SigningCredentials = creds
             };
-            authProps.StoreTokens(tokens);
-
-            await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), authProps);
-        }
-
-        private void AddTokenIfValid(IEnumerable<AuthenticationToken> tokens, string name, string token)
-        {
-            if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(token))
+            SecurityToken token = handler.CreateToken(tokenProperties);
+            return new JwtToken
             {
-                tokens.Append(new AuthenticationToken { Name = name, Value = token });
-            }
+                AccessToken = handler.WriteToken(token),
+                ExpiresAt = tokenProperties.Expires,
+            };
         }
     }
 }
