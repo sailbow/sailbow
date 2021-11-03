@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+
 
 using Sb.Api.Services;
 using Sb.OAuth2;
@@ -78,27 +77,6 @@ namespace Sb.Api
             services.AddGoogleOAuth2Client(new ClientCredentials(Configuration["Google:ClientId"], Configuration["Google:ClientSecret"]));
             services.AddFacebookOAuth2Client(new ClientCredentials(Configuration["Facebook:AppId"], Configuration["Facebook:AppSecret"]));
             services.AddSingleton<OAuth2ClientFactory>();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sailboat API", Version = "V1" });
-                c.AddSecurityDefinition("Google OAuth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        AuthorizationCode = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri(GoogleDefaults.AuthorizationEndpoint),
-                            TokenUrl = new Uri(GoogleDefaults.TokenEndpoint),
-                            Scopes = new Dictionary<string, string>
-                            {
-                                { "https://www.googleapis.com/auth/userinfo.profile", "Basic profile information" }
-                            }
-                        }
-                    }
-                });
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,8 +85,6 @@ namespace Sb.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sailboat API V1"));
             }
 
             app.UseHttpsRedirection();
@@ -121,13 +97,7 @@ namespace Sb.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapSwagger();
                 endpoints.MapControllers();
-                endpoints.MapGet("/unauthorized", context =>
-                {
-                    context.Response.StatusCode = 401;
-                    return System.Threading.Tasks.Task.CompletedTask;
-                });
             });
         }
     }
