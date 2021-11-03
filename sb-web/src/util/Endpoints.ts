@@ -5,7 +5,7 @@ interface Endpoint {
     url: string;
 }
 
-type AuthEndpointsLabels = 'Login' | 'Authorize' | 'Refresh';
+type AuthEndpointsLabels = 'Login' | 'Authorize' | 'Refresh' | 'Logout';
 export const AuthEndpoints: Record<AuthEndpointsLabels, Endpoint> = {
     Login: {
         method: 'GET',
@@ -18,6 +18,10 @@ export const AuthEndpoints: Record<AuthEndpointsLabels, Endpoint> = {
     Refresh: {
         method: 'GET',
         url: 'api/auth/refresh',
+    },
+    Logout: {
+        method: 'POST',
+        url: 'api/auth/logout',
     },
 };
 

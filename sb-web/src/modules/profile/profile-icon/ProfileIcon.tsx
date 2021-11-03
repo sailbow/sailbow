@@ -3,7 +3,8 @@ import React, { FunctionComponent } from 'react';
 import { Avatar, Box, Menu, MenuButton, MenuItem, MenuGroup, MenuDivider, MenuList } from '@chakra-ui/react';
 
 import { useProfile } from 'modules/profile/Profile';
-import { resetLocalStorage } from 'util/Http';
+import { AuthEndpoints } from 'util/Endpoints';
+import { Http, resetLocalStorage } from 'util/Http';
 import { FAQ, Privacy, Terms, User, Logout, Envelope } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
@@ -35,7 +36,8 @@ const HelpOptions = [
 export const ProfileIcon: FunctionComponent = () => {
     const [profileContainer] = useProfile();
 
-    const onLogout = () => {
+    const onLogout = async () => {
+        await Http(AuthEndpoints.Logout);
         resetLocalStorage();
         window.location.href = Routes.Public.Landing;
     };
