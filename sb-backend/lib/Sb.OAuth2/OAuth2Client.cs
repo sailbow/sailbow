@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
-using RestSharp;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+
+using RestSharp;
 
 namespace Sb.OAuth2
 {
@@ -48,14 +48,14 @@ namespace Sb.OAuth2
         {
             string endpoint =
                 $"{_authUrl}?{ParameterKeys.RedirectUri}={HttpUtility.UrlEncode(redirectUri)}&{ParameterKeys.ClientId}={_clientCredentials.ClientId}&scope={scope ?? Defaults.Scope}&access_type={accessType ?? Defaults.AccessType}&{ParameterKeys.ResponseType}=code";
-            foreach (KeyValuePair<string,string> kvp in GetAdditionalAuthorizationParameters())
+            foreach (KeyValuePair<string, string> kvp in GetAdditionalAuthorizationParameters())
             {
                 endpoint += $"&{kvp.Key}={kvp.Value}";
             }
             return endpoint;
         }
 
-        public async Task<GenerateTokenResponse> GenerateAccessTokensAsync(string authCode, string redirectUri)
+        public async Task<TokenBase> GenerateAccessTokensAsync(string authCode, string redirectUri)
         {
             var client = new RestClient(_tokenUrl);
             client.Timeout = -1;
@@ -71,10 +71,10 @@ namespace Sb.OAuth2
             {
                 throw new OAuth2Exception(res.StatusCode, res.Content);
             }
-            return JsonConvert.DeserializeObject<GenerateTokenResponse>(res.Content, SerializerSettings);
+            return JsonConvert.DeserializeObject<TokenBase>(res.Content, SerializerSettings);
         }
 
-        public async Task<RefreshTokenResponse> RefreshTokenAsync(string refreshToken)
+        public async Task<TokenBase> RefreshTokenAsync(string refreshToken)
         {
             var client = new RestClient(_tokenRefreshUrl);
             client.Timeout = -1;
@@ -90,7 +90,7 @@ namespace Sb.OAuth2
             {
                 throw new OAuth2Exception(res.StatusCode, res.Content);
             }
-            return JsonConvert.DeserializeObject<RefreshTokenResponse>(res.Content, SerializerSettings);
+            return JsonConvert.DeserializeObject<TokenBase>(res.Content, SerializerSettings);
         }
 
         public abstract Task<AuthorizedUser> GetAuthorizedUserAsync(string accessToken);

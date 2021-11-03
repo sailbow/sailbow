@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 using RestSharp;
 
@@ -11,7 +10,7 @@ namespace Sb.OAuth2
 {
     public class FacebookOAuth2Client : OAuth2Client
     {
-        public FacebookOAuth2Client(ClientCredentials credentials): base(
+        public FacebookOAuth2Client(ClientCredentials credentials) : base(
             new Uri("https://www.facebook.com/v12.0/dialog/oauth"),
             new Uri("https://graph.facebook.com/v12.0/oauth/access_token"),
             new Uri("https://graph.facebook.com/v12.0/oauth/access_token"),
