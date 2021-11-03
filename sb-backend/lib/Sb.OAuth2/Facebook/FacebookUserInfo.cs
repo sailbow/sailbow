@@ -17,7 +17,7 @@ namespace Sb.OAuth2
     {
         public int Width { get; set; }
         public int Height { get; set; }
-        public int IsSilhouette { get; set; }
+        public bool? IsSilhouette { get; set; }
         public string Url { get; set; }
     }
 }
