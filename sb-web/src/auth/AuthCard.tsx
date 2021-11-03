@@ -21,8 +21,7 @@ export const ProviderToUriMapper: Record<string, string> = {
 export const AuthCard: FunctionComponent = () => {
     const onLogin = async (provider: Providers) => {
         const { data }: AxiosResponse = await Http({
-            method: AuthEndpoints.Login.method,
-            url: AuthEndpoints.Login.url,
+            ...AuthEndpoints.Login,
             params: {
                 provider,
                 redirectUri: ProviderToUriMapper[provider],

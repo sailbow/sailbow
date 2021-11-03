@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
+import { Flex, Heading } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
 import { useHistory } from 'react-router-dom';
 
@@ -7,7 +8,7 @@ import { ToastActionType, useToast } from 'modules/toast/Toast';
 import { Routes } from 'util/Routing';
 import { Http, RedirectResponse, setHeadersToLocalStorage } from 'util/Http';
 import { AuthEndpoints } from 'util/Endpoints';
-import { Providers, ProviderToUriMapper } from 'auth/AuthCard';
+import { ProviderToUriMapper } from 'auth/AuthCard';
 
 export const Redirect: FunctionComponent = () => {
     const history = useHistory();
@@ -22,8 +23,7 @@ export const Redirect: FunctionComponent = () => {
             try {
                 if (code && provider) {
                     const { data }: AxiosResponse<RedirectResponse> = await Http({
-                        method: AuthEndpoints.Authorize.method,
-                        url: AuthEndpoints.Authorize.url,
+                        ...AuthEndpoints.Authorize,
                         params: {
                             provider,
                             code,
@@ -43,5 +43,9 @@ export const Redirect: FunctionComponent = () => {
         })();
     });
 
-    return <span>Redirecting...</span>;
+    return (
+        <Flex h="100%" w="100%" justifyContent="center" alignItems="center">
+            <Heading fontWeight="semibold">Redirecting...</Heading>
+        </Flex>
+    );
 };

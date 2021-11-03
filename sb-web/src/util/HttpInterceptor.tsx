@@ -3,11 +3,12 @@ import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { ToastActionType, useToast } from 'modules/toast/Toast';
 import {
     Http,
-    buildHeaders,
     HttpStatus,
     RedirectResponse,
     setHeadersToLocalStorage,
     resetLocalStorage,
+    LS,
+    TokenStorageKeys,
 } from 'util/Http';
 import { Routes } from 'util/Routing';
 import { AuthEndpoints } from 'util/Endpoints';
@@ -23,7 +24,9 @@ export const HttpInterceptor: FunctionComponent = () => {
         Http.interceptors.request.use(
             (value: AxiosRequestConfig) => {
                 const request = { ...value };
-                request.headers = buildHeaders();
+                request.headers = {
+                    Authorization: `Bearer ${LS.getItem(TokenStorageKeys.AT) || ''}`,
+                };
                 return request;
             },
             (error) => {
@@ -46,22 +49,27 @@ export const HttpInterceptor: FunctionComponent = () => {
                             console.log('Should go to login page');
                             resetLocalStorage();
                             window.location.href = Routes.Public.Landing;
+                            dispatch({
+                                type: ToastActionType.ShowError,
+                                text: "Unauthorized! Looks like you aren't on the manifest",
+                            });
                         } else if (!originalRequest.retry) {
                             originalRequest.retry = true;
                             console.log('Refreshing token....');
 
-                            const response = Http({
-                                method: AuthEndpoints.Refresh.method,
-                                url: AuthEndpoints.Refresh.url,
-                            }).then(async ({ data }: AxiosResponse<RedirectResponse>) => {
-                                const { accessToken, expiresAt } = data;
-                                await setHeadersToLocalStorage(accessToken, expiresAt);
-                                originalRequest.headers = buildHeaders();
+                            const response = Http(AuthEndpoints.Refresh).then(
+                                async ({ data }: AxiosResponse<RedirectResponse>) => {
+                                    const { accessToken, expiresAt } = data;
+                                    await setHeadersToLocalStorage(accessToken, expiresAt);
+                                    originalRequest.headers = {
+                                        Authorization: `Bearer ${LS.getItem(TokenStorageKeys.AT) || ''}`,
+                                    };
 
-                                console.log('Token refreshed...');
+                                    console.log('Token refreshed...');
 
-                                return Http.request(originalRequest);
-                            });
+                                    return Http.request(originalRequest);
+                                },
+                            );
                             return Promise.resolve(response);
                         }
                         break;

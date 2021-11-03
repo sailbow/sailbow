@@ -11,14 +11,13 @@ import { HttpInterceptor } from 'util/HttpInterceptor';
 import { WhitelistedRoutes } from 'util/Routing';
 
 import './App.scss';
+import { ProfileProvider, useProfile } from 'modules/profile/Profile';
+import { ProfileLoading } from 'modules/profile/profile-loading/ProfileLoading';
 
 const AppContainer: FunctionComponent = () => {
-    // const [profileContainer] = useProfile();
-    const profileContainer = {
-        loading: false,
-    };
+    const [profileContainer] = useProfile();
 
-    return <>{profileContainer.loading ? <span>Initializing..</span> : <PrivateContent />}</>;
+    return <>{profileContainer.loading ? <></> : <PrivateContent />}</>;
 };
 
 export const App: FunctionComponent = () => {
@@ -61,13 +60,13 @@ export const App: FunctionComponent = () => {
             <BoatProvider>
                 <ToastBar />
                 <HttpInterceptor />
-                {/* <HttpInterceptor /> */}
                 <BrowserRouter>
                     {isAuth ? (
-                        // <ProfileProvider>
-                        <AppContainer />
+                        <ProfileProvider>
+                            <ProfileLoading />
+                            <AppContainer />
+                        </ProfileProvider>
                     ) : (
-                        // </ProfileProvider>
                         <PublicContent />
                     )}
                 </BrowserRouter>
