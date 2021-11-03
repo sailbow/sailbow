@@ -55,7 +55,7 @@ namespace Sb.OAuth2
             return endpoint;
         }
 
-        public async Task<GenerateTokenResponse> GenerateAccessTokensAsync(string authCode, string redirectUri)
+        public async Task<TokenBase> GenerateAccessTokensAsync(string authCode, string redirectUri)
         {
             var client = new RestClient(_tokenUrl);
             client.Timeout = -1;
@@ -71,10 +71,10 @@ namespace Sb.OAuth2
             {
                 throw new OAuth2Exception(res.StatusCode, res.Content);
             }
-            return JsonConvert.DeserializeObject<GenerateTokenResponse>(res.Content, SerializerSettings);
+            return JsonConvert.DeserializeObject<TokenBase>(res.Content, SerializerSettings);
         }
 
-        public async Task<RefreshTokenResponse> RefreshTokenAsync(string refreshToken)
+        public async Task<TokenBase> RefreshTokenAsync(string refreshToken)
         {
             var client = new RestClient(_tokenRefreshUrl);
             client.Timeout = -1;
@@ -90,7 +90,7 @@ namespace Sb.OAuth2
             {
                 throw new OAuth2Exception(res.StatusCode, res.Content);
             }
-            return JsonConvert.DeserializeObject<RefreshTokenResponse>(res.Content, SerializerSettings);
+            return JsonConvert.DeserializeObject<TokenBase>(res.Content, SerializerSettings);
         }
 
         public abstract Task<AuthorizedUser> GetAuthorizedUserAsync(string accessToken);

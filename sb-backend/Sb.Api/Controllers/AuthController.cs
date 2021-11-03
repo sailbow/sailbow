@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace Sb.Api.Controllers
 {
-    public partial class AuthController : ApiControllerBase
+    public class AuthController : ApiControllerBase
     {
         private readonly OAuth2ClientFactory _clientFactory;
         private readonly JwtConfig _jwtConfig;
@@ -46,9 +46,9 @@ namespace Sb.Api.Controllers
             try
             {
                 OAuth2Client client = _clientFactory.GetClient(provider);
-                GenerateTokenResponse tokenResponse = await client.GenerateAccessTokensAsync(code, redirectUri);
-                AuthorizedUser user = await client.GetAuthorizedUserAsync(tokenResponse.AccessToken);
-                JwtToken token = GenerateToken(provider, tokenResponse, user);
+                TokenBase providerTokens = await client.GenerateAccessTokensAsync(code, redirectUri);
+                AuthorizedUser user = await client.GetAuthorizedUserAsync(providerTokens.AccessToken);
+                JwtToken token = GenerateToken(provider, providerTokens, user);
                 return Ok(token);
             }
             catch (OAuth2Exception e)
@@ -66,6 +66,26 @@ namespace Sb.Api.Controllers
             }
         }
 
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshAsync()
+        {
+            IdentityProvider? provider = HttpContext.GetIdentityProvider();
+            if (provider.HasValue)
+            {
+                TokenBase providerTokens = HttpContext.GetProviderTokens();
+                providerTokens = await _clientFactory
+                    .GetClient(provider.Value)
+                    .RefreshTokenAsync(providerTokens.RefreshToken);
+                AuthorizedUser user = HttpContext.GetUserFromClaims();
+                JwtToken token = GenerateToken(provider.Value, providerTokens, user);
+                return Ok(token);
+            }
+            return BadRequest(new
+            {
+                message = "Invalid identity provider"
+            });
+        }
+
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
@@ -74,7 +94,7 @@ namespace Sb.Api.Controllers
             return Ok();
         }
 
-        private JwtToken GenerateToken(IdentityProvider provider, GenerateTokenResponse providerToken, AuthorizedUser user)
+        private JwtToken GenerateToken(IdentityProvider provider, TokenBase providerToken, AuthorizedUser user)
         {
             var claims = new List<Claim>()
                 .AddIfValid(ClaimTypes.Name, user.Name)
