@@ -65,6 +65,13 @@ namespace Sb.Api
                     };
                 });
 
+            services.AddSbDatabase()
+                .AddMongo(opts =>
+                {
+                    opts.ConnectionString = Configuration["Mongo:ConnectionString"];
+                    opts.DatabaseName = Configuration["Mongo:DatabaseName"];
+                });
+
             services.AddAuthorization();
             services.AddCors(opts =>
             {

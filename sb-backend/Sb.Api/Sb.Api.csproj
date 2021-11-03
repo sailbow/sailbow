@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\lib\Sb.Data\Sb.Data.csproj" />
     <ProjectReference Include="..\lib\Sb.OAuth2\Sb.OAuth2.csproj" />
   </ItemGroup>
 

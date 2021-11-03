@@ -9,11 +9,14 @@ using Newtonsoft.Json;
 
 using Sb.Api.Models;
 using Sb.Api.Services;
+using Sb.Data;
+using Sb.Data.Models.Mongo;
 using Sb.OAuth2;
 
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,13 +44,28 @@ namespace Sb.Api.Controllers
 
         [HttpGet("authorize")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authorize(IdentityProvider provider, [FromQuery] string code, [FromQuery] string redirectUri)
+        public async Task<IActionResult> Authorize(
+            IdentityProvider provider,
+            [FromQuery] string code,
+            [FromQuery] string redirectUri,
+            [FromServices] IMongoRepository<User> userRepository)
         {
             try
             {
                 OAuth2Client client = _clientFactory.GetClient(provider);
                 TokenBase providerTokens = await client.GenerateAccessTokensAsync(code, redirectUri);
                 AuthorizedUser user = await client.GetAuthorizedUserAsync(providerTokens.AccessToken);
+
+                User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email)).FirstOrDefault();
+                if  (existingUser is null)
+                {
+                    existingUser = await userRepository.InsertAsync(new User
+                    {
+                        Name = user.Name,
+                        Email = user.Email,
+                        DateCreated = DateTime.UtcNow
+                    });
+                }
                 JwtToken token = GenerateToken(provider, providerTokens, user);
                 return Ok(token);
             }

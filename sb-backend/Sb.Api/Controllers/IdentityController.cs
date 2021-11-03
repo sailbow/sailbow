@@ -1,36 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
 
-using Sb.Api.Models;
+using Sb.Data;
+using Sb.Data.Models.Mongo;
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Sb.Api.Controllers
 {
     public class IdentityController : ApiControllerBase
     {
-        public IdentityController()
+        private readonly IMongoRepository<User> _userRepo;
+        public IdentityController(IMongoRepository<User> userRepository)
         {
-
+            _userRepo = userRepository;
         }
 
         [HttpGet("me")]
-        public IActionResult GetMe()
+        public async Task<IActionResult> GetMe()
         {
-            IEnumerable<Claim> claims = HttpContext.User.Claims;
-            User user = new()
-            {
-                Id = claims.FirstOrDefault(c => c.Type == "id")?.Value,
-                Email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
-                Name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value,
-                Picture = claims.FirstOrDefault(c => c.Type == "picture")?.Value
-            };
-
-            if (Enum.TryParse(claims.FirstOrDefault(c => c.Type == "provider")?.Value, out IdentityProvider p))
-                user.Provider = p.ToString();
-
+            string id = HttpContext.GetClaim(CustomClaimTypes.Id);
+            User user = (await _userRepo.GetAsync(u => u.Id == id))?.FirstOrDefault();
+            if (user is null)
+                return NotFound();
             return Ok(user);
         }
     }
