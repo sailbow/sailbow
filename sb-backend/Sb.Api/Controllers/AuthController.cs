@@ -1,12 +1,4 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +12,14 @@ using Sb.Api.Services;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 using Sb.OAuth2;
+
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Sb.Api.Controllers
 {
@@ -56,19 +56,26 @@ namespace Sb.Api.Controllers
                 TokenBase providerTokens = await client.GenerateAccessTokensAsync(code, redirectUri);
                 AuthorizedUser user = await client.GetAuthorizedUserAsync(providerTokens.AccessToken);
 
-                User existingUser = (await userRepository.GetAsync(u => u.Provider == provider.ToString() && u.ProviderUserId == user.Id)).FirstOrDefault();
-                if (existingUser is null)
+                if (string.IsNullOrWhiteSpace(user.Email))
+                    return Unauthorized("Invalid email");
+
+                User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email)).FirstOrDefault();
+                if (existingUser is not null)
                 {
-                    existingUser = new User
+                    if (existingUser.Provider != provider.ToString())
+                    {
+                        return BadRequest("An account with this email already exists");
+                    }
+                    existingUser = await userRepository.InsertAsync(new User
                     {
                         Name = user.Name,
                         Email = user.Email,
                         Provider = provider.ToString(),
                         ProviderUserId = user.Id,
                         DateCreated = DateTime.UtcNow
-                    };
-                    existingUser = await userRepository.InsertAsync(existingUser);
+                    });
                 }
+
                 JwtToken token = GenerateToken(provider, providerTokens, existingUser);
                 return Ok(token);
             }
