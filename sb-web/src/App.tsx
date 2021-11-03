@@ -7,6 +7,7 @@ import { BoatProvider } from 'contexts/boat/Boat';
 import { ToastBar, ToastProvider } from 'contexts/toast/Toast';
 import { PrivateContent, PublicContent, WhitelistedContent } from 'screens/content/Content';
 import { LS, TokenStorageKeys } from 'util/Http';
+import { HttpInterceptor } from 'util/HttpInterceptor';
 import { WhitelistedRoutes } from 'util/Routing';
 
 import './App.scss';
@@ -59,6 +60,7 @@ export const App: FunctionComponent = () => {
         <ToastProvider>
             <BoatProvider>
                 <ToastBar />
+                <HttpInterceptor />
                 {/* <HttpInterceptor /> */}
                 <BrowserRouter>
                     {isAuth ? (

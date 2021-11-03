@@ -21,7 +21,7 @@ export const Redirect: FunctionComponent = () => {
 
             try {
                 if (code && provider) {
-                    const { data } = await Http({
+                    const { data }: AxiosResponse<RedirectResponse> = await Http({
                         method: AuthEndpoints.Authorize.method,
                         url: AuthEndpoints.Authorize.url,
                         params: {
@@ -31,12 +31,8 @@ export const Redirect: FunctionComponent = () => {
                         },
                     });
 
-                    await setHeadersToLocalStorage(
-                        data.tokens.access_token,
-                        data.tokens.refresh_token,
-                        data.tokens.expires_in,
-                        data.tokens.token_type,
-                    );
+                    setHeadersToLocalStorage(data.accessToken, data.expiresAt);
+                    window.location.href = Routes.Private.Home;
                 } else {
                     throw new Error('Could not login. Invalid redirect parameters.');
                 }
