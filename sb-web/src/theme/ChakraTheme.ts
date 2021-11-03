@@ -108,7 +108,6 @@ const components: ComponentDefaultProps = {
     Input: {
         variants: {
             brand: (props: any) => {
-                console.log(ChakraTheme.components.Menu);
                 return {
                     field: {
                         ...ChakraTheme.components.Input.variants.outline(props).field,
