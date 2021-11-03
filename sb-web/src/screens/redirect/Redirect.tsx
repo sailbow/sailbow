@@ -3,11 +3,11 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { AxiosResponse } from 'axios';
 import { useHistory } from 'react-router-dom';
 
-import { ToastActionType, useToast } from 'contexts/toast/Toast';
+import { ToastActionType, useToast } from 'modules/toast/Toast';
 import { Routes } from 'util/Routing';
 import { Http, RedirectResponse, setHeadersToLocalStorage } from 'util/Http';
 import { AuthEndpoints } from 'util/Endpoints';
-import { Providers, ProviderToUriMapper } from 'modules/auth/AuthCard';
+import { Providers, ProviderToUriMapper } from 'auth/AuthCard';
 
 export const Redirect: FunctionComponent = () => {
     const history = useHistory();

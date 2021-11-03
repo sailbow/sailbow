@@ -2,11 +2,11 @@ import React, { FunctionComponent } from 'react';
 
 import { Box } from '@chakra-ui/react';
 
-import { BannerType } from 'contexts/boat/BoatConstants';
+import { BannerType } from 'boats/BoatConstants';
 import { Color } from 'theme/Colors';
 import { Checkmark } from 'util/Icons';
 
-import 'modules/banner/banner-change-modal/color-box/ColorBox.scss';
+import 'boats/banner/banner-change-modal/color-box/ColorBox.scss';
 
 interface ColorBoxProps {
     color: Color;

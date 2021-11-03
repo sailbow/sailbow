@@ -16,7 +16,7 @@ import {
 import { Form, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
-import { ToastActionType, useToast } from 'contexts/toast/Toast';
+import { ToastActionType, useToast } from 'modules/toast/Toast';
 import { Envelope, ErrorCircle } from 'util/Icons';
 
 interface FormValues {

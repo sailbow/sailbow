@@ -27,8 +27,8 @@ const License = lazy(() => import('screens/whitelisted/License').then((module) =
 const NotFound = lazy(() => import('screens/not-found/NotFound').then((module) => ({ default: module.NotFound })));
 
 /** Private Content */
-const Home = lazy(() => import('screens/home/Home').then((module) => ({ default: module.Home })));
-const Create = lazy(() => import('screens/create/Create').then((module) => ({ default: module.Create })));
+const Home = lazy(() => import('boats/home/Home').then((module) => ({ default: module.Home })));
+const Create = lazy(() => import('boats/create/Create').then((module) => ({ default: module.Create })));
 
 export const WhitelistedContent: FunctionComponent = () => {
     return (

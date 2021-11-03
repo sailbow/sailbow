@@ -3,12 +3,12 @@ import React, { ChangeEvent, FunctionComponent, useState } from 'react';
 import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
-import { BoatActionType, useBoat } from 'contexts/boat/Boat';
+import { BoatActionType, useBoat } from 'boats/Boat';
 import { Input, TextArea } from 'components/input/Input';
-import { Banner } from 'modules/banner/Banner';
+import { Banner } from 'boats/banner/Banner';
 import { UserSearch } from 'modules/user-search/UserSearch';
 
-import 'screens/create/Create.scss';
+import 'boats/create/Create.scss';
 
 export const Create: FunctionComponent = () => {
     const [, dispatch] = useBoat();

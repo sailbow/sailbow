@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 
 import { Flex } from '@chakra-ui/react';
 
-import { AuthCard } from 'modules/auth/AuthCard';
+import { AuthCard } from 'auth/AuthCard';
 
 import 'screens/landing/Landing.scss';
 

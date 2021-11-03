@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { ToastActionType, useToast } from 'contexts/toast/Toast';
+import { ToastActionType, useToast } from 'modules/toast/Toast';
 import {
     Http,
     buildHeaders,

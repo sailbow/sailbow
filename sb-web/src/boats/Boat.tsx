@@ -1,6 +1,6 @@
 import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
 
-import { BannerType } from 'contexts/boat/BoatConstants';
+import { BannerType } from 'boats/BoatConstants';
 import { Color } from 'theme/Colors';
 import { Log } from 'util/Logger';
 

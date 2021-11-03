@@ -3,8 +3,8 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import Aos from 'aos';
 import { BrowserRouter } from 'react-router-dom';
 
-import { BoatProvider } from 'contexts/boat/Boat';
-import { ToastBar, ToastProvider } from 'contexts/toast/Toast';
+import { BoatProvider } from 'boats/Boat';
+import { ToastBar, ToastProvider } from 'modules/toast/Toast';
 import { PrivateContent, PublicContent, WhitelistedContent } from 'screens/content/Content';
 import { LS, TokenStorageKeys } from 'util/Http';
 import { HttpInterceptor } from 'util/HttpInterceptor';
