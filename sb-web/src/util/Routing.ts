@@ -1,7 +1,11 @@
+type PublicRoutesLabel = 'Landing' | 'Login';
+type PrivateRoutesLabel = 'Home' | 'Create';
+type WhitelistedRoutesLabel = 'AboutUs' | 'Contact' | 'FAQ' | 'HowItWorks' | 'Privacy' | 'Terms' | 'License';
+
 interface Route {
-    Public: Record<string, string>;
-    Private: Record<string, string>;
-    Whitelisted: Record<string, string>;
+    Public: Record<PublicRoutesLabel, string>;
+    Private: Record<PrivateRoutesLabel, string>;
+    Whitelisted: Record<WhitelistedRoutesLabel, string>;
 }
 
 export const Routes: Route = {

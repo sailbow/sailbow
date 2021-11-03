@@ -1,14 +1,15 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Flex, Button, HStack, IconButton, VStack, Box, Text, Avatar } from '@chakra-ui/react';
+import { Flex, Button, HStack, Avatar } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
-import { RightIcon, Menu, Plus, Boat, Bell, Memories } from 'util/Icons';
+import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
+import { Plus } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
 import 'modules/navbar/Navbar.scss';
-import { UnAuthenticatedNavbar } from './UnauthenticatedNavbar';
+import { ProfileIcon } from 'modules/profile/profile-icon/ProfileIcon';
 
 interface Props {
     isAuth: boolean;
@@ -50,7 +51,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                         <Button variant="link">Boats</Button>
                         <Button variant="link">Memories</Button>
                         <Button variant="link">Notifications</Button>
-                        <Avatar name="Hrishikesh Paul" size="sm" h="40px" w="40px" />
+                        <ProfileIcon />
                     </HStack>
                 </>
             ) : (

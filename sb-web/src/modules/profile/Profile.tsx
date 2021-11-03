@@ -21,16 +21,12 @@ export interface SpotifyImage {
 }
 
 export interface Profile {
-    displayName: string;
-    externalURLs?: ExternalURL;
-    followers?: Followers;
-    href: string;
-    id: string;
-    images?: SpotifyImage[];
-    type: 'user';
-    uri: string;
+    dateCreated: string;
     email: string;
-    _id: string;
+    id: string;
+    name: string;
+    provider: string;
+    providerUserId: string;
 }
 
 export enum ProfileActionType {

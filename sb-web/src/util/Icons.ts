@@ -1,8 +1,8 @@
 export {
     BsExclamation as Exclamation,
-    BsEnvelope as Envelope,
     BsChatRightText as ChatRight,
     BsImage as Image,
+    BsQuestionCircle as FAQ,
 } from 'react-icons/bs';
 export {
     IoCloseOutline as Close,
@@ -11,6 +11,8 @@ export {
     IoLogoFacebook as Facebook,
     IoSearchOutline as Search,
     IoPersonOutline as Person,
+    IoDocumentTextOutline as Terms,
+    IoMailOutline as Envelope,
 } from 'react-icons/io5';
 export {
     HiArrowRight as RightIcon,
@@ -23,7 +25,8 @@ export { FcGoogle as Google } from 'react-icons/fc';
 export { FiPlus as Plus, FiMinus as Minus, FiCheck as Checkmark } from 'react-icons/fi';
 export { BiErrorCircle as ErrorCircle } from 'react-icons/bi';
 export { VscBell as Bell } from 'react-icons/vsc';
-export { MdOutlineImageSearch as Memories } from 'react-icons/md';
+export { MdOutlineImageSearch as Memories, MdOutlinePrivacyTip as Privacy } from 'react-icons/md';
+export { AiOutlineUser as User, AiOutlineLogout as Logout } from 'react-icons/ai';
 
 export { ReactComponent as Boat } from 'assets/icons/boat.svg';
 export { ReactComponent as Logo } from 'assets/sailboat-logo.svg';

@@ -178,6 +178,16 @@ const components: ComponentDefaultProps = {
             },
         },
     },
+    Menu: {
+        parts: ['menu', 'item'],
+        baseStyle: {
+            item: {
+                fontWeight: 'normal',
+                lineHeight: 'normal',
+                padding: '1rem',
+            },
+        },
+    },
 };
 
 const shadows = {
