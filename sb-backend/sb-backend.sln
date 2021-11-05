@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{7BEB4C74-1D7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.OAuth2", "lib\Sb.OAuth2\Sb.OAuth2.csproj", "{07175926-E2C7-40AD-836F-5C0832CEA483}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sb.Data", "lib\Sb.Data\Sb.Data.csproj", "{CD07254A-51AB-456A-BBD8-226279CAC847}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.Data", "lib\Sb.Data\Sb.Data.csproj", "{CD07254A-51AB-456A-BBD8-226279CAC847}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
