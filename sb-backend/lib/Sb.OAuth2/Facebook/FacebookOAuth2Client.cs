@@ -31,13 +31,5 @@ namespace Sb.OAuth2
             EnsureSuccess(res);
             return JsonConvert.DeserializeObject<FacebookUserInfo>(res.Content, SerializerSettings);
         }
-
-        protected override Dictionary<string, string> GetAdditionalAuthorizationParameters()
-        {
-            return new Dictionary<string, string>
-            {
-                { "state", Guid.NewGuid().ToString() }
-            };
-        }
     }
 }
