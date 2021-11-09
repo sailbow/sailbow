@@ -4,7 +4,7 @@ import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box } from '
 
 import { Base } from 'screens/whitelisted/Base';
 import { FAQData } from 'screens/whitelisted/Data';
-import { Minus, Plus } from 'util/Icons';
+import { Minus, SbPlusIcon } from 'util/Icons';
 
 export const FAQ: FunctionComponent = () => {
     return (
@@ -19,7 +19,7 @@ export const FAQ: FunctionComponent = () => {
                                         <Box flex="1" textAlign="left" fontWeight="semibold" fontSize="lg">
                                             {data.question}
                                         </Box>
-                                        {isExpanded ? <Minus fontSize="xl" /> : <Plus fontSize="xl" />}
+                                        {isExpanded ? <Minus fontSize="xl" /> : <SbPlusIcon fontSize="xl" />}
                                     </AccordionButton>
                                 </h2>
                                 <AccordionPanel pb={4} fontWeight="normal">

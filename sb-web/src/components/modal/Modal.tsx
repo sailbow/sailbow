@@ -11,7 +11,7 @@ import {
     IconButton,
 } from '@chakra-ui/react';
 
-import { Close } from 'util/Icons';
+import { SbCloseIcon } from 'util/Icons';
 
 interface Props {
     isOpen: boolean;
@@ -47,7 +47,7 @@ export const Modal: FunctionComponent<Props> = ({
                         fontSize="xl"
                         onClick={onClose}
                     >
-                        <Close />
+                        <SbCloseIcon />
                     </IconButton>
                 </ModalHeader>
 

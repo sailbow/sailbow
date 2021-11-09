@@ -5,7 +5,7 @@ import { Avatar, Box, Menu, MenuButton, MenuItem, MenuGroup, MenuDivider, MenuLi
 import { useProfile } from 'modules/profile/Profile';
 import { AuthEndpoints } from 'util/Endpoints';
 import { Http, resetLocalStorage } from 'util/Http';
-import { FAQ, Privacy, Terms, User, Logout, Envelope } from 'util/Icons';
+import { SbQuestionIcon, Privacy, SbTermsIcon, User, Logout, SbMailIcon } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
 import 'modules/profile/profile-icon/ProfileIcon.scss';
@@ -18,18 +18,18 @@ const HelpOptions = [
     },
     {
         label: 'Terms',
-        route: Routes.Whitelisted.Privacy,
-        icon: <Terms />,
+        route: Routes.Whitelisted.Terms,
+        icon: <SbTermsIcon />,
     },
     {
         label: 'FAQ',
-        route: Routes.Whitelisted.Privacy,
-        icon: <FAQ />,
+        route: Routes.Whitelisted.FAQ,
+        icon: <SbQuestionIcon />,
     },
     {
         label: 'Contact',
-        route: Routes.Whitelisted.Privacy,
-        icon: <Envelope />,
+        route: Routes.Whitelisted.Contact,
+        icon: <SbMailIcon />,
     },
 ];
 

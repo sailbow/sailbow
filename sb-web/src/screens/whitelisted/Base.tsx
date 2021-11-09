@@ -4,7 +4,7 @@ import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { LS, TokenStorageKeys } from 'util/Http';
-import { RightIcon } from 'util/Icons';
+import { SbRightArrowIcon } from 'util/Icons';
 
 import 'screens/whitelisted/Base.scss';
 
@@ -37,7 +37,7 @@ export const BaseNavbar: FunctionComponent = () => {
             boxShadow="sm"
         >
             <Logo className="logo" onClick={toHome} />
-            <Button rightIcon={<RightIcon />} onClick={toHome}>
+            <Button rightIcon={<SbRightArrowIcon />} onClick={toHome}>
                 <Text pr="4">{displayLabel()}</Text>
             </Button>
         </Flex>

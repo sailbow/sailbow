@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
 import { ProfileIcon } from 'modules/profile/profile-icon/ProfileIcon';
-import { Bell, Boat, Clock, Feed, Plus } from 'util/Icons';
+import { Bell, Boat, SbClockIcon, Feed, SbPlusIcon } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
 import 'modules/navbar/Navbar.scss';
@@ -53,13 +53,13 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                         <Button variant="ghost" colorScheme="gray" leftIcon={<Feed />} size="sm">
                             Feed
                         </Button>
-                        <Button variant="ghost" colorScheme="gray" leftIcon={<Clock />} size="sm">
+                        <Button variant="ghost" colorScheme="gray" leftIcon={<SbClockIcon />} size="sm">
                             Memories
                         </Button>
                     </HStack>
                     <HStack alignItems="center">
-                        <Button leftIcon={<Plus />} size="sm">
-                            Create
+                        <Button leftIcon={<SbPlusIcon />} size="sm">
+                            Start Boat
                         </Button>
                         <IconButton aria-label="notification" variant="ghost" colorScheme="gray">
                             <Bell />

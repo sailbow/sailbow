@@ -6,7 +6,7 @@ import { AxiosResponse } from 'axios';
 import { ReactComponent as LogoType } from 'assets/sb-gradient-logo-type.svg';
 import { AuthEndpoints } from 'util/Endpoints';
 import { Http } from 'util/Http';
-import { RightIcon, Facebook as FacebookLogo, Google as GoogleLogo } from 'util/Icons';
+import { SbRightArrowIcon, SbFacebookIcon, SbGoogleIcon } from 'util/Icons';
 
 export enum Providers {
     Google,
@@ -53,8 +53,8 @@ export const AuthCard: FunctionComponent = () => {
                         <Button
                             variant="outline"
                             colorScheme="gray"
-                            leftIcon={<GoogleLogo />}
-                            rightIcon={<RightIcon />}
+                            leftIcon={<SbGoogleIcon />}
+                            rightIcon={<SbRightArrowIcon />}
                             onClick={() => onLogin(Providers.Google)}
                         >
                             <Text style={{ paddingRight: '2rem' }}>Log In with Google</Text>
@@ -62,8 +62,8 @@ export const AuthCard: FunctionComponent = () => {
                         <Button
                             variant="outline"
                             colorScheme="gray"
-                            leftIcon={<FacebookLogo />}
-                            rightIcon={<RightIcon />}
+                            leftIcon={<SbFacebookIcon />}
+                            rightIcon={<SbRightArrowIcon />}
                             onClick={() => onLogin(Providers.Facebook)}
                         >
                             <Text pr="3.5">Log In with Facebook</Text>

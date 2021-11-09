@@ -6,7 +6,7 @@ import { BoatActionType, useBoat } from 'boats/Boat';
 import { BannerType } from 'boats/BoatConstants';
 import { BannerChangeModal } from 'boats/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
-import { ArrowDown, ArrowUp } from 'util/Icons';
+import { SbArrowDownIcon, SbArrowUpIcon } from 'util/Icons';
 
 import 'boats/banner/Banner.scss';
 
@@ -80,7 +80,7 @@ export const Banner: FunctionComponent = () => {
                             borderRadius="md"
                             onClick={() => setPosition('up')}
                         >
-                            <ArrowUp />
+                            <SbArrowUpIcon />
                         </IconButton>
                         <IconButton
                             bg="white"
@@ -92,7 +92,7 @@ export const Banner: FunctionComponent = () => {
                             borderRadius="md"
                             onClick={() => setPosition('down')}
                         >
-                            <ArrowDown />
+                            <SbArrowDownIcon />
                         </IconButton>
                         <Image
                             draggable="false"

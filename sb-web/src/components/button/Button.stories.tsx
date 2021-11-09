@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button, Table, Thead, Tbody, Tr, Th, Td, IconButton } from '@chakra-ui/react';
-import { RightIcon, Image } from 'util/Icons';
+import { SbRightArrowIcon, Image } from 'util/Icons';
 
 export default {
     title: 'Components/Button',
@@ -15,7 +15,7 @@ const Template: any = (args: any): JSX.Element => {
         },
         {
             title: 'Primary With Icon',
-            comp: <Button rightIcon={<RightIcon />}>Primary Button</Button>,
+            comp: <Button rightIcon={<SbRightArrowIcon />}>Primary Button</Button>,
         },
         {
             title: 'Outline',
@@ -24,7 +24,7 @@ const Template: any = (args: any): JSX.Element => {
         {
             title: 'Outline with Icon',
             comp: (
-                <Button variant="outline" rightIcon={<RightIcon />}>
+                <Button variant="outline" rightIcon={<SbRightArrowIcon />}>
                     Outline Button
                 </Button>
             ),

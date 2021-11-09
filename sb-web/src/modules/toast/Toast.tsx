@@ -3,7 +3,7 @@ import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContex
 import { Flex, Icon, Text } from '@chakra-ui/react';
 import { ToastContainer, toast } from 'react-toastify';
 
-import { Exclamation, Close, Checkmark } from 'util/Icons';
+import { SbWarningIcon, SbCloseIcon, Checkmark } from 'util/Icons';
 import { Log } from 'util/Logger';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -138,7 +138,7 @@ export const ToastBar = (): JSX.Element | null => {
             toast(
                 <Container>
                     <Flex alignItems="center">
-                        <Icon as={Close} w={6} h={6} zIndex="2" color="white" />
+                        <Icon as={SbCloseIcon} w={6} h={6} zIndex="2" color="white" />
                         <Text pl="4" fontSize="sm" fontWeight="normal">
                             {message.text}
                         </Text>
@@ -152,7 +152,7 @@ export const ToastBar = (): JSX.Element | null => {
             toast(
                 <Container>
                     <Flex alignItems="center">
-                        <Icon as={Exclamation} w={6} h={6} zIndex="2" color="white" />
+                        <Icon as={SbWarningIcon} w={6} h={6} zIndex="2" color="white" />
                         <Text pl="4" fontSize="sm" fontWeight="normal">
                             {message.text}
                         </Text>
