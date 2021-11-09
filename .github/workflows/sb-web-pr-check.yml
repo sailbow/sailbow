@@ -1,4 +1,4 @@
-name: sb-web PR Check
+name: sb-web-pr-check
 
 on:
   pull_request:
