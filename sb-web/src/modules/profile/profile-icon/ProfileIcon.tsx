@@ -50,7 +50,7 @@ export const ProfileIcon: FunctionComponent = () => {
         <Box className="sb-profile-icon">
             <Menu>
                 <MenuButton className="button">
-                    <Avatar name={profileContainer.profile?.name} size="sm" h="40px" w="40px" />
+                    <Avatar name={profileContainer.profile?.name} size="sm" h="35px" w="35px" />
                 </MenuButton>
                 <MenuList fontWeight="normal">
                     <MenuGroup title="Profile">

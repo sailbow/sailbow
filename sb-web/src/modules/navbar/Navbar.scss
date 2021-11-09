@@ -7,9 +7,10 @@
     z-index: 99;
 
     .logo {
-        height: 35px !important;
-        width: 35px !important;
+        height: 30px !important;
+        width: 30px !important;
         z-index: 98;
+        margin-right: 1.5rem;
 
         &:hover {
             cursor: pointer;

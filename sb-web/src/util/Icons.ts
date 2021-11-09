@@ -3,6 +3,7 @@ export {
     BsChatRightText as ChatRight,
     BsImage as Image,
     BsQuestionCircle as FAQ,
+    BsClock as Clock,
 } from 'react-icons/bs';
 export {
     IoCloseOutline as Close,
@@ -23,7 +24,7 @@ export {
 export { CgMenuRight as Menu } from 'react-icons/cg';
 export { FcGoogle as Google } from 'react-icons/fc';
 export { FiPlus as Plus, FiMinus as Minus, FiCheck as Checkmark } from 'react-icons/fi';
-export { BiErrorCircle as ErrorCircle } from 'react-icons/bi';
+export { BiErrorCircle as ErrorCircle, BiLayer as Feed } from 'react-icons/bi';
 export { VscBell as Bell } from 'react-icons/vsc';
 export { MdOutlineImageSearch as Memories, MdOutlinePrivacyTip as Privacy } from 'react-icons/md';
 export { AiOutlineUser as User, AiOutlineLogout as Logout } from 'react-icons/ai';

@@ -1,12 +1,12 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Flex, Button, HStack } from '@chakra-ui/react';
+import { Flex, Button, HStack, IconButton } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
 import { ProfileIcon } from 'modules/profile/profile-icon/ProfileIcon';
-import { Plus } from 'util/Icons';
+import { Bell, Boat, Clock, Feed, Plus } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
 import 'modules/navbar/Navbar.scss';
@@ -45,12 +45,25 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
         >
             {isAuth ? (
                 <>
-                    <Logo className="logo" onClick={() => onRoute(Routes.Private.Home)} />
-                    <HStack alignItems="center" spacing="8">
-                        <Button leftIcon={<Plus />}>Create Boat</Button>
-                        <Button variant="link">Boats</Button>
-                        <Button variant="link">Memories</Button>
-                        <Button variant="link">Notifications</Button>
+                    <HStack alignItems="center" spacing="2">
+                        <Logo className="logo" onClick={() => onRoute(Routes.Private.Home)} />
+                        <Button colorScheme="gray" leftIcon={<Boat />} size="sm">
+                            Boats
+                        </Button>
+                        <Button variant="ghost" colorScheme="gray" leftIcon={<Feed />} size="sm">
+                            Feed
+                        </Button>
+                        <Button variant="ghost" colorScheme="gray" leftIcon={<Clock />} size="sm">
+                            Memories
+                        </Button>
+                    </HStack>
+                    <HStack alignItems="center">
+                        <Button leftIcon={<Plus />} size="sm">
+                            Create
+                        </Button>
+                        <IconButton aria-label="notification" variant="ghost" colorScheme="gray">
+                            <Bell />
+                        </IconButton>
                         <ProfileIcon />
                     </HStack>
                 </>
