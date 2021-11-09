@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet-version: ['3.0', '3.1.x', '5.0.x' ]
+        dotnet-version: ['5.0.x' ]
 
     steps:
       - uses: actions/checkout@v2
@@ -24,10 +24,13 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
           
       - name: Install dependencies
+        working-directory: ./sb-backend
         run: dotnet restore
         
       - name: Build
+        working-directory: ./sb-backend
         run: dotnet build --configuration Release --no-restore
         
       - name: Test
+        working-directory: ./sb-backend
         run: dotnet test 
