@@ -47,20 +47,18 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                 <>
                     <HStack alignItems="center" spacing="2">
                         <Logo className="logo" onClick={() => onRoute(Routes.Private.Home)} />
-                        <Button colorScheme="gray" leftIcon={<Boat />} size="sm">
+                        <Button colorScheme="gray" leftIcon={<Boat />}>
                             Boats
                         </Button>
-                        <Button variant="ghost" colorScheme="gray" leftIcon={<SbFeedIcon />} size="sm">
+                        <Button variant="ghost" colorScheme="gray" leftIcon={<SbFeedIcon />}>
                             Feed
                         </Button>
-                        <Button variant="ghost" colorScheme="gray" leftIcon={<SbClockIcon />} size="sm">
+                        <Button variant="ghost" colorScheme="gray" leftIcon={<SbClockIcon />}>
                             Memories
                         </Button>
                     </HStack>
                     <HStack alignItems="center">
-                        <Button leftIcon={<SbPlusIcon />} size="sm">
-                            Start Boat
-                        </Button>
+                        <Button leftIcon={<SbPlusIcon />}>Start Boat</Button>
                         <IconButton aria-label="notification" variant="ghost" colorScheme="gray">
                             <SbBellIcon />
                         </IconButton>
