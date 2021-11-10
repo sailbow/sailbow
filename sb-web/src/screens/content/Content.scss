@@ -10,6 +10,6 @@
 }
 
 .sb-private-content {
-    padding-top: $sb-navbar-height;
+    padding-top: $sb-navbar-height * 1.5;
     height: calc(100% - $sb-navbar-height);
 }

@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 
 import { ReactComponent as NotFoundSVG } from 'assets/404.svg';
-import { RightIcon } from 'util/Icons';
+import { SbRightArrowIcon } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
 export const NotFound: FunctionComponent = () => {
@@ -24,7 +24,7 @@ export const NotFound: FunctionComponent = () => {
                     </Text>
                     <Button
                         mt="8"
-                        rightIcon={<RightIcon />}
+                        rightIcon={<SbRightArrowIcon />}
                         size="lg"
                         onClick={() => {
                             window.location.pathname = Routes.Public.Landing;

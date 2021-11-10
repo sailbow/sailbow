@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import { Role, RoleAction } from 'components/role/Role';
 import { UserCard } from 'components/user-card/UserCard';
 import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
-import { Search } from 'util/Icons';
+import { SbSearchIcon } from 'util/Icons';
 
 interface MockData {
     label: string;
@@ -141,7 +141,7 @@ export const UserSearch: FunctionComponent = () => {
         <Stack spacing="4" className="sb-user-search">
             <InputGroup variant="brand" alignItems="center">
                 <InputLeftAddon pl="0" position="absolute">
-                    <Search />
+                    <SbSearchIcon />
                 </InputLeftAddon>
                 <AsyncSelect
                     cacheOptions

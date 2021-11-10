@@ -8,7 +8,7 @@ export const customStyles: StylesConfig<any, true> = {
             ...provided,
             transition: 'all 0.2s ease-in-out',
             width: '100%',
-            border: `1px solid ${theme.colors.gray[200]}`,
+            border: `2px solid ${theme.colors.gray[200]}`,
             borderTop: '0',
             borderLeft: '0',
             borderRight: '0',

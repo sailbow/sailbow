@@ -4,7 +4,7 @@ import { Icon, Flex, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
 import { customStyles } from 'theme/SelectStyles';
-import { Checkmark } from 'util/Icons';
+import { SbCheckIcon } from 'util/Icons';
 
 interface Option {
     value: string | number | boolean;
@@ -25,7 +25,7 @@ export const SelectOption: FunctionComponent<any> = (props) => {
         <components.Option {...props}>
             <Flex justifyContent="space-between" alignItems="center">
                 <Text>{data.label}</Text>
-                {isSelected && <Icon as={Checkmark} w={4} h={4} zIndex="2" color="teal.500" fontWeight="bold" />}
+                {isSelected && <Icon as={SbCheckIcon} w={4} h={4} zIndex="2" color="teal.500" fontWeight="bold" />}
             </Flex>
         </components.Option>
     );

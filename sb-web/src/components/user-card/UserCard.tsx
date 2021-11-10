@@ -5,7 +5,7 @@ import Select, { components } from 'react-select';
 
 import { Role, RoleAction } from 'components/role/Role';
 import { customStyles } from 'theme/SelectStyles';
-import { Checkmark } from 'util/Icons';
+import { SbCheckIcon } from 'util/Icons';
 
 interface Option {
     label: string;
@@ -43,7 +43,7 @@ export const UserCard: FunctionComponent<Props> = ({ showActions, user, onChange
             <components.Option {...props}>
                 <Flex justifyContent="space-between" alignItems="center">
                     <Text color={color}>{label}</Text>
-                    {isSelected && <Icon as={Checkmark} w={4} h={4} zIndex="2" color="teal.500" fontWeight="bold" />}
+                    {isSelected && <Icon as={SbCheckIcon} w={4} h={4} zIndex="2" color="teal.500" fontWeight="bold" />}
                 </Flex>
             </components.Option>
         );

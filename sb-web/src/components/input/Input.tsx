@@ -12,7 +12,7 @@ import {
     Spinner,
     Box,
 } from '@chakra-ui/react';
-import { ErrorCircle } from 'util/Icons';
+import { SbErrorCircleIcon } from 'util/Icons';
 
 import 'components/input/Input.scss';
 
@@ -70,7 +70,7 @@ Input.defaultProps = {
     field: {},
     error: false,
     errorLabel: '',
-    errorIcon: <ErrorCircle />,
+    errorIcon: <SbErrorCircleIcon />,
     label: '',
     required: false,
 };
@@ -115,7 +115,7 @@ TextArea.defaultProps = {
     field: {},
     error: false,
     errorLabel: '',
-    errorIcon: <ErrorCircle />,
+    errorIcon: <SbErrorCircleIcon />,
     label: '',
     required: false,
 };

@@ -3,7 +3,7 @@ import React, { FunctionComponent, useState } from 'react';
 import { Button, HStack, IconButton, VStack, Box, Text } from '@chakra-ui/react';
 
 import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
-import { RightIcon, Menu, Logo } from 'util/Icons';
+import { SbRightArrowIcon, SbMenuIcon, Logo } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
 interface Props {
@@ -35,7 +35,7 @@ export const UnAuthenticatedNavbar: FunctionComponent<Props> = ({ navbarBg }) =>
     return (
         <>
             <IconButton
-                icon={<Menu />}
+                icon={<SbMenuIcon />}
                 aria-label="menu"
                 variant="ghost"
                 color="gray.600"
@@ -58,7 +58,7 @@ export const UnAuthenticatedNavbar: FunctionComponent<Props> = ({ navbarBg }) =>
 
                 {navbarBg ? (
                     <Button
-                        rightIcon={<RightIcon />}
+                        rightIcon={<SbRightArrowIcon />}
                         onClick={() => {
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
@@ -70,7 +70,7 @@ export const UnAuthenticatedNavbar: FunctionComponent<Props> = ({ navbarBg }) =>
                 )}
             </HStack>
             <Box display={{ base: 'block', sm: 'none' }}>
-                <Button size="sm" borderRadius="xl" rightIcon={<RightIcon />}>
+                <Button size="sm" borderRadius="xl" rightIcon={<SbRightArrowIcon />}>
                     Start
                 </Button>
                 <Box
