@@ -20,11 +20,15 @@ export {
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';
-export { FiPlus as SbPlusIcon, FiMinus as Minus, FiCheck as Checkmark } from 'react-icons/fi';
-export { BiErrorCircle as ErrorCircle, BiLayer as Feed } from 'react-icons/bi';
-export { VscBell as Bell } from 'react-icons/vsc';
-export { MdOutlineImageSearch as Memories, MdOutlinePrivacyTip as Privacy } from 'react-icons/md';
-export { AiOutlineUser as User, AiOutlineLogout as Logout } from 'react-icons/ai';
+export {
+    FiPlus as SbPlusIcon,
+    FiMinus as SbMinusIcon,
+    FiCheck as SbCheckIcon,
+    FiBell as SbBellIcon,
+} from 'react-icons/fi';
+export { BiErrorCircle as SbErrorCircleIcon, BiLayer as SbFeedIcon } from 'react-icons/bi';
+export { MdOutlinePrivacyTip as SbPrivacyIcon } from 'react-icons/md';
+export { AiOutlineUser as SbUserIcon, AiOutlineLogout as SbLogoutIcon } from 'react-icons/ai';
 
 export { ReactComponent as Boat } from 'assets/icons/boat.svg';
 export { ReactComponent as Logo } from 'assets/sailboat-logo.svg';

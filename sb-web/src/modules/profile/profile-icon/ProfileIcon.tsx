@@ -5,7 +5,7 @@ import { Avatar, Box, Menu, MenuButton, MenuItem, MenuGroup, MenuDivider, MenuLi
 import { useProfile } from 'modules/profile/Profile';
 import { AuthEndpoints } from 'util/Endpoints';
 import { Http, resetLocalStorage } from 'util/Http';
-import { SbQuestionIcon, Privacy, SbTermsIcon, User, Logout, SbMailIcon } from 'util/Icons';
+import { SbQuestionIcon, SbPrivacyIcon, SbTermsIcon, SbUserIcon, SbLogoutIcon, SbMailIcon } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
 import 'modules/profile/profile-icon/ProfileIcon.scss';
@@ -14,7 +14,7 @@ const HelpOptions = [
     {
         label: 'Privacy',
         route: Routes.Whitelisted.Privacy,
-        icon: <Privacy />,
+        icon: <SbPrivacyIcon />,
     },
     {
         label: 'Terms',
@@ -54,7 +54,7 @@ export const ProfileIcon: FunctionComponent = () => {
                 </MenuButton>
                 <MenuList fontWeight="normal">
                     <MenuGroup title="Profile">
-                        <MenuItem icon={<User height="20px" />}>My Profile</MenuItem>
+                        <MenuItem icon={<SbUserIcon height="20px" />}>My Profile</MenuItem>
                     </MenuGroup>
                     <MenuDivider />
                     <MenuGroup title="Help">
@@ -65,7 +65,7 @@ export const ProfileIcon: FunctionComponent = () => {
                         ))}
                     </MenuGroup>
                     <MenuDivider />
-                    <MenuItem icon={<Logout />} onClick={onLogout}>
+                    <MenuItem icon={<SbLogoutIcon />} onClick={onLogout}>
                         Logout
                     </MenuItem>
                 </MenuList>

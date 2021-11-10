@@ -4,7 +4,7 @@ import { Box } from '@chakra-ui/react';
 
 import { BannerType } from 'boats/BoatConstants';
 import { Color } from 'theme/Colors';
-import { Checkmark } from 'util/Icons';
+import { SbCheckIcon } from 'util/Icons';
 
 import 'boats/banner/banner-change-modal/color-box/ColorBox.scss';
 
@@ -28,7 +28,7 @@ export const ColorBox: FunctionComponent<ColorBoxProps> = ({ color, selected, on
         >
             {selected && (
                 <Box className="check">
-                    <Checkmark />
+                    <SbCheckIcon />
                 </Box>
             )}
         </Box>

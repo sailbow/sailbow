@@ -6,7 +6,7 @@ import Gallery from 'react-photo-gallery';
 
 import { BannerType } from 'boats/BoatConstants';
 import { ImageSearchEndpoints } from 'util/Endpoints';
-import { Checkmark, SbSearchIcon } from 'util/Icons';
+import { SbCheckIcon, SbSearchIcon } from 'util/Icons';
 import { useDebounce } from 'util/Input';
 
 import 'boats/banner/banner-change-modal/image-search/ImageSearch.scss';
@@ -114,7 +114,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
                     />
                     {selected === props.photo.src && (
                         <Box className="check">
-                            <Checkmark />
+                            <SbCheckIcon />
                         </Box>
                     )}
                 </Box>

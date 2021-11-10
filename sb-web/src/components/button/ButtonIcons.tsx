@@ -2,6 +2,6 @@ import React from 'react';
 
 import { Icon } from '@chakra-ui/react';
 
-import { Checkmark } from 'util/Icons';
+import { SbCheckIcon } from 'util/Icons';
 
-export const CheckmarkIcon = <Icon as={Checkmark} w={5} h={5} />;
+export const CheckmarkIcon = <Icon as={SbCheckIcon} w={5} h={5} />;
