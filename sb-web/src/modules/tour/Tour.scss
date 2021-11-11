@@ -4,6 +4,11 @@
     font-family: inherit;
 }
 
+.introjs-helperLayer {
+    border-radius: 8px;
+    box-shadow: rgba($sb-teal-800, 40%) 0px 0px 1px 2px, rgba(black, 50%) 0px 0px 0px 5000px !important;
+}
+
 .sb-tour {
     border-radius: 8px;
     right: 0;
@@ -26,11 +31,16 @@
     }
 
     .introjs-tooltipbuttons {
+        padding-left: 1rem;
+        padding-right: 1rem;
+
         .introjs-button {
             background: none;
             border: 0;
             outline: none;
             font-weight: 600;
+            padding-left: 0;
+            padding-right: 0;
 
             &:not(.introjs-disabled):hover {
                 text-decoration: underline;

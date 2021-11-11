@@ -6,12 +6,10 @@ import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { BoatActionType, useBoat } from 'boats/Boat';
 import { Input, TextArea } from 'components/input/Input';
 import { Banner } from 'boats/banner/Banner';
+import { Tour } from 'modules/tour/Tour';
 import { UserSearch } from 'modules/user-search/UserSearch';
 
-import { Steps } from 'intro.js-react';
-
 import 'boats/create/Create.scss';
-import { Tour } from 'modules/tour/Tour';
 
 const steps = [
     {
@@ -31,6 +29,7 @@ const steps = [
 export const Create: FunctionComponent = () => {
     const [, dispatch] = useBoat();
     const [boatForm, setBoatForm] = useState<{ name: string; description: string }>({ name: '', description: '' });
+    const [showTour, setShowTour] = useState<boolean>(false);
 
     const onFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setBoatForm({
@@ -46,17 +45,20 @@ export const Create: FunctionComponent = () => {
 
     return (
         <>
-            <Tour enabled steps={steps} initialStep={0} onExit={() => console.log('')} />
             <Flex flexDir="column" className="sb-create container" px={{ base: '4', md: '8' }}>
                 <Stack spacing="4">
-                    <Heading size="xs" textTransform="uppercase" letterSpacing="wider" color="gray.400">
-                        Start a boat
-                    </Heading>
+                    <Flex alignItems="center">
+                        <Heading size="xs" textTransform="uppercase" letterSpacing="wider" color="gray.400" pr="1">
+                            Start a boat
+                        </Heading>
+                        <Tour steps={steps} />
+                    </Flex>
 
                     <Stack spacing="6">
                         <Banner />
                         <Input
                             label="Name"
+                            customClass="create-boat-name"
                             required
                             props={{
                                 onChange: onFormChange,
@@ -71,6 +73,7 @@ export const Create: FunctionComponent = () => {
                         />
                         <TextArea
                             label="Description"
+                            customClass="create-boat-description"
                             props={{
                                 onChange: onFormChange,
                                 name: 'description',
@@ -80,7 +83,7 @@ export const Create: FunctionComponent = () => {
                                 placeholder: 'What is your boat about?',
                             }}
                         />
-                        <Stack spacing="4" pt="8">
+                        <Stack spacing="4" pt="8" className="create-boat-gather-crew">
                             <Box>
                                 <Text fontSize="lg" fontWeight="semibold">
                                     Gather your crew
@@ -94,12 +97,14 @@ export const Create: FunctionComponent = () => {
                     </Stack>
                 </Stack>
                 <Flex mt="32" justifyContent="flex-end">
-                    <Button variant="link" mr="8">
-                        Cancel
-                    </Button>
-                    <Button onClick={onSubmit} rightIcon={CheckmarkIcon}>
-                        <Text>Start Boat</Text>
-                    </Button>
+                    <Box className="create-boat-actions">
+                        <Button variant="link" mr="8">
+                            Cancel
+                        </Button>
+                        <Button onClick={onSubmit} rightIcon={CheckmarkIcon}>
+                            <Text>Start Boat</Text>
+                        </Button>
+                    </Box>
                 </Flex>
             </Flex>
         </>

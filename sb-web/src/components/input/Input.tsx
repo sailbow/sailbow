@@ -24,6 +24,7 @@ interface Props {
     errorIcon?: JSX.Element;
     label?: string;
     required?: boolean;
+    customClass?: string;
 }
 
 interface InputProps extends Props {
@@ -39,9 +40,10 @@ export const Input: FunctionComponent<InputProps> = ({
     props,
     loading,
     required,
+    customClass,
 }) => {
     return (
-        <Box className="sb-input-wrapper">
+        <Box className={`sb-input-wrapper ${customClass}`}>
             {label && (
                 <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
                     {label}
@@ -73,6 +75,7 @@ Input.defaultProps = {
     errorIcon: <SbErrorCircleIcon />,
     label: '',
     required: false,
+    customClass: '',
 };
 
 interface TextareaProps extends Props {
@@ -87,9 +90,10 @@ export const TextArea: FunctionComponent<TextareaProps> = ({
     errorIcon,
     props,
     required,
+    customClass,
 }) => {
     return (
-        <Box className="sb-input-wrapper">
+        <Box className={`sb-input-wrapper ${customClass}`}>
             {label && (
                 <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
                     {label}
@@ -118,4 +122,5 @@ TextArea.defaultProps = {
     errorIcon: <SbErrorCircleIcon />,
     label: '',
     required: false,
+    customClass: '',
 };

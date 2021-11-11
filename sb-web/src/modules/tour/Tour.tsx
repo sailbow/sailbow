@@ -1,18 +1,20 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
+import { IconButton } from '@chakra-ui/react';
 import { Step, Steps } from 'intro.js-react';
+
+import { SbQuestionIcon } from 'util/Icons';
 
 import 'modules/tour/Tour.scss';
 
 interface Props {
-    enabled: boolean;
     initialStep?: number;
-    onExit: () => void;
     steps: Step[];
 }
 
-export const Tour: FunctionComponent<Props> = ({ steps, initialStep = 0, onExit, enabled }) => {
+export const Tour: FunctionComponent<Props> = ({ steps, initialStep = 0 }) => {
     const [computedSteps, setComputedSteps] = useState<Step[]>([]);
+    const [enabled, setEnabled] = useState<boolean>(false);
 
     useEffect(() => {
         const newSteps = steps.map((step: Step) => ({ ...step, tooltipClass: 'sb-tour' }));
@@ -21,13 +23,23 @@ export const Tour: FunctionComponent<Props> = ({ steps, initialStep = 0, onExit,
     }, [steps]);
 
     return (
-        <Steps
-            options={{ nextLabel: 'Next', prevLabel: 'Prev' }}
-            enabled={enabled}
-            steps={computedSteps}
-            initialStep={initialStep}
-            onExit={onExit}
-        />
+        <>
+            <IconButton
+                aria-label="help-icon"
+                variant="ghost"
+                colorScheme="gray"
+                color="brand.muted"
+                icon={<SbQuestionIcon />}
+                onClick={() => setEnabled(true)}
+            />
+            <Steps
+                options={{ nextLabel: 'Next', prevLabel: 'Prev' }}
+                enabled={enabled}
+                steps={computedSteps}
+                initialStep={initialStep}
+                onExit={() => setEnabled(false)}
+            />
+        </>
     );
 };
 
