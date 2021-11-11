@@ -6,30 +6,15 @@ import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { BoatActionType, useBoat } from 'boats/Boat';
 import { Input, TextArea } from 'components/input/Input';
 import { Banner } from 'boats/banner/Banner';
+import { Steps } from 'boats/create/Create.Tut';
 import { Tour } from 'modules/tour/Tour';
 import { UserSearch } from 'modules/user-search/UserSearch';
 
 import 'boats/create/Create.scss';
 
-const steps = [
-    {
-        element: '.sb-banner',
-        title: 'hello',
-        intro: 'test 1',
-        position: 'right',
-    },
-    {
-        element: '.sb-banner2',
-        title: 'hello',
-        intro: 'test 1',
-        position: 'right',
-    },
-];
-
 export const Create: FunctionComponent = () => {
     const [, dispatch] = useBoat();
     const [boatForm, setBoatForm] = useState<{ name: string; description: string }>({ name: '', description: '' });
-    const [showTour, setShowTour] = useState<boolean>(false);
 
     const onFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setBoatForm({
@@ -51,7 +36,7 @@ export const Create: FunctionComponent = () => {
                         <Heading size="xs" textTransform="uppercase" letterSpacing="wider" color="gray.400" pr="1">
                             Start a boat
                         </Heading>
-                        <Tour steps={steps} />
+                        <Tour steps={Steps} />
                     </Flex>
 
                     <Stack spacing="6">

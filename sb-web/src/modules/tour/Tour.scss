@@ -38,9 +38,10 @@
             background: none;
             border: 0;
             outline: none;
-            font-weight: 600;
+            font-weight: 700;
             padding-left: 0;
             padding-right: 0;
+            color: $sb-dark;
 
             &:not(.introjs-disabled):hover {
                 text-decoration: underline;

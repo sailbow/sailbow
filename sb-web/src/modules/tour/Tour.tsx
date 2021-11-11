@@ -7,6 +7,10 @@ import { SbQuestionIcon } from 'util/Icons';
 
 import 'modules/tour/Tour.scss';
 
+export interface TourType extends Step {
+    title: string;
+}
+
 interface Props {
     initialStep?: number;
     steps: Step[];
