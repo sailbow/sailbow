@@ -1,6 +1,7 @@
 import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
 
 import { BannerType } from 'boats/BoatConstants';
+import { Profile } from 'modules/profile/Profile';
 import { Color } from 'theme/Colors';
 import { Log } from 'util/Logger';
 
@@ -12,10 +13,14 @@ export interface BoatState {
         value: string;
         position?: number;
     };
+    crew: Profile[];
 }
 
 export enum BoatActionType {
     SetDetails = 'SET_DETAILS',
+    AddCrew = 'ADD_CREW',
+    RemoveCrew = 'REMOVE_CREW',
+    UpdateCrewList = 'UPDATE_CREW_LIST',
 }
 
 export interface BoatAction {
@@ -35,6 +40,7 @@ const initialBoatState: BoatState = {
         value: Color.Orange100,
         position: 50,
     },
+    crew: [],
 };
 
 const BoatStateContext = createContext<BoatState | undefined>(undefined);
@@ -48,6 +54,18 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
     switch (action.type) {
         case BoatActionType.SetDetails: {
             const nextState = { ...boatState, ...action.payload };
+            log.next(nextState);
+            return nextState;
+        }
+        case BoatActionType.RemoveCrew: {
+            const updatedCrewList = boatState.crew.filter((crew: any) => crew.email !== action.payload.email);
+            const nextState = { ...boatState, crew: updatedCrewList };
+            log.next(nextState);
+            return nextState;
+        }
+
+        case BoatActionType.AddCrew: {
+            const nextState = { ...boatState, crew: [...boatState.crew, action.payload] };
             log.next(nextState);
             return nextState;
         }

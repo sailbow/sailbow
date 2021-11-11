@@ -17,7 +17,17 @@ import './App.scss';
 const AppContainer: FunctionComponent = () => {
     const [profileContainer] = useProfile();
 
-    return <>{profileContainer.loading ? <></> : <PrivateContent />}</>;
+    return (
+        <>
+            {profileContainer.loading ? (
+                <></>
+            ) : (
+                <BoatProvider>
+                    <PrivateContent />
+                </BoatProvider>
+            )}
+        </>
+    );
 };
 
 export const App: FunctionComponent = () => {
@@ -57,20 +67,18 @@ export const App: FunctionComponent = () => {
 
     return mounted ? (
         <ToastProvider>
-            <BoatProvider>
-                <ToastBar />
-                <HttpInterceptor />
-                <BrowserRouter>
-                    {isAuth ? (
-                        <ProfileProvider>
-                            <ProfileLoading />
-                            <AppContainer />
-                        </ProfileProvider>
-                    ) : (
-                        <PublicContent />
-                    )}
-                </BrowserRouter>
-            </BoatProvider>
+            <ToastBar />
+            <HttpInterceptor />
+            <BrowserRouter>
+                {isAuth ? (
+                    <ProfileProvider>
+                        <ProfileLoading />
+                        <AppContainer />
+                    </ProfileProvider>
+                ) : (
+                    <PublicContent />
+                )}
+            </BrowserRouter>
         </ToastProvider>
     ) : (
         <></>

@@ -1,12 +1,14 @@
-import React, { ChangeEvent, FunctionComponent, useState } from 'react';
+import React, { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
 
 import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
-import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { BoatActionType, useBoat } from 'boats/Boat';
-import { Input, TextArea } from 'components/input/Input';
 import { Banner } from 'boats/banner/Banner';
 import { Steps } from 'boats/create/Create.Tut';
+import { CheckmarkIcon } from 'components/button/ButtonIcons';
+import { Input, TextArea } from 'components/input/Input';
+import { Role } from 'components/role/Role';
+import { useProfile } from 'modules/profile/Profile';
 import { Tour } from 'modules/tour/Tour';
 import { UserSearch } from 'modules/user-search/UserSearch';
 
@@ -14,7 +16,17 @@ import 'boats/create/Create.scss';
 
 export const Create: FunctionComponent = () => {
     const [, dispatch] = useBoat();
+    const [{ profile }] = useProfile();
     const [boatForm, setBoatForm] = useState<{ name: string; description: string }>({ name: '', description: '' });
+
+    useEffect(() => {
+        if (profile) {
+            dispatch({
+                type: BoatActionType.AddCrew,
+                payload: { name: profile.name, email: profile.email, role: Role.Captain, info: '' },
+            });
+        }
+    }, [profile, dispatch]);
 
     const onFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setBoatForm({
