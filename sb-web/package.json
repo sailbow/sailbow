@@ -24,6 +24,8 @@
         "eslint-config-airbnb-typescript-prettier": "^4.2.0",
         "formik": "^2.2.9",
         "framer-motion": "^4",
+        "intro.js": "^4.3.0",
+        "intro.js-react": "^0.5.0",
         "prettier": "^2.4.1",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",

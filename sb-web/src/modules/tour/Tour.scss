@@ -1,0 +1,61 @@
+@import 'theme/base';
+
+.introjs-tooltipReferenceLayer * {
+    font-family: inherit;
+}
+
+.sb-tour {
+    border-radius: 8px;
+    right: 0;
+    color: $sb-dark;
+
+    .introjs-tooltip-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 1rem;
+        padding-top: 0.5rem;
+
+        &:after {
+            display: none;
+        }
+
+        .introjs-skipbutton {
+            padding: 0;
+            margin-top: 4px;
+        }
+    }
+
+    .introjs-tooltipbuttons {
+        .introjs-button {
+            background: none;
+            border: 0;
+            outline: none;
+            font-weight: 600;
+
+            &:not(.introjs-disabled):hover {
+                text-decoration: underline;
+            }
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        .introjs-disabled {
+            color: $sb-muted;
+        }
+    }
+
+    .introjs-tooltiptext {
+        padding: 0 1rem 1rem 1rem;
+    }
+
+    .introjs-skipbutton {
+        color: $sb-muted;
+        font-weight: 500;
+
+        &:hover {
+            color: $sb-dark;
+        }
+    }
+}
