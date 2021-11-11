@@ -66,7 +66,6 @@ namespace Sb.Api.Controllers
                     {
                         return BadRequest("An account with this email already exists");
                     }
-
                 }
                 else
                 {
@@ -147,7 +146,6 @@ namespace Sb.Api.Controllers
 
         private JwtToken GenerateToken(IdentityProvider provider, TokenBase providerToken, User user)
         {
-            Console.WriteLine(user.Name);
             var claims = new List<Claim>()
                 .AddIfValid(ClaimTypes.Name, user.Name)
                 .AddIfValid(ClaimTypes.Email, user.Email)
