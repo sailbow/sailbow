@@ -1,7 +1,7 @@
-import { Role } from 'components/role/Role';
+import { RoleType } from 'modules/role/Role';
 
 export interface Crew {
-    role: Role;
+    role: RoleType;
     email: string;
     name: string;
     id?: string;

@@ -21,13 +21,15 @@ interface PayloadSetDetails {
     };
 }
 
-interface PayloadUpdateCrew {
-    crew: Crew;
+interface PayloadAddCrew extends Crew {}
+
+interface PayloadRemoveCrew {
+    email: string;
 }
 
 interface BoatAction {
     type: BoatActionType;
-    payload: PayloadUpdateCrew | PayloadSetDetails;
+    payload: PayloadAddCrew | PayloadRemoveCrew | PayloadSetDetails;
 }
 
 interface BoatProviderProps {
@@ -60,16 +62,16 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
             return nextState;
         }
         case BoatActionType.RemoveCrew: {
-            const payload = action.payload as PayloadUpdateCrew;
-            const updatedCrewList = boatState.crew.filter((crew: any) => crew.email !== payload.crew.email);
+            const payload = action.payload as PayloadRemoveCrew;
+            const updatedCrewList = boatState.crew.filter((crew: Crew) => crew.email !== payload.email);
             const nextState = { ...boatState, crew: updatedCrewList };
             log.next(nextState);
             return nextState;
         }
 
         case BoatActionType.AddCrew: {
-            const payload = action.payload as PayloadUpdateCrew;
-            const nextState = { ...boatState, crew: [...boatState.crew, payload.crew] };
+            const payload = action.payload as PayloadAddCrew;
+            const nextState = { ...boatState, crew: [...boatState.crew, payload] };
             log.next(nextState);
             return nextState;
         }

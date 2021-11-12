@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import { ProfileEndpoints } from 'util/http/Endpoints';
 import { Http } from 'util/http/Http';
 import { Log } from 'util/logger/Logger';
-import { Role } from 'components/role/Role';
+import { RoleType } from 'modules/role/Role';
 
 export interface Profile {
     dateCreated: string;
@@ -16,7 +16,7 @@ export interface Profile {
 }
 
 export interface CrewMember {
-    role: Role;
+    role: RoleType;
     info: string;
     email: string;
     name: string;

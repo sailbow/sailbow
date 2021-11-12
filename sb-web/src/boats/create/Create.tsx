@@ -7,8 +7,9 @@ import { Banner } from 'boats/banner/Banner';
 import { Steps } from 'boats/create/Create.Tut';
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { Input, TextArea } from 'components/input/Input';
-import { Role } from 'components/role/Role';
+import { RoleType } from 'modules/role/Role';
 import { Tour } from 'modules/tour/Tour';
+import { UserList } from 'modules/user-list/UserList';
 import { UserSearch } from 'modules/user-search/UserSearch';
 import { useProfile } from 'profile/Profile';
 
@@ -23,9 +24,7 @@ export const Create: FunctionComponent = () => {
         if (profile) {
             dispatch({
                 type: BoatActionType.AddCrew,
-                payload: {
-                    crew: { name: profile.name, email: profile.email, role: Role.Captain, info: '' },
-                },
+                payload: { name: profile.name, email: profile.email, role: RoleType.Captain, info: '' },
             });
         }
     }, [profile, dispatch]);
@@ -92,6 +91,7 @@ export const Create: FunctionComponent = () => {
                                 </Text>
                             </Box>
                             <UserSearch />
+                            <UserList actions />
                         </Stack>
                     </Stack>
                 </Stack>
