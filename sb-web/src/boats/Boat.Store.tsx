@@ -2,8 +2,9 @@ import React, { createContext, FunctionComponent, ReactNode, useReducer, useCont
 
 import { Crew } from 'profile/Profile.Constants';
 import { Color } from 'theme/Colors';
-import { BannerState, BannerType, BoatState } from 'boats/Boat.Types';
+import { BannerState, BannerType, BoatState, Photo } from 'boats/Boat.Types';
 import { Log } from 'util/logger/Logger';
+import { getPexelsImages } from './Boat.Service';
 
 export enum BoatActionType {
     SetDetails = 'SET_DETAILS',
@@ -35,7 +36,7 @@ const initialBoatState: BoatState = {
     name: '',
     description: '',
     banner: {
-        show: true, //
+        show: true, // whether it should be shown should be decided by the backend
         type: BannerType.Color,
         value: Color.Orange100,
         position: 50,
@@ -53,21 +54,30 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
 
     switch (action.type) {
         case BoatActionType.SetDetails: {
-            const nextState = { ...boatState, ...(action.payload as PayloadSetDetails) };
+            const nextState: BoatState = { ...boatState, ...action.payload };
+
             log.next(nextState);
             return nextState;
         }
         case BoatActionType.RemoveCrew: {
             const payload = action.payload as PayloadRemoveCrew;
             const updatedCrewList = boatState.crew.filter((crew: Crew) => crew.email !== payload.email);
-            const nextState = { ...boatState, crew: updatedCrewList };
+            const nextState: BoatState = { ...boatState, crew: updatedCrewList };
+
             log.next(nextState);
             return nextState;
         }
-
         case BoatActionType.AddCrew: {
             const payload = action.payload as PayloadAddCrew;
-            const nextState = { ...boatState, crew: [...boatState.crew, payload] };
+            const nextState: BoatState = { ...boatState, crew: [...boatState.crew, payload] };
+
+            log.next(nextState);
+            return nextState;
+        }
+        case BoatActionType.SetBanner: {
+            const payload = action.payload as PayloadSetBanner;
+            const nextState: BoatState = { ...boatState, banner: payload };
+
             log.next(nextState);
             return nextState;
         }
@@ -112,6 +122,7 @@ interface BoatActionApis {
     setBannerAction: (payload: PayloadSetBanner) => void;
     addCrewMemberAction: (payload: PayloadAddCrew) => void;
     removeCrewMemberAction: (payload: PayloadRemoveCrew) => void;
+    getPexelsImagesAction: (value: string, page: number) => Promise<Photo[]>;
 }
 
 export const useBoat = (): [BoatState, BoatActionApis] => {
@@ -141,6 +152,9 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 type: BoatActionType.RemoveCrew,
                 payload,
             });
+        },
+        getPexelsImagesAction: (value: string, page: number) => {
+            return getPexelsImages(value, page);
         },
     };
 

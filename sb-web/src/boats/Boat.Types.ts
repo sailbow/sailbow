@@ -18,3 +18,11 @@ export interface BoatState {
     banner: BannerState;
     crew: Crew[];
 }
+
+export interface Photo {
+    src: string;
+    width: number;
+    height: number;
+    photographer: string;
+    photographerUrl: string;
+}
