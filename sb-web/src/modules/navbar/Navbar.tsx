@@ -1,13 +1,13 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Flex, Button, HStack, IconButton } from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
+import { Flex, Button, HStack } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
+import { Notification } from 'modules/notifications/Notification';
 import { ProfileIcon } from 'profile/profile-icon/ProfileIcon';
 import { Routes } from 'router/Router.Types';
-import { SbBellIcon, Boat, SbClockIcon, SbFeedIcon, SbPlusIcon } from 'util/icons/Icons';
+import { Boat, SbClockIcon, SbFeedIcon, SbPlusIcon } from 'util/icons/Icons';
 
 import 'modules/navbar/Navbar.scss';
 
@@ -16,7 +16,6 @@ interface Props {
 }
 
 export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
-    const history = useHistory();
     const [navbarBg, setNavbarBg] = useState<boolean>(false);
 
     useEffect(() => {
@@ -66,9 +65,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                         <Button leftIcon={<SbPlusIcon />} onClick={() => onRoute(Routes.Private.Create)}>
                             Start Boat
                         </Button>
-                        <IconButton aria-label="notification" variant="ghost" colorScheme="gray">
-                            <SbBellIcon />
-                        </IconButton>
+                        <Notification />
                         <ProfileIcon />
                     </HStack>
                 </>

@@ -199,6 +199,19 @@ const components: ComponentDefaultProps = {
             },
         },
     },
+    Popover: {
+        variants: {
+            responsive: {
+                popper: {
+                    maxWidth: 'unset',
+                    width: 'unset',
+                    boxShadow: 'lg',
+                    border: 'transparent',
+                    borderRadius: 'lg',
+                },
+            },
+        },
+    },
 };
 
 const shadows = {
