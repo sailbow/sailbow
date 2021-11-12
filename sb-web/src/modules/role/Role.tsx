@@ -3,7 +3,7 @@ import React, { FunctionComponent, useState } from 'react';
 import { Flex, Icon, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
-import { BoatActionType, useBoat } from 'boats/Boat.Store';
+import { useBoat } from 'boats/Boat.Store';
 import { Crew } from 'profile/Profile.Constants';
 import { SbCheckIcon } from 'util/icons/Icons';
 import { customStyles } from 'theme/SelectStyles';
@@ -50,13 +50,13 @@ interface Props {
 }
 
 export const Role: FunctionComponent<Props> = ({ user }) => {
+    const [, { removeCrewMemberAction }] = useBoat();
     const [selectedRole, setSelectedRole] = useState<OptionType>({
         label: RoleToLabelMapper[user.role],
         value: user.role,
     });
-    const [, dispatch] = useBoat();
 
-    const onRoleChange = (role: number, data: any) => {
+    const onRoleChange = (role: number, data: Crew) => {
         switch (role) {
             case RoleType.Assistant: {
                 console.log('change to assistant');
@@ -67,7 +67,7 @@ export const Role: FunctionComponent<Props> = ({ user }) => {
                 break;
             }
             case RoleAction.Remove: {
-                dispatch({ type: BoatActionType.RemoveCrew, payload: data });
+                removeCrewMemberAction({ email: data.email });
                 break;
             }
             default: {

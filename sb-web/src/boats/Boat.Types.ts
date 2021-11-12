@@ -5,13 +5,16 @@ export enum BannerType {
     Link,
 }
 
+export interface BannerState {
+    show?: boolean;
+    type: BannerType;
+    value: string;
+    position?: number;
+}
+
 export interface BoatState {
     name: string;
-    description: string;
-    banner: {
-        type: BannerType;
-        value: string;
-        position?: number;
-    };
+    description?: string;
+    banner: BannerState;
     crew: Crew[];
 }

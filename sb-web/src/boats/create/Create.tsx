@@ -2,7 +2,7 @@ import React, { ChangeEvent, FunctionComponent, useEffect, useState } from 'reac
 
 import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
-import { BoatActionType, useBoat } from 'boats/Boat.Store';
+import { useBoat } from 'boats/Boat.Store';
 import { Banner } from 'boats/banner/Banner';
 import { Steps } from 'boats/create/Create.Tut';
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
@@ -16,18 +16,15 @@ import { useProfile } from 'profile/Profile';
 import 'boats/create/Create.scss';
 
 export const Create: FunctionComponent = () => {
-    const [, dispatch] = useBoat();
+    const [, { addCrewMemberAction, setDetailsAction }] = useBoat();
     const [{ profile }] = useProfile();
     const [boatForm, setBoatForm] = useState<{ name: string; description: string }>({ name: '', description: '' });
 
     useEffect(() => {
         if (profile) {
-            dispatch({
-                type: BoatActionType.AddCrew,
-                payload: { name: profile.name, email: profile.email, role: RoleType.Captain, info: '' },
-            });
+            addCrewMemberAction({ name: profile.name, email: profile.email, role: RoleType.Captain, info: '' });
         }
-    }, [profile, dispatch]);
+    }, [profile]); // eslint-disable-line
 
     const onFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setBoatForm({
@@ -37,8 +34,7 @@ export const Create: FunctionComponent = () => {
     };
 
     const onSubmit = () => {
-        console.log(boatForm);
-        dispatch({ type: BoatActionType.SetDetails, payload: { ...boatForm } });
+        setDetailsAction(boatForm);
     };
 
     return (

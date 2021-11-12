@@ -4,7 +4,6 @@ import { AxiosResponse } from 'axios';
 import { ProfileEndpoints } from 'util/http/Endpoints';
 import { Http } from 'util/http/Http';
 import { Log } from 'util/logger/Logger';
-import { RoleType } from 'modules/role/Role';
 
 export interface Profile {
     dateCreated: string;
@@ -13,13 +12,6 @@ export interface Profile {
     name: string;
     provider: string;
     providerUserId: string;
-}
-
-export interface CrewMember {
-    role: RoleType;
-    info: string;
-    email: string;
-    name: string;
 }
 
 export enum ProfileActionType {

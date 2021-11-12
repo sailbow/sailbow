@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import { RoleType } from 'modules/role/Role';
 import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
 import { SbSearchIcon } from 'util/icons/Icons';
-import { BoatActionType, useBoat } from 'boats/Boat.Store';
+import { useBoat } from 'boats/Boat.Store';
 import { UserCard } from 'modules/user-list/UserList';
 
 interface MockData {
@@ -40,15 +40,12 @@ const FormSchema = Yup.object().shape({
 });
 
 export const UserSearch: FunctionComponent = () => {
+    const [, { addCrewMemberAction }] = useBoat();
     const [inputText, setInputText] = useState<string>('');
-    const [, dispatch] = useBoat();
 
     const onCrewSelect = (e: any) => {
         setInputText('');
-        dispatch({
-            type: BoatActionType.AddCrew,
-            payload: { ...e.value, role: RoleType.Sailor },
-        });
+        addCrewMemberAction({ ...e.value, role: RoleType.Sailor });
     };
 
     const NoSelectOption: FunctionComponent<any> = (props) => {
