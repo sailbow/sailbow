@@ -6,7 +6,7 @@ import { BoatActionType, useBoat } from 'boats/Boat.Store';
 import { BannerType } from 'boats/Boat.Types';
 import { BannerChangeModal } from 'boats/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
-import { SbArrowDownIcon, SbArrowUpIcon } from 'util/Icons';
+import { SbArrowDownIcon, SbArrowUpIcon } from 'util/icons/Icons';
 
 import 'boats/banner/Banner.scss';
 

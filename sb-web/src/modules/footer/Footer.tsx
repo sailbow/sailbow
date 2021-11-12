@@ -5,8 +5,8 @@ import { Box, Flex, Heading, Stack, StackDivider, Text, Link, HStack, IconButton
 import { ReactComponent as IconLogoType } from 'assets/icon-logo-type.svg';
 import { SingleSelect } from 'components/select/Select';
 import { Subscribe } from 'modules/footer/Subscribe';
-import { SbFacebookIcon, SbInstagramIcon, SbGitHubIcon } from 'util/Icons';
-import { Routes } from 'util/Routing';
+import { SbFacebookIcon, SbInstagramIcon, SbGitHubIcon } from 'util/icons/Icons';
+import { Routes } from 'router/Router.Types';
 
 const Languages = [
     {

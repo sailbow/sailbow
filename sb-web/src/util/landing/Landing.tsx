@@ -4,7 +4,7 @@ import { Flex } from '@chakra-ui/react';
 
 import { AuthCard } from 'auth/AuthCard';
 
-import 'screens/landing/Landing.scss';
+import 'util/landing/Landing.scss';
 
 export const Landing: FunctionComponent = () => {
     return (

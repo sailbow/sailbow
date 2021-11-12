@@ -1,9 +1,9 @@
 import React, { ReactNode, createContext, Dispatch, useReducer, FunctionComponent, useContext, useEffect } from 'react';
 import { AxiosResponse } from 'axios';
 
-import { ProfileEndpoints } from 'util/Endpoints';
-import { Http } from 'util/Http';
-import { Log } from 'util/Logger';
+import { ProfileEndpoints } from 'util/http/Endpoints';
+import { Http } from 'util/http/Http';
+import { Log } from 'util/logger/Logger';
 import { Role } from 'components/role/Role';
 
 export interface Profile {

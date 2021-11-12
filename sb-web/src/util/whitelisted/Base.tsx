@@ -3,10 +3,10 @@ import React, { FunctionComponent, ReactElement, useEffect } from 'react';
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
-import { LS, TokenStorageKeys } from 'util/Http';
-import { SbRightArrowIcon } from 'util/Icons';
+import { LS, TokenStorageKeys } from 'util/http/Http';
+import { SbRightArrowIcon } from 'util/icons/Icons';
 
-import 'screens/whitelisted/Base.scss';
+import 'util/whitelisted/Base.scss';
 
 interface Props {
     children: ReactElement | ReactElement[];

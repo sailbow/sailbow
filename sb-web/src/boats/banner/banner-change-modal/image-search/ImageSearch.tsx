@@ -5,9 +5,9 @@ import axios, { AxiosResponse } from 'axios';
 import Gallery from 'react-photo-gallery';
 
 import { BannerType } from 'boats/Boat.Types';
-import { ImageSearchEndpoints } from 'util/Endpoints';
-import { SbCheckIcon, SbSearchIcon } from 'util/Icons';
-import { useDebounce } from 'util/Input';
+import { ImageSearchEndpoints } from 'util/http/Endpoints';
+import { SbCheckIcon, SbSearchIcon } from 'util/icons/Icons';
+import { useDebounce } from 'components/input/InputUtils';
 
 import 'boats/banner/banner-change-modal/image-search/ImageSearch.scss';
 

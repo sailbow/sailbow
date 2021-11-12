@@ -3,7 +3,7 @@ import React, { createContext, FunctionComponent, ReactNode, useReducer, useCont
 import { Crew } from 'profile/Profile.Constants';
 import { Color } from 'theme/Colors';
 import { BannerType, BoatState } from 'boats/Boat.Types';
-import { Log } from 'util/Logger';
+import { Log } from 'util/logger/Logger';
 
 export enum BoatActionType {
     SetDetails = 'SET_DETAILS',

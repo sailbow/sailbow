@@ -7,10 +7,10 @@ import { BoatProvider } from 'boats/Boat.Store';
 import { ProfileProvider, useProfile } from 'profile/Profile';
 import { ProfileLoading } from 'profile/profile-loading/ProfileLoading';
 import { ToastBar, ToastProvider } from 'modules/toast/Toast';
-import { PrivateContent, PublicContent, WhitelistedContent } from 'screens/content/Content';
-import { LS, TokenStorageKeys } from 'util/Http';
-import { HttpInterceptor } from 'util/HttpInterceptor';
-import { WhitelistedRoutes } from 'util/Routing';
+import { PrivateRouter, PublicRouter, WhitelistedRouter } from 'router/Router';
+import { LS, TokenStorageKeys } from 'util/http/Http';
+import { HttpInterceptor } from 'util/http/HttpInterceptor';
+import { WhitelistedRoutes } from 'router/Router.Types';
 
 import './App.scss';
 
@@ -23,7 +23,7 @@ const AppContainer: FunctionComponent = () => {
                 <></>
             ) : (
                 <BoatProvider>
-                    <PrivateContent />
+                    <PrivateRouter />
                 </BoatProvider>
             )}
         </>
@@ -58,7 +58,7 @@ export const App: FunctionComponent = () => {
                 <ToastProvider>
                     <ToastBar />
                     <BrowserRouter>
-                        <WhitelistedContent />
+                        <WhitelistedRouter />
                     </BrowserRouter>
                 </ToastProvider>
             </>
@@ -76,7 +76,7 @@ export const App: FunctionComponent = () => {
                         <AppContainer />
                     </ProfileProvider>
                 ) : (
-                    <PublicContent />
+                    <PublicRouter />
                 )}
             </BrowserRouter>
         </ToastProvider>

@@ -11,7 +11,7 @@ import {
     IconButton,
 } from '@chakra-ui/react';
 
-import { SbCloseIcon } from 'util/Icons';
+import { SbCloseIcon } from 'util/icons/Icons';
 
 interface Props {
     isOpen: boolean;

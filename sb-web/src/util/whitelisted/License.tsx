@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 
 import { Box } from '@chakra-ui/react';
 
-import { Base } from 'screens/whitelisted/Base';
+import { Base } from 'util/whitelisted/Base';
 
 export const License: FunctionComponent = () => {
     return (

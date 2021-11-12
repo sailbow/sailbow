@@ -5,9 +5,9 @@ import { AxiosResponse } from 'axios';
 import { useHistory } from 'react-router-dom';
 
 import { ToastActionType, useToast } from 'modules/toast/Toast';
-import { Routes } from 'util/Routing';
-import { Http, RedirectResponse, setHeadersToLocalStorage } from 'util/Http';
-import { AuthEndpoints } from 'util/Endpoints';
+import { Routes } from 'router/Router.Types';
+import { Http, RedirectResponse, setHeadersToLocalStorage } from 'util/http/Http';
+import { AuthEndpoints } from 'util/http/Endpoints';
 import { ProviderToUriMapper } from 'auth/AuthCard';
 
 export const Redirect: FunctionComponent = () => {

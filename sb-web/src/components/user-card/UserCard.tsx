@@ -5,7 +5,7 @@ import Select, { components } from 'react-select';
 
 import { Role, RoleAction, RoleLabel, RoleToLabelMapper } from 'components/role/Role';
 import { customStyles } from 'theme/SelectStyles';
-import { SbCheckIcon } from 'util/Icons';
+import { SbCheckIcon } from 'util/icons/Icons';
 import { CrewMember } from 'profile/Profile';
 
 interface Option {

@@ -3,10 +3,10 @@ import React, { FunctionComponent } from 'react';
 import { Avatar, Box, Menu, MenuButton, MenuItem, MenuGroup, MenuDivider, MenuList } from '@chakra-ui/react';
 
 import { useProfile } from 'profile/Profile';
-import { AuthEndpoints } from 'util/Endpoints';
-import { Http, resetLocalStorage } from 'util/Http';
-import { SbQuestionIcon, SbPrivacyIcon, SbTermsIcon, SbUserIcon, SbLogoutIcon, SbMailIcon } from 'util/Icons';
-import { Routes } from 'util/Routing';
+import { AuthEndpoints } from 'util/http/Endpoints';
+import { Http, resetLocalStorage } from 'util/http/Http';
+import { SbQuestionIcon, SbPrivacyIcon, SbTermsIcon, SbUserIcon, SbLogoutIcon, SbMailIcon } from 'util/icons/Icons';
+import { Routes } from 'router/Router.Types';
 
 import 'profile/profile-icon/ProfileIcon.scss';
 

@@ -14,8 +14,8 @@ export const Routes: Route = {
         Login: '/login',
     },
     Private: {
-        Home: '/boats',
-        Create: '/start-a-boat',
+        Home: '/',
+        Create: '/create',
     },
     Whitelisted: {
         AboutUs: '/about-us',

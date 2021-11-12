@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button, Table, Thead, Tbody, Tr, Th, Td, IconButton } from '@chakra-ui/react';
-import { SbRightArrowIcon, Image } from 'util/Icons';
+import { SbRightArrowIcon, Image } from 'util/icons/Icons';
 
 export default {
     title: 'Components/Button',

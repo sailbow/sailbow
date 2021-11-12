@@ -3,8 +3,8 @@ import React, { FunctionComponent } from 'react';
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 
 import { ReactComponent as NotFoundSVG } from 'assets/404.svg';
-import { SbRightArrowIcon } from 'util/Icons';
-import { Routes } from 'util/Routing';
+import { SbRightArrowIcon } from 'util/icons/Icons';
+import { Routes } from 'router/Router.Types';
 
 export const NotFound: FunctionComponent = () => {
     return (

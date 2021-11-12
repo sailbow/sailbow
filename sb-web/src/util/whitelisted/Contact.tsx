@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { Input, TextArea } from 'components/input/Input';
-import { Base } from 'screens/whitelisted/Base';
+import { Base } from 'util/whitelisted/Base';
 
 interface FormValues {
     email: string;

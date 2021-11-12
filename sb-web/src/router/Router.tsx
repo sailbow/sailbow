@@ -5,36 +5,34 @@ import { Box } from '@chakra-ui/react';
 
 import { Footer } from 'modules/footer/Footer';
 import { Navbar } from 'modules/navbar/Navbar';
-import { BaseNavbar } from 'screens/whitelisted/Base';
-import { Routes } from 'util/Routing';
+import { BaseNavbar } from 'util/whitelisted/Base';
+import { Routes } from 'router/Router.Types';
 
-import 'screens/content/Content.scss';
+import 'router/Router.scss';
 
 /** Public Content */
-const Landing = lazy(() => import('screens/landing/Landing').then((module) => ({ default: module.Landing })));
-const Redirect = lazy(() => import('screens/redirect/Redirect').then((module) => ({ default: module.Redirect })));
+const Landing = lazy(() => import('util/landing/Landing').then((module) => ({ default: module.Landing })));
+const Redirect = lazy(() => import('auth/redirect/Redirect').then((module) => ({ default: module.Redirect })));
 
 /** Whitelisted Content */
-const AboutUs = lazy(() => import('screens/whitelisted/AboutUs').then((module) => ({ default: module.AboutUs })));
-const HowItWorks = lazy(() =>
-    import('screens/whitelisted/HowItWorks').then((module) => ({ default: module.HowItWorks })),
-);
-const FAQ = lazy(() => import('screens/whitelisted/FAQ').then((module) => ({ default: module.FAQ })));
-const Contact = lazy(() => import('screens/whitelisted/Contact').then((module) => ({ default: module.Contact })));
-const Terms = lazy(() => import('screens/whitelisted/Terms').then((module) => ({ default: module.Terms })));
-const Privacy = lazy(() => import('screens/whitelisted/Privacy').then((module) => ({ default: module.Privacy })));
-const License = lazy(() => import('screens/whitelisted/License').then((module) => ({ default: module.License })));
-const NotFound = lazy(() => import('screens/not-found/NotFound').then((module) => ({ default: module.NotFound })));
+const AboutUs = lazy(() => import('util/whitelisted/AboutUs').then((module) => ({ default: module.AboutUs })));
+const HowItWorks = lazy(() => import('util/whitelisted/HowItWorks').then((module) => ({ default: module.HowItWorks })));
+const FAQ = lazy(() => import('util/whitelisted/FAQ').then((module) => ({ default: module.FAQ })));
+const Contact = lazy(() => import('util/whitelisted/Contact').then((module) => ({ default: module.Contact })));
+const Terms = lazy(() => import('util/whitelisted/Terms').then((module) => ({ default: module.Terms })));
+const Privacy = lazy(() => import('util/whitelisted/Privacy').then((module) => ({ default: module.Privacy })));
+const License = lazy(() => import('util/whitelisted/License').then((module) => ({ default: module.License })));
+const NotFound = lazy(() => import('util/not-found/NotFound').then((module) => ({ default: module.NotFound })));
 
 /** Private Content */
 const Home = lazy(() => import('boats/home/Home').then((module) => ({ default: module.Home })));
 const Create = lazy(() => import('boats/create/Create').then((module) => ({ default: module.Create })));
 
-export const WhitelistedContent: FunctionComponent = () => {
+export const WhitelistedRouter: FunctionComponent = () => {
     return (
         <>
             <BaseNavbar />
-            <Box className="sb-whitelisted-content">
+            <Box className="sb-whitelisted-router">
                 <Suspense fallback={null}>
                     <Switch>
                         <Route path={Routes.Whitelisted.AboutUs}>
@@ -69,11 +67,11 @@ export const WhitelistedContent: FunctionComponent = () => {
     );
 };
 
-export const PublicContent: FunctionComponent = () => {
+export const PublicRouter: FunctionComponent = () => {
     return (
         <>
             <Navbar isAuth={false} />
-            <Box className="sb-public-content">
+            <Box className="sb-public-router">
                 <Suspense fallback={null}>
                     <Switch>
                         <Route exact path={Routes.Public.Landing}>
@@ -93,11 +91,11 @@ export const PublicContent: FunctionComponent = () => {
     );
 };
 
-export const PrivateContent: FunctionComponent = () => {
+export const PrivateRouter: FunctionComponent = () => {
     return (
         <>
             <Navbar isAuth />
-            <Box className="sb-private-content">
+            <Box className="sb-private-router">
                 <Suspense fallback={null}>
                     <Switch>
                         <Route exact path={Routes.Private.Home}>

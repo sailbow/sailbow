@@ -12,7 +12,7 @@ import {
     Spinner,
     Box,
 } from '@chakra-ui/react';
-import { SbErrorCircleIcon } from 'util/Icons';
+import { SbErrorCircleIcon } from 'util/icons/Icons';
 
 import 'components/input/Input.scss';
 

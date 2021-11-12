@@ -9,9 +9,9 @@ import {
     resetLocalStorage,
     LS,
     TokenStorageKeys,
-} from 'util/Http';
-import { Routes } from 'util/Routing';
-import { AuthEndpoints } from 'util/Endpoints';
+} from 'util/http/Http';
+import { Routes } from 'router/Router.Types';
+import { AuthEndpoints } from 'util/http/Endpoints';
 
 interface A2 extends AxiosRequestConfig {
     retry?: boolean;

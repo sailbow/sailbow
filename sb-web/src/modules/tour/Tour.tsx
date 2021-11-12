@@ -3,7 +3,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { IconButton } from '@chakra-ui/react';
 import { Step, Steps } from 'intro.js-react';
 
-import { SbQuestionIcon } from 'util/Icons';
+import { SbQuestionIcon } from 'util/icons/Icons';
 
 import 'modules/tour/Tour.scss';
 

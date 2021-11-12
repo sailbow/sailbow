@@ -2,9 +2,9 @@ import React, { FunctionComponent } from 'react';
 
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
 
-import { Base } from 'screens/whitelisted/Base';
-import { FAQData } from 'screens/whitelisted/Data';
-import { SbMinusIcon, SbPlusIcon } from 'util/Icons';
+import { Base } from 'util/whitelisted/Base';
+import { FAQData } from 'util/whitelisted/Data';
+import { SbMinusIcon, SbPlusIcon } from 'util/icons/Icons';
 
 export const FAQ: FunctionComponent = () => {
     return (

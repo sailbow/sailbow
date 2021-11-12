@@ -3,8 +3,8 @@ import React, { FunctionComponent, useState } from 'react';
 import { Button, HStack, IconButton, VStack, Box, Text } from '@chakra-ui/react';
 
 import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
-import { SbRightArrowIcon, SbMenuIcon, Logo } from 'util/Icons';
-import { Routes } from 'util/Routing';
+import { SbRightArrowIcon, SbMenuIcon, Logo } from 'util/icons/Icons';
+import { Routes } from 'router/Router.Types';
 
 interface Props {
     navbarBg: boolean;
