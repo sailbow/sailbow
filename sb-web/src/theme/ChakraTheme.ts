@@ -203,7 +203,7 @@ const components: ComponentDefaultProps = {
         variants: {
             responsive: {
                 popper: {
-                    maxWidth: 'unset',
+                    maxWidath: 'unset',
                     width: 'unset',
                     boxShadow: 'lg',
                     border: 'transparent',

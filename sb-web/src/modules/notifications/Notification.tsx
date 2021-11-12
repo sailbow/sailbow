@@ -19,7 +19,7 @@ export const Notification: FunctionComponent = () => {
                     <SbBellIcon />
                 </IconButton>
             </PopoverTrigger>
-            <PopoverContent>
+            <PopoverContent width="400px">
                 <PopoverHeader>
                     <Heading fontSize="xl">Notifications</Heading>
                 </PopoverHeader>
