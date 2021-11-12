@@ -30,7 +30,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
     }, []);
 
     const onRoute = (path: string) => {
-        history.push(path);
+        window.location.href = path;
     };
 
     return (
@@ -51,6 +51,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                             variant={window.location.pathname === Routes.Private.Home ? 'solid' : 'ghost'}
                             colorScheme="gray"
                             leftIcon={<Boat />}
+                            onClick={() => onRoute(Routes.Private.Home)}
                         >
                             Boats
                         </Button>
@@ -62,7 +63,9 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                         </Button>
                     </HStack>
                     <HStack alignItems="center">
-                        <Button leftIcon={<SbPlusIcon />}>Start Boat</Button>
+                        <Button leftIcon={<SbPlusIcon />} onClick={() => onRoute(Routes.Private.Create)}>
+                            Start Boat
+                        </Button>
                         <IconButton aria-label="notification" variant="ghost" colorScheme="gray">
                             <SbBellIcon />
                         </IconButton>
@@ -70,7 +73,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                     </HStack>
                 </>
             ) : (
-                <UnAuthenticatedNavbar navbarBg={navbarBg} />
+                <UnAuthenticatedNavbar navbarBg={navbarBg} onRoute={onRoute} />
             )}
         </Flex>
     );
