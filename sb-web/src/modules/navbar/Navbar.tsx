@@ -6,8 +6,8 @@ import { useHistory } from 'react-router-dom';
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
 import { ProfileIcon } from 'profile/profile-icon/ProfileIcon';
-import { SbBellIcon, Boat, SbClockIcon, SbFeedIcon, SbPlusIcon } from 'util/icons/Icons';
 import { Routes } from 'router/Router.Types';
+import { SbBellIcon, Boat, SbClockIcon, SbFeedIcon, SbPlusIcon } from 'util/icons/Icons';
 
 import 'modules/navbar/Navbar.scss';
 
@@ -30,7 +30,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
     }, []);
 
     const onRoute = (path: string) => {
-        window.location.href = path;
+        if (window.location.pathname !== path) window.location.href = path;
     };
 
     return (
