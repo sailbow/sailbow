@@ -66,6 +66,9 @@ namespace Sb.Api.Controllers
                     {
                         return BadRequest("An account with this email already exists");
                     }
+                }
+                else
+                {
                     existingUser = await userRepository.InsertAsync(new User
                     {
                         Name = user.Name,
