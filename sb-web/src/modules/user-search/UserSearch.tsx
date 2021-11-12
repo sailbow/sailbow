@@ -9,7 +9,7 @@ import { UserCard } from 'components/user-card/UserCard';
 import { Role } from 'components/role/Role';
 import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
 import { SbSearchIcon } from 'util/Icons';
-import { BoatActionType, useBoat } from 'boats/Boat';
+import { BoatActionType, useBoat } from 'boats/Boat.Store';
 import { UserList } from 'modules/user-list/UserList';
 
 interface MockData {

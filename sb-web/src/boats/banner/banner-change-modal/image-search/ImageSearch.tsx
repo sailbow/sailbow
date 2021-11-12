@@ -4,7 +4,7 @@ import { Box, Input, InputGroup, Image, Flex, Spinner, Text, InputLeftAddon } fr
 import axios, { AxiosResponse } from 'axios';
 import Gallery from 'react-photo-gallery';
 
-import { BannerType } from 'boats/BoatConstants';
+import { BannerType } from 'boats/Boat.Types';
 import { ImageSearchEndpoints } from 'util/Endpoints';
 import { SbCheckIcon, SbSearchIcon } from 'util/Icons';
 import { useDebounce } from 'util/Input';

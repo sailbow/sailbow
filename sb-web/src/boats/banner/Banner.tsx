@@ -2,8 +2,8 @@ import React, { FunctionComponent, useState } from 'react';
 
 import { Box, Image, Button, IconButton } from '@chakra-ui/react';
 
-import { BoatActionType, useBoat } from 'boats/Boat';
-import { BannerType } from 'boats/BoatConstants';
+import { BoatActionType, useBoat } from 'boats/Boat.Store';
+import { BannerType } from 'boats/Boat.Types';
 import { BannerChangeModal } from 'boats/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
 import { SbArrowDownIcon, SbArrowUpIcon } from 'util/Icons';

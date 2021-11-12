@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 
 import { Box, Heading, Modal, ModalContent, ModalOverlay, Spinner, Text } from '@chakra-ui/react';
 
-import { useProfile } from 'modules/profile/Profile';
+import { useProfile } from 'profile/Profile';
 
 export const ProfileLoading: FunctionComponent = () => {
     const [profileContainer] = useProfile();

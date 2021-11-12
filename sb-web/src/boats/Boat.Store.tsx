@@ -1,31 +1,33 @@
-import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
+import React, { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
-import { BannerType } from 'boats/BoatConstants';
-import { Profile } from 'modules/profile/Profile';
+import { Crew } from 'profile/Profile.Constants';
 import { Color } from 'theme/Colors';
+import { BannerType, BoatState } from 'boats/Boat.Types';
 import { Log } from 'util/Logger';
-
-export interface BoatState {
-    name: string;
-    description: string;
-    banner: {
-        type: BannerType;
-        value: string;
-        position?: number;
-    };
-    crew: Profile[];
-}
 
 export enum BoatActionType {
     SetDetails = 'SET_DETAILS',
     AddCrew = 'ADD_CREW',
     RemoveCrew = 'REMOVE_CREW',
-    UpdateCrewList = 'UPDATE_CREW_LIST',
 }
 
-export interface BoatAction {
+interface PayloadSetDetails {
+    name: string;
+    description?: string;
+    banner?: {
+        type: BannerType;
+        value: string;
+        position?: number;
+    };
+}
+
+interface PayloadUpdateCrew {
+    crew: Crew;
+}
+
+interface BoatAction {
     type: BoatActionType;
-    payload: any;
+    payload: PayloadUpdateCrew | PayloadSetDetails;
 }
 
 interface BoatProviderProps {
@@ -53,19 +55,21 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
 
     switch (action.type) {
         case BoatActionType.SetDetails: {
-            const nextState = { ...boatState, ...action.payload };
+            const nextState = { ...boatState, ...(action.payload as PayloadSetDetails) };
             log.next(nextState);
             return nextState;
         }
         case BoatActionType.RemoveCrew: {
-            const updatedCrewList = boatState.crew.filter((crew: any) => crew.email !== action.payload.email);
+            const payload = action.payload as PayloadUpdateCrew;
+            const updatedCrewList = boatState.crew.filter((crew: any) => crew.email !== payload.crew.email);
             const nextState = { ...boatState, crew: updatedCrewList };
             log.next(nextState);
             return nextState;
         }
 
         case BoatActionType.AddCrew: {
-            const nextState = { ...boatState, crew: [...boatState.crew, action.payload] };
+            const payload = action.payload as PayloadUpdateCrew;
+            const nextState = { ...boatState, crew: [...boatState.crew, payload.crew] };
             log.next(nextState);
             return nextState;
         }

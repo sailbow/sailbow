@@ -2,13 +2,13 @@ import React, { FunctionComponent } from 'react';
 
 import { Avatar, Box, Menu, MenuButton, MenuItem, MenuGroup, MenuDivider, MenuList } from '@chakra-ui/react';
 
-import { useProfile } from 'modules/profile/Profile';
+import { useProfile } from 'profile/Profile';
 import { AuthEndpoints } from 'util/Endpoints';
 import { Http, resetLocalStorage } from 'util/Http';
 import { SbQuestionIcon, SbPrivacyIcon, SbTermsIcon, SbUserIcon, SbLogoutIcon, SbMailIcon } from 'util/Icons';
 import { Routes } from 'util/Routing';
 
-import 'modules/profile/profile-icon/ProfileIcon.scss';
+import 'profile/profile-icon/ProfileIcon.scss';
 
 const HelpOptions = [
     {

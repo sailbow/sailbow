@@ -6,7 +6,7 @@ import Select, { components } from 'react-select';
 import { Role, RoleAction, RoleLabel, RoleToLabelMapper } from 'components/role/Role';
 import { customStyles } from 'theme/SelectStyles';
 import { SbCheckIcon } from 'util/Icons';
-import { CrewMember } from 'modules/profile/Profile';
+import { CrewMember } from 'profile/Profile';
 
 interface Option {
     label: string;
@@ -37,8 +37,6 @@ export const UserCard: FunctionComponent<Props> = ({ showActions, user, onChange
         label: RoleToLabelMapper[user.role],
         value: user.role,
     });
-
-    console.log(user);
 
     const RoleOption: FunctionComponent = (props: any) => {
         const { data, isSelected } = props;

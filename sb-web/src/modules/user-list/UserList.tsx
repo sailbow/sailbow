@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 import { Flex, VStack } from '@chakra-ui/react';
 import { UserCard } from 'components/user-card/UserCard';
 import { Role, RoleAction } from 'components/role/Role';
-import { BoatActionType, useBoat } from 'boats/Boat';
+import { BoatActionType, useBoat } from 'boats/Boat.Store';
 
 export const UserList: FunctionComponent = () => {
     const [{ crew }, dispatch] = useBoat();

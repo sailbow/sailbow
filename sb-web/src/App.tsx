@@ -3,9 +3,9 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import Aos from 'aos';
 import { BrowserRouter } from 'react-router-dom';
 
-import { BoatProvider } from 'boats/Boat';
-import { ProfileProvider, useProfile } from 'modules/profile/Profile';
-import { ProfileLoading } from 'modules/profile/profile-loading/ProfileLoading';
+import { BoatProvider } from 'boats/Boat.Store';
+import { ProfileProvider, useProfile } from 'profile/Profile';
+import { ProfileLoading } from 'profile/profile-loading/ProfileLoading';
 import { ToastBar, ToastProvider } from 'modules/toast/Toast';
 import { PrivateContent, PublicContent, WhitelistedContent } from 'screens/content/Content';
 import { LS, TokenStorageKeys } from 'util/Http';

@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
-import { ProfileIcon } from 'modules/profile/profile-icon/ProfileIcon';
+import { ProfileIcon } from 'profile/profile-icon/ProfileIcon';
 import { SbBellIcon, Boat, SbClockIcon, SbFeedIcon, SbPlusIcon } from 'util/Icons';
 import { Routes } from 'util/Routing';
 

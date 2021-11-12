@@ -2,15 +2,15 @@ import React, { ChangeEvent, FunctionComponent, useEffect, useState } from 'reac
 
 import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
-import { BoatActionType, useBoat } from 'boats/Boat';
+import { BoatActionType, useBoat } from 'boats/Boat.Store';
 import { Banner } from 'boats/banner/Banner';
 import { Steps } from 'boats/create/Create.Tut';
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { Input, TextArea } from 'components/input/Input';
 import { Role } from 'components/role/Role';
-import { useProfile } from 'modules/profile/Profile';
 import { Tour } from 'modules/tour/Tour';
 import { UserSearch } from 'modules/user-search/UserSearch';
+import { useProfile } from 'profile/Profile';
 
 import 'boats/create/Create.scss';
 
@@ -23,7 +23,9 @@ export const Create: FunctionComponent = () => {
         if (profile) {
             dispatch({
                 type: BoatActionType.AddCrew,
-                payload: { name: profile.name, email: profile.email, role: Role.Captain, info: '' },
+                payload: {
+                    crew: { name: profile.name, email: profile.email, role: Role.Captain, info: '' },
+                },
             });
         }
     }, [profile, dispatch]);
@@ -37,7 +39,7 @@ export const Create: FunctionComponent = () => {
 
     const onSubmit = () => {
         console.log(boatForm);
-        dispatch({ type: BoatActionType.SetDetails, payload: boatForm });
+        dispatch({ type: BoatActionType.SetDetails, payload: { ...boatForm } });
     };
 
     return (
