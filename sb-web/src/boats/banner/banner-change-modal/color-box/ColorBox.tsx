@@ -2,9 +2,9 @@ import React, { FunctionComponent } from 'react';
 
 import { Box } from '@chakra-ui/react';
 
-import { BannerType } from 'boats/BoatConstants';
+import { BannerType } from 'boats/Boat.Types';
 import { Color } from 'theme/Colors';
-import { SbCheckIcon } from 'util/Icons';
+import { SbCheckIcon } from 'util/icons/Icons';
 
 import 'boats/banner/banner-change-modal/color-box/ColorBox.scss';
 

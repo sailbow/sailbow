@@ -2,31 +2,29 @@ import React, { ChangeEvent, FunctionComponent, useEffect, useState } from 'reac
 
 import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
-import { BoatActionType, useBoat } from 'boats/Boat';
+import { useBoat } from 'boats/Boat.Store';
 import { Banner } from 'boats/banner/Banner';
 import { Steps } from 'boats/create/Create.Tut';
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { Input, TextArea } from 'components/input/Input';
-import { Role } from 'components/role/Role';
-import { useProfile } from 'modules/profile/Profile';
+import { RoleType } from 'modules/role/Role';
 import { Tour } from 'modules/tour/Tour';
+import { UserList } from 'modules/user-list/UserList';
 import { UserSearch } from 'modules/user-search/UserSearch';
+import { useProfile } from 'profile/Profile';
 
 import 'boats/create/Create.scss';
 
 export const Create: FunctionComponent = () => {
-    const [, dispatch] = useBoat();
+    const [, { addCrewMemberAction, setDetailsAction }] = useBoat();
     const [{ profile }] = useProfile();
     const [boatForm, setBoatForm] = useState<{ name: string; description: string }>({ name: '', description: '' });
 
     useEffect(() => {
         if (profile) {
-            dispatch({
-                type: BoatActionType.AddCrew,
-                payload: { name: profile.name, email: profile.email, role: Role.Captain, info: '' },
-            });
+            addCrewMemberAction({ name: profile.name, email: profile.email, role: RoleType.Captain, info: '' });
         }
-    }, [profile, dispatch]);
+    }, [profile]); // eslint-disable-line
 
     const onFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setBoatForm({
@@ -36,8 +34,7 @@ export const Create: FunctionComponent = () => {
     };
 
     const onSubmit = () => {
-        console.log(boatForm);
-        dispatch({ type: BoatActionType.SetDetails, payload: boatForm });
+        setDetailsAction(boatForm);
     };
 
     return (
@@ -90,6 +87,7 @@ export const Create: FunctionComponent = () => {
                                 </Text>
                             </Box>
                             <UserSearch />
+                            <UserList actions />
                         </Stack>
                     </Stack>
                 </Stack>

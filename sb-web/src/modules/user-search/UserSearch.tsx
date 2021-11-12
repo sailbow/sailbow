@@ -5,12 +5,11 @@ import { components } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import * as Yup from 'yup';
 
-import { UserCard } from 'components/user-card/UserCard';
-import { Role } from 'components/role/Role';
+import { RoleType } from 'modules/role/Role';
 import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
-import { SbSearchIcon } from 'util/Icons';
-import { BoatActionType, useBoat } from 'boats/Boat';
-import { UserList } from 'modules/user-list/UserList';
+import { SbSearchIcon } from 'util/icons/Icons';
+import { useBoat } from 'boats/Boat.Store';
+import { UserCard } from 'modules/user-list/UserList';
 
 interface MockData {
     label: string;
@@ -41,12 +40,12 @@ const FormSchema = Yup.object().shape({
 });
 
 export const UserSearch: FunctionComponent = () => {
+    const [, { addCrewMemberAction }] = useBoat();
     const [inputText, setInputText] = useState<string>('');
-    const [, dispatch] = useBoat();
 
     const onCrewSelect = (e: any) => {
         setInputText('');
-        dispatch({ type: BoatActionType.AddCrew, payload: { ...e.value, role: Role.Sailor } });
+        addCrewMemberAction({ ...e.value, role: RoleType.Sailor });
     };
 
     const NoSelectOption: FunctionComponent<any> = (props) => {
@@ -71,12 +70,11 @@ export const UserSearch: FunctionComponent = () => {
                         >
                             <components.Option {...props}>
                                 <UserCard
-                                    showActions={false}
                                     user={{
                                         email: inputValue,
                                         name: inputValue,
                                         info: 'Click to invite',
-                                        role: Role.Sailor,
+                                        role: RoleType.Sailor,
                                     }}
                                 />
                             </components.Option>
@@ -102,7 +100,7 @@ export const UserSearch: FunctionComponent = () => {
 
         return (
             <components.Option {...props}>
-                <UserCard user={data.value} showActions={false} />
+                <UserCard user={data.value} />
             </components.Option>
         );
     };
@@ -147,7 +145,6 @@ export const UserSearch: FunctionComponent = () => {
                     noOptionsMessage={({ inputValue }) => (!inputValue ? null : 'No results found')}
                 />
             </InputGroup>
-            <UserList />
         </Stack>
     );
 };

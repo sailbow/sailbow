@@ -2,24 +2,21 @@ import React, { FunctionComponent, useState } from 'react';
 
 import { Box, Image, Button, IconButton } from '@chakra-ui/react';
 
-import { BoatActionType, useBoat } from 'boats/Boat';
-import { BannerType } from 'boats/BoatConstants';
+import { useBoat } from 'boats/Boat.Store';
+import { BannerType } from 'boats/Boat.Types';
 import { BannerChangeModal } from 'boats/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
-import { SbArrowDownIcon, SbArrowUpIcon } from 'util/Icons';
+import { SbArrowDownIcon, SbArrowUpIcon } from 'util/icons/Icons';
 
 import 'boats/banner/Banner.scss';
 
 export const Banner: FunctionComponent = () => {
-    const [boat, dispatch] = useBoat();
+    const [boat, { setBannerAction }] = useBoat();
     const [isBannerSelectOpen, setIsBannerSelectOpen] = useState<boolean>(false);
     const [bannerPosition, setBannerPosition] = useState<number>(boat.banner.position || 50);
 
     const onSubmit = (type: BannerType, value: string | Color) => {
-        dispatch({
-            type: BoatActionType.SetDetails,
-            payload: { ...boat, banner: { type, value, position: bannerPosition } },
-        });
+        setBannerAction({ type, value, position: bannerPosition });
     };
 
     const setPosition = (dir: 'up' | 'down') => {
@@ -41,10 +38,7 @@ export const Banner: FunctionComponent = () => {
         }
 
         setBannerPosition(newPosition);
-        dispatch({
-            type: BoatActionType.SetDetails,
-            payload: { ...boat, banner: { ...boat.banner, position: newPosition } },
-        });
+        setBannerAction({ ...boat.banner, position: newPosition });
     };
 
     return (

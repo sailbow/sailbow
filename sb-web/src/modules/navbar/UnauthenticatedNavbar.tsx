@@ -3,11 +3,12 @@ import React, { FunctionComponent, useState } from 'react';
 import { Button, HStack, IconButton, VStack, Box, Text } from '@chakra-ui/react';
 
 import { NAVBAR_HEIGHT } from 'theme/ThemeVariables';
-import { SbRightArrowIcon, SbMenuIcon, Logo } from 'util/Icons';
-import { Routes } from 'util/Routing';
+import { SbRightArrowIcon, SbMenuIcon, Logo } from 'util/icons/Icons';
+import { Routes } from 'router/Router.Types';
 
 interface Props {
     navbarBg: boolean;
+    onRoute: (path: string) => void;
 }
 
 const PublicNavItems = [
@@ -25,12 +26,8 @@ const PublicNavItems = [
     },
 ];
 
-export const UnAuthenticatedNavbar: FunctionComponent<Props> = ({ navbarBg }) => {
+export const UnAuthenticatedNavbar: FunctionComponent<Props> = ({ navbarBg, onRoute }) => {
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
-
-    const onRoute = (path: string) => {
-        window.location.href = path;
-    };
 
     return (
         <>

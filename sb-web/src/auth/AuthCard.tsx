@@ -4,9 +4,9 @@ import { Box, Button, Center, Divider, Flex, Heading, Text, VStack } from '@chak
 import { AxiosResponse } from 'axios';
 
 import { ReactComponent as LogoType } from 'assets/sb-gradient-logo-type.svg';
-import { AuthEndpoints } from 'util/Endpoints';
-import { Http } from 'util/Http';
-import { SbRightArrowIcon, SbFacebookIcon, SbGoogleIcon } from 'util/Icons';
+import { AuthEndpoints } from 'util/http/Endpoints';
+import { Http } from 'util/http/Http';
+import { SbRightArrowIcon, SbFacebookIcon, SbGoogleIcon } from 'util/icons/Icons';
 
 export enum Providers {
     Google,

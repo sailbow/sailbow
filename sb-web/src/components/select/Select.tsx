@@ -4,7 +4,7 @@ import { Icon, Flex, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
 import { customStyles } from 'theme/SelectStyles';
-import { SbCheckIcon } from 'util/Icons';
+import { SbCheckIcon } from 'util/icons/Icons';
 
 interface Option {
     value: string | number | boolean;

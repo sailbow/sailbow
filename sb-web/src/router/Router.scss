@@ -1,0 +1,15 @@
+@import 'theme/base';
+
+.sb-public-router {
+    height: 100%;
+}
+
+.sb-whitelisted-router {
+    padding-top: $sb-navbar-height;
+    height: calc(100% - $sb-navbar-height);
+}
+
+.sb-private-router {
+    padding-top: $sb-navbar-height * 1.5;
+    height: calc(100% - $sb-navbar-height);
+}

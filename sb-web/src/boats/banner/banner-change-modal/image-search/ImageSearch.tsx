@@ -1,13 +1,12 @@
 import React, { ChangeEvent, FunctionComponent, useState, useCallback } from 'react';
 
 import { Box, Input, InputGroup, Image, Flex, Spinner, Text, InputLeftAddon } from '@chakra-ui/react';
-import axios, { AxiosResponse } from 'axios';
 import Gallery from 'react-photo-gallery';
 
-import { BannerType } from 'boats/BoatConstants';
-import { ImageSearchEndpoints } from 'util/Endpoints';
-import { SbCheckIcon, SbSearchIcon } from 'util/Icons';
-import { useDebounce } from 'util/Input';
+import { useBoat } from 'boats/Boat.Store';
+import { BannerType } from 'boats/Boat.Types';
+import { SbCheckIcon, SbSearchIcon } from 'util/icons/Icons';
+import { useDebounce } from 'components/input/InputUtils';
 
 import 'boats/banner/banner-change-modal/image-search/ImageSearch.scss';
 
@@ -24,6 +23,7 @@ interface Props {
 }
 
 export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
+    const [, { getPexelsImagesAction }] = useBoat();
     const [debounce] = useDebounce();
     const [images, setImages] = useState<Photo[]>([]);
     const [searchValue, setSearchValue] = useState<string>('');
@@ -31,48 +31,14 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
     const [page, setPage] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const getImages = useCallback(
-        async (value = searchValue, newPage = page): Promise<Photo[]> => {
-            setLoading(true);
-
-            const { data }: AxiosResponse = await axios({
-                method: ImageSearchEndpoints.Search.method,
-                url: ImageSearchEndpoints.Search.url,
-                headers: {
-                    Authorization: process.env.REACT_APP_PEXELS_API_KEY,
-                },
-                params: {
-                    query: value,
-                    per_page: 10,
-                    page: newPage,
-                },
-            });
-
-            const photos: Photo[] = [];
-
-            data.photos.forEach((photo: any) => {
-                photos.push({
-                    src: photo.src.landscape,
-                    width: 3,
-                    height: 2,
-                    photographer: photo.photographer,
-                    photographerUrl: photo.photographer_url,
-                });
-            });
-
-            setLoading(false);
-            return photos;
-        },
-        [page, searchValue],
-    );
-
     const onPaginate = async (newPage: number): Promise<void> => {
         setPage(newPage);
-        const photos = await getImages(searchValue, newPage);
-
+        setLoading(true);
+        const photos = await getPexelsImagesAction(searchValue, newPage);
         const newImages = [...images];
-        newImages.push(...photos);
 
+        newImages.push(...photos);
+        setLoading(false);
         setImages(newImages);
     };
 
@@ -86,8 +52,10 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
             setImages([]);
 
             if (value) {
-                const photos = await getImages(value, 1);
+                setLoading(true);
+                const photos = await getPexelsImagesAction(value, 1);
 
+                setLoading(false);
                 setImages(photos);
             }
         });

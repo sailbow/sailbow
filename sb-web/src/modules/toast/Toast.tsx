@@ -3,8 +3,8 @@ import React, { createContext, Dispatch, FunctionComponent, ReactNode, useContex
 import { Flex, Icon, Text } from '@chakra-ui/react';
 import { ToastContainer, toast } from 'react-toastify';
 
-import { SbWarningIcon, SbCloseIcon, SbCheckIcon } from 'util/Icons';
-import { Log } from 'util/Logger';
+import { SbWarningIcon, SbCloseIcon, SbCheckIcon } from 'util/icons/Icons';
+import { Log } from 'util/logger/Logger';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'modules/toast/Toast.scss';

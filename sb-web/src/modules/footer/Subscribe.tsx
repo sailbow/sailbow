@@ -17,7 +17,7 @@ import { Form, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
 import { ToastActionType, useToast } from 'modules/toast/Toast';
-import { SbMailIcon, SbErrorCircleIcon } from 'util/Icons';
+import { SbMailIcon, SbErrorCircleIcon } from 'util/icons/Icons';
 
 interface FormValues {
     email: string;

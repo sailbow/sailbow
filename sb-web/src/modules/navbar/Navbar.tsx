@@ -1,13 +1,13 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Flex, Button, HStack, IconButton } from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
+import { Flex, Button, HStack } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
-import { ProfileIcon } from 'modules/profile/profile-icon/ProfileIcon';
-import { SbBellIcon, Boat, SbClockIcon, SbFeedIcon, SbPlusIcon } from 'util/Icons';
-import { Routes } from 'util/Routing';
+import { Notification } from 'modules/notifications/Notification';
+import { ProfileIcon } from 'profile/profile-icon/ProfileIcon';
+import { Routes } from 'router/Router.Types';
+import { Boat, SbClockIcon, SbFeedIcon, SbPlusIcon } from 'util/icons/Icons';
 
 import 'modules/navbar/Navbar.scss';
 
@@ -16,7 +16,6 @@ interface Props {
 }
 
 export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
-    const history = useHistory();
     const [navbarBg, setNavbarBg] = useState<boolean>(false);
 
     useEffect(() => {
@@ -30,7 +29,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
     }, []);
 
     const onRoute = (path: string) => {
-        history.push(path);
+        if (window.location.pathname !== path) window.location.href = path;
     };
 
     return (
@@ -51,6 +50,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                             variant={window.location.pathname === Routes.Private.Home ? 'solid' : 'ghost'}
                             colorScheme="gray"
                             leftIcon={<Boat />}
+                            onClick={() => onRoute(Routes.Private.Home)}
                         >
                             Boats
                         </Button>
@@ -62,15 +62,15 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                         </Button>
                     </HStack>
                     <HStack alignItems="center">
-                        <Button leftIcon={<SbPlusIcon />}>Start Boat</Button>
-                        <IconButton aria-label="notification" variant="ghost" colorScheme="gray">
-                            <SbBellIcon />
-                        </IconButton>
+                        <Button leftIcon={<SbPlusIcon />} onClick={() => onRoute(Routes.Private.Create)}>
+                            Start Boat
+                        </Button>
+                        <Notification />
                         <ProfileIcon />
                     </HStack>
                 </>
             ) : (
-                <UnAuthenticatedNavbar navbarBg={navbarBg} />
+                <UnAuthenticatedNavbar navbarBg={navbarBg} onRoute={onRoute} />
             )}
         </Flex>
     );
