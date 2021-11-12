@@ -47,7 +47,11 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                 <>
                     <HStack alignItems="center" spacing="2">
                         <Logo className="logo" onClick={() => onRoute(Routes.Private.Home)} />
-                        <Button colorScheme="gray" leftIcon={<Boat />}>
+                        <Button
+                            variant={window.location.pathname === Routes.Private.Home ? 'solid' : 'ghost'}
+                            colorScheme="gray"
+                            leftIcon={<Boat />}
+                        >
                             Boats
                         </Button>
                         <Button variant="ghost" colorScheme="gray" leftIcon={<SbFeedIcon />}>
