@@ -1,18 +1,32 @@
-import React, { ChangeEvent, FunctionComponent, useState } from 'react';
+import React, { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
 
 import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
-import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { BoatActionType, useBoat } from 'boats/Boat';
-import { Input, TextArea } from 'components/input/Input';
 import { Banner } from 'boats/banner/Banner';
+import { Steps } from 'boats/create/Create.Tut';
+import { CheckmarkIcon } from 'components/button/ButtonIcons';
+import { Input, TextArea } from 'components/input/Input';
+import { Role } from 'components/role/Role';
+import { useProfile } from 'modules/profile/Profile';
+import { Tour } from 'modules/tour/Tour';
 import { UserSearch } from 'modules/user-search/UserSearch';
 
 import 'boats/create/Create.scss';
 
 export const Create: FunctionComponent = () => {
     const [, dispatch] = useBoat();
+    const [{ profile }] = useProfile();
     const [boatForm, setBoatForm] = useState<{ name: string; description: string }>({ name: '', description: '' });
+
+    useEffect(() => {
+        if (profile) {
+            dispatch({
+                type: BoatActionType.AddCrew,
+                payload: { name: profile.name, email: profile.email, role: Role.Captain, info: '' },
+            });
+        }
+    }, [profile, dispatch]);
 
     const onFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setBoatForm({
@@ -27,62 +41,69 @@ export const Create: FunctionComponent = () => {
     };
 
     return (
-        <Flex flexDir="column" className="sb-create container" px={{ base: '4', md: '8' }}>
-            <Stack spacing="4">
-                <Heading size="xs" textTransform="uppercase" letterSpacing="wider" color="gray.400">
-                    Start a boat
-                </Heading>
+        <>
+            <Flex flexDir="column" className="sb-create container" px={{ base: '4', md: '8' }}>
+                <Stack spacing="4">
+                    <Flex alignItems="center">
+                        <Heading size="xs" textTransform="uppercase" letterSpacing="wider" color="gray.400" pr="1">
+                            Start a boat
+                        </Heading>
+                        <Tour steps={Steps} />
+                    </Flex>
 
-                <Stack spacing="6">
-                    <Box>
+                    <Stack spacing="6">
                         <Banner />
-                    </Box>
-                    <Input
-                        label="Name"
-                        required
-                        props={{
-                            onChange: onFormChange,
-                            fontSize: '3xl',
-                            placeholder: 'Boat name...',
-                            fontWeight: 'semibold',
-                            id: 'name',
-                            name: 'name',
-                            py: '7',
-                            autoFocus: true,
-                        }}
-                    />
-                    <TextArea
-                        label="Description"
-                        props={{
-                            onChange: onFormChange,
-                            name: 'description',
-                            id: 'description',
-                            rows: 3,
-                            variant: 'brand',
-                            placeholder: 'What is your boat about?',
-                        }}
-                    />
-                    <Stack spacing="4" pt="8">
-                        <Box>
-                            <Text fontSize="lg" fontWeight="semibold">
-                                Gather your crew
-                            </Text>
-                            <Text fontWeight="normal" fontSize="sm" color="brand.muted">
-                                If you haven’t gone on a voyage with a sailor before, use the link to invite them!
-                            </Text>
-                        </Box>
-                        <UserSearch />
+                        <Input
+                            label="Name"
+                            customClass="create-boat-name"
+                            required
+                            props={{
+                                onChange: onFormChange,
+                                fontSize: '3xl',
+                                placeholder: 'Boat name...',
+                                fontWeight: 'semibold',
+                                id: 'name',
+                                name: 'name',
+                                py: '7',
+                                autoFocus: true,
+                            }}
+                        />
+                        <TextArea
+                            label="Description"
+                            customClass="create-boat-description"
+                            props={{
+                                onChange: onFormChange,
+                                name: 'description',
+                                id: 'description',
+                                rows: 3,
+                                variant: 'brand',
+                                placeholder: 'What is your boat about?',
+                            }}
+                        />
+                        <Stack spacing="4" pt="8" className="create-boat-gather-crew">
+                            <Box>
+                                <Text fontSize="lg" fontWeight="semibold">
+                                    Gather your crew
+                                </Text>
+                                <Text fontWeight="normal" fontSize="sm" color="brand.muted">
+                                    If you haven’t gone on a voyage with a sailor before, use the link to invite them!
+                                </Text>
+                            </Box>
+                            <UserSearch />
+                        </Stack>
                     </Stack>
                 </Stack>
-            </Stack>
-            <Flex mt="32" justifyContent="flex-end">
-                <Button variant="link" mr="8">
-                    Cancel
-                </Button>
-                <Button onClick={onSubmit} rightIcon={CheckmarkIcon}>
-                    <Text>Start Boat</Text>
-                </Button>
+                <Flex mt="32" justifyContent="flex-end">
+                    <Box className="create-boat-actions">
+                        <Button variant="link" mr="8">
+                            Cancel
+                        </Button>
+                        <Button onClick={onSubmit} rightIcon={CheckmarkIcon}>
+                            <Text>Start Boat</Text>
+                        </Button>
+                    </Box>
+                </Flex>
             </Flex>
-        </Flex>
+        </>
     );
 };

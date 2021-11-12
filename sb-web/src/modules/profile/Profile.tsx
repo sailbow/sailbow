@@ -4,21 +4,7 @@ import { AxiosResponse } from 'axios';
 import { ProfileEndpoints } from 'util/Endpoints';
 import { Http } from 'util/Http';
 import { Log } from 'util/Logger';
-
-export interface ExternalURL {
-    [key: string]: string;
-}
-
-export interface Followers {
-    href: string | null;
-    total: number;
-}
-
-export interface SpotifyImage {
-    height: number | null;
-    url: string;
-    width: number | null;
-}
+import { Role } from 'components/role/Role';
 
 export interface Profile {
     dateCreated: string;
@@ -27,6 +13,13 @@ export interface Profile {
     name: string;
     provider: string;
     providerUserId: string;
+}
+
+export interface CrewMember {
+    role: Role;
+    info: string;
+    email: string;
+    name: string;
 }
 
 export enum ProfileActionType {

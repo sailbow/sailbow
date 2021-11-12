@@ -3,21 +3,24 @@ import React, { FunctionComponent, useState } from 'react';
 import { Avatar, Box, Flex, Icon, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
-import { Role, RoleAction } from 'components/role/Role';
+import { Role, RoleAction, RoleLabel, RoleToLabelMapper } from 'components/role/Role';
 import { customStyles } from 'theme/SelectStyles';
 import { SbCheckIcon } from 'util/Icons';
+import { CrewMember } from 'modules/profile/Profile';
 
 interface Option {
     label: string;
     value: Role;
 }
 
+const CaptainRoleOption = [{ label: RoleLabel.Captain, value: Role.Captain }];
+
 export const GatherCrewRoleOptions = [
     {
         label: 'Roles',
         options: [
-            { label: 'Assistant', value: Role.Assistant },
-            { label: 'Sailor', value: Role.Sailor },
+            { label: RoleLabel.Assistant, value: Role.Assistant },
+            { label: RoleLabel.Sailor, value: Role.Sailor },
         ],
     },
     { label: 'Remove', value: RoleAction.Remove, color: 'brand.error' },
@@ -25,15 +28,17 @@ export const GatherCrewRoleOptions = [
 
 interface Props {
     showActions?: boolean;
-    user: any; // needs to change to user type
+    user: CrewMember; // needs to change to user type
     onChange?: (value: number, _data: any) => void;
 }
 
 export const UserCard: FunctionComponent<Props> = ({ showActions, user, onChange }) => {
     const [selectedRole, setSelectedRole] = useState<Option>({
-        label: 'Sailor',
-        value: Role.Sailor,
+        label: RoleToLabelMapper[user.role],
+        value: user.role,
     });
+
+    console.log(user);
 
     const RoleOption: FunctionComponent = (props: any) => {
         const { data, isSelected } = props;
@@ -47,6 +52,14 @@ export const UserCard: FunctionComponent<Props> = ({ showActions, user, onChange
                 </Flex>
             </components.Option>
         );
+    };
+
+    const getOptions = (): any[] => {
+        if (user.role === Role.Captain) {
+            return CaptainRoleOption;
+        }
+
+        return GatherCrewRoleOptions;
     };
 
     return (
@@ -74,7 +87,7 @@ export const UserCard: FunctionComponent<Props> = ({ showActions, user, onChange
                     value={selectedRole}
                     isSearchable={false}
                     styles={customStyles}
-                    options={GatherCrewRoleOptions}
+                    options={getOptions()}
                     components={{
                         IndicatorSeparator: () => null,
                         Option: RoleOption,

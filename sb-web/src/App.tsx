@@ -4,6 +4,8 @@ import Aos from 'aos';
 import { BrowserRouter } from 'react-router-dom';
 
 import { BoatProvider } from 'boats/Boat';
+import { ProfileProvider, useProfile } from 'modules/profile/Profile';
+import { ProfileLoading } from 'modules/profile/profile-loading/ProfileLoading';
 import { ToastBar, ToastProvider } from 'modules/toast/Toast';
 import { PrivateContent, PublicContent, WhitelistedContent } from 'screens/content/Content';
 import { LS, TokenStorageKeys } from 'util/Http';
@@ -11,13 +13,21 @@ import { HttpInterceptor } from 'util/HttpInterceptor';
 import { WhitelistedRoutes } from 'util/Routing';
 
 import './App.scss';
-import { ProfileProvider, useProfile } from 'modules/profile/Profile';
-import { ProfileLoading } from 'modules/profile/profile-loading/ProfileLoading';
 
 const AppContainer: FunctionComponent = () => {
     const [profileContainer] = useProfile();
 
-    return <>{profileContainer.loading ? <></> : <PrivateContent />}</>;
+    return (
+        <>
+            {profileContainer.loading ? (
+                <></>
+            ) : (
+                <BoatProvider>
+                    <PrivateContent />
+                </BoatProvider>
+            )}
+        </>
+    );
 };
 
 export const App: FunctionComponent = () => {
@@ -57,20 +67,18 @@ export const App: FunctionComponent = () => {
 
     return mounted ? (
         <ToastProvider>
-            <BoatProvider>
-                <ToastBar />
-                <HttpInterceptor />
-                <BrowserRouter>
-                    {isAuth ? (
-                        <ProfileProvider>
-                            <ProfileLoading />
-                            <AppContainer />
-                        </ProfileProvider>
-                    ) : (
-                        <PublicContent />
-                    )}
-                </BrowserRouter>
-            </BoatProvider>
+            <ToastBar />
+            <HttpInterceptor />
+            <BrowserRouter>
+                {isAuth ? (
+                    <ProfileProvider>
+                        <ProfileLoading />
+                        <AppContainer />
+                    </ProfileProvider>
+                ) : (
+                    <PublicContent />
+                )}
+            </BrowserRouter>
         </ToastProvider>
     ) : (
         <></>

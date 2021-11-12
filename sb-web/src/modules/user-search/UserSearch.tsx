@@ -1,14 +1,16 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Box, Divider, Flex, InputGroup, InputLeftAddon, Stack, Text } from '@chakra-ui/react';
+import { Box, Divider, InputGroup, InputLeftAddon, Stack, Text } from '@chakra-ui/react';
 import { components } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import * as Yup from 'yup';
 
-import { Role, RoleAction } from 'components/role/Role';
 import { UserCard } from 'components/user-card/UserCard';
+import { Role } from 'components/role/Role';
 import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
 import { SbSearchIcon } from 'util/Icons';
+import { BoatActionType, useBoat } from 'boats/Boat';
+import { UserList } from 'modules/user-list/UserList';
 
 interface MockData {
     label: string;
@@ -40,13 +42,11 @@ const FormSchema = Yup.object().shape({
 
 export const UserSearch: FunctionComponent = () => {
     const [inputText, setInputText] = useState<string>('');
-    const [crewList, setCrewList] = useState<any[]>([]);
+    const [, dispatch] = useBoat();
 
     const onCrewSelect = (e: any) => {
         setInputText('');
-        const updatedInvite = [{ ...e.value }, ...crewList];
-
-        setCrewList(updatedInvite);
+        dispatch({ type: BoatActionType.AddCrew, payload: { ...e.value, role: Role.Sailor } });
     };
 
     const NoSelectOption: FunctionComponent<any> = (props) => {
@@ -72,7 +72,12 @@ export const UserSearch: FunctionComponent = () => {
                             <components.Option {...props}>
                                 <UserCard
                                     showActions={false}
-                                    user={{ email: inputValue, name: inputValue, info: 'Click to invite' }}
+                                    user={{
+                                        email: inputValue,
+                                        name: inputValue,
+                                        info: 'Click to invite',
+                                        role: Role.Sailor,
+                                    }}
                                 />
                             </components.Option>
                         </Box>
@@ -112,29 +117,8 @@ export const UserSearch: FunctionComponent = () => {
                     }
                 });
                 resolve(results);
-            }, 2000);
+            }, 1000);
         });
-    };
-
-    const onRoleChange = (role: number, data: any) => {
-        switch (role) {
-            case Role.Assistant: {
-                console.log('change to assistant');
-                break;
-            }
-            case Role.Sailor: {
-                console.log('change to Sailor');
-                break;
-            }
-            case RoleAction.Remove: {
-                const updatedList = crewList.filter((crew: any) => crew.email !== data.email);
-                setCrewList(updatedList);
-                break;
-            }
-            default: {
-                throw new Error(`Invalid role -- ${role}`);
-            }
-        }
     };
 
     return (
@@ -163,11 +147,7 @@ export const UserSearch: FunctionComponent = () => {
                     noOptionsMessage={({ inputValue }) => (!inputValue ? null : 'No results found')}
                 />
             </InputGroup>
-            {crewList.map((crew: any) => (
-                <Flex key={crew.email}>
-                    <UserCard user={crew} onChange={onRoleChange} />
-                </Flex>
-            ))}
+            <UserList />
         </Stack>
     );
 };

@@ -7,6 +7,7 @@ import { App } from './App';
 import { reportWebVitals } from './reportWebVitals';
 
 import 'aos/dist/aos.css';
+import 'intro.js/introjs.css';
 import './index.scss';
 
 ReactDOM.render(
