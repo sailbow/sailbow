@@ -3,10 +3,10 @@ import React, { FunctionComponent, useState } from 'react';
 import { Flex, Icon, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
+import { BoatActionType, useBoat } from 'boats/Boat.Store';
 import { Crew } from 'profile/Profile.Constants';
 import { SbCheckIcon } from 'util/icons/Icons';
 import { customStyles } from 'theme/SelectStyles';
-import { BoatActionType, useBoat } from 'boats/Boat.Store';
 
 export enum RoleType {
     Captain,
