@@ -201,7 +201,7 @@ const components: ComponentDefaultProps = {
     },
     Popover: {
         variants: {
-            responsive: {
+            brand: {
                 popper: {
                     maxWidath: 'unset',
                     width: 'unset',
@@ -215,7 +215,9 @@ const components: ComponentDefaultProps = {
 };
 
 const shadows = {
+    ...ChakraTheme.shadows,
     outline: 'none',
+    lg: '0 0px 15px -3px rgba(0, 0, 0, 0.1),0 4px 6px -2px rgba(0, 0, 0, 0.05)',
 };
 
 export const theme = extendTheme({ config, styles, fonts, fontWeights, breakpoints, components, shadows, colors });

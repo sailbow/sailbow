@@ -44,22 +44,24 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
         >
             {isAuth ? (
                 <>
-                    <HStack alignItems="center" spacing="2">
+                    <HStack alignItems="center" spacing="4">
                         <Logo className="logo" onClick={() => onRoute(Routes.Private.Home)} />
-                        <Button
-                            variant={window.location.pathname === Routes.Private.Home ? 'solid' : 'ghost'}
-                            colorScheme="gray"
-                            leftIcon={<Boat />}
-                            onClick={() => onRoute(Routes.Private.Home)}
-                        >
-                            Boats
-                        </Button>
-                        <Button variant="ghost" colorScheme="gray" leftIcon={<SbFeedIcon />}>
-                            Feed
-                        </Button>
-                        <Button variant="ghost" colorScheme="gray" leftIcon={<SbClockIcon />}>
-                            Memories
-                        </Button>
+                        <HStack alignItems="center" spacing="2">
+                            <Button
+                                variant={window.location.pathname === Routes.Private.Home ? 'solid' : 'ghost'}
+                                colorScheme="gray"
+                                leftIcon={<Boat />}
+                                onClick={() => onRoute(Routes.Private.Home)}
+                            >
+                                Boats
+                            </Button>
+                            <Button variant="ghost" colorScheme="gray" leftIcon={<SbFeedIcon />}>
+                                Feed
+                            </Button>
+                            <Button variant="ghost" colorScheme="gray" leftIcon={<SbClockIcon />}>
+                                Memories
+                            </Button>
+                        </HStack>
                     </HStack>
                     <HStack alignItems="center">
                         <Button leftIcon={<SbPlusIcon />} onClick={() => onRoute(Routes.Private.Create)}>
