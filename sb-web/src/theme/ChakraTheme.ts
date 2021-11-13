@@ -103,6 +103,19 @@ const components: ComponentDefaultProps = {
                     backgroundColor: 'gray.700',
                 },
             }),
+            icon: (props: any) => {
+                console.log(props);
+                return {
+                    ...ChakraTheme.components.Button.variants.ghost(props),
+                    color: 'brand.dark',
+                    _hover: {
+                        backgroundColor: 'gray.100',
+                    },
+                    _active: {
+                        backgroundColor: 'gray.200',
+                    },
+                };
+            },
         },
     },
     Input: {

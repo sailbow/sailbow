@@ -33,7 +33,11 @@ const HelpOptions = [
     },
 ];
 
-export const ProfileIcon: FunctionComponent = () => {
+interface Props {
+    display: any;
+}
+
+export const ProfileIcon: FunctionComponent<Props> = ({ display }) => {
     const [profileContainer] = useProfile();
 
     const onLogout = async () => {
@@ -47,7 +51,7 @@ export const ProfileIcon: FunctionComponent = () => {
     };
 
     return (
-        <Box className="sb-profile-icon">
+        <Box className="sb-profile-icon" display={display}>
             <Menu>
                 <MenuButton className="button">
                     <Avatar name={profileContainer.profile?.name} size="sm" h="35px" w="35px" />
