@@ -3,6 +3,7 @@ export {
     BsImage as Image,
     BsQuestionCircle as SbQuestionIcon,
     BsClock as SbClockIcon,
+    BsLayers as SbFeedIcon,
 } from 'react-icons/bs';
 export {
     IoCloseOutline as SbCloseIcon,
@@ -26,10 +27,10 @@ export {
     FiCheck as SbCheckIcon,
     FiBell as SbBellIcon,
 } from 'react-icons/fi';
-export { BiErrorCircle as SbErrorCircleIcon, BiLayer as SbFeedIcon } from 'react-icons/bi';
+export { BiErrorCircle as SbErrorCircleIcon } from 'react-icons/bi';
 export { MdOutlinePrivacyTip as SbPrivacyIcon } from 'react-icons/md';
 export { AiOutlineUser as SbUserIcon, AiOutlineLogout as SbLogoutIcon } from 'react-icons/ai';
 
-export { ReactComponent as Boat } from 'assets/icons/boat.svg';
+export { ReactComponent as SbBoatIcon } from 'assets/icons/boat.svg';
 export { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 export { ReactComponent as LogoType } from 'assets/icon-logo-type.svg';

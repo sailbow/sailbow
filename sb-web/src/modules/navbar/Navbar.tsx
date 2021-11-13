@@ -8,7 +8,7 @@ import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
 import { Notification } from 'modules/notifications/Notification';
 import { ProfileIcon } from 'profile/profile-icon/ProfileIcon';
 import { Routes } from 'router/Router.Types';
-import { Boat, SbClockIcon, SbFeedIcon, SbMenuIcon, SbPlusIcon } from 'util/icons/Icons';
+import { SbClockIcon, SbFeedIcon, SbBoatIcon, SbPlusIcon } from 'util/icons/Icons';
 
 import 'modules/navbar/Navbar.scss';
 
@@ -51,7 +51,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                             <Button
                                 variant={window.location.pathname === Routes.Private.Home ? 'solid' : 'ghost'}
                                 colorScheme="gray"
-                                leftIcon={<Boat />}
+                                leftIcon={<SbBoatIcon />}
                                 onClick={() => onRoute(Routes.Private.Home)}
                             >
                                 Boats

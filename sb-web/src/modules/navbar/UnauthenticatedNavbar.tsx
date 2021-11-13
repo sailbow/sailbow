@@ -34,8 +34,7 @@ export const UnAuthenticatedNavbar: FunctionComponent<Props> = ({ navbarBg, onRo
             <IconButton
                 icon={<SbMenuIcon />}
                 aria-label="menu"
-                variant="ghost"
-                color="gray.600"
+                variant="icon"
                 fontSize="2xl"
                 onClick={() => setMenuOpen(!menuOpen)}
                 display={{ base: 'block', sm: 'none' }}
