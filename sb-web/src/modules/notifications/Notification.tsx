@@ -13,7 +13,7 @@ import { SbBellIcon } from 'util/icons/Icons';
 
 export const Notification: FunctionComponent = () => {
     return (
-        <Popover variant="responsive">
+        <Popover variant="brand">
             <PopoverTrigger>
                 <IconButton aria-label="notification" variant="ghost" colorScheme="gray">
                     <SbBellIcon />
