@@ -1,10 +1,9 @@
 import React, { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
-import { Crew } from 'profile/Profile.Constants';
+import { getPexelsImages } from 'boats/Boat.Service';
+import { BannerState, BannerType, BoatState, Photo, Crew } from 'boats/Boat.Types';
 import { Color } from 'theme/Colors';
-import { BannerState, BannerType, BoatState, Photo } from 'boats/Boat.Types';
 import { Log } from 'util/logger/Logger';
-import { getPexelsImages } from './Boat.Service';
 
 export enum BoatActionType {
     SetDetails = 'SET_DETAILS',

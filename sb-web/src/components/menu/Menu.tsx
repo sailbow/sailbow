@@ -11,7 +11,6 @@ import {
     DrawerContent,
     DrawerHeader,
     DrawerBody,
-    Button,
     Text,
     useDisclosure,
 } from '@chakra-ui/react';

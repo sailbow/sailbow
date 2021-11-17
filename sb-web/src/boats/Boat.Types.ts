@@ -1,4 +1,4 @@
-import { Crew } from 'profile/Profile.Constants';
+import { RoleType } from 'modules/role/Role';
 
 export enum BannerType {
     Color,
@@ -25,4 +25,12 @@ export interface Photo {
     height: number;
     photographer: string;
     photographerUrl: string;
+}
+
+export interface Crew {
+    role: RoleType;
+    email: string;
+    name: string;
+    id?: string;
+    info?: string;
 }

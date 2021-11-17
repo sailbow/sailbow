@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 import { Flex, VStack, Text, Avatar, Box } from '@chakra-ui/react';
 import { Role } from 'modules/role/Role';
 import { useBoat } from 'boats/Boat.Store';
-import { Crew } from 'profile/Profile.Constants';
+import { Crew } from 'boats/Boat.Types';
 
 export const UserCard: FunctionComponent<{ user: Crew; actions?: boolean }> = ({ user, actions = false }) => {
     return (

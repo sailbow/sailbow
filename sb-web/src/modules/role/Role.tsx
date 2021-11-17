@@ -4,7 +4,7 @@ import { Flex, Icon, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
 import { useBoat } from 'boats/Boat.Store';
-import { Crew } from 'profile/Profile.Constants';
+import { Crew } from 'boats/Boat.Types';
 import { SbCheckIcon } from 'util/icons/Icons';
 import { customStyles } from 'theme/SelectStyles';
 
