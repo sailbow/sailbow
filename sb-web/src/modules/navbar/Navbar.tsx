@@ -45,7 +45,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
         >
             {isAuth ? (
                 <>
-                    <HStack alignItems="center" spacing="2">
+                    <HStack alignItems="center" spacing="4">
                         <Logo className="logo" onClick={() => onRoute(Routes.Private.Home)} />
                         <Box display={{ base: 'none', md: 'block' }}>
                             <Button

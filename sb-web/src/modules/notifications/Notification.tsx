@@ -18,20 +18,18 @@ interface Props {
 
 export const Notification: FunctionComponent<Props> = ({ display }) => {
     return (
-        <Box display={display}>
-            <Popover variant="responsive">
-                <PopoverTrigger>
-                    <IconButton aria-label="notification" variant="icon">
-                        <SbBellIcon />
-                    </IconButton>
-                </PopoverTrigger>
-                <PopoverContent width="400px">
-                    <PopoverHeader>
-                        <Heading fontSize="xl">Notifications</Heading>
-                    </PopoverHeader>
-                    <PopoverBody>Notification Body</PopoverBody>
-                </PopoverContent>
-            </Popover>
-        </Box>
+        <Popover variant="brand">
+            <PopoverTrigger>
+                <IconButton aria-label="notification" variant="ghost" colorScheme="gray">
+                    <SbBellIcon />
+                </IconButton>
+            </PopoverTrigger>
+            <PopoverContent width="400px">
+                <PopoverHeader>
+                    <Heading fontSize="xl">Notifications</Heading>
+                </PopoverHeader>
+                <PopoverBody>Notification Body</PopoverBody>
+            </PopoverContent>
+        </Popover>
     );
 };
