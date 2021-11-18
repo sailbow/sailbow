@@ -25,8 +25,7 @@ namespace Sb.Api.Controllers
         public async Task<Boat> CreateBoat([FromBody] Boat boat)
         {
             string id = HttpContext.GetClaim(CustomClaimTypes.Id);
-            User user = await _userRepo.GetByIdAsync(id);
-            Guard.Against.Null(user, nameof(user));
+            Guard.Against.NullOrWhiteSpace(id, nameof(id));
 
             boat.Crew = new List<CrewMember>
             {
