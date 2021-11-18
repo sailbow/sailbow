@@ -1,13 +1,13 @@
 ﻿
 using MongoDB.Bson;
 
+using Newtonsoft.Json;
+
 namespace Sb.Data.Models.Mongo
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class MongoEntityBase : EntityBase
     {
-        public MongoEntityBase()
-        {
-            Id = ObjectId.GenerateNewId().ToString();
-        }
+        public override string Id { get; set; } = ObjectId.GenerateNewId().ToString();
     }
 }
