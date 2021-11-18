@@ -1,20 +1,81 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using System.Text;
+using System.Text.Json;
 
-namespace Sb.Api
-{
-    public class Program
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Json;
+using Microsoft.IdentityModel.Tokens;
+
+using Sb.Api;
+using Sb.Api.Services;
+using Sb.OAuth2;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+IServiceCollection services = builder.Services;
+IConfiguration configuration = builder.Configuration;
+
+services
+    .AddOptions()
+    .Configure<JwtConfig>(configuration.GetSection("Jwt"))
+    .Configure<JsonOptions>(opts =>
     {
-        public static void Main(string[] args)
+        opts.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    })
+    .AddGoogleOAuth2Client(new ClientCredentials(configuration["Google:ClientId"], configuration["Google:ClientSecret"]))
+    .AddFacebookOAuth2Client(new ClientCredentials(configuration["Facebook:AppId"], configuration["Facebook:AppSecret"]))
+    .AddSingleton<OAuth2ClientFactory>()
+    .AddAuthorization()
+    .AddCors(opts =>
+    {
+        opts.AddDefaultPolicy(p =>
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        });
+    })
+    .AddAuthentication(opts =>
+    {
+        opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(opts =>
+    {
+        opts.SaveToken = true;
+        opts.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = configuration["Jwt:Issuer"],
+            ValidAudience = configuration["Jwt:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+        };
+    });
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+services.AddSbDatabase()
+    .AddMongo(opts =>
+    {
+        opts.ConnectionString = configuration["Mongo:ConnectionString"];
+        opts.DatabaseName = configuration["Mongo:DatabaseName"];
+    });
+
+services.AddControllers()
+    .AddNewtonsoftJson(opts => opts.UseCamelCasing(true));
+
+var app = builder.Build();
+IWebHostEnvironment env = builder.Environment;
+
+if (env.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
 }
+
+app
+    .UseHttpsRedirection()
+    .UseRouting()
+    .UseCors()
+    .UseAuthentication()
+    .UseAuthorization()
+    .UseEndpoints(endpoints => endpoints.MapControllers());
+
+app.Run();
