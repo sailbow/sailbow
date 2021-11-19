@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Sb.Data.Models.Mongo
 {
@@ -12,7 +11,7 @@ namespace Sb.Data.Models.Mongo
         public string Name { get; set; }
         public string Description { get; set; }
         public Banner Banner { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public bool Show { get; set; } = false;
         public IEnumerable<CrewMember> Crew { get; set; } = Enumerable.Empty<CrewMember>();
     }
