@@ -104,7 +104,6 @@ const components: ComponentDefaultProps = {
                 },
             }),
             icon: (props: any) => {
-                console.log(props);
                 return {
                     ...ChakraTheme.components.Button.variants.ghost(props),
                     color: 'brand.dark',

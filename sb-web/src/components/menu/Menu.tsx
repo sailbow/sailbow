@@ -133,12 +133,12 @@ export const Menu: FunctionComponent<Props> = ({ display }) => {
                         <Divider />
                         <Box pt="4">
                             {groups.map((menu) => (
-                                <Box py="2">
+                                <Box py="2" key={menu.groupName}>
                                     <Text fontWeight="semibold" fontSize="sm" pl="4" pb="2">
                                         {menu.groupName}
                                     </Text>
                                     {menu.items.map((item) => (
-                                        <MenuItem icon={item.icon} text={item.label} />
+                                        <MenuItem key={item.label} icon={item.icon} text={item.label} />
                                     ))}
                                 </Box>
                             ))}
