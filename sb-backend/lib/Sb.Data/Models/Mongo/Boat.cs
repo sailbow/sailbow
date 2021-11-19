@@ -6,6 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Sb.Data.Models.Mongo
 {
     [MongoCollection("Boats")]
+    [BsonIgnoreExtraElements]
     public class Boat : MongoEntityBase
     {
         public string Name { get; set; }

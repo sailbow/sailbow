@@ -1,6 +1,7 @@
-﻿
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -13,14 +14,6 @@ using Sb.Api.Services;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 using Sb.OAuth2;
-
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sb.Api.Controllers
 {
@@ -141,21 +134,22 @@ namespace Sb.Api.Controllers
 
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
+            string token = HttpContext.GetAccessToken();
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                _blacklistedTokenRepo.InsertAsync(new BlacklistedToken { Value = token });
+            }
+
             IdentityProvider? provider = HttpContext.GetIdentityProvider();
             if (provider.HasValue)
             {
-                await _blacklistedTokenRepo.InsertAsync(new BlacklistedToken
-                {
-                    Value = HttpContext.GetAccessToken()
-                });
                 TokenBase providerTokens = HttpContext.GetProviderTokens();
-
-                await _clientFactory
-                    .GetClient(provider.Value)
+                _clientFactory.GetClient(provider.Value)
                     .RevokeTokenAsync(providerTokens.AccessToken);
             }
+
             return Ok();
         }
 

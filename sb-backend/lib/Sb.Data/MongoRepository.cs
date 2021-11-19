@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 
-using Sb.Data.Models;
 using Sb.Data.Models.Mongo;
 
 namespace Sb.Data.Mongo

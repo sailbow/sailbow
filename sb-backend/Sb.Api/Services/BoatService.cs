@@ -1,5 +1,8 @@
 ﻿using Ardalis.GuardClauses;
 
+using Microsoft.AspNetCore.Authorization;
+
+using Sb.Api.Authorization;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 
@@ -9,11 +12,19 @@ namespace Sb.Api.Services
     {
         private readonly IRepository<Boat> _boatRepo;
         private readonly IRepository<User> _userRepo;
+        private readonly HttpContext _context;
+        private readonly IAuthorizationService _authService;
 
-        public BoatService(IRepository<Boat> boatRepo, IRepository<User> userRepo)
+        public BoatService(
+            IRepository<Boat> boatRepo,
+            IRepository<User> userRepo,
+            IHttpContextAccessor contextAccessor,
+            IAuthorizationService authService)
         {
             _boatRepo = boatRepo;
             _userRepo = userRepo;
+            _context = contextAccessor.HttpContext;
+            _authService = authService;
         }
 
         public async Task<Boat> CreateBoat(Boat boat)
@@ -26,7 +37,14 @@ namespace Sb.Api.Services
         public async Task<Boat> GetBoatById(string boatId)
         {
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
-            return await _boatRepo.GetByIdAsync(boatId);
+
+            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            var readAuthResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.ReadBoatPolicy);
+            Guard.Against.Forbidden(readAuthResult);
+
+            var captainAuthResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.CaptainPolicy);
+            boat.Show = captainAuthResult.Succeeded;
+            return boat;
         }
 
         public async Task<Boat> AddCrewMember(string boatId, CrewMember crewMember)
@@ -36,6 +54,9 @@ namespace Sb.Api.Services
 
             Boat boat = await _boatRepo.GetByIdAsync(boatId);
             Guard.Against.EntityMissing(boat, nameof(boat));
+
+            var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.EditBoatPolicy);
+            Guard.Against.Forbidden(authResult);
 
             if (!boat.Crew.Any(member => member.UserId == crewMember.UserId))
             {
@@ -53,6 +74,9 @@ namespace Sb.Api.Services
             Guard.Against.NullOrWhiteSpace(userId, nameof(userId));
 
             Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.CaptainPolicy);
+            Guard.Against.Forbidden(authResult);
+
             if (boat != null)
             {
                 boat.Crew = boat.Crew.Where(cm => cm.UserId != userId);

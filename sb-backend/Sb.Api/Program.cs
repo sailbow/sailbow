@@ -1,13 +1,13 @@
 using System.Text;
-using System.Text.Json;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
 using Newtonsoft.Json.Converters;
 
 using Sb.Api;
+using Sb.Api.Authorization;
 using Sb.Api.Middleware;
 using Sb.Api.Services;
 using Sb.OAuth2;
@@ -18,13 +18,25 @@ IConfiguration configuration = builder.Configuration;
 
 services
     .AddOptions()
+    .AddHttpContextAccessor()
     .Configure<JwtConfig>(configuration.GetSection("Jwt"))
     .AddGoogleOAuth2Client(new ClientCredentials(configuration["Google:ClientId"], configuration["Google:ClientSecret"]))
     .AddFacebookOAuth2Client(new ClientCredentials(configuration["Facebook:AppId"], configuration["Facebook:AppSecret"]))
     .AddSingleton<OAuth2ClientFactory>()
     .AddTransient<BoatService>()
     .AddTransient<TokenBlacklistMiddleware>()
-    .AddAuthorization()
+    .AddAuthorization(opts =>
+    {
+        opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>
+            policy.Requirements.Add(new CrewMemberRequirement()));
+        opts.AddPolicy(AuthorizationPolicies.EditBoatPolicy, policy =>
+            policy.Requirements.Add(new CaptainOrAssistantRequirement()));
+        opts.AddPolicy(AuthorizationPolicies.CaptainPolicy, policy =>
+            policy.Requirements.Add(new CaptainRequirement()));
+    })
+    .AddSingleton<IAuthorizationHandler, CrewMemberAuthorizationHandler>()
+    .AddSingleton<IAuthorizationHandler, CaptainAuthorizationHandler>()
+    .AddSingleton<IAuthorizationHandler, CaptainOrAssistantAuthorizationHandler>()
     .AddCors(opts =>
     {
         opts.AddDefaultPolicy(p =>
@@ -82,6 +94,7 @@ app
     .UseAuthentication()
     .UseAuthorization()
     .UseMiddleware<TokenBlacklistMiddleware>()
+    .UseMiddleware<ExceptionHandlerMiddleware>()
     .UseEndpoints(endpoints => endpoints.MapControllers());
 
 app.Run();

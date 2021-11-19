@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 using Sb.Api.Models;
 using Sb.Api.Services;
-using Sb.Api.Validation;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 
@@ -14,14 +13,16 @@ namespace Sb.Api.Controllers
     {
         private readonly BoatService _boatService;
         private readonly IRepository<User> _userRepo;
-        
-        public BoatsController(BoatService boatService, IRepository<User> userRepo)
+
+        public BoatsController(
+            BoatService boatService,
+            IRepository<User> userRepo)
         {
             _boatService = boatService;
             _userRepo = userRepo;
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<Boat> CreateBoat([FromBody] Boat boat)
         {
             string id = HttpContext.GetClaim(CustomClaimTypes.Id);
@@ -40,18 +41,8 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet("{boatId}")]
-        public async Task<Boat> GetBoatById(string boatId)
-        {
-            Boat boat = await _boatService.GetBoatById(boatId);
-            string id = HttpContext.GetClaim(CustomClaimTypes.Id);
-            CrewMember crewMember = boat.Crew.FirstOrDefault(cm => cm.UserId == id);
-            if (crewMember is null)
-            {
-                throw new UnauthorizedException();
-            }
-            boat.Show = crewMember.Role == Role.Captain;
-            return boat;
-        }
+        public Task<Boat> GetBoatById(string boatId)
+            => _boatService.GetBoatById(boatId);
 
 
         [HttpPost("{boatId}/crew")]

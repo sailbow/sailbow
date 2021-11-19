@@ -12,4 +12,6 @@
     }
 
     internal class UnauthorizedException : ValidationException { }
+
+    internal class ForbiddenResourceException : ValidationException { }
 }

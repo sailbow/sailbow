@@ -1,4 +1,6 @@
-﻿using Sb.Api.Validation;
+﻿using Microsoft.AspNetCore.Authorization;
+
+using Sb.Api.Validation;
 
 namespace Ardalis.GuardClauses
 {
@@ -8,6 +10,12 @@ namespace Ardalis.GuardClauses
         {
             if (entity is null)
                 throw new MissingEntityException($"Entity '{parameterName}' is missing");
+        }
+
+        public static void Forbidden(this IGuardClause guardClause, AuthorizationResult authResult)
+        {
+            if (!authResult.Succeeded)
+                throw new ForbiddenResourceException();
         }
     }
 }

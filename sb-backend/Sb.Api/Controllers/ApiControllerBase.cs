@@ -9,5 +9,6 @@ namespace Sb.Api.Controllers
     public abstract class ApiControllerBase : ControllerBase
     {
         internal ApiControllerBase() { }
+
     }
 }

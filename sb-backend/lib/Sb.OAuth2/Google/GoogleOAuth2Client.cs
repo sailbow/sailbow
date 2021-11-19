@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 using RestSharp;
 
@@ -39,7 +36,7 @@ namespace Sb.OAuth2
             var request = new RestRequest(Method.POST)
                 .AddParameter("token", token)
                 .AddHeader("Authorization", $"Bearer {token}");
-            IRestResponse res = await client.ExecuteAsync(request);
+            await client.ExecuteAsync(request);
         }
     }
 }
