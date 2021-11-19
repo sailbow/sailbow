@@ -33,9 +33,9 @@ namespace Sb.Api.Controllers
 
         [HttpGet("login")]
         [AllowAnonymous]
-        public string Login(IdentityProvider provider, [FromQuery] string redirectUri)
+        public string Login(IdentityProvider provider, [FromQuery] string redirectUri, [FromQuery] string state)
         {
-            return _clientFactory.GetClient(provider).GetAuthorizationEndpoint(redirectUri);
+            return _clientFactory.GetClient(provider).GetAuthorizationEndpoint(redirectUri, null, null, state);
         }
 
 
@@ -45,12 +45,13 @@ namespace Sb.Api.Controllers
             IdentityProvider provider,
             [FromQuery] string code,
             [FromQuery] string redirectUri,
+            [FromQuery] string state,
             [FromServices] IRepository<User> userRepository)
         {
             try
             {
                 OAuth2Client client = _clientFactory.GetClient(provider);
-                TokenBase providerTokens = await client.GenerateAccessTokensAsync(code, redirectUri);
+                TokenBase providerTokens = await client.GenerateAccessTokensAsync(code, redirectUri, state);
                 AuthorizedUser user = await client.GetAuthorizedUserAsync(providerTokens.AccessToken);
 
                 if (string.IsNullOrWhiteSpace(user.Email))
