@@ -1,4 +1,4 @@
-﻿namespace Sb.Api
+﻿namespace Sb.Api.Configuration
 {
     public class JwtConfig
     {

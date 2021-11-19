@@ -11,6 +11,8 @@ using Sb.Api.Authorization;
 using Sb.Api.Middleware;
 using Sb.Api.Services;
 using Sb.OAuth2;
+using Sb.Email;
+using Sb.Api.Configuration;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
@@ -20,6 +22,7 @@ services
     .AddOptions()
     .AddHttpContextAccessor()
     .Configure<JwtConfig>(configuration.GetSection("Jwt"))
+    .Configure<EmailConfig>(configuration.GetSection("Email"))
     .AddGoogleOAuth2Client(new ClientCredentials(configuration["Google:ClientId"], configuration["Google:ClientSecret"]))
     .AddFacebookOAuth2Client(new ClientCredentials(configuration["Facebook:AppId"], configuration["Facebook:AppSecret"]))
     .AddSingleton<OAuth2ClientFactory>()
@@ -70,6 +73,12 @@ services.AddSbDatabase()
     {
         opts.ConnectionString = configuration["Mongo:ConnectionString"];
         opts.DatabaseName = configuration["Mongo:DatabaseName"];
+    });
+
+services.AddSbEmailClients()
+    .AddSendGridClient(opts =>
+    {
+        opts.ApiKey = configuration["SendGrid:ApiKey"];
     });
 
 services.AddControllers()

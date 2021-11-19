@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Sb.Email.Models
 {
+    public record Address(string Email, string Name);
     public class EmailMessage
     {
-        public string? From { get; set; }
-        public IEnumerable<string> To { get; set; } = Enumerable.Empty<string>();
-        public IEnumerable<string> Cc { get; set; } = Enumerable.Empty<string>();
-        public IEnumerable<string> Bcc { get; set; } = Enumerable.Empty<string>();
+        public Address? From { get; set; }
+        public IEnumerable<Address> To { get; set; } = Enumerable.Empty<Address>();
+        public IEnumerable<Address> Cc { get; set; } = Enumerable.Empty<Address>();
+        public IEnumerable<Address> Bcc { get; set; } = Enumerable.Empty<Address>();
         public string? Subject { get; set; }
         public string? Body { get; set; }
     }

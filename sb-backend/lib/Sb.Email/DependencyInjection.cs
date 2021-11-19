@@ -7,6 +7,11 @@ namespace Sb.Email
 {
     public static class DependencyInjection
     {
+        public static SbEmailClients AddSbEmailClients(this IServiceCollection services)
+        {
+            return new SbEmailClients(services);
+        }
+
         public class SbEmailClients
         {
             private readonly IServiceCollection _services;
