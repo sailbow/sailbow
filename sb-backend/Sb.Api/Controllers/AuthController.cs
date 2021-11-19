@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -27,11 +28,13 @@ namespace Sb.Api.Controllers
     {
         private readonly OAuth2ClientFactory _clientFactory;
         private readonly JwtConfig _jwtConfig;
+        private readonly IRepository<BlacklistedToken> _blacklistedTokenRepo;
 
-        public AuthController(IOptions<JwtConfig> jwtOptions, OAuth2ClientFactory clientFactory)
+        public AuthController(IOptions<JwtConfig> jwtOptions, OAuth2ClientFactory clientFactory, IRepository<BlacklistedToken> blacklistedTokenRepo)
         {
             _clientFactory = clientFactory;
             _jwtConfig = jwtOptions.Value;
+            _blacklistedTokenRepo = blacklistedTokenRepo;
         }
 
         [HttpGet("login")]
@@ -140,7 +143,19 @@ namespace Sb.Api.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            IdentityProvider? provider = HttpContext.GetIdentityProvider();
+            if (provider.HasValue)
+            {
+                await _blacklistedTokenRepo.InsertAsync(new BlacklistedToken
+                {
+                    Value = HttpContext.GetAccessToken()
+                });
+                TokenBase providerTokens = HttpContext.GetProviderTokens();
+
+                await _clientFactory
+                    .GetClient(provider.Value)
+                    .RevokeTokenAsync(providerTokens.AccessToken);
+            }
             return Ok();
         }
 

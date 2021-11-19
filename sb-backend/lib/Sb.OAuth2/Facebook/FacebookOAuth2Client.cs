@@ -31,5 +31,10 @@ namespace Sb.OAuth2
             EnsureSuccess(res);
             return JsonConvert.DeserializeObject<FacebookUserInfo>(res.Content, SerializerSettings);
         }
+
+        public override Task RevokeTokenAsync(string token)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

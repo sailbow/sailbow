@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 
 using Sb.Api;
+using Sb.Api.Middleware;
 using Sb.Api.Services;
 using Sb.OAuth2;
 
@@ -22,6 +23,7 @@ services
     .AddFacebookOAuth2Client(new ClientCredentials(configuration["Facebook:AppId"], configuration["Facebook:AppSecret"]))
     .AddSingleton<OAuth2ClientFactory>()
     .AddTransient<BoatService>()
+    .AddTransient<TokenBlacklistMiddleware>()
     .AddAuthorization()
     .AddCors(opts =>
     {
@@ -79,6 +81,7 @@ app
     .UseCors()
     .UseAuthentication()
     .UseAuthorization()
+    .UseMiddleware<TokenBlacklistMiddleware>()
     .UseEndpoints(endpoints => endpoints.MapControllers());
 
 app.Run();

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using RestSharp;
 
@@ -28,6 +31,15 @@ namespace Sb.OAuth2
             IRestResponse res = await client.ExecuteAsync(request);
             EnsureSuccess(res);
             return JsonConvert.DeserializeObject<GoogleUserInfo>(res.Content, SerializerSettings);
+        }
+
+        public override async Task RevokeTokenAsync(string token)
+        {
+            RestClient client = new("https://oauth2.googleapis.com/revoke");
+            var request = new RestRequest(Method.POST)
+                .AddParameter("token", token)
+                .AddHeader("Authorization", $"Bearer {token}");
+            IRestResponse res = await client.ExecuteAsync(request);
         }
     }
 }

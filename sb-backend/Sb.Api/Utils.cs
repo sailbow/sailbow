@@ -12,7 +12,7 @@ using Sb.OAuth2;
 
 namespace Sb.Api
 {
-    internal static class Utils
+    public static class Utils
     {
         public static List<Claim> AddIfValid(this List<Claim> claims, string type, string value)
         {
@@ -61,6 +61,12 @@ namespace Sb.Api
                 Name = context.GetClaim(ClaimTypes.Name),
                 Picture = context.GetClaim(CustomClaimTypes.Picture)
             };
+        }
+
+        public static string GetAccessToken(this HttpContext context)
+        {
+            string token = context.Request.Headers.Authorization;
+            return token?.Replace("Bearer ", string.Empty);
         }
     }
 }
