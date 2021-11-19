@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.Api", "Sb.Api\Sb.Api.csproj", "{F1D95872-57D7-47EC-BFFB-6172BFC8EB2A}"
 EndProject
@@ -15,6 +15,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.OAuth2", "lib\Sb.OAuth2\Sb.OAuth2.csproj", "{07175926-E2C7-40AD-836F-5C0832CEA483}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.Data", "lib\Sb.Data\Sb.Data.csproj", "{CD07254A-51AB-456A-BBD8-226279CAC847}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sb.Email", "lib\Sb.Email\Sb.Email.csproj", "{30D028A5-9CF5-41F0-BD53-368326835BEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +36,10 @@ Global
 		{CD07254A-51AB-456A-BBD8-226279CAC847}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD07254A-51AB-456A-BBD8-226279CAC847}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD07254A-51AB-456A-BBD8-226279CAC847}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30D028A5-9CF5-41F0-BD53-368326835BEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30D028A5-9CF5-41F0-BD53-368326835BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30D028A5-9CF5-41F0-BD53-368326835BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30D028A5-9CF5-41F0-BD53-368326835BEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +47,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{07175926-E2C7-40AD-836F-5C0832CEA483} = {7BEB4C74-1D76-4E49-918E-94AEB2AF61F0}
 		{CD07254A-51AB-456A-BBD8-226279CAC847} = {7BEB4C74-1D76-4E49-918E-94AEB2AF61F0}
+		{30D028A5-9CF5-41F0-BD53-368326835BEB} = {7BEB4C74-1D76-4E49-918E-94AEB2AF61F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF967348-C094-4839-B147-66FBF189C4AB}
