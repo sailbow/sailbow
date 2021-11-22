@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sb.Email.Models
 {
-    public record Address(string Email, string Name);
+    public record Address(string Email, string? Name = null);
     public class EmailMessage
     {
         public Address? From { get; set; }

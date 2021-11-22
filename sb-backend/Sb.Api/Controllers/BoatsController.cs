@@ -1,11 +1,18 @@
 ﻿using Ardalis.GuardClauses;
 
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
+using Sb.Api.Authorization;
+using Sb.Api.Configuration;
 using Sb.Api.Models;
 using Sb.Api.Services;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
+using Sb.Email;
+using Sb.Email.Models;
 
 namespace Sb.Api.Controllers
 {
@@ -13,13 +20,23 @@ namespace Sb.Api.Controllers
     {
         private readonly BoatService _boatService;
         private readonly IRepository<User> _userRepo;
+        private readonly IEmailClient _emailClient;
+        private readonly IAuthorizationService _authService;
+
+        private readonly EmailConfig _emailConfig;
 
         public BoatsController(
             BoatService boatService,
-            IRepository<User> userRepo)
+            IRepository<User> userRepo,
+            IEmailClient emailClient,
+            IAuthorizationService authService,
+            IOptions<EmailConfig> emailConfig)
         {
             _boatService = boatService;
             _userRepo = userRepo;
+            _emailClient = emailClient;
+            _authService = authService;
+            _emailConfig = emailConfig.Value;
         }
 
         [HttpPost("create")]
@@ -43,6 +60,29 @@ namespace Sb.Api.Controllers
         [HttpGet("{boatId}")]
         public Task<Boat> GetBoatById(string boatId)
             => _boatService.GetBoatById(boatId);
+
+        [HttpPost("{boatId}/invites")]
+        public async Task<IActionResult> SendBoatInvites(string boatId, [FromBody] IEnumerable<string> emails)
+        {
+            Boat boat = await _boatService.GetBoatById(boatId);
+            var authResult = await _authService.AuthorizeAsync(HttpContext.User, boat, AuthorizationPolicies.EditBoatPolicy);
+            Guard.Against.Forbidden(authResult);
+            string inviterUserId = HttpContext.GetClaim(CustomClaimTypes.Id);
+            User inviter = await _userRepo.GetByIdAsync(inviterUserId);
+            Guard.Against.Null(inviter, nameof(inviter));
+            IEnumerable<Invite> invites = await _boatService.AddCrewInvites(boatId, emails);
+            foreach (var invite in invites)
+            {
+                await _emailClient.SendEmailAsync(new EmailMessage
+                {
+                    From = new Address(_emailConfig.From, _emailConfig.Name),
+                    To = new List<Address> { new Address(invite.Email) },
+                    Subject = "You've been invited to a Boat!",
+                    Body = $"Captain {inviter.Name} has invited you to the boat {boat.Name}! \"{HttpContext.Request.Host.Value}/boats/{boat.Id}/invites/{invite.Id}/accept\" to accept."
+                });
+            }
+            return Ok();
+        }
 
 
         [HttpPost("{boatId}/crew")]

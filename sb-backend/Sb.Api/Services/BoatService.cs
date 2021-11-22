@@ -83,5 +83,25 @@ namespace Sb.Api.Services
                 await _boatRepo.UpdateAsync(boat);
             }
         }
+
+        public async Task<IEnumerable<Invite>> AddCrewInvites(string boatId, IEnumerable<string> emails)
+        {
+            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+            Guard.Against.Null(emails, nameof(emails));
+
+            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.EditBoatPolicy);
+            Guard.Against.Forbidden(authResult);
+
+            foreach (string email in emails)
+            {
+                if (!boat.Invites.Any(i => i.Email == email))
+                {
+                    boat.Invites = boat.Invites.Append(new Invite { Email = email });
+                }
+            }
+            await _boatRepo.UpdateAsync(boat);
+            return boat.Invites.Where(i => emails.Contains(i.Email));
+        }
     }
 }
