@@ -94,6 +94,7 @@ namespace Sb.OAuth2
         }
 
         public abstract Task<AuthorizedUser> GetAuthorizedUserAsync(string accessToken);
+        public abstract Task RevokeTokenAsync(string token);
 
         protected virtual Dictionary<string, string> GetAdditionalAuthorizationParameters()
             => new();

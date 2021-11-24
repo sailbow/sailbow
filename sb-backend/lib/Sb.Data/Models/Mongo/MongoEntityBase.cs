@@ -1,13 +1,13 @@
-﻿
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace Sb.Data.Models.Mongo
 {
-    public class MongoEntityBase : EntityBase
+    public abstract class MongoEntityBase
     {
-        public MongoEntityBase()
-        {
-            Id = ObjectId.GenerateNewId().ToString();
-        }
+        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        public string Id { get; set; }
     }
 }

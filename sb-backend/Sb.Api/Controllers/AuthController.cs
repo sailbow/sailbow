@@ -1,5 +1,7 @@
-﻿
-using Microsoft.AspNetCore.Authentication;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -9,17 +11,10 @@ using Newtonsoft.Json;
 
 using Sb.Api.Models;
 using Sb.Api.Services;
+using Sb.Api.Configuration;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 using Sb.OAuth2;
-
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sb.Api.Controllers
 {
@@ -27,11 +22,13 @@ namespace Sb.Api.Controllers
     {
         private readonly OAuth2ClientFactory _clientFactory;
         private readonly JwtConfig _jwtConfig;
+        private readonly IRepository<BlacklistedToken> _blacklistedTokenRepo;
 
-        public AuthController(IOptions<JwtConfig> jwtOptions, OAuth2ClientFactory clientFactory)
+        public AuthController(IOptions<JwtConfig> jwtOptions, OAuth2ClientFactory clientFactory, IRepository<BlacklistedToken> blacklistedTokenRepo)
         {
             _clientFactory = clientFactory;
             _jwtConfig = jwtOptions.Value;
+            _blacklistedTokenRepo = blacklistedTokenRepo;
         }
 
         [HttpGet("login")]
@@ -138,9 +135,22 @@ namespace Sb.Api.Controllers
 
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
-            await HttpContext.SignOutAsync();
+            string token = HttpContext.GetAccessToken();
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                _blacklistedTokenRepo.InsertAsync(new BlacklistedToken { Value = token });
+            }
+
+            IdentityProvider? provider = HttpContext.GetIdentityProvider();
+            if (provider.HasValue)
+            {
+                TokenBase providerTokens = HttpContext.GetProviderTokens();
+                _clientFactory.GetClient(provider.Value)
+                    .RevokeTokenAsync(providerTokens.AccessToken);
+            }
+
             return Ok();
         }
 

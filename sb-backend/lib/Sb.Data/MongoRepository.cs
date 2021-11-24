@@ -5,14 +5,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 
-using Sb.Data.Models;
 using Sb.Data.Models.Mongo;
 
 namespace Sb.Data.Mongo
 {
-    public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
+    public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : MongoEntityBase
     {
         private readonly IMongoCollection<TEntity> _collection;
 
@@ -21,6 +21,9 @@ namespace Sb.Data.Mongo
             var attributes = (MongoCollectionAttribute[])Attribute.GetCustomAttributes(typeof(TEntity), typeof(MongoCollectionAttribute));
             if (attributes.Length == 0)
                 throw new ArgumentException($"Cannot initialize MongoRepository with entity '{typeof(TEntity)}': missing MongoCollectionAttribute");
+
+            var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
+            ConventionRegistry.Register("camelCase", conventionPack, t => true);
 
             MongoClient client = new(config.ConnectionString);
             _collection = client

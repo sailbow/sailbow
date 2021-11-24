@@ -29,5 +29,14 @@ namespace Sb.OAuth2
             EnsureSuccess(res);
             return JsonConvert.DeserializeObject<GoogleUserInfo>(res.Content, SerializerSettings);
         }
+
+        public override async Task RevokeTokenAsync(string token)
+        {
+            RestClient client = new("https://oauth2.googleapis.com/revoke");
+            var request = new RestRequest(Method.POST)
+                .AddParameter("token", token)
+                .AddHeader("Authorization", $"Bearer {token}");
+            await client.ExecuteAsync(request);
+        }
     }
 }

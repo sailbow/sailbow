@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
@@ -30,6 +29,11 @@ namespace Sb.OAuth2
             IRestResponse res = await client.ExecuteAsync(request);
             EnsureSuccess(res);
             return JsonConvert.DeserializeObject<FacebookUserInfo>(res.Content, SerializerSettings);
+        }
+
+        public override Task RevokeTokenAsync(string token)
+        {
+            throw new NotImplementedException();
         }
     }
 }

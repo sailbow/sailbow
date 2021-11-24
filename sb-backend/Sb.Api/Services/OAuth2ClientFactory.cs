@@ -1,7 +1,4 @@
-﻿using System;
-
-using Microsoft.Extensions.DependencyInjection;
-
+﻿
 using Sb.Api.Models;
 using Sb.OAuth2;
 
