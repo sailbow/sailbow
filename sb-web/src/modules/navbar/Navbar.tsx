@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Box, Button, Flex, IconButton, HStack } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, HStack, Text } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { Menu } from 'components/menu/Menu';
@@ -66,9 +66,9 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                     </HStack>
                     <HStack alignItems="center">
                         <Button
-                            leftIcon={<SbPlusIcon />}
+                            rightIcon={<SbPlusIcon />}
                             onClick={() => onRoute(Routes.Private.Create)}
-                            display={{ base: 'none', md: 'block' }}
+                            display={{ base: 'none', md: 'flex' }}
                         >
                             Start Boat
                         </Button>

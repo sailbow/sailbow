@@ -68,7 +68,7 @@ const components: ComponentDefaultProps = {
             colorScheme: 'brand',
         },
         baseStyle: {
-            borderRadius: '12px',
+            borderRadius: '10px',
             fontWeight: 'semibold',
         },
         variants: {
