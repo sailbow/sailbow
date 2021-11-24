@@ -33,6 +33,14 @@ export const ProfileEndpoints: Record<ProfileEndpointLabels, Endpoint> = {
     },
 };
 
+type BoatEndpointLabels = 'Create';
+export const BoatEndpoints: Record<BoatEndpointLabels, Endpoint> = {
+    Create: {
+        method: 'POST',
+        url: 'api/boats/create',
+    },
+};
+
 export const ImageSearchEndpoints: Record<string, Endpoint> = {
     Search: {
         method: 'GET',

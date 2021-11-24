@@ -3,23 +3,24 @@ import React, { ChangeEvent, FunctionComponent, useEffect, useState } from 'reac
 import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
 import { initialBoatState, useBoat } from 'boats/Boat.Store';
+import { BannerState, BoatState, Crew } from 'boats/Boat.Types';
 import { Banner } from 'boats/banner/Banner';
+import { UserList } from 'boats/components/user-list/UserList';
+import { UserSearch } from 'boats/components/user-search/UserSearch';
 import { Steps } from 'boats/create/Create.Tut';
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { Input, TextArea } from 'components/input/Input';
 import { RoleType } from 'modules/role/Role';
 import { Tour } from 'modules/tour/Tour';
-import { UserList } from 'boats/components/user-list/UserList';
-import { UserSearch } from 'boats/components/user-search/UserSearch';
 import { useProfile } from 'profile/Profile';
 
 import 'boats/create/Create.scss';
-import { BannerState, BoatState, Crew } from 'boats/Boat.Types';
 
 export const Create: FunctionComponent = () => {
     const [, { createBoat }] = useBoat();
     const [{ profile }] = useProfile();
     const [boatForm, setBoatForm] = useState<BoatState>(initialBoatState);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         if (profile) {
@@ -56,9 +57,12 @@ export const Create: FunctionComponent = () => {
         setBoatForm({ ...boatForm, banner });
     };
 
-    const onSubmit = () => {
-        console.log(boatForm);
-        createBoat(boatForm);
+    const onSubmit = async () => {
+        setLoading(true);
+        const response = await createBoat(boatForm);
+
+        console.log('CREATED', response);
+        setLoading(false);
     };
 
     return (
@@ -120,7 +124,7 @@ export const Create: FunctionComponent = () => {
                         <Button variant="link" mr="8">
                             Cancel
                         </Button>
-                        <Button onClick={onSubmit} rightIcon={CheckmarkIcon}>
+                        <Button isLoading={loading} onClick={onSubmit} rightIcon={CheckmarkIcon}>
                             <Text>Start Boat</Text>
                         </Button>
                     </Box>

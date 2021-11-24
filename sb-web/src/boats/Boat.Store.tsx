@@ -1,7 +1,7 @@
 import React, { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
-import { getPexelsImages } from 'boats/Boat.Service';
-import { BannerState, BannerType, BoatState, Photo, Crew } from 'boats/Boat.Types';
+import { createBoatService, getPexelsImages } from 'boats/Boat.Service';
+import { BannerType, BoatState, Photo } from 'boats/Boat.Types';
 import { Color } from 'theme/Colors';
 import { Log } from 'util/logger/Logger';
 
@@ -89,11 +89,9 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
     const dispatcher = useBoatDispatch();
 
     const actionApis: BoatActionApis = {
-        createBoat: (boat: BoatState) => {
+        createBoat: async (boat: BoatState) => {
             // axios request here
-            return new Promise<BoatState>((res, rej) => {
-                res(boat);
-            });
+            return createBoatService(boat);
         },
         getPexelsImagesAction: (value: string, page: number) => {
             return getPexelsImages(value, page);
