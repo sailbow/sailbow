@@ -6,9 +6,9 @@ import AsyncSelect from 'react-select/async';
 import * as Yup from 'yup';
 
 import { RoleType } from 'modules/role/Role';
-import { customStyles } from 'components/user-search/UserSearchSelectStyles';
+import { customStyles } from 'boats/components/user-search/UserSearchSelectStyles';
 import { SbSearchIcon } from 'util/icons/Icons';
-import { UserCard } from 'components/user-list/UserList';
+import { UserCard } from 'boats/components/user-card/UserCard';
 import { Crew } from 'boats/Boat.Types';
 
 interface MockData {

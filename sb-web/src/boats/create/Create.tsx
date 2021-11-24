@@ -9,8 +9,8 @@ import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { Input, TextArea } from 'components/input/Input';
 import { RoleType } from 'modules/role/Role';
 import { Tour } from 'modules/tour/Tour';
-import { UserList } from 'components/user-list/UserList';
-import { UserSearch } from 'components/user-search/UserSearch';
+import { UserList } from 'boats/components/user-list/UserList';
+import { UserSearch } from 'boats/components/user-search/UserSearch';
 import { useProfile } from 'profile/Profile';
 
 import 'boats/create/Create.scss';
