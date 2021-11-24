@@ -3,20 +3,25 @@ import React, { FunctionComponent, useState } from 'react';
 import { Box, Image, Button, IconButton } from '@chakra-ui/react';
 
 import { useBoat } from 'boats/Boat.Store';
-import { BannerType } from 'boats/Boat.Types';
+import { BannerState, BannerType } from 'boats/Boat.Types';
 import { BannerChangeModal } from 'boats/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
 import { SbArrowDownIcon, SbArrowUpIcon } from 'util/icons/Icons';
 
 import 'boats/banner/Banner.scss';
 
-export const Banner: FunctionComponent = () => {
-    const [boat, { setBannerAction }] = useBoat();
+interface Props {
+    banner: BannerState;
+    onChange: (banner: BannerState) => void;
+}
+
+export const Banner: FunctionComponent<Props> = ({ banner, onChange }) => {
+    // const [boat, { setBannerAction }] = useBoat();
     const [isBannerSelectOpen, setIsBannerSelectOpen] = useState<boolean>(false);
-    const [bannerPosition, setBannerPosition] = useState<number>(boat.banner.position || 50);
+    const [bannerPosition, setBannerPosition] = useState<number>(banner.position || 50);
 
     const onSubmit = (type: BannerType, value: string | Color) => {
-        setBannerAction({ type, value, position: bannerPosition });
+        onChange({ ...banner, type, value, position: bannerPosition });
     };
 
     const setPosition = (dir: 'up' | 'down') => {
@@ -38,7 +43,7 @@ export const Banner: FunctionComponent = () => {
         }
 
         setBannerPosition(newPosition);
-        setBannerAction({ ...boat.banner, position: newPosition });
+        // onchange({ ...banner, position: newPosition });
     };
 
     return (
@@ -47,7 +52,7 @@ export const Banner: FunctionComponent = () => {
                 isOpen={isBannerSelectOpen}
                 onClose={() => setIsBannerSelectOpen(!isBannerSelectOpen)}
                 onChange={onSubmit}
-                banner={boat.banner}
+                banner={banner}
             />
             <Box className="sb-banner" borderRadius="xl" overflow="hidden" height={{ base: '180px', md: '240px' }}>
                 <Button
@@ -60,8 +65,8 @@ export const Banner: FunctionComponent = () => {
                 >
                     Change Banner
                 </Button>
-                {boat.banner.type === BannerType.Color ? (
-                    <Box bg={boat.banner.value} className="sb-banner-image" />
+                {banner.type === BannerType.Color ? (
+                    <Box bg={banner.value} className="sb-banner-image" />
                 ) : (
                     <>
                         <IconButton
@@ -91,7 +96,7 @@ export const Banner: FunctionComponent = () => {
                         <Image
                             draggable="false"
                             objectPosition={`left ${bannerPosition}%`}
-                            src={boat.banner.value}
+                            src={banner.value}
                             className="sb-banner-image"
                         />
                     </>

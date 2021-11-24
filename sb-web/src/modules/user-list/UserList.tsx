@@ -1,11 +1,24 @@
 import React, { FunctionComponent } from 'react';
 
-import { Flex, VStack, Text, Avatar, Box } from '@chakra-ui/react';
-import { Role } from 'modules/role/Role';
+import { Flex, VStack, HStack, Text, Avatar, Box, IconButton } from '@chakra-ui/react';
+import { Role, RoleType } from 'modules/role/Role';
 import { useBoat } from 'boats/Boat.Store';
 import { Crew } from 'boats/Boat.Types';
+import { SbDeleteIcon } from 'util/icons/Icons';
 
-export const UserCard: FunctionComponent<{ user: Crew; actions?: boolean }> = ({ user, actions = false }) => {
+interface UserCardProps {
+    user: Crew;
+    actions?: boolean;
+    onDelete?: ((email: string) => void) | null;
+}
+
+export const UserCard: FunctionComponent<UserCardProps> = ({ user, actions, onDelete }) => {
+    const onClick = () => {
+        if (onDelete) {
+            onDelete(user.email);
+        }
+    };
+
     return (
         <Flex justifyContent="space-between" w="100%">
             <Flex alignItems="center" overflow="hidden">
@@ -19,25 +32,39 @@ export const UserCard: FunctionComponent<{ user: Crew; actions?: boolean }> = ({
                     </Text>
                 </Box>
             </Flex>
-            <Box pl="4" display={actions ? 'block' : 'none'}>
+            <HStack pl="4" display={actions ? 'flex' : 'none'}>
                 <Role user={user} />
-            </Box>
+                {user.role !== RoleType.Captain && (
+                    <IconButton
+                        aria-label="delete"
+                        icon={<SbDeleteIcon />}
+                        variant="ghost"
+                        colorScheme="gray"
+                        onClick={onClick}
+                    />
+                )}
+            </HStack>
         </Flex>
     );
 };
 
 UserCard.defaultProps = {
     actions: false,
+    onDelete: null,
 };
 
-export const UserList: FunctionComponent<{ actions?: boolean }> = ({ actions }) => {
-    const [{ crew }] = useBoat();
+interface UserListProps {
+    crew: Crew[];
+    actions?: boolean;
+    onDelete?: ((email: string) => void) | null;
+}
 
+export const UserList: FunctionComponent<UserListProps> = ({ actions, crew, onDelete }) => {
     return (
         <VStack spacing="4" w="100%">
             {crew.map((c: any) => (
                 <Flex key={c.email} w="100%">
-                    <UserCard user={c} actions={actions} />
+                    <UserCard user={c} actions={actions} onDelete={onDelete} />
                 </Flex>
             ))}
         </VStack>
@@ -46,4 +73,5 @@ export const UserList: FunctionComponent<{ actions?: boolean }> = ({ actions }) 
 
 UserList.defaultProps = {
     actions: false,
+    onDelete: null,
 };

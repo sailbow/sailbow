@@ -10,6 +10,7 @@ import { customStyles } from 'modules/user-search/UserSearchSelectStyles';
 import { SbSearchIcon } from 'util/icons/Icons';
 import { useBoat } from 'boats/Boat.Store';
 import { UserCard } from 'modules/user-list/UserList';
+import { Crew } from 'boats/Boat.Types';
 
 interface MockData {
     label: string;
@@ -39,13 +40,16 @@ const FormSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
 });
 
-export const UserSearch: FunctionComponent = () => {
-    const [, { addCrewMemberAction }] = useBoat();
+interface Props {
+    onChange: (crew: Crew) => void;
+}
+
+export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
     const [inputText, setInputText] = useState<string>('');
 
     const onCrewSelect = (e: any) => {
         setInputText('');
-        addCrewMemberAction({ ...e.value, role: RoleType.Sailor });
+        onChange({ ...e.value, role: RoleType.Sailor });
     };
 
     const NoSelectOption: FunctionComponent<any> = (props) => {

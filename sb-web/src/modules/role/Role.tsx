@@ -42,7 +42,6 @@ export const GatherCrewRoleOptions = [
             { label: RoleLabel.Sailor, value: RoleType.Sailor },
         ],
     },
-    { label: 'Remove', value: RoleAction.Remove, color: 'brand.error' },
 ];
 
 interface Props {
@@ -50,7 +49,6 @@ interface Props {
 }
 
 export const Role: FunctionComponent<Props> = ({ user }) => {
-    const [, { removeCrewMemberAction }] = useBoat();
     const [selectedRole, setSelectedRole] = useState<OptionType>({
         label: RoleToLabelMapper[user.role],
         value: user.role,
@@ -67,7 +65,6 @@ export const Role: FunctionComponent<Props> = ({ user }) => {
                 break;
             }
             case RoleAction.Remove: {
-                removeCrewMemberAction({ email: data.email });
                 break;
             }
             default: {

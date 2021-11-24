@@ -2,7 +2,7 @@ import React, { ChangeEvent, FunctionComponent, useEffect, useState } from 'reac
 
 import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
-import { useBoat } from 'boats/Boat.Store';
+import { initialBoatState, useBoat } from 'boats/Boat.Store';
 import { Banner } from 'boats/banner/Banner';
 import { Steps } from 'boats/create/Create.Tut';
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
@@ -14,27 +14,51 @@ import { UserSearch } from 'modules/user-search/UserSearch';
 import { useProfile } from 'profile/Profile';
 
 import 'boats/create/Create.scss';
+import { BannerState, BoatState, Crew } from 'boats/Boat.Types';
 
 export const Create: FunctionComponent = () => {
-    const [, { addCrewMemberAction, setDetailsAction }] = useBoat();
+    const [, { createBoat }] = useBoat();
     const [{ profile }] = useProfile();
-    const [boatForm, setBoatForm] = useState<{ name: string; description: string }>({ name: '', description: '' });
+    const [boatForm, setBoatForm] = useState<BoatState>(initialBoatState);
 
     useEffect(() => {
         if (profile) {
-            addCrewMemberAction({ name: profile.name, email: profile.email, role: RoleType.Captain, info: '' });
+            setBoatForm({
+                ...boatForm,
+                crew: [{ name: profile.name, email: profile.email, role: RoleType.Captain, info: '' }],
+            });
         }
     }, [profile]); // eslint-disable-line
 
-    const onFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const onAddCrewMember = (crew: Crew) => {
+        setBoatForm({
+            ...boatForm,
+            crew: [...boatForm.crew, { ...crew }],
+        });
+    };
+
+    const onRemoveCrewMember = (email: string) => {
+        const updatedCrewList = boatForm.crew.filter((crew: Crew) => crew.email !== email);
+        setBoatForm({
+            ...boatForm,
+            crew: [...updatedCrewList],
+        });
+    };
+
+    const onFormDetailsChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setBoatForm({
             ...boatForm,
             [e.target.name]: e.target.value,
         });
     };
 
+    const onBannerChange = (banner: BannerState) => {
+        setBoatForm({ ...boatForm, banner });
+    };
+
     const onSubmit = () => {
-        setDetailsAction(boatForm);
+        console.log(boatForm);
+        createBoat(boatForm);
     };
 
     return (
@@ -49,13 +73,13 @@ export const Create: FunctionComponent = () => {
                     </Flex>
 
                     <Stack spacing="6">
-                        <Banner />
+                        <Banner banner={boatForm.banner} onChange={onBannerChange} />
                         <Input
                             label="Name"
                             customClass="create-boat-name"
                             required
                             props={{
-                                onChange: onFormChange,
+                                onChange: onFormDetailsChange,
                                 fontSize: '3xl',
                                 placeholder: 'Boat name...',
                                 fontWeight: 'semibold',
@@ -69,7 +93,7 @@ export const Create: FunctionComponent = () => {
                             label="Description"
                             customClass="create-boat-description"
                             props={{
-                                onChange: onFormChange,
+                                onChange: onFormDetailsChange,
                                 name: 'description',
                                 id: 'description',
                                 rows: 3,
@@ -86,8 +110,8 @@ export const Create: FunctionComponent = () => {
                                     If you haven’t gone on a voyage with a sailor before, use the link to invite them!
                                 </Text>
                             </Box>
-                            <UserSearch />
-                            <UserList actions />
+                            <UserSearch onChange={onAddCrewMember} />
+                            <UserList actions crew={boatForm.crew} onDelete={onRemoveCrewMember} />
                         </Stack>
                     </Stack>
                 </Stack>
