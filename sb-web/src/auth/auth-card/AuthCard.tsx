@@ -18,18 +18,29 @@ export const ProviderToUriMapper: Record<string, string> = {
     [Providers.Facebook]: process.env.REACT_APP_FACEBOOK_REDIRECT_URI!,
 };
 
-export const AuthCard: FunctionComponent = () => {
+interface Props {
+    path?: string;
+}
+
+export const AuthCard: FunctionComponent<Props> = ({ path }) => {
     const onLogin = async (provider: Providers) => {
+        let state = '';
+        if (path) {
+            state = encodeURI(JSON.stringify({ path }));
+        }
+
+        console.log(state);
+
         const { data }: AxiosResponse = await Http({
             ...AuthEndpoints.Login,
             params: {
                 provider,
+                state,
                 redirectUri: ProviderToUriMapper[provider],
             },
         });
 
         window.open(data, '_self');
-        console.log(data);
     };
 
     return (
@@ -73,4 +84,8 @@ export const AuthCard: FunctionComponent = () => {
             </VStack>
         </Box>
     );
+};
+
+AuthCard.defaultProps = {
+    path: '',
 };

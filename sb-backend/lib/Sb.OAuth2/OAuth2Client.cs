@@ -44,10 +44,10 @@ namespace Sb.OAuth2
             _clientCredentials = credentials;
         }
 
-        public virtual string GetAuthorizationEndpoint(string redirectUri, string scope = null, string accessType = null)
+        public virtual string GetAuthorizationEndpoint(string redirectUri, string scope = null, string accessType = null, string state = null)
         {
             string endpoint =
-                $"{_authUrl}?{ParameterKeys.RedirectUri}={HttpUtility.UrlEncode(redirectUri)}&{ParameterKeys.ClientId}={_clientCredentials.ClientId}&scope={scope ?? Defaults.Scope}&access_type={accessType ?? Defaults.AccessType}&{ParameterKeys.ResponseType}=code";
+                $"{_authUrl}?{ParameterKeys.RedirectUri}={HttpUtility.UrlEncode(redirectUri)}&{ParameterKeys.ClientId}={_clientCredentials.ClientId}&state={state}&scope={scope ?? Defaults.Scope}&access_type={accessType ?? Defaults.AccessType}&{ParameterKeys.ResponseType}=code";
             foreach (KeyValuePair<string, string> kvp in GetAdditionalAuthorizationParameters())
             {
                 endpoint += $"&{kvp.Key}={kvp.Value}";
@@ -55,7 +55,7 @@ namespace Sb.OAuth2
             return endpoint;
         }
 
-        public async Task<TokenBase> GenerateAccessTokensAsync(string authCode, string redirectUri)
+        public async Task<TokenBase> GenerateAccessTokensAsync(string authCode, string redirectUri, string state)
         {
             var client = new RestClient(_tokenUrl);
             client.Timeout = -1;
@@ -63,6 +63,7 @@ namespace Sb.OAuth2
                 .AddHeader("Content-Type", "application/x-www-form-urlencoded")
                 .AddParameter(ParameterKeys.Code, authCode)
                 .AddParameter(ParameterKeys.RedirectUri, redirectUri)
+                .AddParameter(ParameterKeys.State, state)
                 .AddParameter(ParameterKeys.ClientId, _clientCredentials.ClientId)
                 .AddParameter(ParameterKeys.ClientSecret, _clientCredentials.ClientSecret)
                 .AddParameter(ParameterKeys.GrantType, "authorization_code");

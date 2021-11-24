@@ -1,17 +1,18 @@
 import React, { FunctionComponent, lazy, Suspense } from 'react';
 
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect as RouterRedirect } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
 
 import { Footer } from 'modules/footer/Footer';
 import { Navbar } from 'modules/navbar/Navbar';
 import { BaseNavbar } from 'util/whitelisted/Base';
-import { Routes } from 'router/Router.Types';
+import { PrivateRoutes, Routes } from 'router/Router.Types';
 
 import 'router/Router.scss';
 
 /** Public Content */
 const Landing = lazy(() => import('util/landing/Landing').then((module) => ({ default: module.Landing })));
+const Authorize = lazy(() => import('auth/authorize/Authorize').then((module) => ({ default: module.Authorize })));
 const Redirect = lazy(() => import('auth/redirect/Redirect').then((module) => ({ default: module.Redirect })));
 
 /** Whitelisted Content */
@@ -68,6 +69,10 @@ export const WhitelistedRouter: FunctionComponent = () => {
 };
 
 export const PublicRouter: FunctionComponent = () => {
+    if (PrivateRoutes.includes(window.location.pathname)) {
+        window.location.href = `${Routes.Public.Redirect}?path=${window.location.pathname}`;
+    }
+
     return (
         <>
             <Navbar isAuth={false} />
@@ -78,6 +83,9 @@ export const PublicRouter: FunctionComponent = () => {
                             <Landing />
                         </Route>
                         <Route path={Routes.Public.Login}>
+                            <Authorize />
+                        </Route>
+                        <Route path={Routes.Public.Redirect}>
                             <Redirect />
                         </Route>
                         <Route path="*">
@@ -98,7 +106,10 @@ export const PrivateRouter: FunctionComponent = () => {
             <Box className="sb-private-router">
                 <Suspense fallback={null}>
                     <Switch>
-                        <Route exact path={Routes.Private.Home}>
+                        <Route exact path="/">
+                            <RouterRedirect to={Routes.Private.Home} />
+                        </Route>
+                        <Route path={Routes.Private.Home}>
                             <Home />
                         </Route>
                         <Route path={Routes.Private.Create}>
