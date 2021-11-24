@@ -3,7 +3,6 @@ import React, { FunctionComponent, useState } from 'react';
 import { Flex, Icon, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
-import { useBoat } from 'boats/Boat.Store';
 import { Crew } from 'boats/Boat.Types';
 import { SbCheckIcon } from 'util/icons/Icons';
 import { customStyles } from 'theme/SelectStyles';
@@ -12,10 +11,6 @@ export enum RoleType {
     Captain,
     Assistant,
     Sailor,
-}
-
-export enum RoleAction {
-    Remove = -1,
 }
 
 export enum RoleLabel {
@@ -62,9 +57,6 @@ export const Role: FunctionComponent<Props> = ({ user }) => {
             }
             case RoleType.Sailor: {
                 console.log('change to Sailor');
-                break;
-            }
-            case RoleAction.Remove: {
                 break;
             }
             default: {

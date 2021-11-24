@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react';
 
 import { Flex, VStack, HStack, Text, Avatar, Box, IconButton } from '@chakra-ui/react';
 import { Role, RoleType } from 'modules/role/Role';
-import { useBoat } from 'boats/Boat.Store';
 import { Crew } from 'boats/Boat.Types';
 import { SbDeleteIcon } from 'util/icons/Icons';
 
