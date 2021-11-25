@@ -6,7 +6,7 @@ import { BannerType } from 'boats/Boat.Types';
 import { Color } from 'theme/Colors';
 import { SbCheckIcon } from 'util/icons/Icons';
 
-import 'boats/banner/banner-change-modal/color-box/ColorBox.scss';
+import 'boats/components/banner/banner-change-modal/color-box/ColorBox.scss';
 
 interface ColorBoxProps {
     color: Color;

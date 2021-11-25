@@ -8,7 +8,7 @@ import { BannerType } from 'boats/Boat.Types';
 import { SbCheckIcon, SbSearchIcon } from 'util/icons/Icons';
 import { useDebounce } from 'components/input/InputUtils';
 
-import 'boats/banner/banner-change-modal/image-search/ImageSearch.scss';
+import 'boats/components/banner/banner-change-modal/image-search/ImageSearch.scss';
 
 interface Photo {
     src: string;

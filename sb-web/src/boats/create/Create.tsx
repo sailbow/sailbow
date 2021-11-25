@@ -4,7 +4,7 @@ import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
 import { initialBoatState, useBoat } from 'boats/Boat.Store';
 import { BannerState, BoatState, Crew } from 'boats/Boat.Types';
-import { Banner } from 'boats/banner/Banner';
+import { Banner } from 'boats/components/banner/Banner';
 import { UserList } from 'boats/components/user-list/UserList';
 import { UserSearch } from 'boats/components/user-search/UserSearch';
 import { Steps } from 'boats/create/Create.Tut';

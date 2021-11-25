@@ -73,8 +73,8 @@ const components: ComponentDefaultProps = {
             borderColor: 'transparent',
             borderWidth: '1px',
             _focus: {
-                boxShadow: '0px 0px 5px 1px #81e6d9',
-                borderColor: '#81e6d9',
+                boxShadow: '0px 0px 2px 1px #b2f5ea',
+                borderColor: '#b2f5ea',
                 borderWidth: '1px',
             },
         },

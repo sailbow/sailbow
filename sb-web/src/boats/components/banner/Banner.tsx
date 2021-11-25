@@ -3,11 +3,11 @@ import React, { FunctionComponent, useState } from 'react';
 import { Box, Image, Button, IconButton } from '@chakra-ui/react';
 
 import { BannerState, BannerType } from 'boats/Boat.Types';
-import { BannerChangeModal } from 'boats/banner/banner-change-modal/BannerChangeModal';
+import { BannerChangeModal } from 'boats/components/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
 import { SbArrowDownIcon, SbArrowUpIcon } from 'util/icons/Icons';
 
-import 'boats/banner/Banner.scss';
+import 'boats/components/banner/Banner.scss';
 
 interface Props {
     banner: BannerState;
@@ -15,15 +15,14 @@ interface Props {
 }
 
 export const Banner: FunctionComponent<Props> = ({ banner, onChange }) => {
-    // const [boat, { setBannerAction }] = useBoat();
     const [isBannerSelectOpen, setIsBannerSelectOpen] = useState<boolean>(false);
     const [bannerPosition, setBannerPosition] = useState<number>(banner.position || 50);
 
-    const onSubmit = (type: BannerType, value: string | Color) => {
+    const onSubmit = (type: BannerType, value: string | Color): void => {
         onChange({ ...banner, type, value, position: bannerPosition });
     };
 
-    const setPosition = (dir: 'up' | 'down') => {
+    const setPosition = (dir: 'up' | 'down'): void => {
         let newPosition = bannerPosition;
 
         switch (dir) {
@@ -42,7 +41,6 @@ export const Banner: FunctionComponent<Props> = ({ banner, onChange }) => {
         }
 
         setBannerPosition(newPosition);
-        // onchange({ ...banner, position: newPosition });
     };
 
     return (
