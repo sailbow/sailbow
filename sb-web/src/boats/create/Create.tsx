@@ -121,10 +121,15 @@ export const Create: FunctionComponent = () => {
                 </Stack>
                 <Flex mt="32" justifyContent="flex-end">
                     <Box className="create-boat-actions">
-                        <Button variant="link" mr="8" size="lg">
+                        <Button variant="link" mr="8">
                             Cancel
                         </Button>
-                        <Button size="lg" isLoading={loading} onClick={onSubmit} rightIcon={CheckmarkIcon}>
+                        <Button
+                            disabled={!boatForm.name}
+                            isLoading={loading}
+                            onClick={onSubmit}
+                            rightIcon={CheckmarkIcon}
+                        >
                             <Text>Start Boat</Text>
                         </Button>
                     </Box>

@@ -84,9 +84,6 @@ const components: ComponentDefaultProps = {
                     return {
                         ...ChakraTheme.components.Button.variants.solid(props),
                         color: 'brand.dark',
-                        _hover: {
-                            color: 'white',
-                        },
                     };
                 }
             },
