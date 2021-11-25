@@ -15,11 +15,11 @@ import { WhitelistedRoutes } from 'router/Router.Types';
 import './App.scss';
 
 const AppContainer: FunctionComponent = () => {
-    const [profileContainer] = useProfile();
+    const [{ loading }] = useProfile();
 
     return (
         <>
-            {profileContainer.loading ? (
+            {loading ? (
                 <></>
             ) : (
                 <BoatProvider>

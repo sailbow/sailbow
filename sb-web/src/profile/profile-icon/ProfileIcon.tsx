@@ -51,7 +51,7 @@ interface Props {
 }
 
 export const ProfileIcon: FunctionComponent<Props> = ({ display }) => {
-    const [profileContainer] = useProfile();
+    const [{ profile }] = useProfile();
 
     const onLogout = async () => {
         await Http(AuthEndpoints.Logout);
@@ -67,7 +67,7 @@ export const ProfileIcon: FunctionComponent<Props> = ({ display }) => {
         <Box className="sb-profile-icon" display={display}>
             <Menu>
                 <MenuButton className="button">
-                    <Avatar name={profileContainer.profile?.name} size="sm" h="35px" w="35px" />
+                    <Avatar name={profile?.name} size="sm" h="35px" w="35px" />
                 </MenuButton>
                 <MenuList fontWeight="normal">
                     <MenuGroup title="Profile">
