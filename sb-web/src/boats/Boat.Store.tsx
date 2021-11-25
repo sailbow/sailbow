@@ -90,7 +90,6 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
 
     const actionApis: BoatActionApis = {
         createBoat: async (boat: BoatState) => {
-            // axios request here
             return createBoatService(boat);
         },
         getPexelsImagesAction: (value: string, page: number) => {

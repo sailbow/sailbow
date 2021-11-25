@@ -32,7 +32,7 @@ export const getPexelsImages = async (value: string, newPage: number): Promise<P
     return photos;
 };
 
-export const createBoatService = async (boat: BoatState) => {
+export const createBoatService = async (boat: BoatState): Promise<BoatState> => {
     const { data }: AxiosResponse<BoatState> = await Http({
         method: BoatEndpoints.Create.method,
         url: BoatEndpoints.Create.url,

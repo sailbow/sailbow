@@ -52,11 +52,11 @@ export const Role: FunctionComponent<Props> = ({ user }) => {
     const onRoleChange = (role: number, data: Crew) => {
         switch (role) {
             case RoleType.Assistant: {
-                console.log('change to assistant');
+                console.log('change to assistant', data);
                 break;
             }
             case RoleType.Sailor: {
-                console.log('change to Sailor');
+                console.log('change to Sailor', data);
                 break;
             }
             default: {
