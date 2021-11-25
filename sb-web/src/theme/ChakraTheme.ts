@@ -70,6 +70,13 @@ const components: ComponentDefaultProps = {
         baseStyle: {
             borderRadius: '10px',
             fontWeight: 'semibold',
+            borderColor: 'transparent',
+            borderWidth: '1px',
+            _focus: {
+                boxShadow: '0px 0px 5px 1px #81e6d9',
+                borderColor: '#81e6d9',
+                borderWidth: '1px',
+            },
         },
         variants: {
             solid: (props: any) => {
@@ -228,7 +235,7 @@ const components: ComponentDefaultProps = {
 
 const shadows = {
     ...ChakraTheme.shadows,
-    outline: 'none',
+    outline: 'teal.100',
     lg: '0 0px 15px -3px rgba(0, 0, 0, 0.1),0 4px 6px -2px rgba(0, 0, 0, 0.05)',
 };
 

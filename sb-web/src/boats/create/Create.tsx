@@ -121,10 +121,10 @@ export const Create: FunctionComponent = () => {
                 </Stack>
                 <Flex mt="32" justifyContent="flex-end">
                     <Box className="create-boat-actions">
-                        <Button variant="link" mr="8">
+                        <Button variant="link" mr="8" size="lg">
                             Cancel
                         </Button>
-                        <Button isLoading={loading} onClick={onSubmit} rightIcon={CheckmarkIcon}>
+                        <Button size="lg" isLoading={loading} onClick={onSubmit} rightIcon={CheckmarkIcon}>
                             <Text>Start Boat</Text>
                         </Button>
                     </Box>

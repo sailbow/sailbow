@@ -5,7 +5,15 @@ import { Avatar, Box, Menu, MenuButton, MenuItem, MenuGroup, MenuDivider, MenuLi
 import { useProfile } from 'profile/Profile';
 import { AuthEndpoints } from 'util/http/Endpoints';
 import { Http, resetLocalStorage } from 'util/http/Http';
-import { SbQuestionIcon, SbPrivacyIcon, SbTermsIcon, SbUserIcon, SbLogoutIcon, SbMailIcon } from 'util/icons/Icons';
+import {
+    SbQuestionIcon,
+    SbPrivacyIcon,
+    SbTermsIcon,
+    SbUserIcon,
+    SbLogoutIcon,
+    SbMailIcon,
+    SbBugIcon,
+} from 'util/icons/Icons';
 import { Routes } from 'router/Router.Types';
 
 import 'profile/profile-icon/ProfileIcon.scss';
@@ -30,6 +38,11 @@ const HelpOptions = [
         label: 'Contact',
         route: Routes.Whitelisted.Contact,
         icon: <SbMailIcon />,
+    },
+    {
+        label: 'Report Bug',
+        route: Routes.Whitelisted.Contact,
+        icon: <SbBugIcon />,
     },
 ];
 
