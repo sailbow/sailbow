@@ -29,8 +29,6 @@ export const AuthCard: FunctionComponent<Props> = ({ path }) => {
             state = encodeURI(JSON.stringify({ path }));
         }
 
-        console.log(state);
-
         const { data }: AxiosResponse = await Http({
             ...AuthEndpoints.Login,
             params: {
