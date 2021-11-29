@@ -6,13 +6,12 @@ using Microsoft.IdentityModel.Tokens;
 
 using Newtonsoft.Json.Converters;
 
-using Sb.Api;
 using Sb.Api.Authorization;
+using Sb.Api.Configuration;
 using Sb.Api.Middleware;
 using Sb.Api.Services;
-using Sb.OAuth2;
 using Sb.Email;
-using Sb.Api.Configuration;
+using Sb.OAuth2;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;

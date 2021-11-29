@@ -9,9 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 
 using Newtonsoft.Json;
 
+using Sb.Api.Configuration;
 using Sb.Api.Models;
 using Sb.Api.Services;
-using Sb.Api.Configuration;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 using Sb.OAuth2;

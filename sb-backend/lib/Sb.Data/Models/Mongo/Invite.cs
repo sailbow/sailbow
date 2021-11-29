@@ -1,8 +1,4 @@
-﻿
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace Sb.Data.Models.Mongo
+﻿namespace Sb.Data.Models.Mongo
 {
     [MongoCollection("Invites")]
     public class Invite : MongoEntityBase
