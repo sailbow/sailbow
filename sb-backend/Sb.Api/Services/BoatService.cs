@@ -88,28 +88,17 @@ namespace Sb.Api.Services
             }
         }
 
-        public async Task<IEnumerable<Invite>> AddCrewInvites(string boatId, IEnumerable<string> emails)
+        public async Task<IEnumerable<Invite>> SendInvites(string boatId, IEnumerable<Invite> invites)
         {
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
-            Guard.Against.Null(emails, nameof(emails));
+            Guard.Against.Null(invites, nameof(invites));
 
             Boat boat = await _boatRepo.GetByIdAsync(boatId);
             var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.EditBoatPolicy);
             Guard.Against.Forbidden(authResult);
 
             var existingInvites = await _inviteRepo.GetAsync(i => i.BoatId == boatId);
-            List<Invite> newInvites = new();
-            foreach (string email in emails)
-            {
-                if (!existingInvites.Any(i => i.Email == email))
-                {
-                    newInvites.Add(new Invite 
-                    {
-                        BoatId = boatId,
-                        Email = email
-                    });
-                }
-            }
+            var newInvites = invites.Where(i => !existingInvites.Any(ei => ei.Email == i.Email));
             await _inviteRepo.InsertManyAsync(newInvites);
             return newInvites;
         }
@@ -130,6 +119,12 @@ namespace Sb.Api.Services
             }
 
             await _inviteRepo.DeleteAsync(invite);
+        }
+
+        public async Task<IEnumerable<Invite>> GetPendingInvites(string boatId)
+        {
+            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+            return await _inviteRepo.GetAsync(i => i.BoatId == boatId);
         }
     }
 }

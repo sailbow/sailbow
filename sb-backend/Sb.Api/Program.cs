@@ -28,6 +28,7 @@ services
     .AddFacebookOAuth2Client(new ClientCredentials(configuration["Facebook:AppId"], configuration["Facebook:AppSecret"]))
     .AddSingleton<OAuth2ClientFactory>()
     .AddTransient<BoatService>()
+    .AddTransient<EmailService>()
     .AddTransient<TokenBlacklistMiddleware>()
     .AddAuthorization(opts =>
     {

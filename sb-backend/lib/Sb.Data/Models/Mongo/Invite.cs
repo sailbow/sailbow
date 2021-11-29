@@ -9,5 +9,6 @@ namespace Sb.Data.Models.Mongo
     {
         public string BoatId { get; set; }
         public string Email { get; set; }
+        public Role Role { get; set; } = Role.Sailor;
     }
 }
