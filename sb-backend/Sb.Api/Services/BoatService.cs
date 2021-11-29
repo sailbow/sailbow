@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Authorization;
 
 using Sb.Api.Authorization;
+using Sb.Api.Validation;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 
@@ -102,6 +103,26 @@ namespace Sb.Api.Services
             }
             await _boatRepo.UpdateAsync(boat);
             return boat.Invites.Where(i => emails.Contains(i.Email));
+        }
+
+        public async Task<Boat> AcceptBoatInvite(string boatId, string inviteId, string email)
+        {
+            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+            Guard.Against.NullOrWhiteSpace(inviteId, nameof(inviteId));
+
+            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Guard.Against.EntityMissing(boat, nameof(boat));
+
+            Invite invite = boat.Invites.FirstOrDefault(i => i.Id == inviteId);
+            Guard.Against.Null(invite, nameof(invite));
+            if (invite.Email != email)
+            {
+                throw new ForbiddenResourceException();
+            }
+
+            boat.Invites = boat.Invites.Where(i => i.Id != inviteId);
+            await _boatRepo.UpdateAsync(boat);
+            return boat;
         }
     }
 }

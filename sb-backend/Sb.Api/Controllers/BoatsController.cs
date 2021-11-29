@@ -14,6 +14,8 @@ using Sb.Data.Models.Mongo;
 using Sb.Email;
 using Sb.Email.Models;
 
+using System.Security.Claims;
+
 namespace Sb.Api.Controllers
 {
     public class BoatsController : ApiControllerBase
@@ -24,19 +26,22 @@ namespace Sb.Api.Controllers
         private readonly IAuthorizationService _authService;
 
         private readonly EmailConfig _emailConfig;
+        private readonly SbApiConfig _apiConfig;
 
         public BoatsController(
             BoatService boatService,
             IRepository<User> userRepo,
             IEmailClient emailClient,
             IAuthorizationService authService,
-            IOptions<EmailConfig> emailConfig)
+            IOptions<EmailConfig> emailConfig,
+            IOptions<SbApiConfig> apiConfig)
         {
             _boatService = boatService;
             _userRepo = userRepo;
             _emailClient = emailClient;
             _authService = authService;
             _emailConfig = emailConfig.Value;
+            _apiConfig = apiConfig.Value;
         }
 
         [HttpPost("create")]
@@ -78,12 +83,19 @@ namespace Sb.Api.Controllers
                     From = new Address(_emailConfig.From, _emailConfig.Name),
                     To = new List<Address> { new Address(invite.Email) },
                     Subject = "You've been invited to a Boat!",
-                    Body = $"Captain {inviter.Name} has invited you to the boat {boat.Name}! \"{HttpContext.Request.Host.Value}/boats/{boat.Id}/invites/{invite.Id}/accept\" to accept."
+                    Body = $"Captain {inviter.Name} has invited you to the boat {boat.Name}! {_apiConfig.BoatInviteBaseUrl}/boats/{boatId}/invites/inviteId={invite.Id} to accept."
                 });
             }
             return Ok();
         }
 
+        [HttpPost("{boatId}/invites/{inviteId}/accept")]
+        public async Task<ActionResult<Boat>> AcceptInvite(string boatId, string inviteId)
+        {
+            Boat boat = await _boatService.AcceptBoatInvite(boatId, inviteId, HttpContext.GetClaim(ClaimTypes.Email));
+            return Ok(boat);
+            
+        }
 
         [HttpPost("{boatId}/crew")]
         public Task<Boat> AddCrewMember(string boatId, [FromBody] CrewMember crewMember)

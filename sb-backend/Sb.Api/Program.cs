@@ -23,6 +23,7 @@ services
     .AddHttpContextAccessor()
     .Configure<JwtConfig>(configuration.GetSection("Jwt"))
     .Configure<EmailConfig>(configuration.GetSection("Email"))
+    .Configure<SbApiConfig>(configuration.GetSection("SbApi"))
     .AddGoogleOAuth2Client(new ClientCredentials(configuration["Google:ClientId"], configuration["Google:ClientSecret"]))
     .AddFacebookOAuth2Client(new ClientCredentials(configuration["Facebook:AppId"], configuration["Facebook:AppSecret"]))
     .AddSingleton<OAuth2ClientFactory>()
