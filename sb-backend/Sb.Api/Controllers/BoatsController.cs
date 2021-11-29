@@ -30,14 +30,13 @@ namespace Sb.Api.Controllers
             _inviteRepo = inviteRepo;
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<Boat> CreateBoat([FromBody] Boat boat)
         {
             string id = HttpContext.GetClaim(CustomClaimTypes.Id);
             Guard.Against.NullOrWhiteSpace(id, nameof(id));
 
             var invitees = boat.Crew.Where(cm => cm.Email != HttpContext.GetClaim(ClaimTypes.Email));
-
             boat.Crew = new List<CrewMember>
             {
                 new CrewMember
@@ -47,16 +46,14 @@ namespace Sb.Api.Controllers
                     Info = string.Empty
                 }
             };
-
             boat = await _boatService.CreateBoat(boat);
-
-            var invites = invitees.Select(invitee => new Invite
+            await SendBoatInvites(boat.Id, invitees.Select(invitee => new Invite
             {
                 BoatId = boat.Id,
                 Email = invitee.Email,
                 Role = invitee.Role
-            });
-            await SendBoatInvites(boat.Id, invites);
+            }));
+
             return boat;
         }
 
@@ -76,7 +73,8 @@ namespace Sb.Api.Controllers
         [HttpPost("{boatId}/invites")]
         public async Task<IActionResult> SendBoatInvites(string boatId, [FromBody] IEnumerable<Invite> invites)
         {
-            await _emailService.SendBoatInvitations(boatId, invites);
+            var newInvites = await _boatService.CreateInvites(boatId, invites);
+            await _emailService.SendBoatInvitations(boatId, newInvites);
             return Ok();
         }
 

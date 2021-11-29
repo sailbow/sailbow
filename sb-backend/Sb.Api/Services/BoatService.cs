@@ -88,7 +88,7 @@ namespace Sb.Api.Services
             }
         }
 
-        public async Task<IEnumerable<Invite>> SendInvites(string boatId, IEnumerable<Invite> invites)
+        public async Task<IEnumerable<Invite>> CreateInvites(string boatId, IEnumerable<Invite> invites)
         {
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
             Guard.Against.Null(invites, nameof(invites));
