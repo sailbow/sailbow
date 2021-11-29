@@ -22,6 +22,7 @@ namespace Sb.Api.Controllers
     {
         private readonly BoatService _boatService;
         private readonly IRepository<User> _userRepo;
+        private readonly IRepository<Invite> _inviteRepo;
         private readonly IEmailClient _emailClient;
         private readonly IAuthorizationService _authService;
 
@@ -31,6 +32,7 @@ namespace Sb.Api.Controllers
         public BoatsController(
             BoatService boatService,
             IRepository<User> userRepo,
+            IRepository<Invite> inviteRepo,
             IEmailClient emailClient,
             IAuthorizationService authService,
             IOptions<EmailConfig> emailConfig,
@@ -38,6 +40,7 @@ namespace Sb.Api.Controllers
         {
             _boatService = boatService;
             _userRepo = userRepo;
+            _inviteRepo = inviteRepo;
             _emailClient = emailClient;
             _authService = authService;
             _emailConfig = emailConfig.Value;
@@ -50,6 +53,8 @@ namespace Sb.Api.Controllers
             string id = HttpContext.GetClaim(CustomClaimTypes.Id);
             Guard.Against.NullOrWhiteSpace(id, nameof(id));
 
+            var inviteList = boat.Crew.Where(cm => cm.Email != HttpContext.GetClaim(ClaimTypes.Email));
+
             boat.Crew = new List<CrewMember>
             {
                 new CrewMember
@@ -59,7 +64,10 @@ namespace Sb.Api.Controllers
                     Info = string.Empty
                 }
             };
-            return await _boatService.CreateBoat(boat);
+
+            boat = await _boatService.CreateBoat(boat);
+            await SendBoatInvites(boat.Id, inviteList.Select(cm => cm.Email));
+            return boat;
         }
 
         [HttpGet("{boatId}")]

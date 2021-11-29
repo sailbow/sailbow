@@ -13,17 +13,20 @@ namespace Sb.Api.Services
     {
         private readonly IRepository<Boat> _boatRepo;
         private readonly IRepository<User> _userRepo;
+        private readonly IRepository<Invite> _inviteRepo;
         private readonly HttpContext _context;
         private readonly IAuthorizationService _authService;
 
         public BoatService(
             IRepository<Boat> boatRepo,
             IRepository<User> userRepo,
+            IRepository<Invite> inviteRepo,
             IHttpContextAccessor contextAccessor,
             IAuthorizationService authService)
         {
             _boatRepo = boatRepo;
             _userRepo = userRepo;
+            _inviteRepo = inviteRepo;
             _context = contextAccessor.HttpContext;
             _authService = authService;
         }
@@ -94,18 +97,24 @@ namespace Sb.Api.Services
             var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.EditBoatPolicy);
             Guard.Against.Forbidden(authResult);
 
+            var existingInvites = await _inviteRepo.GetAsync(i => i.BoatId == boatId);
+            List<Invite> newInvites = new();
             foreach (string email in emails)
             {
-                if (!boat.Invites.Any(i => i.Email == email))
+                if (!existingInvites.Any(i => i.Email == email))
                 {
-                    boat.Invites = boat.Invites.Append(new Invite { Email = email });
+                    newInvites.Add(new Invite 
+                    {
+                        BoatId = boatId,
+                        Email = email
+                    });
                 }
             }
-            await _boatRepo.UpdateAsync(boat);
-            return boat.Invites.Where(i => emails.Contains(i.Email));
+            await _inviteRepo.InsertManyAsync(newInvites);
+            return newInvites;
         }
 
-        public async Task<Boat> AcceptBoatInvite(string boatId, string inviteId, string email)
+        public async Task AcceptBoatInvite(string boatId, string inviteId, string email)
         {
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
             Guard.Against.NullOrWhiteSpace(inviteId, nameof(inviteId));
@@ -113,16 +122,14 @@ namespace Sb.Api.Services
             Boat boat = await _boatRepo.GetByIdAsync(boatId);
             Guard.Against.EntityMissing(boat, nameof(boat));
 
-            Invite invite = boat.Invites.FirstOrDefault(i => i.Id == inviteId);
+            Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
             Guard.Against.Null(invite, nameof(invite));
             if (invite.Email != email)
             {
                 throw new ForbiddenResourceException();
             }
 
-            boat.Invites = boat.Invites.Where(i => i.Id != inviteId);
-            await _boatRepo.UpdateAsync(boat);
-            return boat;
+            await _inviteRepo.DeleteAsync(invite);
         }
     }
 }

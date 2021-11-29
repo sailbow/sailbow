@@ -48,6 +48,11 @@ namespace Sb.Data.Mongo
             return element;
         }
 
+        public async Task InsertManyAsync(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
+        {
+            await _collection.InsertManyAsync(entities, cancellationToken: cancellation);
+        }
+
         public Task UpdateAsync(TEntity element, CancellationToken cancellation = default)
         {
             return _collection.ReplaceOneAsync(e => e.Id == element.Id, element, cancellationToken: cancellation);
