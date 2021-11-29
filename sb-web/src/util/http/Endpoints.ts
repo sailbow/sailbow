@@ -41,7 +41,8 @@ export const BoatEndpoints: Record<BoatEndpointLabels, Endpoint> = {
     },
 };
 
-export const ImageSearchEndpoints: Record<string, Endpoint> = {
+type ImageSearchEndpointLabels = 'Search';
+export const ImageSearchEndpoints: Record<ImageSearchEndpointLabels, Endpoint> = {
     Search: {
         method: 'GET',
         url: 'https://api.pexels.com/v1/search',

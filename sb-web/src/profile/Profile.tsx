@@ -1,10 +1,8 @@
 import React, { ReactNode, createContext, Dispatch, useReducer, FunctionComponent, useContext, useEffect } from 'react';
-import { AxiosResponse } from 'axios';
 
 import { Profile } from 'profile/Profile.Types';
-import { ProfileEndpoints } from 'util/http/Endpoints';
-import { Http } from 'util/http/Http';
 import { Log } from 'util/logger/Logger';
+import { getProfile } from './profile-loading/Profile.Service';
 
 export enum ProfileActionType {
     FetchStart = 'FETCH_START',
@@ -116,7 +114,7 @@ export const useProfile = (): [ProfileContainer, ProfileActionApis] => {
                 try {
                     dispatch({ type: ProfileActionType.FetchStart });
 
-                    const { data }: AxiosResponse<Profile> = await Http(ProfileEndpoints.Me);
+                    const data = await getProfile();
                     dispatch({ type: ProfileActionType.FetchSuccess, profile: data });
                 } catch (error) {
                     dispatch({ type: ProfileActionType.FetchError, error });

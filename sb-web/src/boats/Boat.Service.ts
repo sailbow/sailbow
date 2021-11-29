@@ -5,8 +5,7 @@ import { Http } from 'util/http/Http';
 
 export const getPexelsImages = async (value: string, newPage: number): Promise<Photo[]> => {
     const { data }: AxiosResponse = await axios({
-        method: ImageSearchEndpoints.Search.method,
-        url: ImageSearchEndpoints.Search.url,
+        ...ImageSearchEndpoints.Search,
         headers: {
             Authorization: process.env.REACT_APP_PEXELS_API_KEY,
         },
@@ -34,8 +33,7 @@ export const getPexelsImages = async (value: string, newPage: number): Promise<P
 
 export const createBoatService = async (boat: BoatState): Promise<BoatState> => {
     const { data }: AxiosResponse<BoatState> = await Http({
-        method: BoatEndpoints.Create.method,
-        url: BoatEndpoints.Create.url,
+        ...BoatEndpoints.Create,
         data: { ...boat },
     });
 
