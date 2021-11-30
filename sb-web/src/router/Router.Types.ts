@@ -1,4 +1,4 @@
-type PublicRoutesLabel = 'Landing' | 'Login';
+type PublicRoutesLabel = 'Landing' | 'Login' | 'Redirect';
 type PrivateRoutesLabel = 'Home' | 'Create';
 type WhitelistedRoutesLabel = 'AboutUs' | 'Contact' | 'FAQ' | 'HowItWorks' | 'Privacy' | 'Terms' | 'License';
 
@@ -12,9 +12,10 @@ export const Routes: Route = {
     Public: {
         Landing: '/',
         Login: '/login',
+        Redirect: '/redirect',
     },
     Private: {
-        Home: '/',
+        Home: '/boats',
         Create: '/create',
     },
     Whitelisted: {
@@ -29,3 +30,4 @@ export const Routes: Route = {
 };
 
 export const WhitelistedRoutes: string[] = Object.values(Routes.Whitelisted);
+export const PrivateRoutes: string[] = Object.values(Routes.Private);
