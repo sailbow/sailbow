@@ -55,20 +55,20 @@ namespace Sb.Api.Controllers
                 AuthorizedUser user = await client.GetAuthorizedUserAsync(providerTokens.AccessToken);
 
                 if (string.IsNullOrWhiteSpace(user.Email))
-                    return Unauthorized("Invalid email");
+                    return BadRequest("Invalid email");
 
-                User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email && u.Provider == HttpContext.GetUserFromClaims()?.IdentityProvider)).FirstOrDefault();
-                if (existingUser == null)
+                User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email)).FirstOrDefault();
+                if (existingUser != null)
+                    return BadRequest("A user with this email address already exists");
+
+                existingUser = await userRepository.InsertAsync(new User
                 {
-                    existingUser = await userRepository.InsertAsync(new User
-                    {
-                        Name = user.Name,
-                        Email = user.Email,
-                        Provider = provider.ToString(),
-                        ProviderUserId = user.Id,
-                        DateCreated = DateTime.UtcNow
-                    });
-                }
+                    Name = user.Name,
+                    Email = user.Email,
+                    Provider = provider.ToString(),
+                    ProviderUserId = user.Id,
+                    DateCreated = DateTime.UtcNow
+                });
 
                 JwtToken token = GenerateToken(provider, providerTokens, existingUser);
                 return Ok(token);
