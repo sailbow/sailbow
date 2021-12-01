@@ -33,7 +33,7 @@ namespace Sb.OAuth2
 
         public override Task RevokeTokenAsync(string token)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

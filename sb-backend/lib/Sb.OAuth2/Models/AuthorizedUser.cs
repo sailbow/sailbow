@@ -6,6 +6,7 @@
         public string Name { get; set; }
         public string Email { get; set; }
         public string Picture { get; set; }
+        public string IdentityProvider { get; set; }
         public virtual string GetProfilePicture() => Picture;
     }
 }
