@@ -1,18 +1,17 @@
 import React, { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
 import { createBoatService, getPexelsImages } from 'boats/Boat.Service';
-import { BannerType, BoatState, Photo } from 'boats/Boat.Types';
+import { BannerType, Boat, CreateBoat, Photo } from 'boats/Boat.Types';
 import { Color } from 'theme/Colors';
 import { Log } from 'util/logger/Logger';
 
 export enum BoatActionType {
-    SetDetails = 'SET_DETAILS',
-    AddCrew = 'ADD_CREW',
-    RemoveCrew = 'REMOVE_CREW',
-    SetBanner = 'SET_BANNER',
+    SetBoat = 'SET_BOAT',
 }
 
-interface PayloadCreateBoat extends BoatState {}
+interface PayloadCreateBoat extends CreateBoat {}
+
+interface PayloadSetBoat extends Boat {}
 
 interface BoatAction {
     type: BoatActionType;
@@ -23,7 +22,8 @@ interface BoatProviderProps {
     children: ReactNode;
 }
 
-export const initialBoatState: BoatState = {
+export const initialBoatState: Boat = {
+    id: '',
     name: '',
     description: '',
     banner: {
@@ -35,15 +35,22 @@ export const initialBoatState: BoatState = {
     crew: [],
 };
 
-const BoatStateContext = createContext<BoatState | undefined>(undefined);
+const BoatStateContext = createContext<CreateBoat | undefined>(undefined);
 const BoatDispatchContext = createContext<Dispatch<BoatAction> | undefined>(undefined);
 
-const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
+const boatReducer = (boatState: CreateBoat, action: BoatAction): CreateBoat => {
     const log = new Log();
     log.group(action.type);
     log.prev(boatState);
 
     switch (action.type) {
+        case BoatActionType.SetBoat: {
+            const payload = action.payload as PayloadSetBoat;
+            const nextState = { ...boatState, ...payload };
+            log.next(nextState);
+
+            return nextState;
+        }
         default: {
             throw new Error(`Invalid action -- ${action.type}`);
         }
@@ -60,7 +67,7 @@ export const BoatProvider: FunctionComponent<BoatProviderProps> = ({ children })
     );
 };
 
-const useBoatState = (): BoatState => {
+const useBoatState = (): CreateBoat => {
     const context = useContext(BoatStateContext);
 
     if (context === undefined) {
@@ -81,16 +88,17 @@ const useBoatDispatch = (): Dispatch<BoatAction> => {
 };
 
 interface BoatActionApis {
-    createBoat: (boat: PayloadCreateBoat) => Promise<BoatState>;
+    createBoat: (boat: PayloadCreateBoat) => void;
     getPexelsImagesAction: (value: string, page: number) => Promise<Photo[]>;
 }
 
-export const useBoat = (): [BoatState, BoatActionApis] => {
-    const dispatcher = useBoatDispatch();
+export const useBoat = (): [CreateBoat, BoatActionApis] => {
+    const dispatch = useBoatDispatch();
 
     const actionApis: BoatActionApis = {
-        createBoat: async (boat: BoatState) => {
-            return createBoatService(boat);
+        createBoat: async (boat: CreateBoat) => {
+            const response = await createBoatService(boat);
+            dispatch({ type: BoatActionType.SetBoat, payload: response });
         },
         getPexelsImagesAction: (value: string, page: number) => {
             return getPexelsImages(value, page);

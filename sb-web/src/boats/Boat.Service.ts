@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { BoatEndpoints, ImageSearchEndpoints } from 'util/http/Endpoints';
-import { BoatState, Photo } from 'boats/Boat.Types';
+import { Boat, CreateBoat, Photo } from 'boats/Boat.Types';
 import { Http } from 'util/http/Http';
 
 export const getPexelsImages = async (value: string, newPage: number): Promise<Photo[]> => {
@@ -31,8 +31,8 @@ export const getPexelsImages = async (value: string, newPage: number): Promise<P
     return photos;
 };
 
-export const createBoatService = async (boat: BoatState): Promise<BoatState> => {
-    const { data }: AxiosResponse<BoatState> = await Http({
+export const createBoatService = async (boat: CreateBoat): Promise<Boat> => {
+    const { data }: AxiosResponse<Boat> = await Http({
         ...BoatEndpoints.Create,
         data: { ...boat },
     });

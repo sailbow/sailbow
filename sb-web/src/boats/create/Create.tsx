@@ -3,7 +3,7 @@ import React, { ChangeEvent, FunctionComponent, useEffect, useState } from 'reac
 import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
 import { initialBoatState, useBoat } from 'boats/Boat.Store';
-import { BannerState, BoatState, Crew } from 'boats/Boat.Types';
+import { BannerState, CreateBoat, Crew } from 'boats/Boat.Types';
 import { Banner, UserList, UserSearch } from 'boats/components';
 import { Steps } from 'boats/create/Create.Tut';
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
@@ -17,7 +17,7 @@ import 'boats/create/Create.scss';
 export const Create: FunctionComponent = () => {
     const [, { createBoat }] = useBoat();
     const [{ profile }] = useProfile();
-    const [boatForm, setBoatForm] = useState<BoatState>(initialBoatState);
+    const [boatForm, setBoatForm] = useState<CreateBoat>(initialBoatState);
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -57,9 +57,8 @@ export const Create: FunctionComponent = () => {
 
     const onSubmit = async () => {
         setLoading(true);
-        const response = await createBoat(boatForm);
+        createBoat(boatForm);
 
-        console.log('CREATED', response);
         setLoading(false);
     };
 
