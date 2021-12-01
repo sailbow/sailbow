@@ -1,4 +1,6 @@
-﻿using Ardalis.GuardClauses;
+﻿using System.Security.Claims;
+
+using Ardalis.GuardClauses;
 
 using Microsoft.AspNetCore.Authorization;
 
@@ -98,8 +100,13 @@ namespace Sb.Api.Services
             Guard.Against.Forbidden(authResult);
 
             var existingInvites = await _inviteRepo.GetAsync(i => i.BoatId == boatId);
-            var newInvites = invites.Where(i => !existingInvites.Any(ei => ei.Email == i.Email));
-            await _inviteRepo.InsertManyAsync(newInvites);
+            var newInvites = invites.Where(i => !existingInvites.Any(ei => ei.Email == i.Email)).ToList();
+            foreach (var invite in newInvites)
+            {
+                invite.BoatId = boatId;
+                await _inviteRepo.InsertAsync(invite);
+            }
+
             return newInvites;
         }
 
@@ -111,13 +118,20 @@ namespace Sb.Api.Services
             Boat boat = await _boatRepo.GetByIdAsync(boatId);
             Guard.Against.EntityMissing(boat, nameof(boat));
 
-            Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
-            Guard.Against.Null(invite, nameof(invite));
-            if (invite.Email != email)
-            {
-                throw new ForbiddenResourceException();
-            }
 
+            Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
+            Guard.Against.EntityMissing(invite, nameof(invite));
+            if (invite.Email != email) throw new ForbiddenResourceException();
+            
+            boat.Crew = boat.Crew.Append(new CrewMember
+            {
+                UserId = _context.GetClaim(CustomClaimTypes.Id),
+                Role = invite.Role,
+                Info = string.Empty,
+                Email = email
+            });
+
+            await _boatRepo.UpdateAsync(boat);
             await _inviteRepo.DeleteAsync(invite);
         }
 
