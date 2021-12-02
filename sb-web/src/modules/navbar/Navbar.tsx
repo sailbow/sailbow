@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { Box, Button, Flex, IconButton, HStack } from '@chakra-ui/react';
+import { matchPath } from 'react-router-dom';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { Menu } from 'components/menu/Menu';
@@ -14,6 +15,12 @@ import 'modules/navbar/Navbar.scss';
 
 interface Props {
     isAuth: boolean;
+}
+
+enum LinkLabels {
+    Boats = '/boats',
+    Feed = '/feeds',
+    Memories = '/memories',
 }
 
 export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
@@ -33,6 +40,27 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
         if (window.location.pathname !== path) window.location.href = path;
     };
 
+    const getActiveState = (link: LinkLabels): 'solid' | 'ghost' => {
+        const check = (currentLink: string) => {
+            // eslint-disable-next-line
+            if (!!matchPath(window.location.pathname, currentLink)) {
+                return 'solid';
+            }
+            return 'ghost';
+        };
+
+        switch (link) {
+            case LinkLabels.Boats:
+                return check(Routes.Private.Boats);
+            case LinkLabels.Feed:
+                return check(Routes.Private.Boats);
+            case LinkLabels.Memories:
+                return check(Routes.Private.Boats);
+            default:
+                return 'ghost';
+        }
+    };
+
     return (
         <Flex
             className="sb-navbar"
@@ -46,13 +74,13 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
             {isAuth ? (
                 <>
                     <HStack alignItems="center" spacing="4">
-                        <Logo className="logo" onClick={() => onRoute(Routes.Private.Home)} />
+                        <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
                         <Box display={{ base: 'none', md: 'flex' }}>
                             <Button
-                                variant={window.location.pathname === Routes.Private.Home ? 'solid' : 'ghost'}
+                                variant={getActiveState(LinkLabels.Boats)}
                                 colorScheme="gray"
                                 leftIcon={<SbBoatIcon />}
-                                onClick={() => onRoute(Routes.Private.Home)}
+                                onClick={() => onRoute(Routes.Private.Boats)}
                             >
                                 Boats
                             </Button>

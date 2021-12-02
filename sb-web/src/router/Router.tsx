@@ -28,6 +28,7 @@ const NotFound = lazy(() => import('util/not-found/NotFound').then((module) => (
 /** Private Content */
 const Home = lazy(() => import('boats/home/Home').then((module) => ({ default: module.Home })));
 const Create = lazy(() => import('boats/create/Create').then((module) => ({ default: module.Create })));
+const Boat = lazy(() => import('boats/boat/Boat').then((module) => ({ default: module.Boat })));
 
 export const WhitelistedRouter: FunctionComponent = () => {
     return (
@@ -107,13 +108,16 @@ export const PrivateRouter: FunctionComponent = () => {
                 <Suspense fallback={null}>
                     <Switch>
                         <Route exact path="/">
-                            <RouterRedirect to={Routes.Private.Home} />
+                            <RouterRedirect to={Routes.Private.Boats} />
                         </Route>
-                        <Route path={Routes.Private.Home}>
+                        <Route exact path={Routes.Private.Boats}>
                             <Home />
                         </Route>
                         <Route path={Routes.Private.Create}>
                             <Create />
+                        </Route>
+                        <Route path={`${Routes.Private.Boats}/:boatId`}>
+                            <Boat />
                         </Route>
                         <Route path="*">
                             <NotFound />

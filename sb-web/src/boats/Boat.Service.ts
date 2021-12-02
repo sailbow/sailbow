@@ -39,3 +39,12 @@ export const createBoatService = async (boat: CreateBoat): Promise<Boat> => {
 
     return data;
 };
+
+export const getBoatService = async (boatId: string): Promise<Boat> => {
+    const { data }: AxiosResponse<Boat> = await Http({
+        method: BoatEndpoints.Get.method,
+        url: `${BoatEndpoints.Get.url}/${boatId}`,
+    });
+
+    return data;
+};

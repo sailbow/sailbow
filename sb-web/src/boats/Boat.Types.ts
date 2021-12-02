@@ -1,8 +1,8 @@
 import { RoleType } from 'modules/role/Role';
 
 export enum BannerType {
-    Color,
-    Link,
+    Color = 'Color',
+    Link = 'Link',
 }
 
 export interface BannerState {
@@ -18,6 +18,15 @@ export interface Boat {
     description?: string;
     banner: BannerState;
     crew: Crew[];
+}
+
+export interface BoatState {
+    boat?: Boat;
+    error?: any;
+    loading: {
+        create: boolean;
+        get: boolean;
+    };
 }
 
 export interface CreateBoat extends Omit<Boat, 'id'> {}
