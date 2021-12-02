@@ -2,8 +2,8 @@ import React, { ChangeEvent, FunctionComponent, useEffect, useState } from 'reac
 
 import { Box, Text, Button, Flex, Heading, Stack } from '@chakra-ui/react';
 
-import { initialBoatState, useBoat } from 'boats/Boat.Store';
-import { BannerState, CreateBoat, Crew } from 'boats/Boat.Types';
+import { useBoat } from 'boats/Boat.Store';
+import { BannerState, BannerType, CreateBoat, Crew } from 'boats/Boat.Types';
 import { Banner, UserList, UserSearch } from 'boats/components';
 import { Steps } from 'boats/create/Create.Tut';
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
@@ -11,14 +11,24 @@ import { Input, TextArea } from 'components/input/Input';
 import { RoleType } from 'modules/role/Role';
 import { Tour } from 'modules/tour/Tour';
 import { useProfile } from 'profile/Profile';
+import { Routes } from 'router/Router.Types';
+import { Color } from 'theme/Colors';
 
 import 'boats/create/Create.scss';
 
 export const Create: FunctionComponent = () => {
-    const [, { createBoat }] = useBoat();
+    const [boat, { createBoat }] = useBoat();
     const [{ profile }] = useProfile();
-    const [boatForm, setBoatForm] = useState<CreateBoat>(initialBoatState);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [boatForm, setBoatForm] = useState<CreateBoat>({
+        name: '',
+        description: '',
+        banner: {
+            type: BannerType.Color,
+            value: Color.Orange100,
+            position: 50,
+        },
+        crew: [],
+    });
 
     useEffect(() => {
         if (profile) {
@@ -56,10 +66,11 @@ export const Create: FunctionComponent = () => {
     };
 
     const onSubmit = async () => {
-        setLoading(true);
-        createBoat(boatForm);
+        const boatResponse = await createBoat(boatForm);
 
-        setLoading(false);
+        if (boatResponse) {
+            window.location.href = `${Routes.Private.Boat}/${boatResponse.id}`;
+        }
     };
 
     return (
@@ -123,7 +134,7 @@ export const Create: FunctionComponent = () => {
                         </Button>
                         <Button
                             disabled={!boatForm.name}
-                            isLoading={loading}
+                            isLoading={boat.loading.create}
                             onClick={onSubmit}
                             rightIcon={CheckmarkIcon}
                         >

@@ -20,6 +20,15 @@ export interface Boat {
     crew: Crew[];
 }
 
+export interface BoatState {
+    boat?: Boat;
+    error?: any;
+    loading: {
+        create: boolean;
+        get: boolean;
+    };
+}
+
 export interface CreateBoat extends Omit<Boat, 'id'> {}
 
 export interface Photo {

@@ -33,11 +33,15 @@ export const ProfileEndpoints: Record<ProfileEndpointLabels, Endpoint> = {
     },
 };
 
-type BoatEndpointLabels = 'Create';
+type BoatEndpointLabels = 'Create' | 'Get';
 export const BoatEndpoints: Record<BoatEndpointLabels, Endpoint> = {
+    Get: {
+        method: 'GET',
+        url: 'api/boats',
+    },
     Create: {
         method: 'POST',
-        url: 'api/boats/create',
+        url: 'api/boats',
     },
 };
 
