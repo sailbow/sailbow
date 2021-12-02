@@ -1,8 +1,8 @@
 import { RoleType } from 'modules/role/Role';
 
 export enum BannerType {
-    Color,
-    Link,
+    Color = 'Color',
+    Link = 'Link',
 }
 
 export interface BannerState {

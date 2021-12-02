@@ -1,13 +1,16 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
-import { Box, Heading, Flex, Spinner, Text } from '@chakra-ui/react';
+import { Box, Flex, Heading, Spinner, Text } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
+import { Banner } from 'boats/components';
 import { useBoat } from 'boats/Boat.Store';
 
 export const Boat: FunctionComponent = () => {
     const [{ boat, loading }, { getBoat }] = useBoat();
     const { boatId } = useParams<{ boatId: string }>();
+
+    console.log(boat);
 
     useEffect(() => {
         (async () => {
@@ -24,9 +27,13 @@ export const Boat: FunctionComponent = () => {
             <Spinner />
         </Flex>
     ) : (
-        <Box className="container">
-            <Heading>{boat?.name}</Heading>
-            <Text>{boat?.description}</Text>
+        <Box>
+            <Banner banner={boat!.banner} />
+
+            <Box className="container" pt="8">
+                <Heading>{boat?.name}</Heading>
+                <Text>{boat?.description}</Text>
+            </Box>
         </Box>
     );
 };

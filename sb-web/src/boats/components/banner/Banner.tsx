@@ -11,7 +11,7 @@ import 'boats/components/banner/Banner.scss';
 
 interface Props {
     banner: BannerState;
-    onChange: (banner: BannerState) => void;
+    onChange?: ((banner: BannerState) => void) | null;
 }
 
 export const Banner: FunctionComponent<Props> = ({ banner, onChange }) => {
@@ -19,7 +19,9 @@ export const Banner: FunctionComponent<Props> = ({ banner, onChange }) => {
     const [bannerPosition, setBannerPosition] = useState<number>(banner.position || 50);
 
     const onSubmit = (type: BannerType, value: string | Color): void => {
-        onChange({ ...banner, type, value, position: bannerPosition });
+        if (onChange) {
+            onChange({ ...banner, type, value, position: bannerPosition });
+        }
     };
 
     const setPosition = (dir: 'up' | 'down'): void => {
@@ -101,4 +103,8 @@ export const Banner: FunctionComponent<Props> = ({ banner, onChange }) => {
             </Box>
         </>
     );
+};
+
+Banner.defaultProps = {
+    onChange: null,
 };
