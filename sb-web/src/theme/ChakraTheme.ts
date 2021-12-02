@@ -68,8 +68,15 @@ const components: ComponentDefaultProps = {
             colorScheme: 'brand',
         },
         baseStyle: {
-            borderRadius: '12px',
+            borderRadius: '10px',
             fontWeight: 'semibold',
+            borderColor: 'transparent',
+            borderWidth: '1px',
+            _focus: {
+                boxShadow: '0px 0px 2px 1px #b2f5ea',
+                borderColor: '#b2f5ea',
+                borderWidth: '1px',
+            },
         },
         variants: {
             solid: (props: any) => {
@@ -77,9 +84,6 @@ const components: ComponentDefaultProps = {
                     return {
                         ...ChakraTheme.components.Button.variants.solid(props),
                         color: 'brand.dark',
-                        _hover: {
-                            color: 'white',
-                        },
                     };
                 }
             },
@@ -228,7 +232,7 @@ const components: ComponentDefaultProps = {
 
 const shadows = {
     ...ChakraTheme.shadows,
-    outline: 'none',
+    outline: 'teal.100',
     lg: '0 0px 15px -3px rgba(0, 0, 0, 0.1),0 4px 6px -2px rgba(0, 0, 0, 0.05)',
 };
 

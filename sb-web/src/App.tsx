@@ -8,18 +8,18 @@ import { ProfileProvider, useProfile } from 'profile/Profile';
 import { ProfileLoading } from 'profile/profile-loading/ProfileLoading';
 import { ToastBar, ToastProvider } from 'modules/toast/Toast';
 import { PrivateRouter, PublicRouter, WhitelistedRouter } from 'router/Router';
+import { WhitelistedRoutes } from 'router/Router.Types';
 import { LS, TokenStorageKeys } from 'util/http/Http';
 import { HttpInterceptor } from 'util/http/HttpInterceptor';
-import { WhitelistedRoutes } from 'router/Router.Types';
 
 import './App.scss';
 
 const AppContainer: FunctionComponent = () => {
-    const [profileContainer] = useProfile();
+    const [{ loading }] = useProfile();
 
     return (
         <>
-            {profileContainer.loading ? (
+            {loading ? (
                 <></>
             ) : (
                 <BoatProvider>

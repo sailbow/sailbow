@@ -5,7 +5,15 @@ import { Avatar, Box, Menu, MenuButton, MenuItem, MenuGroup, MenuDivider, MenuLi
 import { useProfile } from 'profile/Profile';
 import { AuthEndpoints } from 'util/http/Endpoints';
 import { Http, resetLocalStorage } from 'util/http/Http';
-import { SbQuestionIcon, SbPrivacyIcon, SbTermsIcon, SbUserIcon, SbLogoutIcon, SbMailIcon } from 'util/icons/Icons';
+import {
+    SbQuestionIcon,
+    SbPrivacyIcon,
+    SbTermsIcon,
+    SbUserIcon,
+    SbLogoutIcon,
+    SbMailIcon,
+    SbBugIcon,
+} from 'util/icons/Icons';
 import { Routes } from 'router/Router.Types';
 
 import 'profile/profile-icon/ProfileIcon.scss';
@@ -31,6 +39,11 @@ const HelpOptions = [
         route: Routes.Whitelisted.Contact,
         icon: <SbMailIcon />,
     },
+    {
+        label: 'Report Bug',
+        route: Routes.Whitelisted.Contact,
+        icon: <SbBugIcon />,
+    },
 ];
 
 interface Props {
@@ -38,7 +51,7 @@ interface Props {
 }
 
 export const ProfileIcon: FunctionComponent<Props> = ({ display }) => {
-    const [profileContainer] = useProfile();
+    const [{ profile }] = useProfile();
 
     const onLogout = async () => {
         await Http(AuthEndpoints.Logout);
@@ -54,7 +67,7 @@ export const ProfileIcon: FunctionComponent<Props> = ({ display }) => {
         <Box className="sb-profile-icon" display={display}>
             <Menu>
                 <MenuButton className="button">
-                    <Avatar name={profileContainer.profile?.name} size="sm" h="35px" w="35px" />
+                    <Avatar name={profile?.name} size="sm" h="35px" w="35px" />
                 </MenuButton>
                 <MenuList fontWeight="normal">
                     <MenuGroup title="Profile">

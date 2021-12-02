@@ -1,24 +1,19 @@
 import React, { ReactNode, createContext, Dispatch, useReducer, FunctionComponent, useContext, useEffect } from 'react';
-import { AxiosResponse } from 'axios';
 
-import { ProfileEndpoints } from 'util/http/Endpoints';
-import { Http } from 'util/http/Http';
+import { Profile } from 'profile/Profile.Types';
 import { Log } from 'util/logger/Logger';
-
-export interface Profile {
-    dateCreated: string;
-    email: string;
-    id: string;
-    name: string;
-    provider: string;
-    providerUserId: string;
-}
+import { getProfile } from './profile-loading/Profile.Service';
 
 export enum ProfileActionType {
     FetchStart = 'FETCH_START',
     FetchSuccess = 'FETCH_SUCCESS',
     FetchError = 'FETCH_ERROR',
     SetProfile = 'SET_PROFILE',
+}
+
+interface PayloadFetchProfileSuccess extends Profile {}
+interface PayloadFetchProfileError {
+    error: any;
 }
 
 export interface ProfileAction {
@@ -48,18 +43,23 @@ const profileReducer = (container: ProfileContainer, action: ProfileAction): Pro
     switch (action.type) {
         case ProfileActionType.FetchStart: {
             const nextState = { loading: true };
+
             log.next(nextState);
             return nextState;
         }
 
         case ProfileActionType.FetchSuccess: {
-            const nextState = { loading: false, profile: action.profile };
+            const payload = action.profile as PayloadFetchProfileSuccess;
+            const nextState = { loading: false, profile: payload };
+
             log.next(nextState);
             return nextState;
         }
 
         case ProfileActionType.FetchError: {
-            const nextState = { loading: false, error: action.error };
+            const payload = action.error as PayloadFetchProfileError;
+            const nextState = { loading: false, error: payload.error };
+
             log.next(nextState);
             return nextState;
         }
@@ -99,7 +99,13 @@ const useProfileDispatch = (): Dispatch<ProfileAction> => {
     return context;
 };
 
-export const useProfile = (): [ProfileContainer, Dispatch<ProfileAction>] => {
+interface ProfileActionApis {
+    fetchProfileStart: () => void;
+    fetchProfileSuccess: (profile: Profile) => void;
+    fetchProfileError: (error: any) => void;
+}
+
+export const useProfile = (): [ProfileContainer, ProfileActionApis] => {
     const [profileContainer, dispatch] = [useProfileState(), useProfileDispatch()];
 
     useEffect(() => {
@@ -108,8 +114,8 @@ export const useProfile = (): [ProfileContainer, Dispatch<ProfileAction>] => {
                 try {
                     dispatch({ type: ProfileActionType.FetchStart });
 
-                    const response: AxiosResponse<Profile> = await Http(ProfileEndpoints.Me);
-                    dispatch({ type: ProfileActionType.FetchSuccess, profile: response.data });
+                    const data = await getProfile();
+                    dispatch({ type: ProfileActionType.FetchSuccess, profile: data });
                 } catch (error) {
                     dispatch({ type: ProfileActionType.FetchError, error });
                 }
@@ -117,5 +123,17 @@ export const useProfile = (): [ProfileContainer, Dispatch<ProfileAction>] => {
         }
     }, [profileContainer.profile, dispatch]);
 
-    return [profileContainer, dispatch];
+    const actionApis: ProfileActionApis = {
+        fetchProfileStart: () => {
+            dispatch({ type: ProfileActionType.FetchStart });
+        },
+        fetchProfileSuccess: (profile: Profile) => {
+            dispatch({ type: ProfileActionType.FetchSuccess, profile });
+        },
+        fetchProfileError: (error: any) => {
+            dispatch({ type: ProfileActionType.FetchError, error });
+        },
+    };
+
+    return [profileContainer, actionApis];
 };

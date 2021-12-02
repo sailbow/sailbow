@@ -33,7 +33,16 @@ export const ProfileEndpoints: Record<ProfileEndpointLabels, Endpoint> = {
     },
 };
 
-export const ImageSearchEndpoints: Record<string, Endpoint> = {
+type BoatEndpointLabels = 'Create';
+export const BoatEndpoints: Record<BoatEndpointLabels, Endpoint> = {
+    Create: {
+        method: 'POST',
+        url: 'api/boats/create',
+    },
+};
+
+type ImageSearchEndpointLabels = 'Search';
+export const ImageSearchEndpoints: Record<ImageSearchEndpointLabels, Endpoint> = {
     Search: {
         method: 'GET',
         url: 'https://api.pexels.com/v1/search',

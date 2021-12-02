@@ -19,7 +19,7 @@ interface Props {
 export const Notification: FunctionComponent<Props> = ({ display }) => {
     return (
         <Box display={display}>
-            <Popover variant="responsive">
+            <Popover variant="brand">
                 <PopoverTrigger>
                     <IconButton aria-label="notification" variant="icon">
                         <SbBellIcon />

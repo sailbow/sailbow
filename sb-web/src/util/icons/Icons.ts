@@ -13,6 +13,8 @@ export {
     IoSearchOutline as SbSearchIcon,
     IoDocumentTextOutline as SbTermsIcon,
     IoMailOutline as SbMailIcon,
+    IoTrashBinOutline as SbDeleteIcon,
+    IoBugOutline as SbBugIcon,
 } from 'react-icons/io5';
 export {
     HiArrowRight as SbRightArrowIcon,

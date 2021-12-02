@@ -35,7 +35,7 @@ export const Modal: FunctionComponent<Props> = ({
     size,
 }) => {
     return (
-        <ChakraModal isOpen={isOpen} onClose={onClose} size={size}>
+        <ChakraModal isOpen={isOpen} onClose={onClose} size={size} autoFocus={false}>
             <ModalOverlay />
             <ModalContent py="2">
                 <ModalHeader d="flex" justifyContent="space-between" alignItems="center">

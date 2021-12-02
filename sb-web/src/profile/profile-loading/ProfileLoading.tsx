@@ -5,10 +5,10 @@ import { Box, Heading, Modal, ModalContent, ModalOverlay, Spinner, Text } from '
 import { useProfile } from 'profile/Profile';
 
 export const ProfileLoading: FunctionComponent = () => {
-    const [profileContainer] = useProfile();
+    const [{ loading }] = useProfile();
 
     return (
-        <Modal isOpen={profileContainer.loading} onClose={() => console.log()} isCentered>
+        <Modal isOpen={loading} onClose={() => console.log()} isCentered>
             <ModalOverlay />
             <ModalContent p="5">
                 <Box textAlign="center">

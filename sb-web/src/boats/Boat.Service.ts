@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
-import { ImageSearchEndpoints } from 'util/http/Endpoints';
-import { Photo } from 'boats/Boat.Types';
+import { BoatEndpoints, ImageSearchEndpoints } from 'util/http/Endpoints';
+import { Boat, CreateBoat, Photo } from 'boats/Boat.Types';
+import { Http } from 'util/http/Http';
 
 export const getPexelsImages = async (value: string, newPage: number): Promise<Photo[]> => {
     const { data }: AxiosResponse = await axios({
-        method: ImageSearchEndpoints.Search.method,
-        url: ImageSearchEndpoints.Search.url,
+        ...ImageSearchEndpoints.Search,
         headers: {
             Authorization: process.env.REACT_APP_PEXELS_API_KEY,
         },
@@ -29,4 +29,13 @@ export const getPexelsImages = async (value: string, newPage: number): Promise<P
     });
 
     return photos;
+};
+
+export const createBoatService = async (boat: CreateBoat): Promise<Boat> => {
+    const { data }: AxiosResponse<Boat> = await Http({
+        ...BoatEndpoints.Create,
+        data: { ...boat },
+    });
+
+    return data;
 };

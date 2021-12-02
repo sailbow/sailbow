@@ -1,37 +1,29 @@
 import React, { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
-import { getPexelsImages } from 'boats/Boat.Service';
-import { BannerState, BannerType, BoatState, Photo, Crew } from 'boats/Boat.Types';
+import { createBoatService, getPexelsImages } from 'boats/Boat.Service';
+import { BannerType, Boat, CreateBoat, Photo } from 'boats/Boat.Types';
 import { Color } from 'theme/Colors';
 import { Log } from 'util/logger/Logger';
 
 export enum BoatActionType {
-    SetDetails = 'SET_DETAILS',
-    AddCrew = 'ADD_CREW',
-    RemoveCrew = 'REMOVE_CREW',
-    SetBanner = 'SET_BANNER',
+    SetBoat = 'SET_BOAT',
 }
 
-interface PayloadSetDetails extends Omit<BoatState, 'crew' | 'banner'> {}
+interface PayloadCreateBoat extends CreateBoat {}
 
-interface PayloadAddCrew extends Crew {}
-
-interface PayloadSetBanner extends BannerState {}
-
-interface PayloadRemoveCrew {
-    email: string;
-}
+interface PayloadSetBoat extends Boat {}
 
 interface BoatAction {
     type: BoatActionType;
-    payload: PayloadAddCrew | PayloadRemoveCrew | PayloadSetDetails | PayloadSetBanner;
+    payload: PayloadCreateBoat;
 }
 
 interface BoatProviderProps {
     children: ReactNode;
 }
 
-const initialBoatState: BoatState = {
+export const initialBoatState: Boat = {
+    id: '',
     name: '',
     description: '',
     banner: {
@@ -43,41 +35,20 @@ const initialBoatState: BoatState = {
     crew: [],
 };
 
-const BoatStateContext = createContext<BoatState | undefined>(undefined);
+const BoatStateContext = createContext<CreateBoat | undefined>(undefined);
 const BoatDispatchContext = createContext<Dispatch<BoatAction> | undefined>(undefined);
 
-const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
+const boatReducer = (boatState: CreateBoat, action: BoatAction): CreateBoat => {
     const log = new Log();
     log.group(action.type);
     log.prev(boatState);
 
     switch (action.type) {
-        case BoatActionType.SetDetails: {
-            const nextState: BoatState = { ...boatState, ...action.payload };
-
+        case BoatActionType.SetBoat: {
+            const payload = action.payload as PayloadSetBoat;
+            const nextState = { ...boatState, ...payload };
             log.next(nextState);
-            return nextState;
-        }
-        case BoatActionType.RemoveCrew: {
-            const payload = action.payload as PayloadRemoveCrew;
-            const updatedCrewList = boatState.crew.filter((crew: Crew) => crew.email !== payload.email);
-            const nextState: BoatState = { ...boatState, crew: updatedCrewList };
 
-            log.next(nextState);
-            return nextState;
-        }
-        case BoatActionType.AddCrew: {
-            const payload = action.payload as PayloadAddCrew;
-            const nextState: BoatState = { ...boatState, crew: [...boatState.crew, payload] };
-
-            log.next(nextState);
-            return nextState;
-        }
-        case BoatActionType.SetBanner: {
-            const payload = action.payload as PayloadSetBanner;
-            const nextState: BoatState = { ...boatState, banner: payload };
-
-            log.next(nextState);
             return nextState;
         }
         default: {
@@ -96,7 +67,7 @@ export const BoatProvider: FunctionComponent<BoatProviderProps> = ({ children })
     );
 };
 
-const useBoatState = (): BoatState => {
+const useBoatState = (): CreateBoat => {
     const context = useContext(BoatStateContext);
 
     if (context === undefined) {
@@ -117,40 +88,17 @@ const useBoatDispatch = (): Dispatch<BoatAction> => {
 };
 
 interface BoatActionApis {
-    setDetailsAction: (payload: PayloadSetDetails) => void;
-    setBannerAction: (payload: PayloadSetBanner) => void;
-    addCrewMemberAction: (payload: PayloadAddCrew) => void;
-    removeCrewMemberAction: (payload: PayloadRemoveCrew) => void;
+    createBoat: (boat: PayloadCreateBoat) => void;
     getPexelsImagesAction: (value: string, page: number) => Promise<Photo[]>;
 }
 
-export const useBoat = (): [BoatState, BoatActionApis] => {
-    const dispatcher = useBoatDispatch();
+export const useBoat = (): [CreateBoat, BoatActionApis] => {
+    const dispatch = useBoatDispatch();
 
     const actionApis: BoatActionApis = {
-        setDetailsAction: (payload: PayloadSetDetails) => {
-            dispatcher({
-                type: BoatActionType.SetDetails,
-                payload,
-            });
-        },
-        setBannerAction: (payload: PayloadSetBanner) => {
-            dispatcher({
-                type: BoatActionType.SetBanner,
-                payload,
-            });
-        },
-        addCrewMemberAction: (payload: PayloadSetDetails) => {
-            dispatcher({
-                type: BoatActionType.AddCrew,
-                payload,
-            });
-        },
-        removeCrewMemberAction: (payload: PayloadRemoveCrew) => {
-            dispatcher({
-                type: BoatActionType.RemoveCrew,
-                payload,
-            });
+        createBoat: async (boat: CreateBoat) => {
+            const response = await createBoatService(boat);
+            dispatch({ type: BoatActionType.SetBoat, payload: response });
         },
         getPexelsImagesAction: (value: string, page: number) => {
             return getPexelsImages(value, page);

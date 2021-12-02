@@ -47,7 +47,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                 <>
                     <HStack alignItems="center" spacing="4">
                         <Logo className="logo" onClick={() => onRoute(Routes.Private.Home)} />
-                        <Box display={{ base: 'none', md: 'block' }}>
+                        <Box display={{ base: 'none', md: 'flex' }}>
                             <Button
                                 variant={window.location.pathname === Routes.Private.Home ? 'solid' : 'ghost'}
                                 colorScheme="gray"
@@ -66,9 +66,9 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                     </HStack>
                     <HStack alignItems="center">
                         <Button
-                            leftIcon={<SbPlusIcon />}
+                            rightIcon={<SbPlusIcon />}
                             onClick={() => onRoute(Routes.Private.Create)}
-                            display={{ base: 'none', md: 'block' }}
+                            display={{ base: 'none', md: 'flex' }}
                         >
                             Start Boat
                         </Button>

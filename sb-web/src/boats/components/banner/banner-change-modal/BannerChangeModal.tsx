@@ -5,11 +5,11 @@ import { Box, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, Text } from
 import { CheckmarkIcon } from 'components/button/ButtonIcons';
 import { Modal } from 'components/modal/Modal';
 import { BannerType } from 'boats/Boat.Types';
-import { ColorBox } from 'boats/banner/banner-change-modal/color-box/ColorBox';
-import { ImageSearch } from 'boats/banner/banner-change-modal/image-search/ImageSearch';
+import { ColorBox } from 'boats/components/banner/banner-change-modal/color-box/ColorBox';
+import { ImageSearch } from 'boats/components/banner/banner-change-modal/image-search/ImageSearch';
 import { BannerColors, Color } from 'theme/Colors';
 
-import 'boats/banner/banner-change-modal/BannerChangeModal.scss';
+import 'boats/components/banner/banner-change-modal/BannerChangeModal.scss';
 
 interface Props {
     isOpen: boolean;

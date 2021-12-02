@@ -12,12 +12,15 @@ export interface BannerState {
     position?: number;
 }
 
-export interface BoatState {
+export interface Boat {
+    id: string;
     name: string;
     description?: string;
     banner: BannerState;
     crew: Crew[];
 }
+
+export interface CreateBoat extends Omit<Boat, 'id'> {}
 
 export interface Photo {
     src: string;
