@@ -21,7 +21,7 @@ export const Notification: FunctionComponent<Props> = ({ display }) => {
         <Box display={display}>
             <Popover variant="brand">
                 <PopoverTrigger>
-                    <IconButton aria-label="notification" variant="icon">
+                    <IconButton aria-label="notification" variant="icon" fontSize="lg">
                         <SbBellIcon />
                     </IconButton>
                 </PopoverTrigger>
