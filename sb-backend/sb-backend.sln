@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{224B658B-2FCE-4175-B935-6247458CB306}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{7BEB4C74-1D76-4E49-918E-94AEB2AF61F0}"
@@ -16,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.OAuth2", "lib\Sb.OAuth2\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.Data", "lib\Sb.Data\Sb.Data.csproj", "{CD07254A-51AB-456A-BBD8-226279CAC847}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sb.Email", "lib\Sb.Email\Sb.Email.csproj", "{30D028A5-9CF5-41F0-BD53-368326835BEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.Email", "lib\Sb.Email\Sb.Email.csproj", "{30D028A5-9CF5-41F0-BD53-368326835BEB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.HttpClients", "lib\Sb.HttpClients\Sb.HttpClients.csproj", "{277C71BF-DD68-4CF4-830A-B0A3F3445AE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +43,10 @@ Global
 		{30D028A5-9CF5-41F0-BD53-368326835BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30D028A5-9CF5-41F0-BD53-368326835BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30D028A5-9CF5-41F0-BD53-368326835BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{277C71BF-DD68-4CF4-830A-B0A3F3445AE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{277C71BF-DD68-4CF4-830A-B0A3F3445AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{277C71BF-DD68-4CF4-830A-B0A3F3445AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{277C71BF-DD68-4CF4-830A-B0A3F3445AE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +55,7 @@ Global
 		{07175926-E2C7-40AD-836F-5C0832CEA483} = {7BEB4C74-1D76-4E49-918E-94AEB2AF61F0}
 		{CD07254A-51AB-456A-BBD8-226279CAC847} = {7BEB4C74-1D76-4E49-918E-94AEB2AF61F0}
 		{30D028A5-9CF5-41F0-BD53-368326835BEB} = {7BEB4C74-1D76-4E49-918E-94AEB2AF61F0}
+		{277C71BF-DD68-4CF4-830A-B0A3F3445AE3} = {7BEB4C74-1D76-4E49-918E-94AEB2AF61F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF967348-C094-4839-B147-66FBF189C4AB}
