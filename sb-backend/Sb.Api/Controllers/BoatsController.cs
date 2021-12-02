@@ -73,6 +73,14 @@ namespace Sb.Api.Controllers
             return Ok(invites);
         }
 
+        [HttpGet("{boatId}/invites/{inviteId}")]
+        public async Task<ActionResult<Invite>> GetInvite(string boatId, string inviteId)
+        {
+            await _boatService.GetBoatById(boatId);
+            Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
+            return Ok(invite);
+        }
+
         [HttpPost("{boatId}/invites")]
         public async Task<IActionResult> SendBoatInvites(string boatId, [FromBody] IEnumerable<Invite> invites)
         {
