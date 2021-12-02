@@ -54,7 +54,7 @@ export const ProfileIcon: FunctionComponent<Props> = ({ display }) => {
     const [{ profile }] = useProfile();
 
     const onLogout = async () => {
-        await Http(AuthEndpoints.Logout);
+        await Http(AuthEndpoints.Logout());
         resetLocalStorage();
         window.location.href = Routes.Public.Landing;
     };
