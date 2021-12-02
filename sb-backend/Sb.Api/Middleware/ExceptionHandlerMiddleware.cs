@@ -9,10 +9,12 @@ namespace Sb.Api.Middleware
     public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandlerMiddleware> _logger;
 
-        public ExceptionHandlerMiddleware(RequestDelegate next)
+        public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -23,6 +25,7 @@ namespace Sb.Api.Middleware
             }
             catch (Exception error)
             {
+                _logger.LogError(error, error.Message);
                 HttpResponse response = context.Response;
                 response.ContentType = "application/json";
                 string result;

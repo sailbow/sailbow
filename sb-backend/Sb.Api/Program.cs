@@ -6,13 +6,12 @@ using Microsoft.IdentityModel.Tokens;
 
 using Newtonsoft.Json.Converters;
 
-using Sb.Api;
 using Sb.Api.Authorization;
+using Sb.Api.Configuration;
 using Sb.Api.Middleware;
 using Sb.Api.Services;
-using Sb.OAuth2;
 using Sb.Email;
-using Sb.Api.Configuration;
+using Sb.OAuth2;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
@@ -23,10 +22,12 @@ services
     .AddHttpContextAccessor()
     .Configure<JwtConfig>(configuration.GetSection("Jwt"))
     .Configure<EmailConfig>(configuration.GetSection("Email"))
+    .Configure<SbApiConfig>(configuration.GetSection("SbApi"))
     .AddGoogleOAuth2Client(new ClientCredentials(configuration["Google:ClientId"], configuration["Google:ClientSecret"]))
     .AddFacebookOAuth2Client(new ClientCredentials(configuration["Facebook:AppId"], configuration["Facebook:AppSecret"]))
     .AddSingleton<OAuth2ClientFactory>()
     .AddTransient<BoatService>()
+    .AddTransient<EmailService>()
     .AddTransient<TokenBlacklistMiddleware>()
     .AddAuthorization(opts =>
     {

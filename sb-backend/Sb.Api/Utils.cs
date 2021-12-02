@@ -63,5 +63,8 @@ namespace Sb.Api
             string token = context.Request.Headers.Authorization;
             return token?.Replace("Bearer ", string.Empty);
         }
+
+        public static string GetHostUrl(this HttpContext context)
+            => context.Request.Host.Value;
     }
 }

@@ -1,50 +1,42 @@
-﻿using Ardalis.GuardClauses;
+﻿using System.Security.Claims;
 
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+using Ardalis.GuardClauses;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
-using Sb.Api.Authorization;
-using Sb.Api.Configuration;
 using Sb.Api.Models;
 using Sb.Api.Services;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
-using Sb.Email;
-using Sb.Email.Models;
 
 namespace Sb.Api.Controllers
 {
     public class BoatsController : ApiControllerBase
     {
         private readonly BoatService _boatService;
+        private readonly EmailService _emailService;
         private readonly IRepository<User> _userRepo;
-        private readonly IEmailClient _emailClient;
-        private readonly IAuthorizationService _authService;
-
-        private readonly EmailConfig _emailConfig;
+        private readonly IRepository<Invite> _inviteRepo;
 
         public BoatsController(
             BoatService boatService,
+            EmailService emailService,
             IRepository<User> userRepo,
-            IEmailClient emailClient,
-            IAuthorizationService authService,
-            IOptions<EmailConfig> emailConfig)
+            IRepository<Invite> inviteRepo)
         {
             _boatService = boatService;
+            _emailService = emailService;
             _userRepo = userRepo;
-            _emailClient = emailClient;
-            _authService = authService;
-            _emailConfig = emailConfig.Value;
+            _inviteRepo = inviteRepo;
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<Boat> CreateBoat([FromBody] Boat boat)
         {
             string id = HttpContext.GetClaim(CustomClaimTypes.Id);
             Guard.Against.NullOrWhiteSpace(id, nameof(id));
 
+            var invitees = boat.Crew.Where(cm => cm.Email != HttpContext.GetClaim(ClaimTypes.Email));
             boat.Crew = new List<CrewMember>
             {
                 new CrewMember
@@ -54,36 +46,46 @@ namespace Sb.Api.Controllers
                     Info = string.Empty
                 }
             };
-            return await _boatService.CreateBoat(boat);
+            boat = await _boatService.CreateBoat(boat);
+            await SendBoatInvites(boat.Id, invitees.Select(invitee => new Invite
+            {
+                BoatId = boat.Id,
+                Email = invitee.Email,
+                Role = invitee.Role
+            }));
+
+            return boat;
         }
 
         [HttpGet("{boatId}")]
         public Task<Boat> GetBoatById(string boatId)
             => _boatService.GetBoatById(boatId);
 
-        [HttpPost("{boatId}/invites")]
-        public async Task<IActionResult> SendBoatInvites(string boatId, [FromBody] IEnumerable<string> emails)
+        [HttpGet("{boatId}/invites")]
+        public async Task<ActionResult<IEnumerable<Invite>>> GetInvites(string boatId)
         {
-            Boat boat = await _boatService.GetBoatById(boatId);
-            var authResult = await _authService.AuthorizeAsync(HttpContext.User, boat, AuthorizationPolicies.EditBoatPolicy);
-            Guard.Against.Forbidden(authResult);
-            string inviterUserId = HttpContext.GetClaim(CustomClaimTypes.Id);
-            User inviter = await _userRepo.GetByIdAsync(inviterUserId);
-            Guard.Against.Null(inviter, nameof(inviter));
-            IEnumerable<Invite> invites = await _boatService.AddCrewInvites(boatId, emails);
-            foreach (var invite in invites)
-            {
-                await _emailClient.SendEmailAsync(new EmailMessage
-                {
-                    From = new Address(_emailConfig.From, _emailConfig.Name),
-                    To = new List<Address> { new Address(invite.Email) },
-                    Subject = "You've been invited to a Boat!",
-                    Body = $"Captain {inviter.Name} has invited you to the boat {boat.Name}! \"{HttpContext.Request.Host.Value}/boats/{boat.Id}/invites/{invite.Id}/accept\" to accept."
-                });
-            }
+            // Perform read validation but don't need the result
+            await _boatService.GetBoatById(boatId);
+            var invites = await _inviteRepo.GetAsync(i => i.BoatId == boatId);
+            return Ok(invites);
+        }
+
+        [HttpPost("{boatId}/invites")]
+        public async Task<IActionResult> SendBoatInvites(string boatId, [FromBody] IEnumerable<Invite> invites)
+        {
+            var newInvites = await _boatService.CreateInvites(boatId, invites);
+            await _emailService.SendBoatInvitations(boatId, newInvites);
             return Ok();
         }
 
+        [HttpPost("{boatId}/invites/{inviteId}/accept")]
+        public async Task<ActionResult<Boat>> AcceptInvite(string boatId, string inviteId)
+        {
+            await _boatService.AcceptBoatInvite(boatId, inviteId, HttpContext.GetClaim(ClaimTypes.Email));
+            Boat boat = await _boatService.GetBoatById(boatId);
+            return Ok(boat);
+
+        }
 
         [HttpPost("{boatId}/crew")]
         public Task<Boat> AddCrewMember(string boatId, [FromBody] CrewMember crewMember)

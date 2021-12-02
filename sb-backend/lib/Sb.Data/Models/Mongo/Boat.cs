@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Sb.Data.Models.Mongo
@@ -16,7 +15,6 @@ namespace Sb.Data.Models.Mongo
         [BsonIgnore]
         public bool Show { get; set; } = false;
         public IEnumerable<CrewMember> Crew { get; set; } = Enumerable.Empty<CrewMember>();
-        public IEnumerable<Invite> Invites { get; set; } = Enumerable.Empty<Invite>();
     }
 
     public class CrewMember
@@ -24,6 +22,7 @@ namespace Sb.Data.Models.Mongo
         public string UserId { get; set; }
         public Role Role { get; set; }
         public string Info { get; set; }
+        public string Email { get; set; }
     }
 
     public enum Role
@@ -51,15 +50,5 @@ namespace Sb.Data.Models.Mongo
         public int Height { get; set; }
         public string Photographer { get; set; }
         public string PhotographerUrl { get; set; }
-    }
-    public class Invite : MongoEntityBase
-    {
-        public string Email { get; set; }
-
-        [BsonConstructor]
-        public Invite()
-        {
-            Id = ObjectId.GenerateNewId().ToString();
-        }
     }
 }

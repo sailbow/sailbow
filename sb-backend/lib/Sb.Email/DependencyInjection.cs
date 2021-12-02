@@ -1,7 +1,7 @@
-﻿using SendGrid;
-using SendGrid.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-using Microsoft.Extensions.DependencyInjection;
+using SendGrid;
+using SendGrid.Extensions.DependencyInjection;
 
 namespace Sb.Email
 {

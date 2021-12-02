@@ -9,9 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 
 using Newtonsoft.Json;
 
+using Sb.Api.Configuration;
 using Sb.Api.Models;
 using Sb.Api.Services;
-using Sb.Api.Configuration;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 using Sb.OAuth2;
@@ -55,27 +55,20 @@ namespace Sb.Api.Controllers
                 AuthorizedUser user = await client.GetAuthorizedUserAsync(providerTokens.AccessToken);
 
                 if (string.IsNullOrWhiteSpace(user.Email))
-                    return Unauthorized("Invalid email");
+                    return BadRequest("Invalid email");
 
                 User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email)).FirstOrDefault();
-                if (existingUser is not null)
+                if (existingUser != null)
+                    return BadRequest("A user with this email address already exists");
+
+                existingUser = await userRepository.InsertAsync(new User
                 {
-                    if (existingUser.Provider != provider.ToString())
-                    {
-                        return BadRequest("An account with this email already exists");
-                    }
-                }
-                else
-                {
-                    existingUser = await userRepository.InsertAsync(new User
-                    {
-                        Name = user.Name,
-                        Email = user.Email,
-                        Provider = provider.ToString(),
-                        ProviderUserId = user.Id,
-                        DateCreated = DateTime.UtcNow
-                    });
-                }
+                    Name = user.Name,
+                    Email = user.Email,
+                    Provider = provider.ToString(),
+                    ProviderUserId = user.Id,
+                    DateCreated = DateTime.UtcNow
+                });
 
                 JwtToken token = GenerateToken(provider, providerTokens, existingUser);
                 return Ok(token);

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Sb.Email.Models
+﻿namespace Sb.Email.Models
 {
     public record Address(string Email, string? Name = null);
     public class EmailMessage

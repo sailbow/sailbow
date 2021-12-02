@@ -1,8 +1,11 @@
-﻿using Ardalis.GuardClauses;
+﻿using System.Security.Claims;
+
+using Ardalis.GuardClauses;
 
 using Microsoft.AspNetCore.Authorization;
 
 using Sb.Api.Authorization;
+using Sb.Api.Validation;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
 
@@ -12,17 +15,20 @@ namespace Sb.Api.Services
     {
         private readonly IRepository<Boat> _boatRepo;
         private readonly IRepository<User> _userRepo;
+        private readonly IRepository<Invite> _inviteRepo;
         private readonly HttpContext _context;
         private readonly IAuthorizationService _authService;
 
         public BoatService(
             IRepository<Boat> boatRepo,
             IRepository<User> userRepo,
+            IRepository<Invite> inviteRepo,
             IHttpContextAccessor contextAccessor,
             IAuthorizationService authService)
         {
             _boatRepo = boatRepo;
             _userRepo = userRepo;
+            _inviteRepo = inviteRepo;
             _context = contextAccessor.HttpContext;
             _authService = authService;
         }
@@ -84,24 +90,55 @@ namespace Sb.Api.Services
             }
         }
 
-        public async Task<IEnumerable<Invite>> AddCrewInvites(string boatId, IEnumerable<string> emails)
+        public async Task<IEnumerable<Invite>> CreateInvites(string boatId, IEnumerable<Invite> invites)
         {
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
-            Guard.Against.Null(emails, nameof(emails));
+            Guard.Against.Null(invites, nameof(invites));
 
             Boat boat = await _boatRepo.GetByIdAsync(boatId);
             var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.EditBoatPolicy);
             Guard.Against.Forbidden(authResult);
 
-            foreach (string email in emails)
+            var existingInvites = await _inviteRepo.GetAsync(i => i.BoatId == boatId);
+            var newInvites = invites.Where(i => !existingInvites.Any(ei => ei.Email == i.Email)).ToList();
+            foreach (var invite in newInvites)
             {
-                if (!boat.Invites.Any(i => i.Email == email))
-                {
-                    boat.Invites = boat.Invites.Append(new Invite { Email = email });
-                }
+                invite.BoatId = boatId;
+                await _inviteRepo.InsertAsync(invite);
             }
+
+            return newInvites;
+        }
+
+        public async Task AcceptBoatInvite(string boatId, string inviteId, string email)
+        {
+            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+            Guard.Against.NullOrWhiteSpace(inviteId, nameof(inviteId));
+
+            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Guard.Against.EntityMissing(boat, nameof(boat));
+
+
+            Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
+            Guard.Against.EntityMissing(invite, nameof(invite));
+            if (invite.Email != email) throw new ForbiddenResourceException();
+            
+            boat.Crew = boat.Crew.Append(new CrewMember
+            {
+                UserId = _context.GetClaim(CustomClaimTypes.Id),
+                Role = invite.Role,
+                Info = string.Empty,
+                Email = email
+            });
+
             await _boatRepo.UpdateAsync(boat);
-            return boat.Invites.Where(i => emails.Contains(i.Email));
+            await _inviteRepo.DeleteAsync(invite);
+        }
+
+        public async Task<IEnumerable<Invite>> GetPendingInvites(string boatId)
+        {
+            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+            return await _inviteRepo.GetAsync(i => i.BoatId == boatId);
         }
     }
 }
