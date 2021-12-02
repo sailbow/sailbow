@@ -54,6 +54,14 @@ namespace Sb.Api.Services
             return boat;
         }
 
+        public async Task<IEnumerable<Boat>> GetBoatsByUserId(string userId)
+        {
+            User user = await _userRepo.GetByIdAsync(userId);
+            Guard.Against.EntityMissing(user, nameof(user));
+
+            return await _boatRepo.GetAsync(b => b.Crew.Any(cm => cm.UserId == userId));
+        }
+
         public async Task<Boat> AddCrewMember(string boatId, CrewMember crewMember)
         {
             Guard.Against.Null(crewMember, nameof(crewMember));
