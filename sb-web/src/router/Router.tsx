@@ -108,15 +108,15 @@ export const PrivateRouter: FunctionComponent = () => {
                 <Suspense fallback={null}>
                     <Switch>
                         <Route exact path="/">
-                            <RouterRedirect to={Routes.Private.Home} />
+                            <RouterRedirect to={Routes.Private.Boats} />
                         </Route>
-                        <Route path={Routes.Private.Home}>
+                        <Route exact path={Routes.Private.Boats}>
                             <Home />
                         </Route>
                         <Route path={Routes.Private.Create}>
                             <Create />
                         </Route>
-                        <Route path={`${Routes.Private.Boat}/:boatId`}>
+                        <Route path={`${Routes.Private.Boats}/:boatId`}>
                             <Boat />
                         </Route>
                         <Route path="*">

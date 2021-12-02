@@ -69,7 +69,7 @@ export const Create: FunctionComponent = () => {
         const boatResponse = await createBoat(boatForm);
 
         if (boatResponse) {
-            window.location.href = `${Routes.Private.Boat}/${boatResponse.id}`;
+            window.location.href = `${Routes.Private.Boats}/${boatResponse.id}`;
         }
     };
 

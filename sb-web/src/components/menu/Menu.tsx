@@ -38,17 +38,17 @@ const groups = [
         items: [
             {
                 label: 'Boats',
-                route: Routes.Private.Home,
+                route: Routes.Private.Boats,
                 icon: <SbBoatIcon />,
             },
             {
                 label: 'Feed',
-                route: Routes.Private.Home,
+                route: Routes.Private.Boats,
                 icon: <SbFeedIcon />,
             },
             {
                 label: 'Memories',
-                route: Routes.Private.Home,
+                route: Routes.Private.Boats,
                 icon: <SbClockIcon />,
             },
         ],

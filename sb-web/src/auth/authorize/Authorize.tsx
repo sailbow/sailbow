@@ -38,7 +38,7 @@ export const Authorize: FunctionComponent = () => {
                         const parsedState = JSON.parse(state);
                         window.location.href = parsedState.path;
                     } else {
-                        window.location.href = Routes.Private.Home;
+                        window.location.href = Routes.Private.Boats;
                     }
                 } else {
                     throw new Error('Could not login. Invalid redirect parameters.');

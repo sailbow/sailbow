@@ -154,7 +154,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
 
                 return response;
             } catch (error) {
-                dispatch({ type: BoatActionType.SetCreateLoading, payload: false });
+                dispatch({ type: BoatActionType.SetGetLoading, payload: false });
                 return null;
             }
         },
