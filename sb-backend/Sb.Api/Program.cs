@@ -82,6 +82,12 @@ services.AddSbEmailClients()
         opts.ApiKey = configuration["SendGrid:ApiKey"];
     });
 
+services.AddSbHttpClients()
+    .AddUnsplash(opts =>
+    {
+        opts.ClientId = configuration["Unsplash:ClientId"];
+    });
+
 services.AddControllers()
     .AddNewtonsoftJson(opts =>
     {
