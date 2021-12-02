@@ -57,7 +57,7 @@ namespace Sb.Api.Controllers
                 if (string.IsNullOrWhiteSpace(user.Email))
                     return BadRequest("Invalid email");
 
-                User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email)).FirstOrDefault();
+                User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email && u.Provider != provider.ToString())).FirstOrDefault();
                 if (existingUser != null)
                     return BadRequest("A user with this email address already exists");
 
