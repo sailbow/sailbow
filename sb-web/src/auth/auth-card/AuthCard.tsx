@@ -30,7 +30,7 @@ export const AuthCard: FunctionComponent<Props> = ({ path }) => {
         }
 
         const { data }: AxiosResponse = await Http({
-            ...AuthEndpoints.Login,
+            ...AuthEndpoints.Login(),
             params: {
                 provider,
                 state,

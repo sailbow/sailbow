@@ -55,6 +55,6 @@ type ImageSearchEndpointLabels = 'Search';
 export const ImageSearchEndpoints: Record<ImageSearchEndpointLabels, Endpoint> = {
     Search: {
         method: 'GET',
-        url: 'https://api.pexels.com/v1/search',
+        url: 'api/images/search',
     },
 };

@@ -1,6 +1,6 @@
 import React, { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
-import { createBoatService, getBoatService, getPexelsImages } from 'boats/Boat.Service';
+import { createBoatService, getBoatService, getBannerImages } from 'boats/Boat.Service';
 import { BannerType, Boat, BoatState, CreateBoat, Photo } from 'boats/Boat.Types';
 import { Color } from 'theme/Colors';
 import { Log } from 'util/logger/Logger';
@@ -159,7 +159,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             }
         },
         getPexelsImagesAction: (value: string, page: number) => {
-            return getPexelsImages(value, page);
+            return getBannerImages(value, page);
         },
     };
 
