@@ -45,6 +45,7 @@ namespace Sb.Api.Services
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
 
             Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Guard.Against.EntityMissing(boat, nameof(boat));
             var readAuthResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.ReadBoatPolicy);
             Guard.Against.Forbidden(readAuthResult);
 
