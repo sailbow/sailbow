@@ -45,12 +45,21 @@ namespace Sb.Api.Services
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
 
             Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Guard.Against.EntityMissing(boat, nameof(boat));
             var readAuthResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.ReadBoatPolicy);
             Guard.Against.Forbidden(readAuthResult);
 
             var captainAuthResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.CaptainPolicy);
             boat.Show = captainAuthResult.Succeeded;
             return boat;
+        }
+
+        public async Task<IEnumerable<Boat>> GetBoatsByUserId(string userId)
+        {
+            User user = await _userRepo.GetByIdAsync(userId);
+            Guard.Against.EntityMissing(user, nameof(user));
+
+            return await _boatRepo.GetAsync(b => b.Crew.Any(cm => cm.UserId == userId));
         }
 
         public async Task<Boat> AddCrewMember(string boatId, CrewMember crewMember)
