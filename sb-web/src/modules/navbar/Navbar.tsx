@@ -40,12 +40,24 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
         if (window.location.pathname !== path) window.location.href = path;
     };
 
-    const checkActiveLink = (link: LinkLabels): boolean => {
+    const getActiveState = (link: LinkLabels): 'solid' | 'ghost' => {
+        const check = (currentLink: string) => {
+            // eslint-disable-next-line
+            if (!!matchPath(window.location.pathname, currentLink)) {
+                return 'solid';
+            }
+            return 'ghost';
+        };
+
         switch (link) {
             case LinkLabels.Boats:
-                return !!matchPath(window.location.pathname, Routes.Private.Boats);
+                return check(Routes.Private.Boats);
+            case LinkLabels.Feed:
+                return check(Routes.Private.Boats);
+            case LinkLabels.Memories:
+                return check(Routes.Private.Boats);
             default:
-                return false;
+                return 'ghost';
         }
     };
 
@@ -65,7 +77,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                         <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
                         <Box display={{ base: 'none', md: 'flex' }}>
                             <Button
-                                variant={checkActiveLink(LinkLabels.Boats) ? 'solid' : 'ghost'}
+                                variant={getActiveState(LinkLabels.Boats)}
                                 colorScheme="gray"
                                 leftIcon={<SbBoatIcon />}
                                 onClick={() => onRoute(Routes.Private.Boats)}
