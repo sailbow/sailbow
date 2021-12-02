@@ -124,7 +124,7 @@ const useBoatDispatch = (): Dispatch<BoatAction> => {
 
 interface BoatActionApis {
     createBoat: (boat: PayloadCreateBoat) => Promise<Boat | null>;
-    getPexelsImagesAction: (value: string, page: number) => Promise<Photo[]>;
+    getImages: (value: string, page: number) => Promise<Photo[]>;
     getBoat: (boatId: string) => Promise<Boat | null>;
 }
 
@@ -158,7 +158,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 return null;
             }
         },
-        getPexelsImagesAction: (value: string, page: number) => {
+        getImages: (value: string, page: number) => {
             return getBannerImages(value, page);
         },
     };

@@ -1,31 +1,25 @@
-import axios, { AxiosResponse } from 'axios';
-import { BoatEndpoints, ImageSearchEndpoints } from 'util/http/Endpoints';
+import { AxiosResponse } from 'axios';
+import { BoatEndpoints, ImageEndpoints } from 'util/http/Endpoints';
 import { Boat, CreateBoat, Photo } from 'boats/Boat.Types';
 import { Http } from 'util/http/Http';
 
 export const getBannerImages = async (value: string, newPage: number): Promise<Photo[]> => {
-    const { data }: AxiosResponse = await axios({
-        ...ImageSearchEndpoints.Search,
+    const { data }: AxiosResponse = await Http({
+        ...ImageEndpoints.Search,
         params: {
             query: value,
-            perPage: 10,
             page: newPage,
         },
     });
-
-    console.log(data);
-
     const photos: Photo[] = [];
 
-    // data.photos.forEach((photo: any) => {
-    //     photos.push({
-    //         src: photo.src.landscape,
-    //         width: 3,
-    //         height: 2,
-    //         photographer: photo.photographer,
-    //         photographerUrl: photo.photographer_url,
-    //     });
-    // });
+    data.forEach((photo: any) => {
+        photos.push({
+            src: photo.url,
+            width: 3,
+            height: 2,
+        });
+    });
 
     return photos;
 };

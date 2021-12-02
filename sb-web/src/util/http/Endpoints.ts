@@ -51,8 +51,8 @@ export const BoatEndpoints: Record<BoatEndpointLabels, Endpoint> = {
     },
 };
 
-type ImageSearchEndpointLabels = 'Search';
-export const ImageSearchEndpoints: Record<ImageSearchEndpointLabels, Endpoint> = {
+type ImageEndpointLabels = 'Search';
+export const ImageEndpoints: Record<ImageEndpointLabels, Endpoint> = {
     Search: {
         method: 'GET',
         url: 'api/images/search',

@@ -4,26 +4,18 @@ import { Box, Input, InputGroup, Image, Flex, Spinner, Text, InputLeftAddon } fr
 import Gallery from 'react-photo-gallery';
 
 import { useBoat } from 'boats/Boat.Store';
-import { BannerType } from 'boats/Boat.Types';
+import { BannerType, Photo } from 'boats/Boat.Types';
 import { SbCheckIcon, SbSearchIcon } from 'util/icons/Icons';
 import { useDebounce } from 'components/input/InputUtils';
 
 import 'boats/components/banner/banner-change-modal/image-search/ImageSearch.scss';
-
-interface Photo {
-    src: string;
-    width: number;
-    height: number;
-    photographer: string;
-    photographerUrl: string;
-}
 
 interface Props {
     onChange: (type: BannerType, value: string) => void;
 }
 
 export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
-    const [, { getPexelsImagesAction }] = useBoat();
+    const [, { getImages }] = useBoat();
     const [debounce] = useDebounce();
     const [images, setImages] = useState<Photo[]>([]);
     const [searchValue, setSearchValue] = useState<string>('');
@@ -34,7 +26,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
     const onPaginate = async (newPage: number): Promise<void> => {
         setPage(newPage);
         setLoading(true);
-        const photos = await getPexelsImagesAction(searchValue, newPage);
+        const photos = await getImages(searchValue, newPage);
         const newImages = [...images];
 
         newImages.push(...photos);
@@ -53,7 +45,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
 
             if (value) {
                 setLoading(true);
-                const photos = await getPexelsImagesAction(value, 1);
+                const photos = await getImages(value, 1);
 
                 setLoading(false);
                 setImages(photos);
@@ -100,7 +92,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
                 <Input paddingLeft="24px" placeholder="Search images..." onChange={onSearch} fontWeight="normal" />
             </InputGroup>
             <Text fontSize="xx-small" textAlign="right" pt="1">
-                Powered by Pexels
+                Powered by Unsplash
             </Text>
             <Box
                 mt="2"
