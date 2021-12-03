@@ -112,6 +112,7 @@ namespace Sb.Api.Services
             var newInvites = invites.Where(i => !existingInvites.Any(ei => ei.Email == i.Email)).ToList();
             foreach (var invite in newInvites)
             {
+                invite.InviterId = _context.GetUserFromClaims().Id;
                 invite.BoatId = boatId;
                 await _inviteRepo.InsertAsync(invite);
             }
