@@ -83,6 +83,11 @@ export const HttpInterceptor: FunctionComponent = () => {
                         }
                         break;
                     case HttpStatus.NOT_FOUND:
+                        dispatch({
+                            type: ToastActionType.ShowError,
+                            text: "Looks like what you're looking for doesn't exist.",
+                        });
+                        break;
                     case HttpStatus.INTERNAL_ERROR:
                         dispatch({
                             type: ToastActionType.ShowError,
