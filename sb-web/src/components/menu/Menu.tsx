@@ -95,9 +95,9 @@ export const Menu: FunctionComponent<Props> = ({ display }) => {
 
     const MenuItem: FunctionComponent<MenuItemProps> = ({ icon, text }) => {
         return (
-            <Flex alignItems="center" py="2" px="4" _active={{ bgColor: 'gray.200' }}>
+            <Flex alignItems="center" py="3" px="4" _active={{ bgColor: 'gray.200' }}>
                 <span>{icon}</span>
-                <Text pl="2" fontWeight="normal">
+                <Text pl="2" fontWeight="normal" fontSize="lg">
                     {text}
                 </Text>
             </Flex>
@@ -109,7 +109,7 @@ export const Menu: FunctionComponent<Props> = ({ display }) => {
             <IconButton aria-label="menu" variant="icon" icon={<SbMenuIcon />} onClick={onOpen} />
             <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
                 <DrawerOverlay />
-                <DrawerContent className="sb-menu">
+                <DrawerContent className="sb-menu" w="100%">
                     <DrawerHeader border="0" pb="0" pr="2" pt="2" textAlign="right">
                         <IconButton aria-label="close" variant="icon" icon={<SbBellIcon />} fontSize="xl" />
                         <IconButton
@@ -134,7 +134,7 @@ export const Menu: FunctionComponent<Props> = ({ display }) => {
                         <Box pt="4">
                             {groups.map((menu) => (
                                 <Box py="2" key={menu.groupName}>
-                                    <Text fontWeight="semibold" fontSize="sm" pl="4" pb="2">
+                                    <Text fontWeight="semibold" pl="4" pb="2">
                                         {menu.groupName}
                                     </Text>
                                     {menu.items.map((item) => (
