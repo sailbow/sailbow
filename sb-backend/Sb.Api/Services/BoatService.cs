@@ -111,14 +111,15 @@ namespace Sb.Api.Services
             var existingInvites = await _inviteRepo.GetAsync(i => i.BoatId == boatId);
             var newInvites = invites
                 .Where((i) => !existingInvites.Any(ei => ei.BoatId == i.BoatId));
+            List<Invite> created = new();
             foreach (var invite in newInvites)
             {
                 invite.InviterId = _context.GetUserFromClaims().Id;
                 invite.BoatId = boatId;
-                await _inviteRepo.InsertAsync(invite);
+                created.Add(await _inviteRepo.InsertAsync(invite));
             }
 
-            return newInvites;
+            return created;
         }
 
         public async Task AcceptBoatInvite(string boatId, string inviteId, string email)
