@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
 
 using Ardalis.GuardClauses;
 
@@ -109,7 +109,8 @@ namespace Sb.Api.Services
             Guard.Against.Forbidden(authResult);
 
             var existingInvites = await _inviteRepo.GetAsync(i => i.BoatId == boatId);
-            var newInvites = invites.Where(i => !existingInvites.Any(ei => ei.Email == i.Email)).ToList();
+            var newInvites = invites
+                .Where((i) => !existingInvites.Any(ei => ei.BoatId == i.BoatId));
             foreach (var invite in newInvites)
             {
                 invite.InviterId = _context.GetUserFromClaims().Id;
