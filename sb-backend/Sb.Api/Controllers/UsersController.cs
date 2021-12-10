@@ -21,10 +21,13 @@ namespace Sb.Api.Controllers
         {
             string userId = HttpContext.GetUserId();
             var boats = await _boatService.GetBoatsByUserId(userId);
-            var mates = boats
+            IEnumerable<string> mateUserIds = boats
                 .SelectMany(boat => boat.Crew
-                    .Where(cm => cm.UserId != userId));
-            return Ok(mates);
+                    .Where(cm => cm.UserId != userId))
+                .Select(cm => cm.UserId);
+
+            var users = await _userRepo.GetAsync(u => mateUserIds.Contains(u.Id));
+            return Ok(users);
         }
 
         [HttpGet("search")]
