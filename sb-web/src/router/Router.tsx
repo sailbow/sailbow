@@ -30,6 +30,7 @@ const Home = lazy(() => import('boats/home/Home').then((module) => ({ default: m
 const Create = lazy(() => import('boats/create/Create').then((module) => ({ default: module.Create })));
 const Boat = lazy(() => import('boats/boat/Boat').then((module) => ({ default: module.Boat })));
 const Invite = lazy(() => import('auth/invite/Invite').then((module) => ({ default: module.Invite })));
+const Error = lazy(() => import('util/error/Error').then((module) => ({ default: module.Error })));
 
 export const WhitelistedRouter: FunctionComponent = () => {
     return (
@@ -122,6 +123,9 @@ export const PrivateRouter: FunctionComponent = () => {
                         </Route>
                         <Route path={Routes.Private.Invite}>
                             <Invite />
+                        </Route>
+                        <Route path={Routes.Private.Error}>
+                            <Error />
                         </Route>
                         <Route path="*">
                             <NotFound />

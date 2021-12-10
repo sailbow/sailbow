@@ -66,7 +66,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
             className="sb-navbar"
             justifyContent="space-between"
             alignItems="center"
-            px={{ base: '4', sm: '4' }}
+            px="4"
             bg={navbarBg ? 'white' : 'transparent'}
             transition="all 0.25s ease-in-out"
             boxShadow={navbarBg ? 'sm' : 'none'}

@@ -7,7 +7,7 @@ interface Endpoint {
 
 type EndpointFunction = (...args: string[]) => Endpoint;
 
-type AuthEndpointsLabels = 'Login' | 'Authorize' | 'Refresh' | 'Logout' | 'AcceptInvite';
+type AuthEndpointsLabels = 'Login' | 'Authorize' | 'Refresh' | 'Logout' | 'GetInvite' | 'AcceptInvite';
 export const AuthEndpoints: Record<AuthEndpointsLabels, EndpointFunction> = {
     Login: () => ({
         method: 'GET',
@@ -24,6 +24,10 @@ export const AuthEndpoints: Record<AuthEndpointsLabels, EndpointFunction> = {
     Logout: () => ({
         method: 'POST',
         url: 'api/auth/logout',
+    }),
+    GetInvite: (boatId: string, inviteId: string) => ({
+        method: 'GET',
+        url: `api/boats/${boatId}/invite/${inviteId}`,
     }),
     AcceptInvite: (boatId: string, inviteId: string) => ({
         method: 'POST',
