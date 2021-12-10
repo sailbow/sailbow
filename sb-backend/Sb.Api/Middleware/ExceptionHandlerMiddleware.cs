@@ -38,6 +38,9 @@ namespace Sb.Api.Middleware
                     case ForbiddenResourceException:
                         response.StatusCode = (int)HttpStatusCode.Forbidden;
                         break;
+                    case ConflictException:
+                        response.StatusCode = (int)HttpStatusCode.Conflict;
+                        break;
                     case ValidationException:
                     case ArgumentException:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;

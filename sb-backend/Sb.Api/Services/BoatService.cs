@@ -130,6 +130,8 @@ namespace Sb.Api.Services
             Boat boat = await _boatRepo.GetByIdAsync(boatId);
             Guard.Against.EntityMissing(boat, nameof(boat));
 
+            if (boat.Crew.Any(cm => cm.Email == email))
+                throw new ConflictException();
 
             Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
             Guard.Against.EntityMissing(invite, nameof(invite));
