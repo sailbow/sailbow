@@ -60,18 +60,10 @@ namespace Sb.Api.Services
             var authResult = await _authorizationService.AuthorizeAsync(_httpContext.User, boat, AuthorizationPolicies.EditBoatPolicy);
             Guard.Against.Forbidden(authResult);
 
-            List<Task> inviteTasks = new();
             foreach (Invite invite in invites)
             {
-                Invite duplicate = (await _inviteRepo.GetAsync(i => i.Email == invite.Email && i.BoatId == boatId))?.FirstOrDefault();
-
-                if (duplicate != null)
-                    await _inviteRepo.DeleteAsync(duplicate);
-                    
-                inviteTasks.Add(SendInvitationAsync(invite, boat));
+                await SendInvitationAsync(invite, boat);
             }
-
-            await Task.WhenAll(inviteTasks);
         }
 
         private async Task SendInvitationAsync(Invite invite, Boat boat)
