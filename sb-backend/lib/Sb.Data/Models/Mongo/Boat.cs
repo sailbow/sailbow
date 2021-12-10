@@ -41,7 +41,7 @@ namespace Sb.Data.Models.Mongo
         public bool Show { get; set; } = false;
         public BannerType Type { get; set; }
         public string Value { get; set; }
-        public int? Position { get; set; }
+        public int Position { get; set; } = 0;
     }
     public class Photo
     {

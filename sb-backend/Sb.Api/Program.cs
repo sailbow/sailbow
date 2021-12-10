@@ -104,7 +104,6 @@ if (env.IsDevelopment())
 }
 
 app
-    .UseHttpsRedirection()
     .UseRouting()
     .UseCors()
     .UseAuthentication()
