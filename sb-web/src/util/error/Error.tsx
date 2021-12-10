@@ -13,8 +13,6 @@ interface ErrorState {
 
 export enum ErrorCode {
     InviteNotFound = 'SBE1000',
-    // InviteUnauthorized = 'SBE1001',
-    // InviteError = 'SBE1002',
     BoatNotFound = 'SBE1100',
     BoatForbidden = 'SBE1101',
     BoatError = 'SBE1102',

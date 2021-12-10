@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 
 import { Box, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react';
 
-import { CheckmarkIcon } from 'components/button/ButtonIcons';
+import { CheckMarkIcon } from 'components/button/ButtonIcons';
 import { Modal } from 'components/modal/Modal';
 import { BannerType } from 'boats/Boat.Types';
 import { ColorBox } from 'boats/components/banner/banner-change-modal/color-box/ColorBox';
@@ -28,7 +28,7 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
             onClose={onClose}
             size="4xl"
             positiveButton={
-                <Button onClick={onClose} rightIcon={CheckmarkIcon} mt="4">
+                <Button onClick={onClose} rightIcon={CheckMarkIcon} mt="4">
                     <Text>Done</Text>
                 </Button>
             }
