@@ -6,21 +6,45 @@ import { Footer } from 'modules/footer/Footer';
 import { Routes } from 'router/Router.Types';
 import { SbRightArrowIcon } from 'util/icons/Icons';
 
+interface ErrorState {
+    text: string;
+    heading: string;
+}
+
 export enum ErrorCode {
     InviteNotFound = 'SBE1000',
-    InviteUnauthorized = 'SBE1001',
-    InviteError = 'SBE1002',
+    // InviteUnauthorized = 'SBE1001',
+    // InviteError = 'SBE1002',
     BoatNotFound = 'SBE1100',
-    BoatUnauthorized = 'SBE1101',
+    BoatForbidden = 'SBE1101',
     BoatError = 'SBE1102',
 }
+
+const ErrorDetails: Record<ErrorCode, ErrorState> = {
+    [ErrorCode.InviteNotFound]: {
+        heading: 'Invalid invite! :(',
+        text: 'The invite that you are looking for is invalid. Please check the invite link in your email or contact your Captain.',
+    },
+    [ErrorCode.BoatNotFound]: {
+        heading: 'Boat not found!',
+        text: 'Looks like the boat you are looking for does not exist.',
+    },
+    [ErrorCode.BoatForbidden]: {
+        heading: 'Stop! No access!',
+        text: 'Unfortunately you do not have access to this boat.',
+    },
+    [ErrorCode.BoatError]: {
+        heading: "Oops, something ain't right...",
+        text: 'Looks like something went wrong. Please refresh the page or try again later.',
+    },
+};
 
 export const getErrorPath = (code: string): string => {
     return `${Routes.Private.Error}?code=${code}`;
 };
 
 export const Error: FunctionComponent = () => {
-    const [errorState, setErrorState] = useState<{ text: string; heading: string }>({
+    const [errorState, setErrorState] = useState<ErrorState>({
         text: '',
         heading: '',
     });
@@ -31,10 +55,10 @@ export const Error: FunctionComponent = () => {
 
         switch (errorCode) {
             case ErrorCode.InviteNotFound:
-                setErrorState({
-                    heading: 'Invalid invite! :(',
-                    text: 'The invite that you are looking for is invalid. Please check the invite link in your email or contact your Captain.',
-                });
+                setErrorState(ErrorDetails[ErrorCode.InviteNotFound]);
+                break;
+            case ErrorCode.BoatNotFound:
+                setErrorState(ErrorDetails[ErrorCode.BoatNotFound]);
                 break;
             default:
                 setErrorState({
