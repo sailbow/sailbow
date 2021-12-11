@@ -28,6 +28,7 @@ export {
     FiMinus as SbMinusIcon,
     FiCheck as SbCheckIcon,
     FiBell as SbBellIcon,
+    FiCopy as SbCopyIcon,
 } from 'react-icons/fi';
 export { BiErrorCircle as SbErrorCircleIcon } from 'react-icons/bi';
 export { MdOutlinePrivacyTip as SbPrivacyIcon } from 'react-icons/md';
