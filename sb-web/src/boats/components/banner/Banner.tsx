@@ -43,6 +43,8 @@ export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChang
                 throw new Error(`Invalid direction - ${dir}`);
         }
 
+        console.log(newPosition);
+
         setBannerPosition(newPosition);
     };
 
@@ -69,7 +71,7 @@ export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChang
                 {banner.type === BannerType.Color ? (
                     <Box bg={banner.value} className="sb-banner-image" />
                 ) : (
-                    <Box display={showControls ? 'block' : 'none'}>
+                    <Box>
                         <IconButton
                             bg="white"
                             aria-label="edit-button-up"

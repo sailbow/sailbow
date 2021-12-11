@@ -1,58 +1,67 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Avatar, Box, Button, Heading, Flex, Text, Spinner } from '@chakra-ui/react';
+import { Box, Button, Heading, Flex, Text, Spinner } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
+import { acceptInvite, getInvite, InviteType } from 'auth/invite/Invite.Service';
+import { Banner } from 'boats/components';
 import { CheckMarkIcon } from 'components/button/ButtonIcons';
 import { Footer } from 'modules/footer/Footer';
 import { ToastActionType, useToast } from 'modules/toast/Toast';
+import { Routes } from 'router/Router.Types';
 import { ErrorCode, getErrorPath } from 'util/error/Error';
-import { Http } from 'util/http/Http';
-import { AuthEndpoints } from 'util/http/Endpoints';
-import { BannerState } from 'boats/Boat.Types';
-import { AxiosResponse } from 'axios';
-import { Banner } from 'boats/components';
-
-interface InviteType {
-    id: string;
-    banner: BannerState;
-    boatName: string;
-    captain: {
-        name: string;
-        role: string;
-        userId: string;
-    };
-}
+import { HttpStatus } from 'util/http/Http';
 
 export const Invite: FunctionComponent = () => {
     const [, dispatch] = useToast();
     const { boatId } = useParams<{ boatId: string }>();
+    const inviteId: string | null = new URLSearchParams(window.location.search).get('inviteId');
     const [invite, setInvite] = useState<InviteType | null>(null);
 
     useEffect(() => {
         (async () => {
-            const urlSearchParams = new URLSearchParams(window.location.search);
-            const inviteId: string | null = urlSearchParams.get('inviteId');
-
             if (!inviteId) {
                 window.location.href = getErrorPath(ErrorCode.InviteError);
                 return null;
             }
 
             try {
-                const { data }: AxiosResponse<InviteType> = await Http(AuthEndpoints.GetInvite(boatId, inviteId));
+                const data = await getInvite(boatId, inviteId);
 
                 if (!data) {
                     throw new Error('No invite found');
                 }
 
                 setInvite(data);
-            } catch (err: any) {
-                console.log(err.status);
+            } catch (error: any) {
+                switch (error.response.status) {
+                    case HttpStatus.NOT_FOUND:
+                        window.location.href = getErrorPath(ErrorCode.InviteNotFound);
+                        break;
+                    case 409:
+                        window.location.href = getErrorPath(ErrorCode.InviteConflict);
+                        break;
+                    case HttpStatus.FORBIDDEN:
+                        window.location.href = getErrorPath(ErrorCode.InviteForbidden);
+                        break;
+                    default:
+                        window.location.href = getErrorPath(ErrorCode.InviteError);
+                }
                 dispatch({ type: ToastActionType.ShowError, text: 'Invalid invite' });
             }
         })();
-    }, [dispatch, boatId]);
+    }, [dispatch, boatId, inviteId]);
+
+    const onAccept = async () => {
+        try {
+            const data = await acceptInvite(boatId, inviteId!);
+
+            window.location.href = `${Routes.Private.Boats}/${data.id}`;
+        } catch (err: any) {
+            console.log(err.response);
+            dispatch({ type: ToastActionType.ShowError, text: 'Invalid invite' });
+        }
+    };
 
     return (
         <>
@@ -72,7 +81,7 @@ export const Invite: FunctionComponent = () => {
                                 </Text>
                                 !
                             </Text>
-                            <Button variant="solid" size="lg" mt="16" rightIcon={CheckMarkIcon}>
+                            <Button variant="solid" size="lg" mt="16" rightIcon={CheckMarkIcon} onClick={onAccept}>
                                 <Text>Accept Invite</Text>
                             </Button>
                         </Box>
