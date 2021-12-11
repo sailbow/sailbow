@@ -43,8 +43,6 @@ export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChang
                 throw new Error(`Invalid direction - ${dir}`);
         }
 
-        console.log(newPosition);
-
         setBannerPosition(newPosition);
     };
 
