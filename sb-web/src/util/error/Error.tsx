@@ -6,6 +6,12 @@ import { Footer } from 'modules/footer/Footer';
 import { Routes } from 'router/Router.Types';
 import { SbRightArrowIcon } from 'util/icons/Icons';
 
+/**
+ * 0 - Not found
+ * 1 - Forbidden
+ * 2 - Error
+ * 3 - Conflict
+ */
 interface ErrorState {
     text: string;
     heading: string;
@@ -13,6 +19,9 @@ interface ErrorState {
 
 export enum ErrorCode {
     InviteNotFound = 'SBE1000',
+    InviteForbidden = 'SBE1001',
+    InviteError = 'SBE1002',
+    InviteConflict = 'SBE1003',
     BoatNotFound = 'SBE1100',
     BoatForbidden = 'SBE1101',
     BoatError = 'SBE1102',
@@ -20,8 +29,20 @@ export enum ErrorCode {
 
 const ErrorDetails: Record<ErrorCode, ErrorState> = {
     [ErrorCode.InviteNotFound]: {
-        heading: 'Invalid invite! :(',
+        heading: 'Invite not found! :(',
+        text: 'The invite that you are looking for could not be found.',
+    },
+    [ErrorCode.InviteForbidden]: {
+        heading: 'Stop! No access',
+        text: 'Unfortunately you do not have access to this invite.',
+    },
+    [ErrorCode.InviteError]: {
+        heading: 'Invalid Invite!',
         text: 'The invite that you are looking for is invalid. Please check the invite link in your email or contact your Captain.',
+    },
+    [ErrorCode.InviteConflict]: {
+        heading: "Oops, you've come to the wrong place",
+        text: 'Looks like you are already a part of the boat.',
     },
     [ErrorCode.BoatNotFound]: {
         heading: 'Boat not found!',
