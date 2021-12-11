@@ -27,7 +27,7 @@ export const AuthEndpoints: Record<AuthEndpointsLabels, EndpointFunction> = {
     }),
     GetInvite: (boatId: string, inviteId: string) => ({
         method: 'GET',
-        url: `api/boats/${boatId}/invite/${inviteId}`,
+        url: `api/boats/${boatId}/invites/${inviteId}`,
     }),
     AcceptInvite: (boatId: string, inviteId: string) => ({
         method: 'POST',

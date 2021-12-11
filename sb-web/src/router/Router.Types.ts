@@ -1,5 +1,5 @@
 type PublicRoutesLabel = 'Landing' | 'Login' | 'Redirect';
-type PrivateRoutesLabel = 'Error' | 'Boats' | 'Create' | 'Invite';
+type PrivateRoutesLabel = 'Error' | 'Boats' | 'Create' | 'Invite' | 'Boat';
 type WhitelistedRoutesLabel = 'AboutUs' | 'Contact' | 'FAQ' | 'HowItWorks' | 'Privacy' | 'Terms' | 'License';
 
 interface Route {
@@ -19,6 +19,7 @@ export const Routes: Route = {
         Boats: '/boats',
         Create: '/create',
         Invite: '/boats/:boatId/invite',
+        Boat: '/boat/:boatId',
     },
     Whitelisted: {
         AboutUs: '/about-us',

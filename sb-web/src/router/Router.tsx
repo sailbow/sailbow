@@ -1,6 +1,6 @@
-import React, { FunctionComponent, lazy, Suspense } from 'react';
+import React, { FunctionComponent, lazy, Suspense, useEffect } from 'react';
 
-import { Switch, Route, Redirect as RouterRedirect } from 'react-router-dom';
+import { Switch, Route, Redirect as RouterRedirect, matchPath } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
 
 import { Footer } from 'modules/footer/Footer';
@@ -72,9 +72,18 @@ export const WhitelistedRouter: FunctionComponent = () => {
 };
 
 export const PublicRouter: FunctionComponent = () => {
-    if (PrivateRoutes.includes(window.location.pathname)) {
-        window.location.href = `${Routes.Public.Redirect}?path=${window.location.pathname}`;
-    }
+    // this is a hacky way. need to use regex to optimize route matching
+    useEffect(() => {
+        // eslint-disable-next-line
+        for (const path of PrivateRoutes) {
+            const { search, pathname } = window.location;
+            const match = matchPath(pathname, { path, strict: true, exact: true });
+            if (match) {
+                window.location.href = `${Routes.Public.Redirect}?path=${pathname}${search}`;
+                break;
+            }
+        }
+    }, []);
 
     return (
         <>

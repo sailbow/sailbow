@@ -1,13 +1,14 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
-import { Button, Heading, Flex, Text } from '@chakra-ui/react';
+import { Avatar, Box, Button, Heading, Flex, Text } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 import { CheckMarkIcon } from 'components/button/ButtonIcons';
-import { Http } from 'util/http/Http';
-import { AuthEndpoints } from 'util/http/Endpoints';
+import { Footer } from 'modules/footer/Footer';
 import { ToastActionType, useToast } from 'modules/toast/Toast';
 import { ErrorCode, getErrorPath } from 'util/error/Error';
+import { Http } from 'util/http/Http';
+import { AuthEndpoints } from 'util/http/Endpoints';
 
 export const Invite: FunctionComponent = () => {
     const [, dispatch] = useToast();
@@ -33,21 +34,20 @@ export const Invite: FunctionComponent = () => {
     }, [dispatch, boatId]);
 
     return (
-        <Flex
-            className="container"
-            flexDir="column"
-            textAlign="center"
-            justifyContent="center"
-            alignItems="center"
-            h="100%"
-        >
-            <Heading>Getting ready for your next adventure?</Heading>
-            <Text fontWeight="normal" mt="4">
-                Someone has invited you to their boat!
-            </Text>
-            <Button variant="solid" size="lg" mt="16" rightIcon={CheckMarkIcon}>
-                <Text>Accept Invite</Text>
-            </Button>
-        </Flex>
+        <>
+            <Flex className="container" flexDir="column" textAlign="center" pt="16" pb="48">
+                <Heading>You have been invited!</Heading>
+                <Box mt="8" fontWeight="normal">
+                    <Avatar name="Hello" size="2xl" />
+                    <Text fontWeight="normal" mt="4">
+                        Someone has invited you to their boat!
+                    </Text>
+                    <Button variant="solid" size="lg" mt="16" rightIcon={CheckMarkIcon}>
+                        <Text>Accept Invite</Text>
+                    </Button>
+                </Box>
+            </Flex>
+            <Footer />
+        </>
     );
 };
