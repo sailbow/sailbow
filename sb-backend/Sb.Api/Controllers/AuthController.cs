@@ -57,18 +57,19 @@ namespace Sb.Api.Controllers
                 if (string.IsNullOrWhiteSpace(user.Email))
                     return BadRequest("Invalid email");
 
-                User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email && u.Provider != provider.ToString())).FirstOrDefault();
-                if (existingUser != null)
-                    return BadRequest("A user with this email address already exists");
-
-                existingUser = await userRepository.InsertAsync(new User
+                User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email)).FirstOrDefault();
+                if (existingUser is null)
                 {
-                    Name = user.Name,
-                    Email = user.Email,
-                    Provider = provider.ToString(),
-                    ProviderUserId = user.Id,
-                    DateCreated = DateTime.UtcNow
-                });
+                    existingUser = await userRepository.InsertAsync(new User
+                    {
+                        Name = user.Name,
+                        Email = user.Email,
+                        Provider = provider.ToString(),
+                        ProviderUserId = user.Id,
+                        DateCreated = DateTime.UtcNow
+                    });
+                }
+
 
                 JwtToken token = GenerateToken(provider, providerTokens, existingUser);
                 return Ok(token);

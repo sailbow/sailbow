@@ -47,6 +47,9 @@ namespace Sb.Api
             return null;
         }
 
+        public static string GetUserId(this HttpContext context)
+            => context.GetClaim(CustomClaimTypes.Id);
+
         public static AuthorizedUser GetUserFromClaims(this HttpContext context)
         {
             return new AuthorizedUser

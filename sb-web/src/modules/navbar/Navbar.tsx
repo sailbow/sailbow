@@ -9,7 +9,9 @@ import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
 import { Notification } from 'modules/notifications/Notification';
 import { ProfileIcon } from 'profile/profile-icon/ProfileIcon';
 import { Routes } from 'router/Router.Types';
-import { SbClockIcon, SbFeedIcon, SbBoatIcon, SbPlusIcon } from 'util/icons/Icons';
+import { SbClockIcon, SbFeedIcon, SbBoatIcon, SbPlusIcon, SbCopyIcon } from 'util/icons/Icons';
+import { useToast, ToastActionType } from 'modules/toast/Toast';
+import { LS, TokenStorageKeys } from '../../util/http/Http';
 
 import 'modules/navbar/Navbar.scss';
 
@@ -25,7 +27,7 @@ enum LinkLabels {
 
 export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
     const [navbarBg, setNavbarBg] = useState<boolean>(false);
-
+    const [, dispatchToast] = useToast();
     useEffect(() => {
         document.addEventListener('scroll', () => {
             if (window.scrollY < 10) {
@@ -61,6 +63,18 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
         }
     };
 
+    const copyAccessToken = () => {
+        const token = LS.getItem(TokenStorageKeys.AT);
+        const toast =
+            token !== null
+                ? { type: ToastActionType.ShowSuccess, text: 'Copied!' }
+                : { type: ToastActionType.ShowWarning, text: 'No access token found!' };
+        if (token) {
+            navigator.clipboard.writeText(token);
+        }
+        dispatchToast(toast);
+    };
+
     return (
         <Flex
             className="sb-navbar"
@@ -90,6 +104,16 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                             <Button variant="ghost" colorScheme="gray" leftIcon={<SbClockIcon />}>
                                 Memories
                             </Button>
+                            {process.env.NODE_ENV === 'development' && (
+                                <Button
+                                    onClick={copyAccessToken}
+                                    variant="ghost"
+                                    colorScheme="gray"
+                                    leftIcon={<SbCopyIcon />}
+                                >
+                                    Copy Access Token
+                                </Button>
+                            )}
                         </Box>
                     </HStack>
                     <HStack alignItems="center">

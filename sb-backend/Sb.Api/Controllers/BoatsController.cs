@@ -31,7 +31,10 @@ namespace Sb.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<Boat> CreateBoat([FromBody] Boat boat)
+        public async Task<Boat> CreateBoat(
+            [FromBody] Boat boat,
+            [FromQuery] bool generateCode = false,
+            [FromQuery] int? codeExpiresUnix = null)
         {
             string id = HttpContext.GetClaim(CustomClaimTypes.Id);
             Guard.Against.NullOrWhiteSpace(id, nameof(id));
@@ -47,6 +50,9 @@ namespace Sb.Api.Controllers
                 }
             };
             boat = await _boatService.CreateBoat(boat);
+            if (generateCode)
+                boat.Code = await _boatService.GenerateCodeInvite(boat.Id, codeExpiresUnix);
+
             await SendBoatInvites(boat.Id, invitees.Select(invitee => new Invite
             {
                 BoatId = boat.Id,
@@ -64,6 +70,27 @@ namespace Sb.Api.Controllers
         public Task<Boat> GetBoatById(string boatId)
             => _boatService.GetBoatById(boatId);
 
+        [HttpPut("{boatId}/code")]
+        public async Task<ActionResult<Code>> GenerateCodeInvite(string boatId, [FromQuery] int? expiresUnix)
+        {
+            Code code = await _boatService.GenerateCodeInvite(boatId, expiresUnix);
+            return Ok(code);
+        }
+
+        [HttpGet("{boatId}/code")]
+        public async Task<ActionResult<Code>> GetCodeInvite(string boatId)
+        {
+            Code code = await _boatService.GetCodeInvite(boatId);
+            return Ok(code);
+        }
+
+        [HttpPost("{boatId}/code/accept")]
+        public async Task<ActionResult<Boat>> AcceptCodeInvite(string boatId, [FromQuery] string code)
+        {
+            Boat boat = await _boatService.AcceptCodeInvite(boatId, code);
+            return Ok(boat);
+        }
+
         [HttpGet("{boatId}/invites")]
         public async Task<ActionResult<IEnumerable<Invite>>> GetInvites(string boatId)
         {
@@ -74,10 +101,9 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet("{boatId}/invites/{inviteId}")]
-        public async Task<ActionResult<Invite>> GetInvite(string boatId, string inviteId)
+        public async Task<ActionResult<InviteDetails>> GetInvite(string boatId, string inviteId)
         {
-            await _boatService.GetBoatById(boatId);
-            Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
+            InviteDetails invite = await _boatService.GetInviteById(boatId, inviteId);
             return Ok(invite);
         }
 
