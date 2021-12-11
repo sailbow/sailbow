@@ -31,7 +31,10 @@ namespace Sb.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<Boat> CreateBoat([FromBody] Boat boat)
+        public async Task<Boat> CreateBoat(
+            [FromBody] Boat boat,
+            [FromQuery] bool generateCode = false,
+            [FromQuery] int? codeExpiresUnix = null)
         {
             string id = HttpContext.GetClaim(CustomClaimTypes.Id);
             Guard.Against.NullOrWhiteSpace(id, nameof(id));
@@ -47,6 +50,9 @@ namespace Sb.Api.Controllers
                 }
             };
             boat = await _boatService.CreateBoat(boat);
+            if (generateCode)
+                boat.Code = await _boatService.GenerateCodeInvite(boat.Id, codeExpiresUnix);
+
             await SendBoatInvites(boat.Id, invitees.Select(invitee => new Invite
             {
                 BoatId = boat.Id,
