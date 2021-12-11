@@ -37,8 +37,8 @@ export const Invite: FunctionComponent = () => {
         <>
             <Flex className="container" flexDir="column" textAlign="center" pt="16" pb="48">
                 <Heading>You have been invited!</Heading>
-                <Box mt="8" fontWeight="normal">
-                    <Avatar name="Hello" size="2xl" />
+                <Box mt="4" fontWeight="normal">
+                    <Avatar name="Boat" size="2xl" />
                     <Text fontWeight="normal" mt="4">
                         Someone has invited you to their boat!
                     </Text>
