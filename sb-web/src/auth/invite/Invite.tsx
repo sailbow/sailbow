@@ -1,6 +1,8 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
 import { Button, Heading, Flex, Text } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
+
 import { CheckMarkIcon } from 'components/button/ButtonIcons';
 import { Http } from 'util/http/Http';
 import { AuthEndpoints } from 'util/http/Endpoints';
@@ -9,6 +11,7 @@ import { ErrorCode, getErrorPath } from 'util/error/Error';
 
 export const Invite: FunctionComponent = () => {
     const [, dispatch] = useToast();
+    const { boatId } = useParams<{ boatId: string }>();
 
     useEffect(() => {
         (async () => {
@@ -21,13 +24,13 @@ export const Invite: FunctionComponent = () => {
             }
 
             try {
-                const response = await Http(AuthEndpoints.GetInvite());
+                const response = await Http(AuthEndpoints.GetInvite(boatId, inviteId));
                 console.log(response);
             } catch (err) {
                 dispatch({ type: ToastActionType.ShowError, text: 'Invalid invite' });
             }
         })();
-    }, [dispatch]);
+    }, [dispatch, boatId]);
 
     return (
         <Flex

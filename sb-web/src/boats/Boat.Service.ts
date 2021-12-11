@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
-import { BoatEndpoints, ImageEndpoints } from 'util/http/Endpoints';
+
 import { Boat, CreateBoat, Photo } from 'boats/Boat.Types';
+import { BoatEndpoints, ImageEndpoints } from 'util/http/Endpoints';
 import { Http } from 'util/http/Http';
 
 export const getBannerImages = async (value: string, newPage: number): Promise<Photo[]> => {
