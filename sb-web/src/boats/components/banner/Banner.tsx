@@ -70,30 +70,32 @@ export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChang
                     <Box bg={banner.value} className="sb-banner-image" />
                 ) : (
                     <Box>
-                        <IconButton
-                            bg="white"
-                            aria-label="edit-button-up"
-                            className="edit-button-up"
-                            size="xs"
-                            boxShadow="sm"
-                            colorScheme="gray"
-                            borderRadius="md"
-                            onClick={() => setPosition('up')}
-                        >
-                            <SbArrowUpIcon />
-                        </IconButton>
-                        <IconButton
-                            bg="white"
-                            aria-label="edit-button-down"
-                            className="edit-button-down"
-                            size="xs"
-                            boxShadow="sm"
-                            colorScheme="gray"
-                            borderRadius="md"
-                            onClick={() => setPosition('down')}
-                        >
-                            <SbArrowDownIcon />
-                        </IconButton>
+                        <Box display={showControls ? 'block' : 'none'}>
+                            <IconButton
+                                bg="white"
+                                aria-label="edit-button-up"
+                                className="edit-button-up"
+                                size="xs"
+                                boxShadow="sm"
+                                colorScheme="gray"
+                                borderRadius="md"
+                                onClick={() => setPosition('up')}
+                            >
+                                <SbArrowUpIcon />
+                            </IconButton>
+                            <IconButton
+                                bg="white"
+                                aria-label="edit-button-down"
+                                className="edit-button-down"
+                                size="xs"
+                                boxShadow="sm"
+                                colorScheme="gray"
+                                borderRadius="md"
+                                onClick={() => setPosition('down')}
+                            >
+                                <SbArrowDownIcon />
+                            </IconButton>
+                        </Box>
                         <Image
                             draggable="false"
                             objectPosition={`left ${bannerPosition}%`}
