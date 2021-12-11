@@ -101,10 +101,9 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet("{boatId}/invites/{inviteId}")]
-        public async Task<ActionResult<Invite>> GetInvite(string boatId, string inviteId)
+        public async Task<ActionResult<InviteDetails>> GetInvite(string boatId, string inviteId)
         {
-            await _boatService.GetBoatById(boatId);
-            Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
+            InviteDetails invite = await _boatService.GetInviteById(boatId, inviteId);
             return Ok(invite);
         }
 

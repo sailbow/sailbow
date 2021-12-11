@@ -5,6 +5,7 @@ using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Authorization;
 
 using Sb.Api.Authorization;
+using Sb.Api.Models;
 using Sb.Api.Validation;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
@@ -166,6 +167,30 @@ namespace Sb.Api.Services
             }
 
             return created;
+        }
+
+        public async Task<InviteDetails> GetInviteById(string boatId, string inviteId)
+        {
+            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+            Guard.Against.NullOrWhiteSpace(inviteId, nameof(inviteId));
+            Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
+            Guard.Against.EntityMissing(invite, nameof(invite));
+            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Guard.Against.EntityMissing(boat, nameof(boat));
+            CrewMember captain = boat.Crew.First(cm => cm.Role == Role.Captain);
+            User captainUserData = await _userRepo.GetByIdAsync(captain.UserId);
+            return new InviteDetails
+            {
+                Id = inviteId,
+                BoatName = boat.Name,
+                Banner = boat.Banner,
+                Captain = new CrewMemberWithUserInfo
+                {
+                    UserId = captain.UserId,
+                    Name = captainUserData.Name,
+                    Role = captain.Role
+                }
+            };
         }
 
         public async Task AcceptBoatInvite(string boatId, string inviteId, string email)
