@@ -8,6 +8,7 @@ using Sb.Api.Authorization;
 using Sb.Api.Validation;
 using Sb.Data;
 using Sb.Data.Models.Mongo;
+using Sb.OAuth2;
 
 namespace Sb.Api.Services
 {
@@ -42,10 +43,7 @@ namespace Sb.Api.Services
 
         public async Task<Boat> GetBoatById(string boatId)
         {
-            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
-
-            Boat boat = await _boatRepo.GetByIdAsync(boatId);
-            Guard.Against.EntityMissing(boat, nameof(boat));
+            Boat boat = await GetBoat(boatId);
             var readAuthResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.ReadBoatPolicy);
             Guard.Against.Forbidden(readAuthResult);
 
@@ -62,13 +60,63 @@ namespace Sb.Api.Services
             return await _boatRepo.GetAsync(b => b.Crew.Any(cm => cm.UserId == userId));
         }
 
+        public async Task<Code> GenerateCodeInvite(string boatId, int? expiresUnix)
+        {
+            Boat boat = await GetBoat(boatId);
+
+            var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.EditBoatPolicy);
+            Guard.Against.Forbidden(authResult);
+
+            DateTimeOffset offset = expiresUnix.HasValue
+                ? DateTimeOffset.FromUnixTimeSeconds(expiresUnix.Value)
+                : DateTimeOffset.UtcNow;
+
+            Code code = new()
+            {
+                Value = Guid.NewGuid().ToString(),
+                ExpiresAt = offset.UtcDateTime
+            };
+            boat.Code = code;
+            await _boatRepo.UpdateAsync(boat);
+            return code;
+        }
+
+        public async Task<Code> GetCodeInvite(string boatId)
+        {
+            Boat boat = await GetBoat(boatId);
+            Guard.Against.EntityMissing(boat.Code, nameof(boat.Code));
+            return boat.Code;
+        }
+
+
+        public async Task<Boat> AcceptCodeInvite(string boatId, string code)
+        {
+            Boat boat = await GetBoat(boatId);
+            Guard.Against.EntityMissing(boat.Code, nameof(boat.Code));
+
+            AuthorizedUser user = _context.GetUserFromClaims();
+            if (boat.Crew.Any(cm => cm.UserId == user.Id))
+                throw new ConflictException();
+
+            if (boat.Code.Value != code)
+                throw new ValidationException("Code has expired or is invalid");
+
+            boat.Crew = boat.Crew.Append(new CrewMember
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                Role = Role.Sailor
+            });
+            await _boatRepo.UpdateAsync(boat);
+            return boat;
+        }
+
         public async Task<Boat> AddCrewMember(string boatId, CrewMember crewMember)
         {
             Guard.Against.Null(crewMember, nameof(crewMember));
             Guard.Against.NullOrWhiteSpace(crewMember.UserId, nameof(crewMember.UserId));
 
-            Boat boat = await _boatRepo.GetByIdAsync(boatId);
-            Guard.Against.EntityMissing(boat, nameof(boat));
+            Boat boat = await GetBoat(boatId);
 
             var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.EditBoatPolicy);
             Guard.Against.Forbidden(authResult);
@@ -101,10 +149,8 @@ namespace Sb.Api.Services
 
         public async Task<IEnumerable<Invite>> CreateInvites(string boatId, IEnumerable<Invite> invites)
         {
-            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
             Guard.Against.Null(invites, nameof(invites));
-
-            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Boat boat = await GetBoat(boatId);
             var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.EditBoatPolicy);
             Guard.Against.Forbidden(authResult);
 
@@ -124,11 +170,9 @@ namespace Sb.Api.Services
 
         public async Task AcceptBoatInvite(string boatId, string inviteId, string email)
         {
-            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
             Guard.Against.NullOrWhiteSpace(inviteId, nameof(inviteId));
 
-            Boat boat = await _boatRepo.GetByIdAsync(boatId);
-            Guard.Against.EntityMissing(boat, nameof(boat));
+            Boat boat = await GetBoat(boatId);
 
             if (boat.Crew.Any(cm => cm.Email == email))
                 throw new ConflictException();
@@ -153,6 +197,14 @@ namespace Sb.Api.Services
         {
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
             return await _inviteRepo.GetAsync(i => i.BoatId == boatId);
+        }
+
+        private async Task<Boat> GetBoat(string boatId)
+        {
+            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Guard.Against.EntityMissing(boat, nameof(boat));
+            return boat;
         }
     }
 }

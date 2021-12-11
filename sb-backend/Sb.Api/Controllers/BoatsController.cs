@@ -64,6 +64,27 @@ namespace Sb.Api.Controllers
         public Task<Boat> GetBoatById(string boatId)
             => _boatService.GetBoatById(boatId);
 
+        [HttpPut("{boatId}/code")]
+        public async Task<ActionResult<Code>> GenerateCodeInvite(string boatId, [FromQuery] int? expiresUnix)
+        {
+            Code code = await _boatService.GenerateCodeInvite(boatId, expiresUnix);
+            return Ok(code);
+        }
+
+        [HttpGet("{boatId}/code")]
+        public async Task<ActionResult<Code>> GetCodeInvite(string boatId)
+        {
+            Code code = await _boatService.GetCodeInvite(boatId);
+            return Ok(code);
+        }
+
+        [HttpPost("{boatId}/code/accept")]
+        public async Task<ActionResult<Boat>> AcceptCodeInvite(string boatId, [FromQuery] string code)
+        {
+            Boat boat = await _boatService.AcceptCodeInvite(boatId, code);
+            return Ok(boat);
+        }
+
         [HttpGet("{boatId}/invites")]
         public async Task<ActionResult<IEnumerable<Invite>>> GetInvites(string boatId)
         {
