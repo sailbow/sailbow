@@ -29,7 +29,6 @@ enum LinkLabels {
 export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
     const [navbarBg, setNavbarBg] = useState<boolean>(false);
     const [, dispatchToast] = useToast();
-    const [, { openCreateBoat }] = useBoat();
     useEffect(() => {
         document.addEventListener('scroll', () => {
             if (window.scrollY < 10) {
@@ -44,37 +43,102 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
         if (window.location.pathname !== path) window.location.href = path;
     };
 
-    const getActiveState = (link: LinkLabels): 'solid' | 'ghost' => {
-        const check = (currentLink: string) => {
-            // eslint-disable-next-line
-            if (!!matchPath(window.location.pathname, currentLink)) {
-                return 'solid';
+    const AuthenticatedNavbar: FunctionComponent = () => {
+        const [, { openCreateBoat }] = useBoat();
+
+        const getActiveState = (link: LinkLabels): 'solid' | 'ghost' => {
+            const check = (currentLink: string) => {
+                // eslint-disable-next-line
+                if (!!matchPath(window.location.pathname, currentLink)) {
+                    return 'solid';
+                }
+                return 'ghost';
+            };
+
+            switch (link) {
+                case LinkLabels.Boats:
+                    return check(Routes.Private.Boats);
+                case LinkLabels.Feed:
+                    return check(Routes.Private.Boats);
+                case LinkLabels.Memories:
+                    return check(Routes.Private.Boats);
+                default:
+                    return 'ghost';
             }
-            return 'ghost';
         };
 
-        switch (link) {
-            case LinkLabels.Boats:
-                return check(Routes.Private.Boats);
-            case LinkLabels.Feed:
-                return check(Routes.Private.Boats);
-            case LinkLabels.Memories:
-                return check(Routes.Private.Boats);
-            default:
-                return 'ghost';
-        }
-    };
+        const copyAccessToken = () => {
+            const token = LS.getItem(TokenStorageKeys.AT);
+            const toast =
+                token !== null
+                    ? { type: ToastActionType.ShowSuccess, text: 'Copied!' }
+                    : { type: ToastActionType.ShowWarning, text: 'No access token found!' };
+            if (token) {
+                navigator.clipboard.writeText(token);
+            }
+            dispatchToast(toast);
+        };
 
-    const copyAccessToken = () => {
-        const token = LS.getItem(TokenStorageKeys.AT);
-        const toast =
-            token !== null
-                ? { type: ToastActionType.ShowSuccess, text: 'Copied!' }
-                : { type: ToastActionType.ShowWarning, text: 'No access token found!' };
-        if (token) {
-            navigator.clipboard.writeText(token);
-        }
-        dispatchToast(toast);
+        return (
+            <>
+                <HStack alignItems="center" spacing="4">
+                    <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
+                    <Box display={{ base: 'none', md: 'flex' }}>
+                        <Button
+                            variant={getActiveState(LinkLabels.Boats)}
+                            colorScheme="gray"
+                            leftIcon={<SbBoatIcon />}
+                            onClick={() => onRoute(Routes.Private.Boats)}
+                        >
+                            Boats
+                        </Button>
+                        <Button variant="ghost" colorScheme="gray" leftIcon={<SbFeedIcon />}>
+                            Feed
+                        </Button>
+                        <Button variant="ghost" colorScheme="gray" leftIcon={<SbClockIcon />}>
+                            Memories
+                        </Button>
+                        {process.env.NODE_ENV === 'development' && (
+                            <Button
+                                onClick={copyAccessToken}
+                                variant="ghost"
+                                colorScheme="gray"
+                                leftIcon={<SbCopyIcon />}
+                            >
+                                Copy Access Token
+                            </Button>
+                        )}
+                    </Box>
+                </HStack>
+                <HStack alignItems="center">
+                    <Button
+                        rightIcon={<SbPlusIcon />}
+                        onClick={() => {
+                            openCreateBoat();
+                        }}
+                        display={{ base: 'none', md: 'flex' }}
+                    >
+                        Start Boat
+                    </Button>
+                    <Notification display={{ base: 'none', md: 'block' }} />
+                    <ProfileIcon display={{ base: 'none', md: 'block' }} />
+
+                    {/* MOBILE NAV ITEMS START */}
+
+                    <IconButton
+                        aria-label="add"
+                        icon={<SbPlusIcon />}
+                        display={{ base: 'flex', md: 'none' }}
+                        onClick={() => {
+                            openCreateBoat();
+                        }}
+                    />
+                    <Menu display={{ base: 'block', md: 'none' }} />
+
+                    {/* MOBILE NAV ITEMS END */}
+                </HStack>
+            </>
+        );
     };
 
     return (
@@ -87,68 +151,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
             transition="all 0.25s ease-in-out"
             boxShadow={navbarBg ? 'sm' : 'none'}
         >
-            {isAuth ? (
-                <>
-                    <HStack alignItems="center" spacing="4">
-                        <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
-                        <Box display={{ base: 'none', md: 'flex' }}>
-                            <Button
-                                variant={getActiveState(LinkLabels.Boats)}
-                                colorScheme="gray"
-                                leftIcon={<SbBoatIcon />}
-                                onClick={() => onRoute(Routes.Private.Boats)}
-                            >
-                                Boats
-                            </Button>
-                            <Button variant="ghost" colorScheme="gray" leftIcon={<SbFeedIcon />}>
-                                Feed
-                            </Button>
-                            <Button variant="ghost" colorScheme="gray" leftIcon={<SbClockIcon />}>
-                                Memories
-                            </Button>
-                            {process.env.NODE_ENV === 'development' && (
-                                <Button
-                                    onClick={copyAccessToken}
-                                    variant="ghost"
-                                    colorScheme="gray"
-                                    leftIcon={<SbCopyIcon />}
-                                >
-                                    Copy Access Token
-                                </Button>
-                            )}
-                        </Box>
-                    </HStack>
-                    <HStack alignItems="center">
-                        <Button
-                            rightIcon={<SbPlusIcon />}
-                            onClick={() => {
-                                openCreateBoat();
-                            }}
-                            display={{ base: 'none', md: 'flex' }}
-                        >
-                            Start Boat
-                        </Button>
-                        <Notification display={{ base: 'none', md: 'block' }} />
-                        <ProfileIcon display={{ base: 'none', md: 'block' }} />
-
-                        {/* MOBILE NAV ITEMS START */}
-
-                        <IconButton
-                            aria-label="add"
-                            icon={<SbPlusIcon />}
-                            display={{ base: 'flex', md: 'none' }}
-                            onClick={() => {
-                                openCreateBoat();
-                            }}
-                        />
-                        <Menu display={{ base: 'block', md: 'none' }} />
-
-                        {/* MOBILE NAV ITEMS END */}
-                    </HStack>
-                </>
-            ) : (
-                <UnAuthenticatedNavbar navbarBg={navbarBg} onRoute={onRoute} />
-            )}
+            {isAuth ? <AuthenticatedNavbar /> : <UnAuthenticatedNavbar navbarBg={navbarBg} onRoute={onRoute} />}
         </Flex>
     );
 };

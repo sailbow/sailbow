@@ -101,7 +101,7 @@ export const CreateEdit: FunctionComponent = () => {
             <DrawerContent w="500px">
                 <DrawerHeader>
                     <Flex alignItems="center" justifyContent="space-between">
-                        <Heading fontSize="xl">Start a boat</Heading>
+                        <Heading fontSize="xl">Start a Boat</Heading>
                         <Flex>
                             <Tour steps={Steps} />
                             <IconButton
@@ -126,12 +126,12 @@ export const CreateEdit: FunctionComponent = () => {
                                 required
                                 props={{
                                     onChange: onFormDetailsChange,
-                                    fontSize: '3xl',
+                                    fontSize: 'xl',
                                     placeholder: 'Boat name...',
                                     fontWeight: 'semibold',
                                     id: 'name',
                                     name: 'name',
-                                    py: '7',
+                                    py: '4',
                                     autoFocus: true,
                                 }}
                             />
