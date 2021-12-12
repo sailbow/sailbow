@@ -4,6 +4,7 @@ import { Box, Button, Flex, IconButton, HStack } from '@chakra-ui/react';
 import { matchPath } from 'react-router-dom';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
+import { useBoat } from 'boats/Boat.Store';
 import { Menu } from 'components/menu/Menu';
 import { UnAuthenticatedNavbar } from 'modules/navbar/UnauthenticatedNavbar';
 import { Notification } from 'modules/notifications/Notification';
@@ -11,7 +12,7 @@ import { ProfileIcon } from 'profile/profile-icon/ProfileIcon';
 import { Routes } from 'router/Router.Types';
 import { SbClockIcon, SbFeedIcon, SbBoatIcon, SbPlusIcon, SbCopyIcon } from 'util/icons/Icons';
 import { useToast, ToastActionType } from 'modules/toast/Toast';
-import { LS, TokenStorageKeys } from '../../util/http/Http';
+import { LS, TokenStorageKeys } from 'util/http/Http';
 
 import 'modules/navbar/Navbar.scss';
 
@@ -28,6 +29,7 @@ enum LinkLabels {
 export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
     const [navbarBg, setNavbarBg] = useState<boolean>(false);
     const [, dispatchToast] = useToast();
+    const [, { openCreateBoat }] = useBoat();
     useEffect(() => {
         document.addEventListener('scroll', () => {
             if (window.scrollY < 10) {
@@ -119,7 +121,9 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                     <HStack alignItems="center">
                         <Button
                             rightIcon={<SbPlusIcon />}
-                            onClick={() => onRoute(Routes.Private.Create)}
+                            onClick={() => {
+                                openCreateBoat();
+                            }}
                             display={{ base: 'none', md: 'flex' }}
                         >
                             Start Boat
@@ -129,7 +133,14 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
 
                         {/* MOBILE NAV ITEMS START */}
 
-                        <IconButton aria-label="add" icon={<SbPlusIcon />} display={{ base: 'flex', md: 'none' }} />
+                        <IconButton
+                            aria-label="add"
+                            icon={<SbPlusIcon />}
+                            display={{ base: 'flex', md: 'none' }}
+                            onClick={() => {
+                                openCreateBoat();
+                            }}
+                        />
                         <Menu display={{ base: 'block', md: 'none' }} />
 
                         {/* MOBILE NAV ITEMS END */}

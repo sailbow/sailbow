@@ -6,6 +6,7 @@ import { Color } from 'theme/Colors';
 import { Log } from 'util/logger/Logger';
 
 export enum BoatActionType {
+    SetCreateNav = 'SET_CREATE_NAV',
     SetError = 'SET_ERROR',
     SetBoat = 'SET_BOAT',
     SetCreateLoading = 'SET_CREATE_LOADING',
@@ -16,13 +17,17 @@ interface PayloadCreateBoat extends CreateBoat {}
 
 interface PayloadSetBoat extends Boat {}
 
+interface PayloadSetCreateNav {
+    open: boolean;
+}
+
 interface PayloadError {
     error: any;
 }
 
 interface BoatAction {
     type: BoatActionType;
-    payload: PayloadCreateBoat | PayloadSetBoat | PayloadError | boolean;
+    payload: PayloadCreateBoat | PayloadSetBoat | PayloadError | boolean | PayloadSetCreateNav;
 }
 
 interface BoatProviderProps {
@@ -46,6 +51,7 @@ export const initialBoatState: BoatState = {
         create: false,
         get: false,
     },
+    createOpen: false,
 };
 
 const BoatStateContext = createContext<BoatState | undefined>(undefined);
@@ -89,6 +95,14 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
 
             return nextState;
         }
+        case BoatActionType.SetCreateNav: {
+            const payload = action.payload as PayloadSetCreateNav;
+            const nextState: BoatState = { ...boatState, createOpen: payload.open };
+
+            log.next(nextState);
+
+            return nextState;
+        }
         default: {
             throw new Error(`Invalid action -- ${action.type}`);
         }
@@ -126,6 +140,8 @@ const useBoatDispatch = (): Dispatch<BoatAction> => {
 };
 
 interface BoatActionApis {
+    openCreateBoat: () => void;
+    closeCreateBoat: () => void;
     createBoat: (boat: PayloadCreateBoat) => Promise<Boat | null>;
     getImages: (value: string, page: number) => Promise<Photo[]>;
     getBoat: (boatId: string) => Promise<Boat | null>;
@@ -135,6 +151,12 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
     const dispatch = useBoatDispatch();
 
     const actionApis: BoatActionApis = {
+        openCreateBoat: () => {
+            dispatch({ type: BoatActionType.SetCreateNav, payload: { open: true } });
+        },
+        closeCreateBoat: () => {
+            dispatch({ type: BoatActionType.SetCreateNav, payload: { open: false } });
+        },
         createBoat: async (boat: CreateBoat) => {
             dispatch({ type: BoatActionType.SetCreateLoading, payload: true });
             try {
