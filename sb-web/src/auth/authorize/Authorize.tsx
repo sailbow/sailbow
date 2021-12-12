@@ -28,7 +28,7 @@ export const Authorize: FunctionComponent = () => {
                         params: {
                             provider,
                             code,
-                            redirectUri: ProviderToUriMapper[provider],
+                            redirectUri: encodeURI(ProviderToUriMapper[provider]),
                         },
                     });
 
