@@ -47,7 +47,7 @@ namespace Sb.OAuth2
         public virtual string GetAuthorizationEndpoint(string redirectUri, string scope = null, string accessType = null, string state = null)
         {
             string endpoint =
-                $"{_authUrl}?{ParameterKeys.RedirectUri}={HttpUtility.UrlEncode(redirectUri)}&{ParameterKeys.ClientId}={_clientCredentials.ClientId}&state={state}&scope={scope ?? Defaults.Scope}&access_type={accessType ?? Defaults.AccessType}&{ParameterKeys.ResponseType}=code";
+                $"{_authUrl}?{ParameterKeys.RedirectUri}={redirectUri}&{ParameterKeys.ClientId}={_clientCredentials.ClientId}&state={state}&scope={scope ?? Defaults.Scope}&access_type={accessType ?? Defaults.AccessType}&{ParameterKeys.ResponseType}=code";
             foreach (KeyValuePair<string, string> kvp in GetAdditionalAuthorizationParameters())
             {
                 endpoint += $"&{kvp.Key}={kvp.Value}";
