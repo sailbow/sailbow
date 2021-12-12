@@ -24,7 +24,7 @@ export const Authorize: FunctionComponent = () => {
             try {
                 if (code && provider) {
                     const { data }: AxiosResponse<RedirectResponse> = await Http({
-                        ...AuthEndpoints.Authorize,
+                        ...AuthEndpoints.Authorize(),
                         params: {
                             provider,
                             code,

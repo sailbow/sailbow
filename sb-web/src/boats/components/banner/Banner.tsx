@@ -11,10 +11,11 @@ import 'boats/components/banner/Banner.scss';
 
 interface Props {
     banner: BannerState;
+    showControls?: boolean;
     onChange?: ((banner: BannerState) => void) | null;
 }
 
-export const Banner: FunctionComponent<Props> = ({ banner, onChange }) => {
+export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChange }) => {
     const [isBannerSelectOpen, setIsBannerSelectOpen] = useState<boolean>(false);
     const [bannerPosition, setBannerPosition] = useState<number>(banner.position || 50);
 
@@ -55,6 +56,7 @@ export const Banner: FunctionComponent<Props> = ({ banner, onChange }) => {
             />
             <Box className="sb-banner" borderRadius="xl" overflow="hidden" height={{ base: '180px', md: '240px' }}>
                 <Button
+                    display={showControls ? 'flex' : 'none'}
                     size="sm"
                     borderRadius="lg"
                     className="sb-banner-button"
@@ -67,38 +69,40 @@ export const Banner: FunctionComponent<Props> = ({ banner, onChange }) => {
                 {banner.type === BannerType.Color ? (
                     <Box bg={banner.value} className="sb-banner-image" />
                 ) : (
-                    <>
-                        <IconButton
-                            bg="white"
-                            aria-label="edit-button-up"
-                            className="edit-button-up"
-                            size="xs"
-                            boxShadow="sm"
-                            colorScheme="gray"
-                            borderRadius="md"
-                            onClick={() => setPosition('up')}
-                        >
-                            <SbArrowUpIcon />
-                        </IconButton>
-                        <IconButton
-                            bg="white"
-                            aria-label="edit-button-down"
-                            className="edit-button-down"
-                            size="xs"
-                            boxShadow="sm"
-                            colorScheme="gray"
-                            borderRadius="md"
-                            onClick={() => setPosition('down')}
-                        >
-                            <SbArrowDownIcon />
-                        </IconButton>
+                    <Box>
+                        <Box display={showControls ? 'block' : 'none'}>
+                            <IconButton
+                                bg="white"
+                                aria-label="edit-button-up"
+                                className="edit-button-up"
+                                size="xs"
+                                boxShadow="sm"
+                                colorScheme="gray"
+                                borderRadius="md"
+                                onClick={() => setPosition('up')}
+                            >
+                                <SbArrowUpIcon />
+                            </IconButton>
+                            <IconButton
+                                bg="white"
+                                aria-label="edit-button-down"
+                                className="edit-button-down"
+                                size="xs"
+                                boxShadow="sm"
+                                colorScheme="gray"
+                                borderRadius="md"
+                                onClick={() => setPosition('down')}
+                            >
+                                <SbArrowDownIcon />
+                            </IconButton>
+                        </Box>
                         <Image
                             draggable="false"
                             objectPosition={`left ${bannerPosition}%`}
                             src={banner.value}
                             className="sb-banner-image"
                         />
-                    </>
+                    </Box>
                 )}
             </Box>
         </>
@@ -107,4 +111,5 @@ export const Banner: FunctionComponent<Props> = ({ banner, onChange }) => {
 
 Banner.defaultProps = {
     onChange: null,
+    showControls: true,
 };

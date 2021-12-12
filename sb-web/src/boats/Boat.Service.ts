@@ -1,30 +1,24 @@
-import axios, { AxiosResponse } from 'axios';
-import { BoatEndpoints, ImageSearchEndpoints } from 'util/http/Endpoints';
+import { AxiosResponse } from 'axios';
+
 import { Boat, CreateBoat, Photo } from 'boats/Boat.Types';
+import { BoatEndpoints, ImageEndpoints } from 'util/http/Endpoints';
 import { Http } from 'util/http/Http';
 
-export const getPexelsImages = async (value: string, newPage: number): Promise<Photo[]> => {
-    const { data }: AxiosResponse = await axios({
-        ...ImageSearchEndpoints.Search,
-        headers: {
-            Authorization: process.env.REACT_APP_PEXELS_API_KEY,
-        },
+export const getBannerImages = async (value: string, newPage: number): Promise<Photo[]> => {
+    const { data }: AxiosResponse = await Http({
+        ...ImageEndpoints.Search,
         params: {
             query: value,
-            per_page: 10,
             page: newPage,
         },
     });
-
     const photos: Photo[] = [];
 
-    data.photos.forEach((photo: any) => {
+    data.forEach((photo: any) => {
         photos.push({
-            src: photo.src.landscape,
+            src: photo.url,
             width: 3,
             height: 2,
-            photographer: photo.photographer,
-            photographerUrl: photo.photographer_url,
         });
     });
 

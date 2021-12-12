@@ -6,7 +6,7 @@ import { useBoat } from 'boats/Boat.Store';
 import { BannerState, BannerType, CreateBoat, Crew } from 'boats/Boat.Types';
 import { Banner, UserList, UserSearch } from 'boats/components';
 import { Steps } from 'boats/create/Create.Tut';
-import { CheckmarkIcon } from 'components/button/ButtonIcons';
+import { CheckMarkIcon } from 'components/button/ButtonIcons';
 import { Input, TextArea } from 'components/input/Input';
 import { RoleType } from 'modules/role/Role';
 import { Tour } from 'modules/tour/Tour';
@@ -136,7 +136,7 @@ export const Create: FunctionComponent = () => {
                             disabled={!boatForm.name}
                             isLoading={boat.loading.create}
                             onClick={onSubmit}
-                            rightIcon={CheckmarkIcon}
+                            rightIcon={CheckMarkIcon}
                         >
                             <Text>Start Boat</Text>
                         </Button>

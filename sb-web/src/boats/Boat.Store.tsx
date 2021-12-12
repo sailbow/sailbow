@@ -1,6 +1,6 @@
 import React, { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
-import { createBoatService, getBoatService, getPexelsImages } from 'boats/Boat.Service';
+import { createBoatService, getBoatService, getBannerImages } from 'boats/Boat.Service';
 import { BannerType, Boat, BoatState, CreateBoat, Photo } from 'boats/Boat.Types';
 import { Color } from 'theme/Colors';
 import { Log } from 'util/logger/Logger';
@@ -16,9 +16,13 @@ interface PayloadCreateBoat extends CreateBoat {}
 
 interface PayloadSetBoat extends Boat {}
 
+interface PayloadError {
+    error: any;
+}
+
 interface BoatAction {
     type: BoatActionType;
-    payload: PayloadCreateBoat | PayloadSetBoat | boolean;
+    payload: PayloadCreateBoat | PayloadSetBoat | PayloadError | boolean;
 }
 
 interface BoatProviderProps {
@@ -31,14 +35,13 @@ export const initialBoatState: BoatState = {
         name: '',
         description: '',
         banner: {
-            show: true, // whether it should be shown should be decided by the backend
+            show: true,
             type: BannerType.Color,
             value: Color.Orange100,
             position: 50,
         },
         crew: [],
     },
-    error: {},
     loading: {
         create: false,
         get: false,
@@ -71,8 +74,8 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
             return nextState;
         }
         case BoatActionType.SetError: {
-            const { payload } = action;
-            const nextState: BoatState = { ...boatState, error: payload };
+            const payload = action.payload as PayloadError;
+            const nextState: BoatState = { ...boatState, error: { ...payload.error } };
 
             log.next(nextState);
 
@@ -124,7 +127,7 @@ const useBoatDispatch = (): Dispatch<BoatAction> => {
 
 interface BoatActionApis {
     createBoat: (boat: PayloadCreateBoat) => Promise<Boat | null>;
-    getPexelsImagesAction: (value: string, page: number) => Promise<Photo[]>;
+    getImages: (value: string, page: number) => Promise<Photo[]>;
     getBoat: (boatId: string) => Promise<Boat | null>;
 }
 
@@ -139,8 +142,9 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
 
                 dispatch({ type: BoatActionType.SetCreateLoading, payload: false });
                 return response;
-            } catch (error) {
+            } catch (error: any) {
                 dispatch({ type: BoatActionType.SetCreateLoading, payload: false });
+                dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
                 return null;
             }
         },
@@ -153,13 +157,14 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 dispatch({ type: BoatActionType.SetGetLoading, payload: false });
 
                 return response;
-            } catch (error) {
+            } catch (error: any) {
                 dispatch({ type: BoatActionType.SetGetLoading, payload: false });
+                dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
                 return null;
             }
         },
-        getPexelsImagesAction: (value: string, page: number) => {
-            return getPexelsImages(value, page);
+        getImages: (value: string, page: number) => {
+            return getBannerImages(value, page);
         },
     };
 

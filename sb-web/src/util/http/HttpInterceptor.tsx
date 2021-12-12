@@ -45,7 +45,7 @@ export const HttpInterceptor: FunctionComponent = () => {
 
                 switch (error.response?.status) {
                     case HttpStatus.UNAUTHORIZED:
-                        if (originalRequest.url?.includes(AuthEndpoints.Refresh.url)) {
+                        if (originalRequest.url?.includes(AuthEndpoints.Refresh().url)) {
                             console.log('Should go to login page');
                             resetLocalStorage();
                             window.location.href = Routes.Public.Landing;
@@ -57,7 +57,7 @@ export const HttpInterceptor: FunctionComponent = () => {
                             originalRequest.retry = true;
                             console.log('Refreshing token....');
 
-                            const response = Http(AuthEndpoints.Refresh).then(
+                            const response = Http(AuthEndpoints.Refresh()).then(
                                 async ({ data }: AxiosResponse<RedirectResponse>) => {
                                     const { accessToken, expiresAt } = data;
                                     setHeadersToLocalStorage(accessToken, expiresAt);
@@ -83,6 +83,11 @@ export const HttpInterceptor: FunctionComponent = () => {
                         }
                         break;
                     case HttpStatus.NOT_FOUND:
+                        dispatch({
+                            type: ToastActionType.ShowError,
+                            text: "Looks like what you're looking for doesn't exist.",
+                        });
+                        break;
                     case HttpStatus.INTERNAL_ERROR:
                         dispatch({
                             type: ToastActionType.ShowError,

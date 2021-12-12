@@ -8,6 +8,8 @@ import { AuthEndpoints } from 'util/http/Endpoints';
 import { Http } from 'util/http/Http';
 import { SbRightArrowIcon, SbFacebookIcon, SbGoogleIcon } from 'util/icons/Icons';
 
+import 'auth/auth-card/AuthCard.scss';
+
 export enum Providers {
     Google,
     Facebook,
@@ -30,7 +32,7 @@ export const AuthCard: FunctionComponent<Props> = ({ path }) => {
         }
 
         const { data }: AxiosResponse = await Http({
-            ...AuthEndpoints.Login,
+            ...AuthEndpoints.Login(),
             params: {
                 provider,
                 state,
@@ -42,7 +44,7 @@ export const AuthCard: FunctionComponent<Props> = ({ path }) => {
     };
 
     return (
-        <Box boxShadow="xl" bg="white" p="12" pb="4" borderRadius="xl">
+        <Box boxShadow="xl" bg="white" p="12" pb="4" borderRadius="xl" className="sb-auth-card">
             <VStack spacing="32">
                 <Flex textAlign="center" justifyContent="center" flexDir="column">
                     <LogoType />
@@ -60,6 +62,7 @@ export const AuthCard: FunctionComponent<Props> = ({ path }) => {
                     </Box>
                     <VStack spacing="5" pb="8">
                         <Button
+                            className="social-outline-button"
                             variant="outline"
                             colorScheme="gray"
                             leftIcon={<SbGoogleIcon />}
@@ -69,6 +72,7 @@ export const AuthCard: FunctionComponent<Props> = ({ path }) => {
                             <Text style={{ paddingRight: '2rem' }}>Log In with Google</Text>
                         </Button>
                         <Button
+                            className="social-outline-button"
                             variant="outline"
                             colorScheme="gray"
                             leftIcon={<SbFacebookIcon />}

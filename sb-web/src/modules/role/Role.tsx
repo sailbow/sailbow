@@ -8,9 +8,9 @@ import { SbCheckIcon } from 'util/icons/Icons';
 import { customStyles } from 'theme/SelectStyles';
 
 export enum RoleType {
-    Captain,
-    Assistant,
-    Sailor,
+    Captain = 'captain',
+    Assistant = 'assistant',
+    Sailor = 'sailor',
 }
 
 export enum RoleLabel {
@@ -25,7 +25,7 @@ export const RoleToLabelMapper = {
     [RoleType.Sailor]: RoleLabel.Sailor,
 };
 
-type OptionType = { label: string; value: number };
+type OptionType = { label: string; value: string };
 
 const CaptainRoleOption = [{ label: RoleLabel.Captain, value: RoleType.Captain }];
 
@@ -49,7 +49,7 @@ export const Role: FunctionComponent<Props> = ({ user }) => {
         value: user.role,
     });
 
-    const onRoleChange = (role: number, data: Crew) => {
+    const onRoleChange = (role: string, data: Crew) => {
         switch (role) {
             case RoleType.Assistant: {
                 console.log('change to assistant', data);

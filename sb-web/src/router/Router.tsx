@@ -1,6 +1,6 @@
-import React, { FunctionComponent, lazy, Suspense } from 'react';
+import React, { FunctionComponent, lazy, Suspense, useEffect } from 'react';
 
-import { Switch, Route, Redirect as RouterRedirect } from 'react-router-dom';
+import { Switch, Route, Redirect as RouterRedirect, matchPath } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
 
 import { Footer } from 'modules/footer/Footer';
@@ -29,6 +29,8 @@ const NotFound = lazy(() => import('util/not-found/NotFound').then((module) => (
 const Home = lazy(() => import('boats/home/Home').then((module) => ({ default: module.Home })));
 const Create = lazy(() => import('boats/create/Create').then((module) => ({ default: module.Create })));
 const Boat = lazy(() => import('boats/boat/Boat').then((module) => ({ default: module.Boat })));
+const Invite = lazy(() => import('auth/invite/Invite').then((module) => ({ default: module.Invite })));
+const Error = lazy(() => import('util/error/Error').then((module) => ({ default: module.Error })));
 
 export const WhitelistedRouter: FunctionComponent = () => {
     return (
@@ -70,9 +72,18 @@ export const WhitelistedRouter: FunctionComponent = () => {
 };
 
 export const PublicRouter: FunctionComponent = () => {
-    if (PrivateRoutes.includes(window.location.pathname)) {
-        window.location.href = `${Routes.Public.Redirect}?path=${window.location.pathname}`;
-    }
+    // this is a hacky way. need to use regex to optimize route matching
+    useEffect(() => {
+        // eslint-disable-next-line
+        for (const path of PrivateRoutes) {
+            const { search, pathname } = window.location;
+            const match = matchPath(pathname, { path, strict: true, exact: true });
+            if (match) {
+                window.location.href = `${Routes.Public.Redirect}?path=${pathname}${search}`;
+                break;
+            }
+        }
+    }, []);
 
     return (
         <>
@@ -116,8 +127,14 @@ export const PrivateRouter: FunctionComponent = () => {
                         <Route path={Routes.Private.Create}>
                             <Create />
                         </Route>
-                        <Route path={`${Routes.Private.Boats}/:boatId`}>
+                        <Route exact path={`${Routes.Private.Boats}/:boatId`}>
                             <Boat />
+                        </Route>
+                        <Route path={Routes.Private.Invite}>
+                            <Invite />
+                        </Route>
+                        <Route path={Routes.Private.Error}>
+                            <Error />
                         </Route>
                         <Route path="*">
                             <NotFound />
