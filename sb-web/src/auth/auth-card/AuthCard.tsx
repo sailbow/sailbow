@@ -36,7 +36,7 @@ export const AuthCard: FunctionComponent<Props> = ({ path }) => {
             params: {
                 provider,
                 state,
-                redirectUri: ProviderToUriMapper[provider],
+                redirectUri: encodeURI(ProviderToUriMapper[provider]),
             },
         });
 
