@@ -35,7 +35,7 @@ export const Boat: FunctionComponent = () => {
     }, [error]);
 
     return (
-        <Box px="4" h="100%">
+        <Box px="4" h="100%" id="sb-main">
             <Route exact path={Routes.Private.Boats}>
                 <Home />
             </Route>

@@ -21,6 +21,7 @@ export {
     HiArrowRight as SbRightArrowIcon,
     HiArrowUp as SbArrowUpIcon,
     HiArrowDown as SbArrowDownIcon,
+    HiArrowLeft as SbArrowLeftIcon,
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';
@@ -31,7 +32,11 @@ export {
     FiBell as SbBellIcon,
     FiCopy as SbCopyIcon,
 } from 'react-icons/fi';
-export { BiErrorCircle as SbErrorCircleIcon } from 'react-icons/bi';
+export {
+    BiErrorCircle as SbErrorCircleIcon,
+    BiChevronRight as SbChevronRight,
+    BiChevronLeft as SbChevronLeft,
+} from 'react-icons/bi';
 export { MdOutlinePrivacyTip as SbPrivacyIcon } from 'react-icons/md';
 export {
     AiOutlineUser as SbUserIcon,

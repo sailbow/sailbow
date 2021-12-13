@@ -108,15 +108,15 @@ export const LayoutSidebar: FunctionComponent<GenericLayoutProps> = ({
     const [sidebarHeight, setSidebarHeight] = useState<number>(0);
 
     useEffect(() => {
-        const header: HTMLElement | null = document.getElementById('vb-header');
-        const footer: HTMLElement | null = document.getElementById('vb-footer');
-        const main: HTMLElement | null = document.getElementById('vb-main');
+        const header: HTMLElement | null = document.getElementById('sb-navbar');
+        const footer: HTMLElement | null = document.getElementById('sb-footer');
+        const main: HTMLElement | null = document.getElementById('sb-main');
         const headerHeight: number = header?.clientHeight || 0;
         const footerHeight: number = footer?.clientHeight || 0;
         const mainHeight: number = main?.clientHeight || 0;
 
         setSidebarHeight(mainHeight - headerHeight - footerHeight - 100);
-        setTopPosition(headerHeight);
+        setTopPosition(80);
     }, []);
 
     return (
@@ -124,9 +124,8 @@ export const LayoutSidebar: FunctionComponent<GenericLayoutProps> = ({
             position="sticky"
             top={`${topPosition}px`}
             flex={flex}
-            height={calcSidebarHeight ? `${sidebarHeight}px` : 'fit-content'}
+            height="100%"
             display={{ lg: 'block', base: 'none' }}
-            bottom="20px"
         >
             {children}
         </Box>
@@ -150,7 +149,7 @@ export const LayoutBody: FunctionComponent<LayoutBodyProps> = ({ children, class
  */
 export const LayoutHeader: FunctionComponent<GenericLayoutProps> = ({ children, className }): JSX.Element => {
     return (
-        <Box width="100%" position="sticky" top="0" zIndex="997" className={` ${className}`} id="vb-header">
+        <Box width="100%" className={` ${className}`} id="vb-header">
             {children}
         </Box>
     );

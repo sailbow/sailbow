@@ -1,20 +1,54 @@
 import React, { FunctionComponent } from 'react';
 
-import { Flex, IconButton } from '@chakra-ui/react';
+import { Flex, IconButton, Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from '@chakra-ui/react';
 
-import { SbSettingsIcon, SbUserGroup } from 'util/icons/Icons';
+import { SbChevronLeft, SbChevronRight, SbSettingsIcon, SbUserGroup } from 'util/icons/Icons';
+import { Boat } from 'boats/Boat.Types';
 
-export const Toolbar: FunctionComponent = () => {
+interface Props {
+    boat: Boat;
+}
+
+export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
     return (
-        <Flex>
-            <IconButton fontSize="xl" aria-label="settings" colorScheme="gray" variant="ghost" icon={<SbUserGroup />} />
-            <IconButton
-                fontSize="xl"
-                aria-label="settings"
-                colorScheme="gray"
-                variant="ghost"
-                icon={<SbSettingsIcon />}
-            />
+        <Flex justifyContent="space-between" alignItems="center" pb="4" bg="white">
+            <Flex alignItems="center">
+                <IconButton
+                    fontSize="2xl"
+                    aria-label="back"
+                    colorScheme="gray"
+                    variant="ghost"
+                    icon={<SbChevronLeft />}
+                />
+
+                <Breadcrumb pl="2" spacing="8px" fontWeight="semibold">
+                    <BreadcrumbItem>
+                        <BreadcrumbLink color="brand.muted">Boats</BreadcrumbLink>
+                    </BreadcrumbItem>
+
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href="#" isCurrentPage color="teal.600">
+                            {boat.name}
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                </Breadcrumb>
+            </Flex>
+            <Flex>
+                <IconButton
+                    fontSize="xl"
+                    aria-label="users"
+                    colorScheme="gray"
+                    variant="ghost"
+                    icon={<SbUserGroup />}
+                />
+                <IconButton
+                    fontSize="xl"
+                    aria-label="settings"
+                    colorScheme="gray"
+                    variant="ghost"
+                    icon={<SbSettingsIcon />}
+                />
+            </Flex>
         </Flex>
     );
 };

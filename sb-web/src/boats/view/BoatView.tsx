@@ -1,14 +1,16 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
-import { Box, Heading, Flex, Text, VStack } from '@chakra-ui/react';
+import { Box, Heading, Text } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 import { Banner } from 'boats/components';
 import { useBoat } from 'boats/Boat.Store';
+import { BoatTabs } from 'boats/view/tabs/Tabs';
 import { Toolbar } from 'boats/view/toolbar/Toolbar';
 import { Layout } from 'components/layout/Layout';
 import { Loading } from 'components/loading/Loading';
 import { Boat } from 'boats/Boat.Types';
+import { SbRightArrowIcon } from 'util/icons/Icons';
 
 export const BoatView: FunctionComponent = () => {
     const [{ boat, loading, error }, { getBoat }] = useBoat();
@@ -25,16 +27,13 @@ export const BoatView: FunctionComponent = () => {
         return (
             <Layout.Wrapper>
                 <Layout.Header>
-                    <Flex justifyContent="space-between" alignItems="center" py="4">
-                        <Heading>{data.name}</Heading>
-                        <Toolbar />
-                    </Flex>
+                    <Toolbar boat={data} />
                 </Layout.Header>
                 <Layout.Body>
-                    <Layout.Content flex="0.7">
-                        <Box>This is the content</Box>
+                    <Layout.Content flex="0.75">
+                        <BoatTabs />
                     </Layout.Content>
-                    <Layout.Sidebar flex="0.3">
+                    <Layout.Sidebar flex="0.25">
                         <Box>
                             <Banner banner={data.banner} showControls={false} />
                             <Box pt="4">

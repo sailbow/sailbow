@@ -150,6 +150,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
             bg={navbarBg ? 'white' : 'transparent'}
             transition="all 0.25s ease-in-out"
             boxShadow={navbarBg ? 'sm' : 'none'}
+            id="sb-navbar"
         >
             {isAuth ? <AuthenticatedNavbar /> : <UnAuthenticatedNavbar navbarBg={navbarBg} onRoute={onRoute} />}
         </Flex>
