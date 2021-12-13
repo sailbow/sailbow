@@ -42,3 +42,9 @@ export const getBoatService = async (boatId: string): Promise<Boat> => {
 
     return data;
 };
+
+export const getAllBoatsService = async (): Promise<Boat[]> => {
+    const { data }: AxiosResponse<Boat[]> = await Http(BoatEndpoints.Get);
+
+    return data;
+};

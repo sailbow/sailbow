@@ -9,6 +9,7 @@ import { HttpStatus } from 'util/http/Http';
 import { ErrorCode, getErrorPath } from 'util/error/Error';
 
 const BoatView = lazy(() => import('boats/view/BoatView').then((module) => ({ default: module.BoatView })));
+const Home = lazy(() => import('boats/home/Home').then((module) => ({ default: module.Home })));
 
 enum BoatRoutes {
     AllBoats = '/',
@@ -36,7 +37,7 @@ export const Boat: FunctionComponent = () => {
     return (
         <Box px="4" h="100%">
             <Route exact path={Routes.Private.Boats}>
-                <div>Home Page</div>
+                <Home />
             </Route>
             <Route exact path={`${Routes.Private.Boats}${BoatRoutes.View}`}>
                 <BoatView />
