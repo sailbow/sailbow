@@ -1,14 +1,12 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
 import { Flex, Heading } from '@chakra-ui/react';
-import { AxiosResponse } from 'axios';
 import { useHistory } from 'react-router-dom';
 
 import { ToastActionType, useToast } from 'modules/toast/Toast';
 import { Routes } from 'router/Router.Types';
-import { Http, RedirectResponse, setHeadersToLocalStorage } from 'util/http/Http';
-import { AuthEndpoints } from 'util/http/Endpoints';
-import { ProviderToUriMapper } from 'auth/auth-card/AuthCard';
+import { setHeadersToLocalStorage } from 'util/http/Http';
+import { authorize } from 'auth/Auth.Service';
 
 export const Authorize: FunctionComponent = () => {
     const history = useHistory();
@@ -23,14 +21,7 @@ export const Authorize: FunctionComponent = () => {
 
             try {
                 if (code && provider) {
-                    const { data }: AxiosResponse<RedirectResponse> = await Http({
-                        ...AuthEndpoints.Authorize(),
-                        params: {
-                            provider,
-                            code,
-                            redirectUri: encodeURI(ProviderToUriMapper[provider]),
-                        },
-                    });
+                    const data = await authorize(provider, code);
 
                     setHeadersToLocalStorage(data.accessToken, data.expiresAt);
 

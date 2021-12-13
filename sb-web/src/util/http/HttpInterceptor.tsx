@@ -1,15 +1,10 @@
 import React, { FunctionComponent, useEffect } from 'react';
+
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+
+import { RedirectResponse } from 'auth/Auth.Service';
 import { ToastActionType, useToast } from 'modules/toast/Toast';
-import {
-    Http,
-    HttpStatus,
-    RedirectResponse,
-    setHeadersToLocalStorage,
-    resetLocalStorage,
-    LS,
-    TokenStorageKeys,
-} from 'util/http/Http';
+import { Http, HttpStatus, setHeadersToLocalStorage, resetLocalStorage, LS, TokenStorageKeys } from 'util/http/Http';
 import { Routes } from 'router/Router.Types';
 import { AuthEndpoints } from 'util/http/Endpoints';
 
