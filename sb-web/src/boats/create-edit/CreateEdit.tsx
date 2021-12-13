@@ -105,6 +105,7 @@ export const CreateEdit: FunctionComponent = () => {
                         <Flex>
                             <Tour steps={Steps} />
                             <IconButton
+                                mr="-3"
                                 onClick={() => closeCreateBoat()}
                                 aria-label="close-icon"
                                 icon={<SbCloseIcon />}
@@ -153,7 +154,7 @@ export const CreateEdit: FunctionComponent = () => {
                                         Gather your crew
                                     </Text>
                                     <Text fontWeight="normal" fontSize="sm" color="brand.muted">
-                                        If you haven’t gone on a voyage with a sailor before, use the link to invite
+                                        If you have not gone on a voyage with a sailor before, use the link to invite
                                         them!
                                     </Text>
                                 </Box>
@@ -181,73 +182,5 @@ export const CreateEdit: FunctionComponent = () => {
                 </DrawerFooter>
             </DrawerContent>
         </Drawer>
-        // <Flex flexDir="column" className="sb-create container" px="4">
-        //     <Stack spacing="4">
-        //         {/* <Flex alignItems="center">
-        //             <Heading size="xs" textTransform="uppercase" letterSpacing="wider" color="gray.400" pr="1">
-        //                 Start a boat
-        //             </Heading>
-        //             <Tour steps={Steps} />
-        //         </Flex> */}
-
-        //         <Stack spacing="6">
-        //             <Banner banner={boatForm.banner} onChange={onBannerChange} />
-        //             <Input
-        //                 label="Name"
-        //                 customClass="create-boat-name"
-        //                 required
-        //                 props={{
-        //                     onChange: onFormDetailsChange,
-        //                     fontSize: '3xl',
-        //                     placeholder: 'Boat name...',
-        //                     fontWeight: 'semibold',
-        //                     id: 'name',
-        //                     name: 'name',
-        //                     py: '7',
-        //                     autoFocus: true,
-        //                 }}
-        //             />
-        //             <TextArea
-        //                 label="Description"
-        //                 customClass="create-boat-description"
-        //                 props={{
-        //                     onChange: onFormDetailsChange,
-        //                     name: 'description',
-        //                     id: 'description',
-        //                     rows: 3,
-        //                     variant: 'brand',
-        //                     placeholder: 'What is your boat about?',
-        //                 }}
-        //             />
-        //             <Stack spacing="4" pt="8" className="create-boat-gather-crew">
-        //                 <Box>
-        //                     <Text fontSize="lg" fontWeight="semibold">
-        //                         Gather your crew
-        //                     </Text>
-        //                     <Text fontWeight="normal" fontSize="sm" color="brand.muted">
-        //                         If you haven’t gone on a voyage with a sailor before, use the link to invite them!
-        //                     </Text>
-        //                 </Box>
-        //                 <UserSearch onChange={onAddCrewMember} />
-        //                 <UserList actions crew={boatForm.crew} onDelete={onRemoveCrewMember} />
-        //             </Stack>
-        //         </Stack>
-        //     </Stack>
-        //     <Flex mt="32" justifyContent="flex-end">
-        //         <Box className="create-boat-actions">
-        //             <Button variant="link" mr="8">
-        //                 Cancel
-        //             </Button>
-        //             <Button
-        //                 disabled={!boatForm.name}
-        //                 isLoading={loading.create}
-        //                 onClick={onSubmit}
-        //                 rightIcon={CheckMarkIcon}
-        //             >
-        //                 <Text>Start Boat</Text>
-        //             </Button>
-        //         </Box>
-        //     </Flex>
-        // </Flex>
     );
 };
