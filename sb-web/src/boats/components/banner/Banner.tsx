@@ -31,7 +31,7 @@ export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChang
                 onChange={onSubmit}
                 banner={banner}
             />
-            <Box className="sb-banner" borderRadius="xl" overflow="hidden" height={{ base: '180px', md: '240px' }}>
+            <Box className="sb-banner" borderRadius="xl" overflow="hidden" height="180px">
                 <Button
                     display={showControls ? 'flex' : 'none'}
                     size="sm"
