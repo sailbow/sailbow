@@ -68,7 +68,7 @@ namespace Sb.Api.Services
 
         private async Task SendInvitationAsync(Invite invite, Boat boat)
         {
-            string inviteUrl = $"{_sbApiConfig.BoatInviteBaseUrl}/boats/{invite.BoatId}/invite?inviteId={invite.Id}";
+            string inviteUrl = $"{_sbApiConfig.BoatInviteBaseUrl}/invite?inviteId={invite.Id}&boatId={invite.BoatId}";
 
             _logger.LogInformation("Sending email invite with url '{inviteUrl}'", inviteUrl);
             await _emailClient.SendEmailAsync(new EmailMessage
