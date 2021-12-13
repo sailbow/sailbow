@@ -1,11 +1,10 @@
 import React, { FunctionComponent, useState } from 'react';
 
-import { Box, Image, Button, IconButton } from '@chakra-ui/react';
+import { Box, Image, Button } from '@chakra-ui/react';
 
 import { BannerState, BannerType } from 'boats/Boat.Types';
 import { BannerChangeModal } from 'boats/components/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
-import { SbArrowDownIcon, SbArrowUpIcon } from 'util/icons/Icons';
 
 import 'boats/components/banner/Banner.scss';
 
@@ -17,33 +16,11 @@ interface Props {
 
 export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChange }) => {
     const [isBannerSelectOpen, setIsBannerSelectOpen] = useState<boolean>(false);
-    const [bannerPosition, setBannerPosition] = useState<number>(banner.position || 50);
 
     const onSubmit = (type: BannerType, value: string | Color): void => {
         if (onChange) {
-            onChange({ ...banner, type, value, position: bannerPosition });
+            onChange({ ...banner, type, value });
         }
-    };
-
-    const setPosition = (dir: 'up' | 'down'): void => {
-        let newPosition = bannerPosition;
-
-        switch (dir) {
-            case 'down':
-                if (bannerPosition < 90) {
-                    newPosition = bannerPosition + 10;
-                }
-                break;
-            case 'up':
-                if (bannerPosition > 10) {
-                    newPosition = bannerPosition - 10;
-                }
-                break;
-            default:
-                throw new Error(`Invalid direction - ${dir}`);
-        }
-
-        setBannerPosition(newPosition);
     };
 
     return (
@@ -54,7 +31,7 @@ export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChang
                 onChange={onSubmit}
                 banner={banner}
             />
-            <Box className="sb-banner" borderRadius="xl" overflow="hidden" height={{ base: '180px', md: '240px' }}>
+            <Box className="sb-banner" borderRadius="xl" overflow="hidden" height="180px">
                 <Button
                     display={showControls ? 'flex' : 'none'}
                     size="sm"
@@ -70,38 +47,7 @@ export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChang
                     <Box bg={banner.value} className="sb-banner-image" />
                 ) : (
                     <Box>
-                        <Box display={showControls ? 'block' : 'none'}>
-                            <IconButton
-                                bg="white"
-                                aria-label="edit-button-up"
-                                className="edit-button-up"
-                                size="xs"
-                                boxShadow="sm"
-                                colorScheme="gray"
-                                borderRadius="md"
-                                onClick={() => setPosition('up')}
-                            >
-                                <SbArrowUpIcon />
-                            </IconButton>
-                            <IconButton
-                                bg="white"
-                                aria-label="edit-button-down"
-                                className="edit-button-down"
-                                size="xs"
-                                boxShadow="sm"
-                                colorScheme="gray"
-                                borderRadius="md"
-                                onClick={() => setPosition('down')}
-                            >
-                                <SbArrowDownIcon />
-                            </IconButton>
-                        </Box>
-                        <Image
-                            draggable="false"
-                            objectPosition={`left ${bannerPosition}%`}
-                            src={banner.value}
-                            className="sb-banner-image"
-                        />
+                        <Image draggable="false" src={banner.value} className="sb-banner-image" />
                     </Box>
                 )}
             </Box>

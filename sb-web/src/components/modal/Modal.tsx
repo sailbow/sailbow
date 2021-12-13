@@ -41,6 +41,7 @@ export const Modal: FunctionComponent<Props> = ({
                 <ModalHeader d="flex" justifyContent="space-between" alignItems="center">
                     <Heading fontSize="3xl">{title}</Heading>
                     <IconButton
+                        mr="-3"
                         aria-label="modal-close"
                         variant="ghost"
                         colorScheme="gray"

@@ -3,6 +3,7 @@ import React, { FunctionComponent, lazy, Suspense, useEffect } from 'react';
 import { Switch, Route, Redirect as RouterRedirect, matchPath } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
 
+import { CreateEdit } from 'boats/create-edit/CreateEdit';
 import { Footer } from 'modules/footer/Footer';
 import { Navbar } from 'modules/navbar/Navbar';
 import { BaseNavbar } from 'util/whitelisted/Base';
@@ -27,7 +28,6 @@ const NotFound = lazy(() => import('util/not-found/NotFound').then((module) => (
 
 /** Private Content */
 const Home = lazy(() => import('boats/home/Home').then((module) => ({ default: module.Home })));
-const Create = lazy(() => import('boats/create/Create').then((module) => ({ default: module.Create })));
 const Boat = lazy(() => import('boats/boat/Boat').then((module) => ({ default: module.Boat })));
 const Invite = lazy(() => import('auth/invite/Invite').then((module) => ({ default: module.Invite })));
 const Error = lazy(() => import('util/error/Error').then((module) => ({ default: module.Error })));
@@ -115,6 +115,7 @@ export const PrivateRouter: FunctionComponent = () => {
     return (
         <>
             <Navbar isAuth />
+            <CreateEdit />
             <Box className="sb-private-router">
                 <Suspense fallback={null}>
                     <Switch>
@@ -123,9 +124,6 @@ export const PrivateRouter: FunctionComponent = () => {
                         </Route>
                         <Route exact path={Routes.Private.Boats}>
                             <Home />
-                        </Route>
-                        <Route path={Routes.Private.Create}>
-                            <Create />
                         </Route>
                         <Route exact path={`${Routes.Private.Boats}/:boatId`}>
                             <Boat />

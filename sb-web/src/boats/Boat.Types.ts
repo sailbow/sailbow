@@ -27,6 +27,7 @@ export interface BoatState {
         create: boolean;
         get: boolean;
     };
+    createOpen: boolean;
 }
 
 export interface CreateBoat extends Omit<Boat, 'id'> {}
