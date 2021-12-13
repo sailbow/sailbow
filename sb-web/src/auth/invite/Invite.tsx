@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { Box, Button, Heading, Flex, Text, Spinner } from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
 
 import { acceptInvite, getInvite, InviteType } from 'auth/invite/Invite.Service';
 import { Banner } from 'boats/components';
@@ -14,13 +13,13 @@ import { HttpStatus } from 'util/http/Http';
 
 export const Invite: FunctionComponent = () => {
     const [, dispatch] = useToast();
-    const { boatId } = useParams<{ boatId: string }>();
+    const boatId: string | null = new URLSearchParams(window.location.search).get('boatId');
     const inviteId: string | null = new URLSearchParams(window.location.search).get('inviteId');
     const [invite, setInvite] = useState<InviteType | null>(null);
 
     useEffect(() => {
         (async () => {
-            if (!inviteId) {
+            if (!inviteId || !boatId) {
                 window.location.href = getErrorPath(ErrorCode.InviteError);
                 return null;
             }
