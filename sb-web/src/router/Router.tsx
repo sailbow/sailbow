@@ -28,7 +28,6 @@ const NotFound = lazy(() => import('util/not-found/NotFound').then((module) => (
 
 /** Private Content */
 const Home = lazy(() => import('boats/home/Home').then((module) => ({ default: module.Home })));
-// const Create = lazy(() => import('boats/create/Create').then((module) => ({ default: module.Create })));
 const Boat = lazy(() => import('boats/boat/Boat').then((module) => ({ default: module.Boat })));
 const Invite = lazy(() => import('auth/invite/Invite').then((module) => ({ default: module.Invite })));
 const Error = lazy(() => import('util/error/Error').then((module) => ({ default: module.Error })));
