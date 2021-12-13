@@ -2,11 +2,6 @@ import axios from 'axios';
 
 export const LS = localStorage;
 
-export interface RedirectResponse {
-    accessToken: string;
-    expiresAt: string;
-}
-
 export enum HttpStatus {
     OK = 200,
     NO_CONTENT = 204,
