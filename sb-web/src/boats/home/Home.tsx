@@ -17,11 +17,18 @@ export const Home: FunctionComponent = () => {
     }, []); // eslint-disable-line
 
     return !loading.get && boats ? (
-        <>
+        <div className="container">
             {boats.map((boat: Boat) => {
-                return <Link href={`/boats/${boat.id}`}>{boat.name}</Link>;
+                return (
+                    <>
+                        <Link fontSize="xl" href={`/boats/${boat.id}`}>
+                            {boat.name}
+                        </Link>
+                        <br />
+                    </>
+                );
             })}
-        </>
+        </div>
     ) : (
         <Loading />
     );

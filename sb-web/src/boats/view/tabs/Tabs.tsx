@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 
 import { Box, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, IconButton, Text } from '@chakra-ui/react';
 import { SbCloseIcon, SbPlusIcon } from 'util/icons/Icons';

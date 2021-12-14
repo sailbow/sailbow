@@ -4,6 +4,7 @@ export {
     BsQuestionCircle as SbQuestionIcon,
     BsClock as SbClockIcon,
     BsLayers as SbFeedIcon,
+    BsLink45Deg as SbLinkIcon,
 } from 'react-icons/bs';
 export {
     IoCloseOutline as SbCloseIcon,

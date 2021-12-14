@@ -4,6 +4,7 @@ import { Flex, IconButton, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@c
 
 import { SbSettingsIcon, SbUserGroup } from 'util/icons/Icons';
 import { Boat } from 'boats/Boat.Types';
+import { LinkButton } from 'boats/components/link-button/LinkButton';
 
 interface Props {
     boat: Boat;
@@ -26,6 +27,7 @@ export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
                 </Breadcrumb>
             </Flex>
             <Flex>
+                <LinkButton />
                 <IconButton
                     fontSize="xl"
                     aria-label="users"
