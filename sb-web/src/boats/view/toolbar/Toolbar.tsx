@@ -12,21 +12,20 @@ interface Props {
 
 export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
     return (
-        <Flex justifyContent="space-between" alignItems="center" pb="4" bg="white">
-            <Flex alignItems="center">
-                <Breadcrumb spacing="8px" fontWeight="semibold">
-                    <BreadcrumbItem>
-                        <BreadcrumbLink color="brand.muted">Boats</BreadcrumbLink>
-                    </BreadcrumbItem>
+        <Flex justifyContent="space-between" pb="4" bg="white">
+            <Breadcrumb spacing="8px" fontWeight="semibold" fontSize="xl">
+                <BreadcrumbItem>
+                    <BreadcrumbLink color="brand.muted">Boats</BreadcrumbLink>
+                </BreadcrumbItem>
 
-                    <BreadcrumbItem>
-                        <BreadcrumbLink dis isCurrentPage color="teal.600">
-                            {boat.name}
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                </Breadcrumb>
-            </Flex>
-            <Flex>
+                <BreadcrumbItem>
+                    <BreadcrumbLink dis isCurrentPage color="teal.600">
+                        {boat.name}
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+            </Breadcrumb>
+
+            <Flex justifyContent="flex-end">
                 <LinkButton />
                 <IconButton
                     fontSize="xl"

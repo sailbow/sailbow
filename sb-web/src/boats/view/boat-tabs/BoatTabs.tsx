@@ -3,6 +3,8 @@ import React, { FunctionComponent, useState } from 'react';
 import { Box, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, IconButton, Text } from '@chakra-ui/react';
 import { SbCloseIcon, SbPlusIcon } from 'util/icons/Icons';
 
+import 'boats/view/boat-tabs/BoatTabs.scss';
+
 interface Day {
     title: string;
     editing: boolean;
@@ -40,11 +42,11 @@ export const BoatTabs: FunctionComponent = () => {
     };
 
     return (
-        <Box position="relative">
+        <Box position="relative" className="sb-boat-tabs">
             <Tabs colorScheme="teal" index={tabIndex} isLazy onChange={handleTabsChange}>
-                <TabList borderBottom="none" alignItems="center">
+                <TabList alignItems="center" className="tablist">
                     {days.map((day: Day, idx: number) => (
-                        <Tab fontWeight="semibold" pr="0" pl="2" as="div" key={day.title}>
+                        <Tab className="tab" fontWeight="semibold" pr="0" pl="3" as="div" key={day.title}>
                             <Flex justifyContent="space-between" alignItems="center">
                                 <Text>{day.title}</Text>
                                 <IconButton
@@ -58,6 +60,7 @@ export const BoatTabs: FunctionComponent = () => {
                                     color="gray.500"
                                     borderRadius="50%"
                                     ml="4"
+                                    mr="1"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         e.preventDefault();
@@ -68,24 +71,25 @@ export const BoatTabs: FunctionComponent = () => {
                             </Flex>
                         </Tab>
                     ))}
+                    <IconButton
+                        borderRadius="50%"
+                        aria-label="add-tabs"
+                        icon={<SbPlusIcon />}
+                        variant="ghost"
+                        colorScheme="gray"
+                        onClick={onAdd}
+                        mx="2"
+                        fontSize="xl"
+                    />
                 </TabList>
                 <TabPanels>
                     {days.map((day: Day) => (
-                        <TabPanel key={day.title}>{day.panel}</TabPanel>
+                        <TabPanel key={day.title} height="1230px">
+                            {day.panel}
+                        </TabPanel>
                     ))}
                 </TabPanels>
             </Tabs>
-
-            <IconButton
-                aria-label="add-tabs"
-                icon={<SbPlusIcon />}
-                variant="ghost"
-                colorScheme="gray"
-                onClick={onAdd}
-                position="absolute"
-                top="0"
-                right="0"
-            />
         </Box>
     );
 };

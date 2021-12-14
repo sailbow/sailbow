@@ -111,8 +111,9 @@ export const LayoutSidebar: FunctionComponent<GenericLayoutProps> = ({ children,
             position="sticky"
             top={`${topPosition}px`}
             flex={flex}
-            height="fit-content"
+            maxHeight="100vh"
             display={{ xl: 'block', base: 'none' }}
+            overflow="auto"
         >
             {children}
         </Box>

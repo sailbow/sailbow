@@ -121,7 +121,9 @@ export const CreateEdit: FunctionComponent = () => {
                 <DrawerBody pb="8">
                     <Stack spacing="4">
                         <Stack spacing="6">
-                            <Banner banner={boatForm.banner} onChange={onBannerChange} />
+                            <Box height="240px">
+                                <Banner banner={boatForm.banner} onChange={onBannerChange} />
+                            </Box>
                             <Input
                                 label="Name"
                                 customClass="create-boat-name"
