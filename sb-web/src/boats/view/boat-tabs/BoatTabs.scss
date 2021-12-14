@@ -1,0 +1,17 @@
+@import 'theme/base';
+
+.sb-boat-tabs {
+    .tablist {
+        border: none;
+
+        .tab {
+            cursor: pointer !important;
+            border-top-right-radius: 8px;
+            border-top-left-radius: 8px;
+
+            &:hover {
+                background-color: $sb-gray-50;
+            }
+        }
+    }
+}

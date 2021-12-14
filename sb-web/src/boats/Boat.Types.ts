@@ -21,6 +21,7 @@ export interface Boat {
 }
 
 export interface BoatState {
+    boats?: Boat[];
     boat?: Boat;
     error?: any;
     loading: {

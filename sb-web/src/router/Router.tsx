@@ -27,8 +27,7 @@ const License = lazy(() => import('util/whitelisted/License').then((module) => (
 const NotFound = lazy(() => import('util/not-found/NotFound').then((module) => ({ default: module.NotFound })));
 
 /** Private Content */
-const Home = lazy(() => import('boats/home/Home').then((module) => ({ default: module.Home })));
-const Boat = lazy(() => import('boats/boat/Boat').then((module) => ({ default: module.Boat })));
+const Boat = lazy(() => import('boats/Boat').then((module) => ({ default: module.Boat })));
 const Invite = lazy(() => import('auth/invite/Invite').then((module) => ({ default: module.Invite })));
 const Error = lazy(() => import('util/error/Error').then((module) => ({ default: module.Error })));
 
@@ -122,10 +121,7 @@ export const PrivateRouter: FunctionComponent = () => {
                         <Route exact path="/">
                             <RouterRedirect to={Routes.Private.Boats} />
                         </Route>
-                        <Route exact path={Routes.Private.Boats}>
-                            <Home />
-                        </Route>
-                        <Route exact path={`${Routes.Private.Boats}/:boatId`}>
+                        <Route path={Routes.Private.Boats}>
                             <Boat />
                         </Route>
                         <Route path={Routes.Private.Invite}>

@@ -53,7 +53,7 @@ export const Invite: FunctionComponent = () => {
 
     const onAccept = async () => {
         try {
-            const data = await acceptInvite(boatId, inviteId!);
+            const data = await acceptInvite(boatId!, inviteId!);
 
             window.location.href = `${Routes.Private.Boats}/${data.id}`;
         } catch (err: any) {

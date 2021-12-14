@@ -4,6 +4,7 @@ export {
     BsQuestionCircle as SbQuestionIcon,
     BsClock as SbClockIcon,
     BsLayers as SbFeedIcon,
+    BsLink45Deg as SbLinkIcon,
 } from 'react-icons/bs';
 export {
     IoCloseOutline as SbCloseIcon,
@@ -15,11 +16,13 @@ export {
     IoMailOutline as SbMailIcon,
     IoTrashBinOutline as SbDeleteIcon,
     IoBugOutline as SbBugIcon,
+    IoSettingsOutline as SbSettingsIcon,
 } from 'react-icons/io5';
 export {
     HiArrowRight as SbRightArrowIcon,
     HiArrowUp as SbArrowUpIcon,
     HiArrowDown as SbArrowDownIcon,
+    HiArrowLeft as SbArrowLeftIcon,
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';
@@ -30,9 +33,17 @@ export {
     FiBell as SbBellIcon,
     FiCopy as SbCopyIcon,
 } from 'react-icons/fi';
-export { BiErrorCircle as SbErrorCircleIcon } from 'react-icons/bi';
+export {
+    BiErrorCircle as SbErrorCircleIcon,
+    BiChevronRight as SbChevronRight,
+    BiChevronLeft as SbChevronLeft,
+} from 'react-icons/bi';
 export { MdOutlinePrivacyTip as SbPrivacyIcon } from 'react-icons/md';
-export { AiOutlineUser as SbUserIcon, AiOutlineLogout as SbLogoutIcon } from 'react-icons/ai';
+export {
+    AiOutlineUser as SbUserIcon,
+    AiOutlineLogout as SbLogoutIcon,
+    AiOutlineUsergroupAdd as SbUserGroup,
+} from 'react-icons/ai';
 
 export { ReactComponent as SbBoatIcon } from 'assets/icons/boat.svg';
 export { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
