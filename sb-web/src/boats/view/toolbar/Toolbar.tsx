@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 
-import { Flex, IconButton, Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from '@chakra-ui/react';
+import { Flex, IconButton, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 
-import { SbChevronLeft, SbChevronRight, SbSettingsIcon, SbUserGroup } from 'util/icons/Icons';
+import { SbSettingsIcon, SbUserGroup } from 'util/icons/Icons';
 import { Boat } from 'boats/Boat.Types';
 
 interface Props {
@@ -13,21 +13,13 @@ export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
     return (
         <Flex justifyContent="space-between" alignItems="center" pb="4" bg="white">
             <Flex alignItems="center">
-                <IconButton
-                    fontSize="2xl"
-                    aria-label="back"
-                    colorScheme="gray"
-                    variant="ghost"
-                    icon={<SbChevronLeft />}
-                />
-
-                <Breadcrumb pl="2" spacing="8px" fontWeight="semibold">
+                <Breadcrumb spacing="8px" fontWeight="bold" fontSize="lg">
                     <BreadcrumbItem>
                         <BreadcrumbLink color="brand.muted">Boats</BreadcrumbLink>
                     </BreadcrumbItem>
 
                     <BreadcrumbItem>
-                        <BreadcrumbLink href="#" isCurrentPage color="teal.600">
+                        <BreadcrumbLink dis isCurrentPage color="teal.600">
                             {boat.name}
                         </BreadcrumbLink>
                     </BreadcrumbItem>

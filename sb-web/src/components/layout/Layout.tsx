@@ -85,10 +85,10 @@ export const LayoutFooter: FunctionComponent<GenericLayoutProps> = ({ children, 
 export const LayoutContent: FunctionComponent<GenericLayoutProps> = ({
     children,
     flex = '0.5',
-    mx = 10,
+    mx = 8,
 }): JSX.Element => {
     return (
-        <Box mr={{ lg: mx, base: 0 }} flex={{ lg: flex, base: 1 }} overflow="hidden" className="layout-content">
+        <Box ml={{ lg: mx, base: 0 }} flex={{ lg: flex, base: 1 }} className="layout-content">
             {children}
         </Box>
     );
@@ -99,23 +99,10 @@ export const LayoutContent: FunctionComponent<GenericLayoutProps> = ({
  * width based on the flex value.
  * The Y position of the sidebar depends on the height of the header which is dynamically calculated here.
  */
-export const LayoutSidebar: FunctionComponent<GenericLayoutProps> = ({
-    children,
-    flex = '0.25',
-    calcSidebarHeight,
-}): JSX.Element => {
+export const LayoutSidebar: FunctionComponent<GenericLayoutProps> = ({ children, flex = '0.25' }): JSX.Element => {
     const [topPosition, setTopPosition] = useState<number>(0); // randomly set initial value
-    const [sidebarHeight, setSidebarHeight] = useState<number>(0);
 
     useEffect(() => {
-        const header: HTMLElement | null = document.getElementById('sb-navbar');
-        const footer: HTMLElement | null = document.getElementById('sb-footer');
-        const main: HTMLElement | null = document.getElementById('sb-main');
-        const headerHeight: number = header?.clientHeight || 0;
-        const footerHeight: number = footer?.clientHeight || 0;
-        const mainHeight: number = main?.clientHeight || 0;
-
-        setSidebarHeight(mainHeight - headerHeight - footerHeight - 100);
         setTopPosition(80);
     }, []);
 
@@ -124,8 +111,8 @@ export const LayoutSidebar: FunctionComponent<GenericLayoutProps> = ({
             position="sticky"
             top={`${topPosition}px`}
             flex={flex}
-            height="100%"
-            display={{ lg: 'block', base: 'none' }}
+            height="fit-content"
+            display={{ xl: 'block', base: 'none' }}
         >
             {children}
         </Box>

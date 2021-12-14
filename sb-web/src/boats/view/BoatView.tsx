@@ -10,7 +10,6 @@ import { Toolbar } from 'boats/view/toolbar/Toolbar';
 import { Layout } from 'components/layout/Layout';
 import { Loading } from 'components/loading/Loading';
 import { Boat } from 'boats/Boat.Types';
-import { SbRightArrowIcon } from 'util/icons/Icons';
 
 export const BoatView: FunctionComponent = () => {
     const [{ boat, loading, error }, { getBoat }] = useBoat();
@@ -18,7 +17,6 @@ export const BoatView: FunctionComponent = () => {
 
     useEffect(() => {
         (async () => {
-            console.log('here', loading);
             await getBoat(boatId);
         })();
     }, []); // eslint-disable-line
@@ -30,9 +28,6 @@ export const BoatView: FunctionComponent = () => {
                     <Toolbar boat={data} />
                 </Layout.Header>
                 <Layout.Body>
-                    <Layout.Content flex="0.75">
-                        <BoatTabs />
-                    </Layout.Content>
                     <Layout.Sidebar flex="0.25">
                         <Box>
                             <Banner banner={data.banner} showControls={false} />
@@ -42,6 +37,9 @@ export const BoatView: FunctionComponent = () => {
                             </Box>
                         </Box>
                     </Layout.Sidebar>
+                    <Layout.Content flex="0.75">
+                        <BoatTabs />
+                    </Layout.Content>
                 </Layout.Body>
             </Layout.Wrapper>
         );
