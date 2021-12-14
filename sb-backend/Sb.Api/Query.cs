@@ -1,5 +1,7 @@
 ﻿using HotChocolate.Data;
 
+using MongoDB.Driver;
+
 using Sb.Data.Models.Mongo;
 using Sb.Data.Mongo;
 
@@ -11,9 +13,9 @@ namespace Sb.Api
         [UseProjection]
         [UseSorting]
         [UseFiltering]
-        public IExecutable<User> GetUsers([Service] MongoRepository<User> userRepo)
+        public IQueryable<User> GetUsers([Service] MongoRepository<User> userRepo)
         {
-            return userRepo.Collection.AsExecutable();
+            return userRepo.Collection.AsQueryable();
         }
     }
 }

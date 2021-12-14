@@ -96,13 +96,13 @@ services.AddControllers()
         opts.SerializerSettings.Converters.Add(new StringEnumConverter());
     });
 
-services
+var graphBuilder = services
     .AddGraphQLServer()
     .AddAuthorization()
     .AddQueryType<Query>()
-    .AddMongoDbFiltering()
-    .AddMongoDbProjections()
-    .AddMongoDbSorting();
+    .AddFiltering()
+    .AddProjections()
+    .AddSorting();
 
 var app = builder.Build();
 IWebHostEnvironment env = builder.Environment;
