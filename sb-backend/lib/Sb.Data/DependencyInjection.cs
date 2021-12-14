@@ -28,6 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 configureAction(config);
                 _services.AddSingleton(config);
                 _services.AddSingleton(typeof(IRepository<>), typeof(MongoRepository<>));
+                _services.AddSingleton(typeof(MongoRepository<>));
             }
         }
     }
