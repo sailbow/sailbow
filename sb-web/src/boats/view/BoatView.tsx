@@ -32,8 +32,10 @@ export const BoatView: FunctionComponent = () => {
                         <Box>
                             <Banner banner={data.banner} showControls={false} />
                             <Box pt="4">
-                                <Heading fontSize="lg">{data.name}</Heading>
-                                <Text fontWeight="normal">{data.description}</Text>
+                                <Heading fontSize="xl">{data.name}</Heading>
+                                <Text pt="1" fontWeight="normal" color="brand.muted">
+                                    {data.description}
+                                </Text>
                             </Box>
                         </Box>
                     </Layout.Sidebar>

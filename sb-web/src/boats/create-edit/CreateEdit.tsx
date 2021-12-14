@@ -96,6 +96,7 @@ export const CreateEdit: FunctionComponent = () => {
                 closeCreateBoat();
             }}
             size="md"
+            allowPinchZoom
         >
             <DrawerOverlay />
             <DrawerContent w="500px">
