@@ -17,7 +17,7 @@ export const LinkButton: FunctionComponent = () => {
             </PopoverTrigger>
             <PopoverContent w="100%" borderRadius="lg">
                 <PopoverBody p="2">
-                    <Flex p="2" bgColor="gray.50" borderRadius="lg" alignItems="center">
+                    <Flex p="2" alignItems="center">
                         <Text fontWeight="normal" pr="4">
                             https://sailboatapp.com/xc7wg
                         </Text>

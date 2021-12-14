@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
 
-import { Box, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, IconButton, Text } from '@chakra-ui/react';
+import { Box, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, IconButton, Text } from '@chakra-ui/react';
 import { SbCloseIcon, SbPlusIcon } from 'util/icons/Icons';
 
 interface Day {
@@ -74,16 +74,6 @@ export const BoatTabs: FunctionComponent = () => {
                         <TabPanel key={day.title}>{day.panel}</TabPanel>
                     ))}
                 </TabPanels>
-                <Button
-                    colorScheme="brand"
-                    rightIcon={<SbPlusIcon />}
-                    ml="4"
-                    position="fixed"
-                    bottom="16px"
-                    right="16px"
-                >
-                    Add Widgets
-                </Button>
             </Tabs>
 
             <IconButton

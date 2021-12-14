@@ -1,15 +1,15 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
-import { Box, Heading, Text } from '@chakra-ui/react';
+import { Box, Button, Heading, Text } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 import { Banner } from 'boats/components';
 import { useBoat } from 'boats/Boat.Store';
-import { BoatTabs } from 'boats/view/tabs/Tabs';
 import { Toolbar } from 'boats/view/toolbar/Toolbar';
 import { Layout } from 'components/layout/Layout';
 import { Loading } from 'components/loading/Loading';
 import { Boat } from 'boats/Boat.Types';
+import { SbPlusIcon } from 'util/icons/Icons';
 
 export const BoatView: FunctionComponent = () => {
     const [{ boat, loading, error }, { getBoat }] = useBoat();
@@ -40,7 +40,19 @@ export const BoatView: FunctionComponent = () => {
                         </Box>
                     </Layout.Sidebar>
                     <Layout.Content flex="0.75">
-                        <BoatTabs />
+                        <Box>
+                            Widgets go here
+                            <Button
+                                colorScheme="brand"
+                                rightIcon={<SbPlusIcon />}
+                                ml="4"
+                                position="fixed"
+                                bottom="16px"
+                                right="16px"
+                            >
+                                Add Widgets
+                            </Button>
+                        </Box>
                     </Layout.Content>
                 </Layout.Body>
             </Layout.Wrapper>
