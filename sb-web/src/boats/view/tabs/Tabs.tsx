@@ -39,15 +39,7 @@ export const BoatTabs: FunctionComponent = () => {
                     </TabPanel>
                 </TabPanels>
             </Tabs>
-            <Button
-                size="lg"
-                colorScheme="orange"
-                rightIcon={<SbPlusIcon />}
-                ml="4"
-                position="fixed"
-                bottom="16px"
-                right="16px"
-            >
+            <Button colorScheme="orange" rightIcon={<SbPlusIcon />} ml="4" position="fixed" bottom="16px" right="16px">
                 Add Widgets
             </Button>
         </Box>

@@ -13,7 +13,7 @@ export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
     return (
         <Flex justifyContent="space-between" alignItems="center" pb="4" bg="white">
             <Flex alignItems="center">
-                <Breadcrumb spacing="8px" fontWeight="bold" fontSize="lg">
+                <Breadcrumb spacing="8px" fontWeight="semibold">
                     <BreadcrumbItem>
                         <BreadcrumbLink color="brand.muted">Boats</BreadcrumbLink>
                     </BreadcrumbItem>
