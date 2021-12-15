@@ -1,14 +1,12 @@
 name: Backend Deploy
 
 on:
- 
   push:
-    branches:
-      - master
-    paths:
-      - sb-backend/**
- 
-
+   paths:
+    - sb-backend/**
+   branches:
+    - master
+    
 jobs:
   build:
     runs-on: ubuntu-latest
