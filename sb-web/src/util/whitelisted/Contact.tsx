@@ -48,11 +48,9 @@ export const Contact: FunctionComponent = () => {
                                     error={Boolean(errors.email && touched.email)}
                                     errorLabel={errors.email}
                                     required
-                                    props={{
-                                        name: 'email',
-                                        id: 'email',
-                                        placeholder: 'Enter your email',
-                                    }}
+                                    name="email"
+                                    id="email"
+                                    placeholder="Enter your email"
                                 />
                             </FormControl>
                             <FormControl isInvalid={Boolean(errors.body && touched.body)} onChange={setForm}>
@@ -62,13 +60,10 @@ export const Contact: FunctionComponent = () => {
                                     error={Boolean(errors.body && touched.body)}
                                     errorLabel={errors.body}
                                     required
-                                    props={{
-                                        name: 'body',
-
-                                        id: 'body',
-                                        placeholder: 'Pour your heat out',
-                                        rows: 5,
-                                    }}
+                                    name="body"
+                                    id="body"
+                                    placeholder="Pour your heat out"
+                                    rows={5}
                                 />
                             </FormControl>
                         </VStack>

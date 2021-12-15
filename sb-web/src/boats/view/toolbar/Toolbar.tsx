@@ -19,7 +19,7 @@ export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
                 </BreadcrumbItem>
 
                 <BreadcrumbItem>
-                    <BreadcrumbLink dis isCurrentPage color="teal.600">
+                    <BreadcrumbLink isCurrentPage color="teal.600">
                         {boat.name}
                     </BreadcrumbLink>
                 </BreadcrumbItem>

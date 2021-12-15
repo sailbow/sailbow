@@ -19,27 +19,17 @@ interface Props extends TextProps {
     buttonText?: string;
 }
 
-export const TextEdit: FunctionComponent<Props> = ({
-    type,
-    editable,
-    editElement,
-    buttonText = 'Save',
-    children,
-    ...props
-}) => {
+export const TextEdit: FunctionComponent<Props> = ({ type, editable, editElement, buttonText, children, ...props }) => {
     const [open, setOpen] = useState<boolean>(false);
 
-    if (!editable) {
-        throw new Error('editElement and editActions can only be used when text is editable');
-    }
-
-    const TextRender: FunctionComponent = () => {
+    const textRender = () => {
         const properties = {
             ...props,
-            _hover: { bg: 'gray.100' },
-            bg: open ? 'gray.100' : 'transparent',
+            _hover: editable ? { py: '2', bg: 'gray.100' } : {},
+            bg: open && editable ? 'gray.100' : 'transparent',
             borderRadius: 'lg',
-            p: '1',
+            transition: 'all 0.2s ease-in-out',
+            cursor: editable ? 'pointer' : 'inherit',
         };
 
         switch (type) {
@@ -60,9 +50,7 @@ export const TextEdit: FunctionComponent<Props> = ({
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
         >
-            <PopoverTrigger>
-                <TextRender />
-            </PopoverTrigger>
+            <PopoverTrigger>{textRender()}</PopoverTrigger>
             <PopoverContent width="400px">
                 <PopoverBody>
                     {editElement}
@@ -76,9 +64,7 @@ export const TextEdit: FunctionComponent<Props> = ({
             </PopoverContent>
         </Popover>
     ) : (
-        <Text {...props} p="2">
-            {children}
-        </Text>
+        <>{textRender()}</>
     );
 };
 

@@ -21,7 +21,7 @@ export const LinkButton: FunctionComponent = () => {
                         <Text fontWeight="normal" pr="4">
                             https://sailboatapp.com/xc7wg
                         </Text>
-                        <Button font rightIcon={<SbCopyIcon />} size="sm" colorScheme="gray" onClick={onCopy}>
+                        <Button rightIcon={<SbCopyIcon />} size="sm" colorScheme="gray" onClick={onCopy}>
                             Copy
                         </Button>
                     </Flex>
