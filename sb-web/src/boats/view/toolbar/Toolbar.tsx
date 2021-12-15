@@ -28,14 +28,14 @@ export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
             <Flex justifyContent="flex-end">
                 <LinkButton />
                 <IconButton
-                    fontSize="xl"
+                    fontSize="2xl"
                     aria-label="users"
                     colorScheme="gray"
                     variant="ghost"
                     icon={<SbUserGroup />}
                 />
                 <IconButton
-                    fontSize="xl"
+                    fontSize="2xl"
                     aria-label="settings"
                     colorScheme="gray"
                     variant="ghost"

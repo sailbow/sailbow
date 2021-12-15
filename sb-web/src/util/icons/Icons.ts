@@ -23,6 +23,7 @@ export {
     HiArrowUp as SbArrowUpIcon,
     HiArrowDown as SbArrowDownIcon,
     HiArrowLeft as SbArrowLeftIcon,
+    HiOutlinePencil as SbEditIcon,
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';

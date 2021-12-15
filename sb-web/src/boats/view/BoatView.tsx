@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { Banner } from 'boats/components';
 import { useBoat } from 'boats/Boat.Store';
 import { BoatTabs } from 'boats/view/boat-tabs/BoatTabs';
+import { Details } from 'boats/view/details/Details';
 import { Toolbar } from 'boats/view/toolbar/Toolbar';
 import { Loading } from 'components/loading/Loading';
 import { Boat } from 'boats/Boat.Types';
@@ -31,16 +32,7 @@ export const BoatView: FunctionComponent = () => {
                         <BoatTabs />
                     </Box>
                     <Box flex="0.2" display={{ base: 'none', md: 'block' }}>
-                        <Box>
-                            <Banner banner={data.banner} showControls={false} />
-                        </Box>
-                        <Box pt="4">
-                            <Heading fontSize="xl">{data.name}</Heading>
-
-                            <Text pt="1" fontWeight="normal" color="gray.500">
-                                {data.description}
-                            </Text>
-                        </Box>
+                        <Details boat={data} />
                     </Box>
                 </Flex>
 

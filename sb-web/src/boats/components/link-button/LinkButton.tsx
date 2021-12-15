@@ -11,7 +11,7 @@ export const LinkButton: FunctionComponent = () => {
     return (
         <Popover variant="brand">
             <PopoverTrigger>
-                <IconButton aria-label="link-icon" variant="icon" fontSize="xl">
+                <IconButton aria-label="link-icon" variant="icon" fontSize="2xl">
                     <SbLinkIcon />
                 </IconButton>
             </PopoverTrigger>

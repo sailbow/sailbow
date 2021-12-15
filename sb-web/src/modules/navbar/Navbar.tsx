@@ -133,7 +133,9 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
                             openCreateBoat();
                         }}
                     />
-                    <Menu display={{ base: 'block', md: 'none' }} />
+                    <Box mr="-3">
+                        <Menu display={{ base: 'block', md: 'none' }} />
+                    </Box>
 
                     {/* MOBILE NAV ITEMS END */}
                 </HStack>
