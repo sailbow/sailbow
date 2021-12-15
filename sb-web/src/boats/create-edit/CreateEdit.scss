@@ -2,4 +2,9 @@
 
 .sb-create {
     padding-bottom: $sb-navbar-height;
+
+    .desc-letter-count {
+        font-size: '8pt';
+        margin: 0;
+    }
 }

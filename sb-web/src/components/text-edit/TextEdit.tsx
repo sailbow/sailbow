@@ -25,11 +25,12 @@ export const TextEdit: FunctionComponent<Props> = ({ type, editable, editElement
     const textRender = () => {
         const properties = {
             ...props,
-            _hover: editable ? { py: '2', bg: 'gray.100' } : {},
+            _hover: editable && !open ? { py: '2', bg: 'gray.100' } : {},
             bg: open && editable ? 'gray.100' : 'transparent',
             borderRadius: 'lg',
             transition: 'all 0.2s ease-in-out',
             cursor: editable ? 'pointer' : 'inherit',
+            py: open ? '2' : '0',
         };
 
         switch (type) {
@@ -47,11 +48,12 @@ export const TextEdit: FunctionComponent<Props> = ({ type, editable, editElement
             variant="brand"
             isLazy
             lazyBehavior="unmount"
+            isOpen={open}
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
         >
             <PopoverTrigger>{textRender()}</PopoverTrigger>
-            <PopoverContent width="400px">
+            <PopoverContent>
                 <PopoverBody>
                     {editElement}
                     <Flex alignItems="center" justifyContent="end" pt="4">
