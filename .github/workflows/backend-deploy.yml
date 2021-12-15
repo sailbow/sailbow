@@ -1,4 +1,4 @@
-name: Backend Deploy
+name: Backend Heroku Deploy
 
 on:
   push:
@@ -33,7 +33,5 @@ jobs:
         run: heroku git:remote --app $HEROKU_APP_NAME
         env:
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-      - name: Show Heroku Remote
-        run: git remote show heroku
       - name: Push to Heroku
         run: git push heroku main
