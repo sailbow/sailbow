@@ -36,4 +36,4 @@ jobs:
       - name: Show Heroku Remote
         run: git remote show heroku
       - name: Push to Heroku
-        run: git push heroku master
+        run: git push heroku main
