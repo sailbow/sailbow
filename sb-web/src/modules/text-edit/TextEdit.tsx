@@ -12,15 +12,51 @@ import {
     Button,
 } from '@chakra-ui/react';
 
+import { ToastActionType, useToast } from 'modules/toast/Toast';
+
 interface Props extends TextProps {
     type: 'text' | 'heading';
     editable?: boolean;
     editElement?: JSX.Element;
-    buttonText?: string;
+    onSave?: () => void;
+    onCancel?: () => void;
 }
 
-export const TextEdit: FunctionComponent<Props> = ({ type, editable, editElement, buttonText, children, ...props }) => {
+export const TextEdit: FunctionComponent<Props> = ({
+    type,
+    editable,
+    editElement,
+    onSave,
+    onCancel,
+    children,
+    ...props
+}) => {
+    const [, dispatch] = useToast();
     const [open, setOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const handleCancel = () => {
+        setOpen(false);
+        if (onCancel) {
+            onCancel();
+        }
+    };
+
+    const handleSave = async () => {
+        if (onSave) {
+            try {
+                setLoading(true);
+                await onSave();
+
+                setOpen(false);
+                setLoading(false);
+                dispatch({ type: ToastActionType.ShowSuccess, text: 'Boat details successfully updated!' });
+            } catch (err: any) {
+                setLoading(false);
+                dispatch({ type: ToastActionType.ShowError, text: 'Could not update boat details' });
+            }
+        }
+    };
 
     const textRender = () => {
         const properties = {
@@ -57,10 +93,12 @@ export const TextEdit: FunctionComponent<Props> = ({ type, editable, editElement
                 <PopoverBody>
                     {editElement}
                     <Flex alignItems="center" justifyContent="end" pt="4">
-                        <Button size="sm" variant="link" mr="2" onClick={() => setOpen(false)}>
+                        <Button size="sm" variant="link" mr="4" onClick={handleCancel}>
                             Cancel
                         </Button>
-                        <Button size="sm">{buttonText}</Button>
+                        <Button size="sm" onClick={handleSave} isLoading={loading}>
+                            Save
+                        </Button>
                     </Flex>
                 </PopoverBody>
             </PopoverContent>
@@ -73,5 +111,6 @@ export const TextEdit: FunctionComponent<Props> = ({ type, editable, editElement
 TextEdit.defaultProps = {
     editable: false,
     editElement: undefined,
-    buttonText: 'Save',
+    onSave: undefined,
+    onCancel: undefined,
 };
