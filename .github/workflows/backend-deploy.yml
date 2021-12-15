@@ -6,6 +6,7 @@ on:
     - sb-backend/**
    branches:
     - main
+  workflow_dispatch:
     
 jobs:
   build:
