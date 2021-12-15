@@ -100,6 +100,7 @@ var graphBuilder = services
     .AddGraphQLServer()
     .AddAuthorization()
     .AddQueryType<Query>()
+    .AddMutationType<Mutation>()
     .AddFiltering()
     .AddProjections()
     .AddSorting();
@@ -123,6 +124,7 @@ app
     {
         endpoints.MapControllers();
         endpoints.MapGraphQL();
+        endpoints.MapGraphQLSchema("/graphql/schema");
     });
 
 app.Run();
