@@ -1,9 +1,8 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
-import { Box, Flex, Button, Heading, Text } from '@chakra-ui/react';
+import { Box, Flex, Button } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
-import { Banner } from 'boats/components';
 import { useBoat } from 'boats/Boat.Store';
 import { BoatTabs } from 'boats/view/boat-tabs/BoatTabs';
 import { Details } from 'boats/view/details/Details';

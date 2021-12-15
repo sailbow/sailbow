@@ -13,15 +13,15 @@ interface Props {
 export const Details: FunctionComponent<Props> = ({ boat }) => {
     return (
         <Box flex="0.2" display={{ base: 'none', md: 'block' }}>
-            <Box px="2">
+            <Box px="1">
                 <Banner banner={boat.banner} showControls={false} />
             </Box>
             <Box pt="4">
-                <Heading px="2" fontSize="xl" _hover={{ bg: 'gray.100' }} transition="0.25s all ease-in-out">
+                <TextEdit px="2" fontSize="xl" editable type="heading">
                     {boat.name}
-                </Heading>
+                </TextEdit>
 
-                <TextEdit fontWeight="normal" color="gray.500" editable>
+                <TextEdit type="text" fontWeight="normal" color="gray.500" editable>
                     {boat.description}
                 </TextEdit>
             </Box>
