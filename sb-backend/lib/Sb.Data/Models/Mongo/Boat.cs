@@ -15,9 +15,13 @@ namespace Sb.Data.Models.Mongo
         public string Description { get; set; }
         public Banner Banner { get; set; }
         public Code Code { get; set; }
+        public IEnumerable<CrewMember> Crew { get; set; } = Enumerable.Empty<CrewMember>();
+
         [BsonIgnore]
         public bool Show { get; set; } = false;
-        public IEnumerable<CrewMember> Crew { get; set; } = Enumerable.Empty<CrewMember>();
+
+        [BsonIgnore]
+        public CrewMember Captain => Crew.FirstOrDefault(cm => cm.Role == Role.Captain);
     }
 
     public class CrewMember
