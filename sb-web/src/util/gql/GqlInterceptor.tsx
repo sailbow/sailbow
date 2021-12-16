@@ -4,8 +4,8 @@ import { HttpLink, ApolloLink, from } from '@apollo/client';
 import { onError, ErrorResponse } from '@apollo/client/link/error';
 
 import { ToastActionType, useToast } from 'modules/toast/Toast';
-import { LS, TokenStorageKeys } from 'util/http/Http';
 import { GqlClient, GqlUri } from 'util/gql/Gql';
+import { LS, TokenStorageKeys } from 'util/http/Http';
 
 export const GqlInterceptor: FunctionComponent = () => {
     const [, dispatch] = useToast();
