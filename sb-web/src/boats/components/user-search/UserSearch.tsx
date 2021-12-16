@@ -10,41 +10,26 @@ import { customStyles } from 'boats/components/user-search/UserSearchSelectStyle
 import { SbSearchIcon } from 'util/icons/Icons';
 import { UserCard } from 'boats/components/user-card/UserCard';
 import { Crew } from 'boats/Boat.Types';
-
-interface MockData {
-    label: string;
-    value: any;
-}
-
-const MOCK: MockData[] = [
-    {
-        label: 'Hrishikesh Paul',
-        value: {
-            email: 'hrpaul@iu.edu',
-            name: 'Hrishikesh Paul',
-            info: 'Been with on 3 other boats',
-        },
-    },
-    {
-        label: 'Zack Gilbert',
-        value: {
-            email: 'zagilbert@iu.edu',
-            name: 'Zack Gilbert',
-            info: 'Been with on 2 other boats',
-        },
-    },
-];
+import { useDebounce } from 'util/hooks/Input';
+import { useBoat } from 'boats/Boat.Store';
 
 const FormSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
 });
 
+interface CrewListItem {
+    label: string;
+    value: Crew;
+}
 interface Props {
     onChange: (crew: Crew) => void;
 }
 
 export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
+    const [, { getCrewByQuery }] = useBoat();
     const [inputText, setInputText] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
+    const [debounce] = useDebounce();
 
     const onCrewSelect = (e: any) => {
         setInputText('');
@@ -108,17 +93,30 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
         );
     };
 
-    const getCrewMockFunction = (input: string) => {
-        return new Promise<MockData[]>((resolve) => {
-            setTimeout(() => {
-                const results: MockData[] = [];
-                MOCK.forEach((mock) => {
-                    if (mock.label.toLowerCase().includes(input)) {
-                        results.push(mock);
-                    }
+    const getCrew = (query: string) => {
+        setLoading(true);
+
+        return new Promise((resolve) => {
+            debounce(query, async (q) => {
+                const data = await getCrewByQuery(q);
+
+                setLoading(false);
+
+                if (!data) {
+                    return [];
+                }
+
+                const list: CrewListItem[] = [];
+
+                data.forEach((user: Crew) => {
+                    list.push({
+                        label: user.name,
+                        value: user,
+                    });
                 });
-                resolve(results);
-            }, 1000);
+
+                resolve(list);
+            });
         });
     };
 
@@ -129,9 +127,8 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
                     <SbSearchIcon />
                 </InputLeftAddon>
                 <AsyncSelect
-                    cacheOptions
                     classNamePrefix="sb-select"
-                    loadOptions={getCrewMockFunction}
+                    loadOptions={getCrew}
                     blurInputOnSelect
                     placeholder="Type name or email..."
                     styles={customStyles}
@@ -144,6 +141,7 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
                         if (action.action === 'input-change') setInputText(value);
                     }}
                     value=""
+                    isLoading={loading}
                     onChange={onCrewSelect}
                     noOptionsMessage={({ inputValue }) => (!inputValue ? null : 'No results found')}
                 />

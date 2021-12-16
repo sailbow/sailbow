@@ -33,6 +33,7 @@ export const Tour: FunctionComponent<Props> = ({ steps, initialStep = 0 }) => {
                 variant="ghost"
                 colorScheme="gray"
                 color="brand.muted"
+                fontSize="xl"
                 icon={<SbQuestionIcon />}
                 onClick={() => setEnabled(true)}
             />

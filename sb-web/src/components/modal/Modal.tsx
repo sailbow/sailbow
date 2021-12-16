@@ -39,13 +39,13 @@ export const Modal: FunctionComponent<Props> = ({
             <ModalOverlay />
             <ModalContent py="2">
                 <ModalHeader d="flex" justifyContent="space-between" alignItems="center">
-                    <Heading fontSize="3xl">{title}</Heading>
+                    <Heading fontSize="2xl">{title}</Heading>
                     <IconButton
                         mr="-3"
                         aria-label="modal-close"
                         variant="ghost"
                         colorScheme="gray"
-                        fontSize="xl"
+                        fontSize="2xl"
                         onClick={onClose}
                     >
                         <SbCloseIcon />

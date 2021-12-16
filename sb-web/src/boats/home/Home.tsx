@@ -12,8 +12,7 @@ export const Home: FunctionComponent = () => {
 
     useEffect(() => {
         (async () => {
-            const r = await getBoats();
-            console.log(r);
+            await getBoats();
         })();
     }, []); // eslint-disable-line
 

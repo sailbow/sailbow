@@ -1,6 +1,8 @@
+import { gql } from '@apollo/client';
 import { AxiosResponse } from 'axios';
 
-import { Boat, CreateBoat, Photo } from 'boats/Boat.Types';
+import { Boat, CreateBoat, Crew, Photo } from 'boats/Boat.Types';
+import { GqlClient } from 'util/gql/Gql';
 import { BoatEndpoints, ImageEndpoints } from 'util/http/Endpoints';
 import { Http } from 'util/http/Http';
 
@@ -46,7 +48,22 @@ export const getBoatService = async (boatId: string): Promise<Boat> => {
 export const getAllBoatsService = async (): Promise<Boat[]> => {
     const { data }: AxiosResponse<Boat[]> = await Http(BoatEndpoints.Get);
 
-    console.log(data);
-
     return data;
+};
+
+export const getUsersByQuery = async (query: string): Promise<Crew[]> => {
+    const { data } = await GqlClient.query<{ users: Crew[] }>({
+        query: gql`
+            query GetUsers($q: String!) {
+                users(where: { or: [{ email: { contains: $q } }, { name: { contains: $q } }] }) {
+                    id
+                    name
+                    email
+                }
+            }
+        `,
+        variables: { q: query },
+    });
+
+    return data.users;
 };

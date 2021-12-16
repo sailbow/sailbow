@@ -99,10 +99,10 @@ export const CreateEdit: FunctionComponent = () => {
             allowPinchZoom
         >
             <DrawerOverlay />
-            <DrawerContent w="500px">
+            <DrawerContent>
                 <DrawerHeader>
                     <Flex alignItems="center" justifyContent="space-between">
-                        <Heading fontSize="xl">Start a Boat</Heading>
+                        <Heading fontSize="2xl">Start a Boat</Heading>
                         <Flex>
                             <Tour steps={Steps} />
                             <IconButton
@@ -111,7 +111,7 @@ export const CreateEdit: FunctionComponent = () => {
                                 aria-label="close-icon"
                                 icon={<SbCloseIcon />}
                                 colorScheme="gray"
-                                fontSize="xl"
+                                fontSize="2xl"
                                 variant="ghost"
                             />
                         </Flex>
@@ -121,7 +121,7 @@ export const CreateEdit: FunctionComponent = () => {
                 <DrawerBody pb="8">
                     <Stack spacing="4">
                         <Stack spacing="6">
-                            <Box height="240px">
+                            <Box height="260px">
                                 <Banner banner={boatForm.banner} onChange={onBannerChange} />
                             </Box>
                             <Input
