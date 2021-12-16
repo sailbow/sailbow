@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
-import { HttpLink, ApolloLink, ServerError, from } from '@apollo/client';
+import { HttpLink, ApolloLink, from } from '@apollo/client';
 import { onError, ErrorResponse } from '@apollo/client/link/error';
 
 import { ToastActionType, useToast } from 'modules/toast/Toast';
-import { HttpStatus, LS, TokenStorageKeys } from 'util/http/Http';
+import { LS, TokenStorageKeys } from 'util/http/Http';
 import { GqlClient, GqlUri } from 'util/gql/Gql';
 
 export const GqlInterceptor: FunctionComponent = () => {
