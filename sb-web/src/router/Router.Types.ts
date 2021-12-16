@@ -17,7 +17,7 @@ export const Routes: Route = {
     Private: {
         Error: '/error',
         Boats: '/boats',
-        Invite: '/boats/:boatId/invite',
+        Invite: '/invite',
         Boat: '/boat/:boatId',
     },
     Whitelisted: {
