@@ -153,19 +153,16 @@ export const CreateEdit: FunctionComponent = () => {
                                     {boatForm.description?.length}/300
                                 </Text>
                             </Box>
-                            <Stack spacing="4" pt="8" className="create-boat-gather-crew">
-                                <Box>
-                                    <Text fontSize="lg" fontWeight="semibold">
-                                        Gather your crew
-                                    </Text>
-                                    <Text fontWeight="normal" fontSize="sm" color="brand.muted">
-                                        If you have not gone on a voyage with a sailor before, use the link to invite
-                                        them!
-                                    </Text>
-                                </Box>
+                            <Box className="create-boat-gather-crew">
+                                <Text fontSize="sm" fontWeight="semibold" color="brand.muted" pb="1">
+                                    Invite Crew
+                                </Text>
+
                                 <UserSearch onChange={onAddCrewMember} />
-                                <UserList actions crew={boatForm.crew} onDelete={onRemoveCrewMember} />
-                            </Stack>
+                                <Box mt="4">
+                                    <UserList actions crew={boatForm.crew} onDelete={onRemoveCrewMember} />
+                                </Box>
+                            </Box>
                         </Stack>
                     </Stack>
                 </DrawerBody>

@@ -59,6 +59,8 @@ export const Role: FunctionComponent<Props> = ({ user }) => {
                 console.log('change to Sailor', data);
                 break;
             }
+            case RoleType.Captain:
+                break;
             default: {
                 throw new Error(`Invalid role -- ${role}`);
             }
