@@ -67,7 +67,7 @@ export const ProfileIcon: FunctionComponent<Props> = ({ display }) => {
         <Box className="sb-profile-icon" display={display}>
             <Menu>
                 <MenuButton className="button">
-                    <Avatar name={profile?.name} size="sm" h="35px" w="35px" />
+                    <Avatar name={profile?.name} size="sm" h="40px" w="40px" />
                 </MenuButton>
                 <MenuList fontWeight="normal">
                     <MenuGroup title="Profile">

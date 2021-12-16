@@ -16,7 +16,7 @@ import { SbErrorCircleIcon } from 'util/icons/Icons';
 
 import 'components/input/Input.scss';
 
-interface Props {
+interface InputProps extends ChakraInputProps {
     loading?: boolean;
     field?: any;
     error?: boolean;
@@ -27,8 +27,15 @@ interface Props {
     customClass?: string;
 }
 
-interface InputProps extends Props {
-    props: ChakraInputProps;
+interface TextareaProps extends ChakraTextareaProps {
+    loading?: boolean;
+    field?: any;
+    error?: boolean;
+    errorLabel?: string;
+    errorIcon?: JSX.Element;
+    label?: string;
+    required?: boolean;
+    customClass?: string;
 }
 
 export const Input: FunctionComponent<InputProps> = ({
@@ -37,10 +44,10 @@ export const Input: FunctionComponent<InputProps> = ({
     error,
     errorLabel,
     errorIcon,
-    props,
     loading,
     required,
     customClass,
+    ...props
 }) => {
     return (
         <Box className={`sb-input-wrapper ${customClass}`}>
@@ -68,7 +75,7 @@ export const Input: FunctionComponent<InputProps> = ({
 };
 
 Input.defaultProps = {
-    loading: false,
+    loading: undefined,
     field: {},
     error: false,
     errorLabel: '',
@@ -78,19 +85,15 @@ Input.defaultProps = {
     customClass: '',
 };
 
-interface TextareaProps extends Props {
-    props: ChakraTextareaProps;
-}
-
 export const TextArea: FunctionComponent<TextareaProps> = ({
     label,
     field,
     error,
     errorLabel,
     errorIcon,
-    props,
     required,
     customClass,
+    ...props
 }) => {
     return (
         <Box className={`sb-input-wrapper ${customClass}`}>
@@ -115,7 +118,7 @@ export const TextArea: FunctionComponent<TextareaProps> = ({
 };
 
 TextArea.defaultProps = {
-    loading: false,
+    loading: undefined,
     field: {},
     error: false,
     errorLabel: '',

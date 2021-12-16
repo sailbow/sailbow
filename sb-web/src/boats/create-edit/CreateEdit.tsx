@@ -128,29 +128,31 @@ export const CreateEdit: FunctionComponent = () => {
                                 label="Name"
                                 customClass="create-boat-name"
                                 required
-                                props={{
-                                    onChange: onFormDetailsChange,
-                                    fontSize: 'xl',
-                                    placeholder: 'Boat name...',
-                                    fontWeight: 'semibold',
-                                    id: 'name',
-                                    name: 'name',
-                                    py: '4',
-                                    autoFocus: true,
-                                }}
+                                onChange={onFormDetailsChange}
+                                fontSize="xl"
+                                placeholder="Boat name..."
+                                fontWeight="semibold"
+                                id="name"
+                                name="name"
+                                py="4"
+                                autoFocus
                             />
-                            <TextArea
-                                label="Description"
-                                customClass="create-boat-description"
-                                props={{
-                                    onChange: onFormDetailsChange,
-                                    name: 'description',
-                                    id: 'description',
-                                    rows: 3,
-                                    variant: 'brand',
-                                    placeholder: 'What is your boat about?',
-                                }}
-                            />
+                            <Box>
+                                <TextArea
+                                    label="Description"
+                                    customClass="create-boat-description"
+                                    onChange={onFormDetailsChange}
+                                    name="description"
+                                    id="description"
+                                    rows={3}
+                                    variant="brand"
+                                    placeholder="What is your boat about?"
+                                    maxLength={300}
+                                />
+                                <Text fontWeight="normal" textAlign="right" fontSize="xs">
+                                    {boatForm.description?.length}/300
+                                </Text>
+                            </Box>
                             <Stack spacing="4" pt="8" className="create-boat-gather-crew">
                                 <Box>
                                     <Text fontSize="lg" fontWeight="semibold">
