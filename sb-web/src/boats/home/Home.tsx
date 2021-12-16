@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
 import { Box, Heading, Text, SimpleGrid } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
 
 import { Boat } from 'boats/Boat.Types';
 import { useBoat } from 'boats/Boat.Store';
@@ -9,6 +10,7 @@ import { Banner } from 'boats/components';
 
 export const Home: FunctionComponent = () => {
     const [{ boats, loading }, { getBoats }] = useBoat();
+    const history = useHistory();
 
     useEffect(() => {
         (async () => {
@@ -18,7 +20,7 @@ export const Home: FunctionComponent = () => {
 
     const Card: FunctionComponent<{ boat: Boat }> = ({ boat }) => {
         const onClick = () => {
-            window.location.href = `/boats/${boat.id}`;
+            history.push(`/boats/${boat.id}`);
         };
         return (
             <Box

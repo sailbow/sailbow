@@ -84,6 +84,7 @@ export const CreateEdit: FunctionComponent = () => {
         const boatResponse = await createBoat(boatForm);
 
         if (boatResponse) {
+            closeCreateBoat();
             window.location.href = `${Routes.Private.Boats}/${boatResponse.id}`;
         }
     };
