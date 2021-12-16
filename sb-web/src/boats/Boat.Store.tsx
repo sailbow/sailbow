@@ -40,18 +40,7 @@ interface BoatProviderProps {
 }
 
 export const initialBoatState: BoatState = {
-    boat: {
-        id: '',
-        name: '',
-        description: '',
-        banner: {
-            show: true,
-            type: BannerType.Color,
-            value: Color.Orange100,
-            position: 50,
-        },
-        crew: [],
-    },
+    boat: undefined,
     loading: {
         create: false,
         get: false,

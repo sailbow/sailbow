@@ -4,8 +4,9 @@ import { Box, Flex, Text, IconButton } from '@chakra-ui/react';
 import GridLayout, { Layout } from 'react-grid-layout';
 import { SizeMe } from 'react-sizeme';
 
-import 'boats/view/widgets/Widgets.scss';
 import { SbDragIcon } from 'util/icons/Icons';
+
+import 'boats/view/widgets/Widgets.scss';
 
 export const Widgets: FunctionComponent = () => {
     const [isDraggable, setIsDraggable] = useState<boolean>(false);

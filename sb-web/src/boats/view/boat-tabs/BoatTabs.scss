@@ -3,14 +3,21 @@
 .sb-boat-tabs {
     .tablist {
         border: none;
+        position: sticky;
 
         .tab {
             cursor: pointer !important;
             border-top-right-radius: 8px;
-            border-top-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            width: 120px;
 
             &:hover {
                 background-color: $sb-gray-50;
+            }
+
+            &[aria-selected='true'] {
+                background-color: $sb-gray-50;
+                border-left: 2px solid $sb-teal-500;
             }
         }
     }
