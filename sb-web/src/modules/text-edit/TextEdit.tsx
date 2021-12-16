@@ -43,18 +43,20 @@ export const TextEdit: FunctionComponent<Props> = ({
     };
 
     const handleSave = async () => {
-        if (onSave) {
-            try {
-                setLoading(true);
-                await onSave();
+        if (!onSave) {
+            return null;
+        }
 
-                setOpen(false);
-                setLoading(false);
-                dispatch({ type: ToastActionType.ShowSuccess, text: 'Boat details successfully updated!' });
-            } catch (err: any) {
-                setLoading(false);
-                dispatch({ type: ToastActionType.ShowError, text: 'Could not update boat details' });
-            }
+        try {
+            setLoading(true);
+            await onSave();
+
+            setOpen(false);
+            setLoading(false);
+            dispatch({ type: ToastActionType.ShowSuccess, text: 'Boat details successfully updated!' });
+        } catch (err: any) {
+            setLoading(false);
+            dispatch({ type: ToastActionType.ShowError, text: 'Could not update boat details' });
         }
     };
 
