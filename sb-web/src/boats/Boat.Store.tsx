@@ -1,8 +1,7 @@
 import React, { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
 import { createBoatService, getBoatService, getBannerImages, getAllBoatsService } from 'boats/Boat.Service';
-import { BannerType, Boat, BoatState, CreateBoat, Photo } from 'boats/Boat.Types';
-import { Color } from 'theme/Colors';
+import { Boat, BoatState, CreateBoat, Photo } from 'boats/Boat.Types';
 import { Log } from 'util/logger/Logger';
 
 export enum BoatActionType {
