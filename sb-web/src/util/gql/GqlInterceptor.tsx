@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
-import { HttpLink, ApolloLink, from } from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
+import { HttpLink, ApolloLink, ServerError, from } from '@apollo/client';
+import { onError, ErrorResponse } from '@apollo/client/link/error';
 
 import { ToastActionType, useToast } from 'modules/toast/Toast';
 import { HttpStatus, LS, TokenStorageKeys } from 'util/http/Http';
@@ -24,16 +24,16 @@ export const GqlInterceptor: FunctionComponent = () => {
             return forward(operation);
         });
 
-        const errorMiddleware = onError(({ graphQLErrors, networkError }) => {
+        const errorMiddleware = onError(({ graphQLErrors, networkError }: ErrorResponse) => {
             if (graphQLErrors)
                 graphQLErrors.forEach(({ message, locations, path }) =>
                     console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`),
                 );
 
             if (networkError) {
-                console.log(`[Network error]: ${(networkError as any).statusCode}`);
+                console.log(`[Network error]: ${(networkError as ServerError).statusCode}`);
 
-                switch ((networkError as any).statusCode) {
+                switch ((networkError as ServerError).statusCode) {
                     case HttpStatus.BAD_REQUEST:
                         dispatch({ type: ToastActionType.ShowError, text: networkError.message });
                         break;

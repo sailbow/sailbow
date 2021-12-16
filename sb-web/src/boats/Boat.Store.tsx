@@ -215,9 +215,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
         },
         getCrewByQuery: async (query) => {
             try {
-                const response = await getUsersByQuery(query);
-
-                return response;
+                return await getUsersByQuery(query);
             } catch (error: any) {
                 return null;
             }
