@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Box, Button, Heading, Flex, Text, Spinner } from '@chakra-ui/react';
+import { Box, Button, Heading, Flex, Text, Spinner, Center } from '@chakra-ui/react';
 
 import { acceptInvite, getInvite, InviteType } from 'auth/invite/Invite.Service';
 import { Banner } from 'boats/components';
@@ -13,8 +13,9 @@ import { HttpStatus } from 'util/http/Http';
 
 export const Invite: FunctionComponent = () => {
     const [, dispatch] = useToast();
-    const boatId: string | null = new URLSearchParams(window.location.search).get('boatId');
-    const inviteId: string | null = new URLSearchParams(window.location.search).get('inviteId');
+    const params = new URLSearchParams(window.location.search);
+    const boatId: string | null = params.get('boatId');
+    const inviteId: string | null = params.get('inviteId');
     const [invite, setInvite] = useState<InviteType | null>(null);
 
     useEffect(() => {
@@ -68,9 +69,13 @@ export const Invite: FunctionComponent = () => {
                 {invite ? (
                     <>
                         <Heading>You have been invited!</Heading>
-                        <Box mt="4" fontWeight="normal">
-                            <Banner showControls={false} banner={invite.banner} />
-                            <Text fontWeight="normal" mt="4">
+                        <Box mt="6" fontWeight="normal">
+                            <Center>
+                                <Box w="360px">
+                                    <Banner showControls={false} banner={invite.banner} />
+                                </Box>
+                            </Center>
+                            <Text fontWeight="normal" mt="4" fontSize="lg">
                                 <Text as="span" fontWeight="semibold">
                                     {invite.captain.role} {invite.captain.name}
                                 </Text>{' '}
