@@ -1,0 +1,24 @@
+@import '~react-grid-layout/css/styles.css';
+@import '~react-resizable/css/styles.css';
+@import 'theme/base';
+
+.sb-widgets {
+    .react-grid-item.react-grid-placeholder {
+        background-color: $sb-teal-300;
+        border-radius: 8px;
+    }
+
+    .sb-widget {
+        border: 2px solid white;
+        transition: border 0.2s ease-in-out;
+
+        &:hover {
+            border: 2px solid $sb-teal-400;
+            cursor: pointer;
+        }
+    }
+
+    .active {
+        border: 2px solid $sb-teal-400;
+    }
+}

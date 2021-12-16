@@ -1,6 +1,8 @@
 import React, { FunctionComponent, useState } from 'react';
 
 import { Box, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, IconButton, Text } from '@chakra-ui/react';
+
+import { Widgets } from 'boats/view/widgets/Widgets';
 import { SbCloseIcon, SbPlusIcon } from 'util/icons/Icons';
 
 import 'boats/view/boat-tabs/BoatTabs.scss';
@@ -84,8 +86,8 @@ export const BoatTabs: FunctionComponent = () => {
                 </TabList>
                 <TabPanels>
                     {days.map((day: Day) => (
-                        <TabPanel key={day.title} height="1230px">
-                            {day.panel}
+                        <TabPanel key={day.title} px="0">
+                            <Widgets />
                         </TabPanel>
                     ))}
                 </TabPanels>

@@ -6,7 +6,7 @@ import Gallery from 'react-photo-gallery';
 import { useBoat } from 'boats/Boat.Store';
 import { BannerType, Photo } from 'boats/Boat.Types';
 import { SbCheckIcon, SbSearchIcon } from 'util/icons/Icons';
-import { useDebounce } from 'components/input/InputUtils';
+import { useDebounce } from 'util/hooks/Input';
 
 import 'boats/components/banner/banner-change-modal/image-search/ImageSearch.scss';
 

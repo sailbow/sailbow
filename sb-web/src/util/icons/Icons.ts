@@ -39,7 +39,7 @@ export {
     BiChevronRight as SbChevronRight,
     BiChevronLeft as SbChevronLeft,
 } from 'react-icons/bi';
-export { MdOutlinePrivacyTip as SbPrivacyIcon } from 'react-icons/md';
+export { MdOutlinePrivacyTip as SbPrivacyIcon, MdDragIndicator as SbDragIcon } from 'react-icons/md';
 export {
     AiOutlineUser as SbUserIcon,
     AiOutlineLogout as SbLogoutIcon,
