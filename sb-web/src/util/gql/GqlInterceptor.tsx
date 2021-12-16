@@ -31,15 +31,9 @@ export const GqlInterceptor: FunctionComponent = () => {
                 );
 
             if (networkError) {
-                console.log(`[Network error]: ${(networkError as ServerError).statusCode}`);
+                console.log(`[Network error]: ${networkError.message}`);
 
-                switch ((networkError as ServerError).statusCode) {
-                    case HttpStatus.BAD_REQUEST:
-                        dispatch({ type: ToastActionType.ShowError, text: networkError.message });
-                        break;
-                    default:
-                        dispatch({ type: ToastActionType.ShowError, text: 'Oops, something went wrong :(' });
-                }
+                dispatch({ type: ToastActionType.ShowError, text: 'Oops, something went wrong :(' });
             }
         });
 
