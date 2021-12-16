@@ -47,7 +47,7 @@ export const BoatTabs: FunctionComponent = () => {
     return (
         <Box position="relative" className="sb-boat-tabs">
             <Tabs colorScheme="teal" index={tabIndex} isLazy onChange={handleTabsChange} orientation="vertical">
-                <TabList alignItems="center" className="tablist" mt="2.5">
+                <TabList alignItems="center" className="tablist" mt="2.5" display={{ base: 'none', md: 'flex' }}>
                     {days.map((day: Day, idx: number) => (
                         <Tab
                             className="tab"
