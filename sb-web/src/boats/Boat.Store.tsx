@@ -1,7 +1,13 @@
 import React, { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
-import { createBoatService, getBoatService, getBannerImages, getAllBoatsService } from 'boats/Boat.Service';
-import { Boat, BoatState, CreateBoat, Photo } from 'boats/Boat.Types';
+import {
+    createBoatService,
+    getBoatService,
+    getBannerImages,
+    getAllBoatsService,
+    getUsersByQuery,
+} from 'boats/Boat.Service';
+import { Boat, BoatState, CreateBoat, Crew, Photo } from 'boats/Boat.Types';
 import { Log } from 'util/logger/Logger';
 
 export enum BoatActionType {
@@ -148,6 +154,7 @@ interface BoatActionApis {
     getImages: (value: string, page: number) => Promise<Photo[]>;
     getBoat: (boatId: string) => Promise<Boat | null>;
     getBoats: () => Promise<Boat[] | null>;
+    getCrewByQuery: (query: string) => Promise<Crew[] | null>;
 }
 
 export const useBoat = (): [BoatState, BoatActionApis] => {
@@ -203,6 +210,13 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             } catch (error: any) {
                 dispatch({ type: BoatActionType.SetGetLoading, payload: false });
                 dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
+                return null;
+            }
+        },
+        getCrewByQuery: async (query) => {
+            try {
+                return await getUsersByQuery(query);
+            } catch (error: any) {
                 return null;
             }
         },

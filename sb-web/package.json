@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
+        "@apollo/client": "^3.5.6",
         "@chakra-ui/layout": "^1.4.9",
         "@chakra-ui/react": "^1.6.8",
         "@chakra-ui/theme-tools": "^1.2.1",
@@ -15,6 +16,7 @@
         "@types/aos": "^3.0.4",
         "@types/axios": "^0.14.0",
         "@types/jest": "^26.0.15",
+        "@types/lodash": "^4.14.178",
         "@types/node": "^12.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
@@ -26,6 +28,7 @@
         "eslint-config-airbnb-typescript-prettier": "^4.2.0",
         "formik": "^2.2.9",
         "framer-motion": "^4",
+        "graphql": "^16.1.0",
         "intro.js": "^4.3.0",
         "intro.js-react": "^0.5.0",
         "prettier": "^2.4.1",

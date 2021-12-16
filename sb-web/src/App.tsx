@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
+import { ApolloProvider } from '@apollo/client';
 import Aos from 'aos';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -11,8 +12,10 @@ import { PrivateRouter, PublicRouter, WhitelistedRouter } from 'router/Router';
 import { WhitelistedRoutes } from 'router/Router.Types';
 import { LS, TokenStorageKeys } from 'util/http/Http';
 import { HttpInterceptor } from 'util/http/HttpInterceptor';
+import { GqlClient } from 'util/gql/Gql';
 
 import './App.scss';
+import { GqlInterceptor } from 'util/gql/GqlInterceptor';
 
 const AppContainer: FunctionComponent = () => {
     const [{ loading }] = useProfile();
@@ -66,20 +69,23 @@ export const App: FunctionComponent = () => {
     }
 
     return mounted ? (
-        <ToastProvider>
-            <ToastBar />
-            <HttpInterceptor />
-            <BrowserRouter>
-                {isAuth ? (
-                    <ProfileProvider>
-                        <ProfileLoading />
-                        <AppContainer />
-                    </ProfileProvider>
-                ) : (
-                    <PublicRouter />
-                )}
-            </BrowserRouter>
-        </ToastProvider>
+        <ApolloProvider client={GqlClient}>
+            <ToastProvider>
+                <ToastBar />
+                <HttpInterceptor />
+                <GqlInterceptor />
+                <BrowserRouter>
+                    {isAuth ? (
+                        <ProfileProvider>
+                            <ProfileLoading />
+                            <AppContainer />
+                        </ProfileProvider>
+                    ) : (
+                        <PublicRouter />
+                    )}
+                </BrowserRouter>
+            </ToastProvider>
+        </ApolloProvider>
     ) : (
         <></>
     );

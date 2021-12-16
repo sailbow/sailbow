@@ -38,6 +38,7 @@ export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChang
                     borderRadius="lg"
                     className="sb-banner-button"
                     colorScheme="gray"
+                    bg="white"
                     boxShadow="sm"
                     onClick={() => setIsBannerSelectOpen(!isBannerSelectOpen)}
                 >
