@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FunctionComponent, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Box, Flex, Text, IconButton } from '@chakra-ui/react';
 import GridLayout, { Layout } from 'react-grid-layout';
@@ -6,7 +6,6 @@ import { SizeMe } from 'react-sizeme';
 
 import 'boats/view/widgets/Widgets.scss';
 import { SbDragIcon } from 'util/icons/Icons';
-import { useLongPress } from 'util/hooks/Input';
 
 export const Widgets: FunctionComponent = () => {
     const [isDraggable, setIsDraggable] = useState<boolean>(false);
@@ -48,28 +47,28 @@ export const Widgets: FunctionComponent = () => {
     }, [getLayout]);
 
     const toggleCollapse = (id: string) => {
-        const currentLayoutIdx = layout.findIndex((l) => l.i === id);
+        const currentLayouts = layout.map((l) => ({ ...l }));
+        const currentLayoutIdx = currentLayouts.findIndex((l) => l.i === id);
+        const currentH = currentLayouts[currentLayoutIdx].h;
 
-        if (currentLayoutIdx !== -1) {
-            const newLayouts = [...layout];
-
-            newLayouts[currentLayoutIdx].h = 3;
-            setLayout([...newLayouts]);
-            console.log(layout);
+        if (currentH === 3) {
+            currentLayouts[currentLayoutIdx].h = 1;
+        } else {
+            currentLayouts[currentLayoutIdx].h = 3;
         }
+
+        setLayout([...currentLayouts]);
     };
 
-    const onDragStart = () => {
+    const onDragStart = (e: MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        e.preventDefault();
         setIsDraggable(true);
     };
 
     const onDragEnd = () => {
         setIsDraggable(false);
     };
-
-    const backspaceLongPress = useLongPress(() => {
-        onDragStart();
-    }, 500);
 
     return (
         <>
@@ -78,13 +77,14 @@ export const Widgets: FunctionComponent = () => {
                     <GridLayout
                         className="sb-widgets"
                         cols={12}
+                        rowHeight={56}
                         width={size.width || 900}
                         layout={layout}
                         isResizable={false}
                         isDraggable={isDraggable}
                         onDragStop={onDragEnd}
-                        onLayoutChange={(e) => {
-                            console.log(e);
+                        onLayoutChange={(e: Layout[]) => {
+                            setLayout(e);
                         }}
                     >
                         {widgets.map((widget) => (
@@ -98,9 +98,8 @@ export const Widgets: FunctionComponent = () => {
                                 px="4"
                                 py="2"
                                 w="100%"
-                                className="sb-widget"
+                                className={`sb-widget ${isDraggable ? 'on-drag' : ''}`}
                                 overflow="auto"
-                                {...backspaceLongPress}
                             >
                                 <Flex justifyContent="space-between" alignItems="center">
                                     <Text>{widget.name}</Text>
