@@ -14,7 +14,6 @@ export {
     IoSearchOutline as SbSearchIcon,
     IoDocumentTextOutline as SbTermsIcon,
     IoMailOutline as SbMailIcon,
-    IoTrashBinOutline as SbDeleteIcon,
     IoBugOutline as SbBugIcon,
     IoSettingsOutline as SbSettingsIcon,
 } from 'react-icons/io5';
@@ -33,13 +32,14 @@ export {
     FiCheck as SbCheckIcon,
     FiBell as SbBellIcon,
     FiCopy as SbCopyIcon,
+    FiTrash2 as SbDeleteIcon,
 } from 'react-icons/fi';
 export {
     BiErrorCircle as SbErrorCircleIcon,
     BiChevronRight as SbChevronRight,
     BiChevronLeft as SbChevronLeft,
 } from 'react-icons/bi';
-export { MdOutlinePrivacyTip as SbPrivacyIcon } from 'react-icons/md';
+export { MdOutlinePrivacyTip as SbPrivacyIcon, MdDragIndicator as SbDragIcon } from 'react-icons/md';
 export {
     AiOutlineUser as SbUserIcon,
     AiOutlineLogout as SbLogoutIcon,

@@ -2,9 +2,9 @@ import React, { FunctionComponent } from 'react';
 
 import { Flex, IconButton, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 
-import { SbSettingsIcon, SbUserGroup } from 'util/icons/Icons';
 import { Boat } from 'boats/Boat.Types';
 import { LinkButton } from 'boats/components/link-button/LinkButton';
+import { SbSettingsIcon, SbUserGroup } from 'util/icons/Icons';
 
 interface Props {
     boat: Boat;
@@ -12,7 +12,7 @@ interface Props {
 
 export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
     return (
-        <Flex justifyContent="space-between" pb="4" bg="white">
+        <Flex justifyContent="space-between" pb="4" bg="white" alignItems="center">
             <Breadcrumb spacing="8px" fontWeight="semibold" fontSize="xl">
                 <BreadcrumbItem>
                     <BreadcrumbLink color="brand.muted">Boats</BreadcrumbLink>

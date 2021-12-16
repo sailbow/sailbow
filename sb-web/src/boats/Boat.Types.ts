@@ -1,3 +1,5 @@
+import { Layout } from 'react-grid-layout';
+
 import { RoleType } from 'modules/role/Role';
 
 export enum BannerType {
@@ -12,26 +14,7 @@ export interface BannerState {
     position?: number;
 }
 
-export interface Boat {
-    id: string;
-    name: string;
-    description?: string;
-    banner: BannerState;
-    crew: Crew[];
-}
-
-export interface BoatState {
-    boats?: Boat[];
-    boat?: Boat;
-    error?: any;
-    loading: {
-        create: boolean;
-        get: boolean;
-    };
-    createOpen: boolean;
-}
-
-export interface CreateBoat extends Omit<Boat, 'id'> {}
+export interface CreateBoat extends Omit<Boat, 'id' | 'anchors'> {}
 
 export interface Photo {
     src: string;
@@ -45,4 +28,46 @@ export interface Crew {
     name: string;
     id?: string;
     info?: string;
+}
+
+export interface Comment {
+    author: Crew;
+    body: string;
+    likes: Array<string>; // ids of crew members
+}
+
+export interface Widget {
+    id: string;
+    name: string;
+    layout: Layout;
+    responses: Array<string>; // ids of crew members
+    comments: Array<Comment>;
+    selected?: string; // after the votes, the one that is selected by the captain
+    data: any; // data will look different for diff widgets
+}
+
+export interface Anchor {
+    name: string;
+    id: string;
+    widgets: Widget[];
+}
+
+export interface Boat {
+    id: string;
+    name: string;
+    description?: string;
+    banner: BannerState;
+    crew: Crew[];
+    anchors: Anchor[];
+}
+
+export interface BoatState {
+    boats?: Boat[];
+    boat?: Boat;
+    error?: any;
+    loading: {
+        create: boolean;
+        get: boolean;
+    };
+    createOpen: boolean;
 }
