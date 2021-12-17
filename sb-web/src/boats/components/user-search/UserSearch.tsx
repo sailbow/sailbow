@@ -127,6 +127,7 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
                     <SbSearchIcon />
                 </InputLeftAddon>
                 <AsyncSelect
+                    cacheOptions
                     classNamePrefix="sb-select"
                     loadOptions={getCrew}
                     blurInputOnSelect
@@ -143,7 +144,7 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
                     value=""
                     isLoading={loading}
                     onChange={onCrewSelect}
-                    noOptionsMessage={({ inputValue }) => (!inputValue ? null : 'No results found')}
+                    noOptionsMessage={({ inputValue }) => (!inputValue ? null : inputText ? null : '')}
                 />
             </InputGroup>
         </Stack>
