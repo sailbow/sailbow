@@ -144,7 +144,7 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
                     value=""
                     isLoading={loading}
                     onChange={onCrewSelect}
-                    noOptionsMessage={({ inputValue }) => (!inputValue ? null : inputText ? null : '')}
+                    noOptionsMessage={({ inputValue }) => (!inputValue ? null : inputText ? null : '')} // eslint-disable-line
                 />
             </InputGroup>
         </Stack>
