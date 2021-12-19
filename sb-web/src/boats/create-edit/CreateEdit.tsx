@@ -123,7 +123,7 @@ export const CreateEdit: FunctionComponent = () => {
                     <Stack spacing="4">
                         <Stack spacing="6">
                             <Box height="260px">
-                                <Banner banner={boatForm.banner} onChange={onBannerChange} />
+                                <Banner id="create" banner={boatForm.banner} onChange={onBannerChange} />
                             </Box>
                             <Input
                                 label="Name"

@@ -2,7 +2,7 @@ import { TourType } from 'modules/tour/Tour';
 
 export const Steps: TourType[] = [
     {
-        element: '.sb-banner',
+        element: '.sb-banner--create',
         title: 'Set a mood',
         intro: 'Start by setting the mood for your boat. Select from our favorite colors or add an image using the "Change Banner" button!',
         position: 'right',

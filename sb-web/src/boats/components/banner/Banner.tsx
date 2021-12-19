@@ -10,11 +10,12 @@ import 'boats/components/banner/Banner.scss';
 
 interface Props {
     banner: BannerState;
+    id: string;
     showControls?: boolean;
     onChange?: ((banner: BannerState) => void) | null;
 }
 
-export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChange }) => {
+export const Banner: FunctionComponent<Props> = ({ banner, id, showControls, onChange }) => {
     const [isBannerSelectOpen, setIsBannerSelectOpen] = useState<boolean>(false);
 
     const onSubmit = (type: BannerType, value: string | Color): void => {
@@ -31,7 +32,7 @@ export const Banner: FunctionComponent<Props> = ({ banner, showControls, onChang
                 onChange={onSubmit}
                 banner={banner}
             />
-            <Box className="sb-banner" borderRadius="xl" overflow="hidden">
+            <Box className={`sb-banner sb-banner--${id}`} borderRadius="xl" overflow="hidden">
                 <Button
                     display={showControls ? 'flex' : 'none'}
                     size="sm"

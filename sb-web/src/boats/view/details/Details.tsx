@@ -41,7 +41,7 @@ export const Details: FunctionComponent<Props> = ({ boat }) => {
     return (
         <Box flex="0.2" display={{ base: 'none', md: 'block' }}>
             <Box px="2">
-                <Banner banner={boat.banner} showControls={false} />
+                <Banner id="details" banner={boat.banner} showControls={false} />
             </Box>
             <Box pt="4">
                 <TextEdit

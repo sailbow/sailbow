@@ -72,7 +72,7 @@ export const Invite: FunctionComponent = () => {
                         <Box mt="6" fontWeight="normal">
                             <Center>
                                 <Box w="360px">
-                                    <Banner showControls={false} banner={invite.banner} />
+                                    <Banner id="invite" showControls={false} banner={invite.banner} />
                                 </Box>
                             </Center>
                             <Text fontWeight="normal" mt="4" fontSize="lg">
