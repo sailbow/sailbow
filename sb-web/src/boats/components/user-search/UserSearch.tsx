@@ -93,6 +93,12 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
         );
     };
 
+    const showNoOpt = (inputValue: string): string | null => {
+        if (!inputValue) return null;
+
+        return inputText ? null : '';
+    };
+
     const getCrew = (query: string) => {
         setLoading(true);
 
@@ -127,6 +133,7 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
                     <SbSearchIcon />
                 </InputLeftAddon>
                 <AsyncSelect
+                    cacheOptions
                     classNamePrefix="sb-select"
                     loadOptions={getCrew}
                     blurInputOnSelect
@@ -143,7 +150,7 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
                     value=""
                     isLoading={loading}
                     onChange={onCrewSelect}
-                    noOptionsMessage={({ inputValue }) => (!inputValue ? null : 'No results found')}
+                    noOptionsMessage={({ inputValue }) => showNoOpt(inputValue)} // eslint-disable-line
                 />
             </InputGroup>
         </Stack>
