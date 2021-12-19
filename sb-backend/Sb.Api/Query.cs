@@ -1,5 +1,7 @@
 ﻿using HotChocolate.Data;
 
+using Microsoft.AspNetCore.Mvc;
+
 using MongoDB.Driver;
 
 using Sb.Data;
@@ -21,7 +23,7 @@ namespace Sb.Api
     public class Mutation
     {
         public async Task<Boat> UpdateBoatAsync(
-            [Service] IRepository<Boat> boatRepo,
+            [FromServices] IRepository<Boat> boatRepo,
             string boatId,
             string name,
             string description,
