@@ -34,7 +34,7 @@ export const Home: FunctionComponent = () => {
                 onClick={onClick}
             >
                 <Box>
-                    <Banner banner={boat.banner} showControls={false} />
+                    <Banner id="home" banner={boat.banner} showControls={false} />
                 </Box>
                 <Text fontSize="lg" pt="2" fontWeight="semibold">
                     {boat.name}
