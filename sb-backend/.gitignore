@@ -389,3 +389,5 @@ FodyWeavers.xsd
 
 # Configuration files
 *.development.json
+
+.vscode/
