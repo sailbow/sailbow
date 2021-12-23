@@ -47,6 +47,7 @@ namespace Sb.Data.Models.Mongo
     public class Banner
     {
         public bool Show { get; set; } = false;
+        [BsonRepresentation(BsonType.String)]
         public BannerType Type { get; set; }
         public string Value { get; set; }
         public int? Position { get; set; } = 0;
