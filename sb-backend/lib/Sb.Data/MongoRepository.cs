@@ -36,6 +36,11 @@ namespace Sb.Data.Mongo
             return await Task.FromResult(Collection.AsQueryable().Where(predicate));
         }
 
+        public async Task<TEntity> FirstOrDefaultAsync(Func<TEntity, bool> predicate, CancellationToken cancellation = default)
+        {
+            return (await GetAsync(predicate, cancellation)).FirstOrDefault();
+        }
+
         public async Task<TEntity> GetByIdAsync(string id, CancellationToken cancellation = default)
         {
             return (await Collection.FindAsync(e => e.Id.Equals(id), cancellationToken: cancellation))

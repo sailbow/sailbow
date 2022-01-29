@@ -18,7 +18,7 @@ export const AuthEndpoints: Record<AuthEndpointsLabels, EndpointFunction> = {
         url: 'api/auth/authorize',
     }),
     Refresh: () => ({
-        method: 'GET',
+        method: 'POST',
         url: 'api/auth/refresh',
     }),
     Logout: () => ({

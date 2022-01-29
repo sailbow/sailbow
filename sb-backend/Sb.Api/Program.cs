@@ -29,7 +29,8 @@ services
     .AddSingleton<OAuth2ClientFactory>()
     .AddTransient<BoatService>()
     .AddTransient<EmailService>()
-    .AddTransient<TokenBlacklistMiddleware>()
+    .AddTransient<ITokenService,TokenService>()
+    .AddTransient<ValidateAccessTokenMiddleware>()
     .AddAuthorization(opts =>
     {
         opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>
@@ -118,7 +119,7 @@ app
     .UseCors()
     .UseAuthentication()
     .UseAuthorization()
-    .UseMiddleware<TokenBlacklistMiddleware>()
+    .UseMiddleware<ValidateAccessTokenMiddleware>()
     .UseMiddleware<ExceptionHandlerMiddleware>()
     .UseEndpoints(endpoints =>
     {

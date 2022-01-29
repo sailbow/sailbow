@@ -1,3 +1,4 @@
+import { SbToken } from 'auth/Auth.Types';
 import axios from 'axios';
 
 export const LS = localStorage;
@@ -14,17 +15,20 @@ export enum HttpStatus {
 
 export enum TokenStorageKeys {
     AT = 'sb-at',
-    EXP = 'sb-exp',
+    AT_EXP = 'sb-at-exp',
+    RT = 'sb-rt',
+    RT_EXP = 'sb-rt-exp',
 }
 
-export const setHeadersToLocalStorage = (accessToken: string, exp: string): void => {
-    LS.setItem(TokenStorageKeys.AT, accessToken);
-    LS.setItem(TokenStorageKeys.EXP, exp);
+export const setAuthorizationHeaders = (accessToken: SbToken, refreshToken: SbToken): void => {
+    LS.setItem(TokenStorageKeys.AT, accessToken.value);
+    LS.setItem(TokenStorageKeys.AT_EXP, accessToken.expires);
+    LS.setItem(TokenStorageKeys.RT, refreshToken.value);
+    LS.setItem(TokenStorageKeys.RT_EXP, refreshToken.expires);
 };
 
 export const resetLocalStorage = (): void => {
-    LS.removeItem(TokenStorageKeys.AT);
-    LS.removeItem(TokenStorageKeys.EXP);
+    LS.clear();
 };
 
 export const Http = axios.create({
