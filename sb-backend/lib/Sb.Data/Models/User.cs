@@ -9,6 +9,7 @@ namespace Sb.Data.Models
         public string Email { get; set; }
         public string Provider { get; set; }
         public string ProviderUserId { get; set; }
+        public string Hash { get; set; }
         public DateTime? DateCreated { get; set; }
     }
 }

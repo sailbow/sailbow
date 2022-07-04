@@ -30,6 +30,7 @@ services
     .AddTransient<EmailService>()
     .AddTransient<ITokenService,TokenService>()
     .AddTransient<ValidateAccessTokenMiddleware>()
+    .AddTransient<IUserService,UserService>()
     .AddAuthorization(opts =>
     {
         opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>

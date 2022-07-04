@@ -35,7 +35,8 @@ namespace Sb.Api.Middleware
         private readonly List<string> _publicEndpoints = new()
         {
             "/api/auth/login",
-            "/api/auth/authorize"
+            "/api/auth/authorize",
+            "/api/auth/register",
         };
     }
 }

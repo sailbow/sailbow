@@ -18,6 +18,11 @@ using Sb.OAuth2;
 
 namespace Sb.Api.Controllers
 {
+    public class EmailPasswordLogin
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
     public class AuthController : ApiControllerBase
     {
         private readonly OAuth2ClientFactory _clientFactory;
@@ -34,6 +39,24 @@ namespace Sb.Api.Controllers
         public string Login(IdentityProvider provider, [FromQuery] string redirectUri, [FromQuery] string state)
         {
             return _clientFactory.GetClient(provider).GetAuthorizationEndpoint(redirectUri, null, null, state);
+        }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginEmailPassword(
+            [FromBody] EmailPasswordLogin login,
+            [FromServices] IUserService userService)
+        {
+            return Ok(await userService.AuthenticateAsync(login.Email, login.Password));
+        }
+
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(
+            [FromServices] IUserService userService,
+            CreateUser user)
+        {
+            return Ok(await userService.CreateUserAsync(user));
         }
 
 
