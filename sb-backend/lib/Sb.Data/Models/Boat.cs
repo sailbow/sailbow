@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace Sb.Data.Models.Mongo
+namespace Sb.Data.Models
 {
-    [MongoCollection("Boats")]
-    [BsonIgnoreExtraElements]
-    public class Boat : MongoEntityBase
+    [PersistenceModel("Boats")]
+    public class Boat : EntityBase
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -17,17 +13,14 @@ namespace Sb.Data.Models.Mongo
         public Code Code { get; set; }
         public IEnumerable<CrewMember> Crew { get; set; } = Enumerable.Empty<CrewMember>();
 
-        [BsonIgnore]
         public bool Show { get; set; } = false;
 
-        [BsonIgnore]
         public CrewMember Captain => Crew.FirstOrDefault(cm => cm.Role == Role.Captain);
     }
 
     public class CrewMember
     {
         public string UserId { get; set; }
-        [BsonRepresentation(BsonType.String)]
         public Role Role { get; set; }
         public string Info { get; set; }
         public string Email { get; set; }
@@ -47,7 +40,6 @@ namespace Sb.Data.Models.Mongo
     public class Banner
     {
         public bool Show { get; set; } = false;
-        [BsonRepresentation(BsonType.String)]
         public BannerType Type { get; set; }
         public string Value { get; set; }
         public int? Position { get; set; } = 0;

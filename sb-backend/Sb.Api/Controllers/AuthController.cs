@@ -13,7 +13,7 @@ using Sb.Api.Configuration;
 using Sb.Api.Models;
 using Sb.Api.Services;
 using Sb.Data;
-using Sb.Data.Models.Mongo;
+using Sb.Data.Models;
 using Sb.OAuth2;
 
 namespace Sb.Api.Controllers
@@ -22,13 +22,11 @@ namespace Sb.Api.Controllers
     {
         private readonly OAuth2ClientFactory _clientFactory;
         private readonly JwtConfig _jwtConfig;
-        private readonly IRepository<BlacklistedToken> _blacklistedTokenRepo;
 
-        public AuthController(IOptions<JwtConfig> jwtOptions, OAuth2ClientFactory clientFactory, IRepository<BlacklistedToken> blacklistedTokenRepo)
+        public AuthController(IOptions<JwtConfig> jwtOptions, OAuth2ClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
             _jwtConfig = jwtOptions.Value;
-            _blacklistedTokenRepo = blacklistedTokenRepo;
         }
 
         [HttpGet("login")]
@@ -82,6 +80,7 @@ namespace Sb.Api.Controllers
             }
             catch (OAuth2Exception e)
             {
+                Console.WriteLine(e.Content);
                 if (e.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return Unauthorized();

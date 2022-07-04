@@ -12,7 +12,6 @@ using Sb.Api.Middleware;
 using Sb.Api.Services;
 using Sb.Email;
 using Sb.OAuth2;
-using Sb.Api;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
@@ -71,12 +70,11 @@ services
         };
     });
 
-services.AddSbDatabase()
-    .AddMongo(opts =>
-    {
-        opts.ConnectionString = configuration["Mongo:ConnectionString"];
-        opts.DatabaseName = configuration["Mongo:DatabaseName"];
-    });
+services.AddMongoDB(opts =>
+{
+    opts.ConnectionString = configuration["Mongo:ConnectionString"];
+    opts.DatabaseName = configuration["Mongo:DatabaseName"];
+});
 
 services.AddSbEmailClients()
     .AddSendGridClient(opts =>
@@ -97,15 +95,6 @@ services.AddControllers()
         opts.SerializerSettings.Converters.Add(new StringEnumConverter());
     });
 
-var graphBuilder = services
-    .AddGraphQLServer()
-    .AddAuthorization()
-    .AddQueryType<Query>()
-    .AddMutationType<Mutation>()
-    .AddFiltering()
-    .AddProjections()
-    .AddSorting();
-
 var app = builder.Build();
 IWebHostEnvironment env = builder.Environment;
 
@@ -124,8 +113,6 @@ app
     .UseEndpoints(endpoints =>
     {
         endpoints.MapControllers();
-        endpoints.MapGraphQL();
-        endpoints.MapGraphQLSchema("/graphql/schema");
     });
 
 app.Run();

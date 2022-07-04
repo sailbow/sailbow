@@ -8,7 +8,7 @@ using Sb.Api.Authorization;
 using Sb.Api.Models;
 using Sb.Api.Validation;
 using Sb.Data;
-using Sb.Data.Models.Mongo;
+using Sb.Data.Models;
 using Sb.OAuth2;
 
 namespace Sb.Api.Services

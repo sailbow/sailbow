@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-using Sb.Data.Models.Mongo;
+using Sb.Data.Models;
 
 namespace Sb.Api.Authorization
 {
