@@ -3,6 +3,8 @@ import { AxiosResponse } from 'axios';
 import { AuthEndpoints } from 'util/http/Endpoints';
 import { Http } from 'util/http/Http';
 
+import { SbToken } from './Auth.Types';
+
 export enum Provider {
     Google,
     Facebook,
@@ -14,8 +16,8 @@ export const ProviderToUriMapper: Record<string, string> = {
 };
 
 export interface RedirectResponse {
-    accessToken: string;
-    expiresAt: string;
+    accessToken: SbToken;
+    refreshToken: SbToken;
 }
 
 export const login = async (provider: Provider, state: string): Promise<string> => {

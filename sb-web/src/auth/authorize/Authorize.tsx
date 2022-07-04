@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ToastActionType, useToast } from 'modules/toast/Toast';
 import { Routes } from 'router/Router.Types';
-import { setHeadersToLocalStorage } from 'util/http/Http';
+import { setAuthorizationHeaders } from 'util/http/Http';
 import { authorize } from 'auth/Auth.Service';
 
 export const Authorize: FunctionComponent = () => {
@@ -23,7 +23,7 @@ export const Authorize: FunctionComponent = () => {
                 if (code && provider) {
                     const data = await authorize(provider, code);
 
-                    setHeadersToLocalStorage(data.accessToken, data.expiresAt);
+                    setAuthorizationHeaders(data.accessToken, data.refreshToken);
 
                     if (state) {
                         const parsedState = JSON.parse(state);

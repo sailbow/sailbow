@@ -4,7 +4,7 @@ import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 import { RedirectResponse } from 'auth/Auth.Service';
 import { ToastActionType, useToast } from 'modules/toast/Toast';
-import { Http, HttpStatus, setHeadersToLocalStorage, resetLocalStorage, LS, TokenStorageKeys } from 'util/http/Http';
+import { Http, HttpStatus, setAuthorizationHeaders, resetLocalStorage, LS, TokenStorageKeys } from 'util/http/Http';
 import { Routes } from 'router/Router.Types';
 import { AuthEndpoints } from 'util/http/Endpoints';
 
@@ -54,8 +54,8 @@ export const HttpInterceptor: FunctionComponent = () => {
 
                             const response = Http(AuthEndpoints.Refresh()).then(
                                 async ({ data }: AxiosResponse<RedirectResponse>) => {
-                                    const { accessToken, expiresAt } = data;
-                                    setHeadersToLocalStorage(accessToken, expiresAt);
+                                    const { accessToken, refreshToken } = data;
+                                    setAuthorizationHeaders(accessToken, refreshToken);
                                     originalRequest.headers = {
                                         Authorization: `Bearer ${LS.getItem(TokenStorageKeys.AT) || ''}`,
                                     };

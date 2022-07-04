@@ -46,18 +46,19 @@ namespace Sb.Api.Controllers
             [FromQuery] string code,
             [FromQuery] string redirectUri,
             [FromQuery] string state,
-            [FromServices] IRepository<User> userRepository)
+            [FromServices] IRepository<User> userRepository,
+            [FromServices] ITokenService tokenService)
         {
             try
             {
                 OAuth2Client client = _clientFactory.GetClient(provider);
-                TokenBase providerTokens = await client.GenerateAccessTokensAsync(code, redirectUri, state);
+                OAuthTokens providerTokens = await client.GenerateAccessTokensAsync(code, redirectUri, state);
                 AuthorizedUser user = await client.GetAuthorizedUserAsync(providerTokens.AccessToken);
 
                 if (string.IsNullOrWhiteSpace(user.Email))
                     return BadRequest("Invalid email");
 
-                User existingUser = (await userRepository.GetAsync(u => u.Email == user.Email)).FirstOrDefault();
+                User existingUser = await userRepository.FirstOrDefaultAsync(u => u.Email == user.Email);
                 if (existingUser is null)
                 {
                     existingUser = await userRepository.InsertAsync(new User
@@ -70,9 +71,14 @@ namespace Sb.Api.Controllers
                     });
                 }
 
-
-                JwtToken token = GenerateToken(provider, providerTokens, existingUser);
-                return Ok(token);
+                IEnumerable<Claim> claims = GenerateUserClaims(existingUser);
+                TokenBase accessToken = await tokenService.GenerateToken(existingUser.Id, TokenType.Access, claims);
+                TokenBase refreshToken = await tokenService.GenerateToken(existingUser.Id, TokenType.Refresh, claims);
+                return Ok(new JwtTokensResponse
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                });
             }
             catch (OAuth2Exception e)
             {
@@ -89,96 +95,43 @@ namespace Sb.Api.Controllers
             }
         }
 
-        [HttpGet("refresh")]
-        public async Task<IActionResult> RefreshAsync([FromServices] IRepository<User> userRepository)
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RefreshToken(
+            [FromBody] TokenBase token,
+            [FromServices] ITokenService tokenService)
         {
-            try
+            AuthorizedUser u = HttpContext.GetUserFromClaims();
+            if (await tokenService.IsTokenValid(u.Id, token.Value, TokenType.Refresh))
             {
-                IdentityProvider? provider = HttpContext.GetIdentityProvider();
-                if (provider.HasValue)
+                return Ok(new JwtTokensResponse
                 {
-                    TokenBase providerTokens = HttpContext.GetProviderTokens();
-                    if (string.IsNullOrWhiteSpace(providerTokens.RefreshToken))
-                        return Unauthorized();
-
-                    providerTokens = await _clientFactory
-                        .GetClient(provider.Value)
-                        .RefreshTokenAsync(providerTokens.RefreshToken);
-                    string id = HttpContext.GetClaim(CustomClaimTypes.Id);
-                    User user = await userRepository.GetByIdAsync(id);
-                    JwtToken token = GenerateToken(provider.Value, providerTokens, user);
-                    return Ok(token);
-                }
-            }
-            catch (OAuth2Exception e)
-            {
-                if (e.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    return Unauthorized();
-                }
-                return BadRequest(new
-                {
-                    message = e.Message
+                    AccessToken = await tokenService.GenerateToken(u.Id, TokenType.Access, HttpContext.User.Claims),
+                    RefreshToken = await tokenService.GenerateToken(u.Id, TokenType.Refresh, HttpContext.User.Claims)
                 });
             }
-
-            return BadRequest(new
-            {
-                message = "Invalid identity provider"
-            });
+            return BadRequest();
         }
 
-
         [HttpPost("logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout([FromServices] ITokenService tokenService)
         {
             string token = HttpContext.GetAccessToken();
-            if (!string.IsNullOrWhiteSpace(token))
-            {
-                _blacklistedTokenRepo.InsertAsync(new BlacklistedToken { Value = token });
-            }
-
-            IdentityProvider? provider = HttpContext.GetIdentityProvider();
-            if (provider.HasValue)
-            {
-                TokenBase providerTokens = HttpContext.GetProviderTokens();
-                _clientFactory.GetClient(provider.Value)
-                    .RevokeTokenAsync(providerTokens.AccessToken);
-            }
-
+            await tokenService.RevokeToken(HttpContext.GetUserId(), token, TokenType.Access);
             return Ok();
         }
 
-        private JwtToken GenerateToken(IdentityProvider provider, TokenBase providerToken, User user)
+        [HttpPost("logout-all")]
+        public async Task<IActionResult> LogoutAll([FromServices] ITokenService tokenService)
         {
-            var claims = new List<Claim>()
+            await tokenService.RevokeAllTokens(HttpContext.GetUserId());
+            return Ok();
+        }
+
+        private IEnumerable<Claim> GenerateUserClaims(User user)
+            => new List<Claim>()
                 .AddIfValid(ClaimTypes.Name, user.Name)
                 .AddIfValid(ClaimTypes.Email, user.Email)
-                .AddIfValid(CustomClaimTypes.Id, user.Id)
-                .AddIfValid(CustomClaimTypes.Provider, provider.ToString())
-                .AddIfValid(CustomClaimTypes.ProviderTokens, JsonConvert.SerializeObject(providerToken));
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Key));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var handler = new JwtSecurityTokenHandler();
-            var tokenProperties = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Issuer = _jwtConfig.Issuer,
-                Audience = _jwtConfig.Audience,
-                Expires = providerToken.ExpiresIn.HasValue
-                    ? DateTime.UtcNow.AddSeconds(providerToken.ExpiresIn.Value)
-                    : null,
-                IssuedAt = DateTime.UtcNow,
-                SigningCredentials = creds
-            };
-            SecurityToken token = handler.CreateToken(tokenProperties);
-            return new JwtToken
-            {
-                AccessToken = handler.WriteToken(token),
-                ExpiresAt = tokenProperties.Expires,
-            };
-        }
+                .AddIfValid(CustomClaimTypes.Id, user.Id);
     }
 }

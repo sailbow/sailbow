@@ -26,24 +26,14 @@ namespace Sb.Api
             return context.Request.Headers[name].ToString();
         }
 
-        public static TokenBase GetProviderTokens(this HttpContext context)
+        public static OAuthTokens GetProviderTokens(this HttpContext context)
         {
             string providerTokens = context.GetClaim(CustomClaimTypes.ProviderTokens);
 
             if (!string.IsNullOrWhiteSpace(providerTokens))
             {
-                return JsonConvert.DeserializeObject<TokenBase>(providerTokens);
+                return JsonConvert.DeserializeObject<OAuthTokens>(providerTokens);
             }
-            return null;
-        }
-
-        public static IdentityProvider? GetIdentityProvider(this HttpContext context)
-        {
-            string providerString = context.GetClaim(CustomClaimTypes.Provider);
-
-            if (Enum.TryParse(providerString, out IdentityProvider provider))
-                return provider;
-
             return null;
         }
 
