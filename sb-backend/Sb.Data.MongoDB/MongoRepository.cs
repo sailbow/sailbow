@@ -1,24 +1,22 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Reflection;
 
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 
-using Sb.Data.Models.Mongo;
+using Sb.Data.Models;
 
-namespace Sb.Data.Mongo
+namespace Sb.Data.MongoDB
 {
-    public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : MongoEntityBase
+    public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
     {
         public IMongoCollection<TEntity> Collection { get; private set; }
 
         public MongoRepository(MongoConfiguration config)
         {
-            var attributes = (MongoCollectionAttribute[])Attribute.GetCustomAttributes(typeof(TEntity), typeof(MongoCollectionAttribute));
+            var attributes = (PersistenceModelAttribute[])Attribute.GetCustomAttributes(typeof(TEntity), typeof(PersistenceModelAttribute));
             if (attributes.Length == 0)
                 throw new ArgumentException($"Cannot initialize MongoRepository with entity '{typeof(TEntity)}': missing MongoCollectionAttribute");
 
@@ -49,19 +47,21 @@ namespace Sb.Data.Mongo
 
         public async Task<TEntity> InsertAsync(TEntity element, CancellationToken cancellation = default)
         {
+            element.Id = Guid.NewGuid().ToString();
             await Collection.InsertOneAsync(element, null, cancellation);
             return element;
         }
 
         public async Task InsertManyAsync(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
         {
+            foreach (TEntity e in entities) e.Id = Guid.NewGuid().ToString();
+
             await Collection.InsertManyAsync(entities, cancellationToken: cancellation);
         }
 
         public Task UpdateAsync(TEntity element, CancellationToken cancellation = default)
         {
             return Collection.ReplaceOneAsync(e => e.Id == element.Id, element, cancellationToken: cancellation);
-
         }
 
         public Task DeleteAsync(TEntity element, CancellationToken cancellation = default)

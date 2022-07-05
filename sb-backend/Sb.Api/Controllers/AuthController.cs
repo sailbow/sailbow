@@ -13,22 +13,25 @@ using Sb.Api.Configuration;
 using Sb.Api.Models;
 using Sb.Api.Services;
 using Sb.Data;
-using Sb.Data.Models.Mongo;
+using Sb.Data.Models;
 using Sb.OAuth2;
 
 namespace Sb.Api.Controllers
 {
+    public class EmailPasswordLogin
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
     public class AuthController : ApiControllerBase
     {
         private readonly OAuth2ClientFactory _clientFactory;
         private readonly JwtConfig _jwtConfig;
-        private readonly IRepository<BlacklistedToken> _blacklistedTokenRepo;
 
-        public AuthController(IOptions<JwtConfig> jwtOptions, OAuth2ClientFactory clientFactory, IRepository<BlacklistedToken> blacklistedTokenRepo)
+        public AuthController(IOptions<JwtConfig> jwtOptions, OAuth2ClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
             _jwtConfig = jwtOptions.Value;
-            _blacklistedTokenRepo = blacklistedTokenRepo;
         }
 
         [HttpGet("login")]
@@ -36,6 +39,24 @@ namespace Sb.Api.Controllers
         public string Login(IdentityProvider provider, [FromQuery] string redirectUri, [FromQuery] string state)
         {
             return _clientFactory.GetClient(provider).GetAuthorizationEndpoint(redirectUri, null, null, state);
+        }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginEmailPassword(
+            [FromBody] EmailPasswordLogin login,
+            [FromServices] IUserService userService)
+        {
+            return Ok(await userService.AuthenticateAsync(login.Email, login.Password));
+        }
+
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(
+            [FromServices] IUserService userService,
+            CreateUser user)
+        {
+            return Ok(await userService.CreateUserAsync(user));
         }
 
 
@@ -82,6 +103,7 @@ namespace Sb.Api.Controllers
             }
             catch (OAuth2Exception e)
             {
+                Console.WriteLine(e.Content);
                 if (e.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return Unauthorized();

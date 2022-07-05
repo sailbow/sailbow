@@ -1,7 +1,7 @@
-﻿namespace Sb.Data.Models.Mongo
+﻿namespace Sb.Data.Models
 {
-    [MongoCollection("Invites")]
-    public class Invite : MongoEntityBase
+    [PersistenceModel("Invites")]
+    public class Invite : EntityBase
     {
         public string InviterId { get; set; }
         public string BoatId { get; set; }

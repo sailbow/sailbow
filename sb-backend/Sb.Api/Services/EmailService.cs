@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 using Sb.Api.Authorization;
 using Sb.Api.Configuration;
 using Sb.Data;
-using Sb.Data.Models.Mongo;
+using Sb.Data.Models;
 using Sb.Email;
 using Sb.Email.Models;
 

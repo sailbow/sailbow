@@ -1,4 +1,4 @@
-﻿namespace Sb.Data.Models.Mongo
+﻿namespace Sb.Data.MongoDB
 {
     public class MongoConfiguration
     {

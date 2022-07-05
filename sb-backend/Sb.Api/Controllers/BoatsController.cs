@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sb.Api.Models;
 using Sb.Api.Services;
 using Sb.Data;
-using Sb.Data.Models.Mongo;
+using Sb.Data.Models;
 
 namespace Sb.Api.Controllers
 {

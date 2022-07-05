@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 using Sb.Api.Configuration;
 using Sb.Data;
-using Sb.Data.Models.Mongo;
+using Sb.Data.Models;
 
 namespace Sb.Api.Services
 {

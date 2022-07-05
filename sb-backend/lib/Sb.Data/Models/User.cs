@@ -1,14 +1,15 @@
 ﻿using System;
 
-namespace Sb.Data.Models.Mongo
+namespace Sb.Data.Models
 {
-    [MongoCollection("Users")]
-    public class User : MongoEntityBase
+    [PersistenceModel("Users")]
+    public class User : EntityBase
     {
         public string Name { get; set; }
         public string Email { get; set; }
         public string Provider { get; set; }
         public string ProviderUserId { get; set; }
+        public string Hash { get; set; }
         public DateTime? DateCreated { get; set; }
     }
 }

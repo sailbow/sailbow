@@ -2,7 +2,7 @@
 
 using Sb.Api.Services;
 using Sb.Data;
-using Sb.Data.Models.Mongo;
+using Sb.Data.Models;
 
 namespace Sb.Api.Middleware
 {
@@ -35,7 +35,8 @@ namespace Sb.Api.Middleware
         private readonly List<string> _publicEndpoints = new()
         {
             "/api/auth/login",
-            "/api/auth/authorize"
+            "/api/auth/authorize",
+            "/api/auth/register",
         };
     }
 }
