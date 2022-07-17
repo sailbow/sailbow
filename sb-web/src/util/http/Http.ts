@@ -1,4 +1,4 @@
-import { SbToken } from 'auth/Auth.Types';
+import { SbToken } from 'modules/auth/Auth.Types';
 import axios from 'axios';
 
 export const LS = localStorage;

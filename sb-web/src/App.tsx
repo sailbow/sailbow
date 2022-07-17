@@ -4,7 +4,7 @@ import { ApolloProvider } from '@apollo/client';
 import Aos from 'aos';
 import { BrowserRouter } from 'react-router-dom';
 
-import { BoatProvider } from 'boats/Boat.Store';
+import { BoatProvider } from 'modules/boats/Boat.Store';
 import { ProfileProvider, useProfile } from 'profile/Profile';
 import { ProfileLoading } from 'profile/profile-loading/ProfileLoading';
 import { ToastBar, ToastProvider } from 'modules/toast/Toast';

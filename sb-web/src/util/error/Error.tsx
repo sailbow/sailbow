@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { Box, Button, Flex, Text, Heading, Link } from '@chakra-ui/react';
 
-import { Footer } from 'modules/footer/Footer';
+import { Footer } from 'shared/footer/Footer';
 import { Routes } from 'router/Router.Types';
 import { SbRightArrowIcon } from 'util/icons/Icons';
 

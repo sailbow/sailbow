@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect } from 'react';
 
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
-import { RedirectResponse } from 'auth/Auth.Service';
+import { RedirectResponse } from 'modules/auth/Auth.Service';
 import { ToastActionType, useToast } from 'modules/toast/Toast';
 import { Http, HttpStatus, setAuthorizationHeaders, resetLocalStorage, LS, TokenStorageKeys } from 'util/http/Http';
 import { Routes } from 'router/Router.Types';
