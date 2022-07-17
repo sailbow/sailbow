@@ -5,7 +5,7 @@ import { Box, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, IconButton, Text } 
 import { Widgets } from 'modules/boats/view/widgets/Widgets';
 import { SbCheckIcon, SbCloseIcon, SbDeleteIcon, SbPlusIcon } from 'util/icons/Icons';
 
-import 'boats/view/boat-tabs/BoatTabs.scss';
+import './BoatTabs.scss';
 
 interface Day {
     title: string;

@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Boat } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Loading } from 'components/loading/Loading';
+import { Loading } from 'shared/loading/Loading';
 import { Banner } from 'modules/boats/components';
 
 export const Home: FunctionComponent = () => {

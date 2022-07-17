@@ -1,4 +1,4 @@
-import { TourType } from 'modules/tour/Tour';
+import { TourType } from 'shared/tour/Tour';
 
 export const Steps: TourType[] = [
     {

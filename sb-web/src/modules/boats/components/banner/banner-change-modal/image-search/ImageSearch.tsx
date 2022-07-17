@@ -8,7 +8,7 @@ import { BannerType, Photo } from 'modules/boats/Boat.Types';
 import { SbCheckIcon, SbSearchIcon } from 'util/icons/Icons';
 import { useDebounce } from 'util/hooks/Input';
 
-import 'boats/components/banner/banner-change-modal/image-search/ImageSearch.scss';
+import './ImageSearch.scss';
 
 interface Props {
     onChange: (type: BannerType, value: string) => void;

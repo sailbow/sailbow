@@ -20,8 +20,8 @@ import { useBoat } from 'modules/boats/Boat.Store';
 import { BannerState, BannerType, CreateBoat, Crew } from 'modules/boats/Boat.Types';
 import { Banner, UserList, UserSearch } from 'modules/boats/components';
 import { Steps } from 'modules/boats/create-edit/CreateEdit.Tut';
-import { CheckMarkIcon } from 'components/button/ButtonIcons';
-import { Input, TextArea } from 'components/input/Input';
+import { CheckMarkIcon } from 'shared/button/ButtonIcons';
+import { Input, TextArea } from 'shared/input/Input';
 import { RoleType } from 'shared/role/Role';
 import { Tour } from 'shared/tour/Tour';
 import { useProfile } from 'profile/Profile';
@@ -29,7 +29,7 @@ import { Routes } from 'router/Router.Types';
 import { Color } from 'theme/Colors';
 import { SbCloseIcon } from 'util/icons/Icons';
 
-import 'boats/create-edit/CreateEdit.scss';
+import './CreateEdit.scss';
 
 export const CreateEdit: FunctionComponent = () => {
     const [{ createOpen, loading }, { createBoat, closeCreateBoat }] = useBoat();

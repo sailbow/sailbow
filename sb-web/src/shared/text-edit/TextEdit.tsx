@@ -12,7 +12,7 @@ import {
     Button,
 } from '@chakra-ui/react';
 
-import { ToastActionType, useToast } from 'modules/toast/Toast';
+import { ToastActionType, useToast } from 'shared/toast/Toast';
 
 interface Props extends TextProps {
     type: 'text' | 'heading';

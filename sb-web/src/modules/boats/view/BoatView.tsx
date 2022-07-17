@@ -7,7 +7,7 @@ import { useBoat } from 'modules/boats/Boat.Store';
 import { BoatTabs } from 'modules/boats/view/boat-tabs/BoatTabs';
 import { Details } from 'modules/boats/view/details/Details';
 import { Toolbar } from 'modules/boats/view/toolbar/Toolbar';
-import { Loading } from 'components/loading/Loading';
+import { Loading } from 'shared/loading/Loading';
 import { Boat } from 'modules/boats/Boat.Types';
 import { SbPlusIcon } from 'util/icons/Icons';
 

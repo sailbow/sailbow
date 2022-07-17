@@ -6,6 +6,15 @@ import { GqlClient } from 'util/gql/Gql';
 import { BoatEndpoints, ImageEndpoints } from 'util/http/Endpoints';
 import { Http } from 'util/http/Http';
 
+// GetInvite: <T>(data: T) => ({
+//     method: 'GET',
+//     url: `api/boats/${data.boatId}/invites/${data.inviteId}`,
+// }),
+// AcceptInvite: (boatId: string, inviteId: string) => ({
+//     method: 'POST',
+//     url: `/api/boats/${boatId}/invites/${inviteId}/accept`,
+// }),
+
 export const getBannerImages = async (value: string, newPage: number): Promise<Photo[]> => {
     const { data }: AxiosResponse = await Http({
         ...ImageEndpoints.Search,

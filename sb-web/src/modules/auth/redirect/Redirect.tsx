@@ -5,7 +5,7 @@ import { Box, Flex, Heading } from '@chakra-ui/react';
 import { AuthCard } from 'modules/auth/auth-card/AuthCard';
 import { Routes } from 'router/Router.Types';
 
-import 'auth/redirect/Redirect.scss';
+import './Redirect.scss';
 
 export const Redirect: FunctionComponent = () => {
     const urlSearchParams = new URLSearchParams(window.location.search);

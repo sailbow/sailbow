@@ -2,11 +2,11 @@ import React, { FunctionComponent, useEffect } from 'react';
 
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
-import { RedirectResponse } from 'modules/auth/Auth.Service';
-import { ToastActionType, useToast } from 'modules/toast/Toast';
-import { Http, HttpStatus, setAuthorizationHeaders, resetLocalStorage, LS, TokenStorageKeys } from 'util/http/Http';
+import { AuthEndpoints, RedirectResponse } from 'modules/auth/Auth.Service';
+import { ToastActionType, useToast } from 'shared/toast/Toast';
+import { Http, HttpStatus, setHeadersToLocalStorage, resetLocalStorage } from 'util/http/Http';
 import { Routes } from 'router/Router.Types';
-import { AuthEndpoints } from 'util/http/Endpoints';
+import { LocalStorageKeys, LS } from 'util/localstorage/LocalStorage';
 
 interface A2 extends AxiosRequestConfig {
     retry?: boolean;
@@ -20,7 +20,7 @@ export const HttpInterceptor: FunctionComponent = () => {
             (value: AxiosRequestConfig) => {
                 const request = { ...value };
                 request.headers = {
-                    Authorization: `Bearer ${LS.getItem(TokenStorageKeys.AT) || ''}`,
+                    Authorization: `Bearer ${LS.getItem(LocalStorageKeys.AT) || ''}`,
                 };
                 return request;
             },
@@ -54,10 +54,10 @@ export const HttpInterceptor: FunctionComponent = () => {
 
                             const response = Http(AuthEndpoints.Refresh()).then(
                                 async ({ data }: AxiosResponse<RedirectResponse>) => {
-                                    const { accessToken, refreshToken } = data;
-                                    setAuthorizationHeaders(accessToken, refreshToken);
+                                    const { accessToken, expiredAt } = data;
+                                    setHeadersToLocalStorage(accessToken, expiredAt);
                                     originalRequest.headers = {
-                                        Authorization: `Bearer ${LS.getItem(TokenStorageKeys.AT) || ''}`,
+                                        Authorization: `Bearer ${LS.getItem(LocalStorageKeys.AT) || ''}`,
                                     };
 
                                     console.log('Token refreshed...');

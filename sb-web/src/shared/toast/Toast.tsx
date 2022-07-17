@@ -7,7 +7,7 @@ import { SbWarningIcon, SbCloseIcon, SbCheckIcon } from 'util/icons/Icons';
 import { Log } from 'util/logger/Logger';
 
 import 'react-toastify/dist/ReactToastify.css';
-import 'modules/toast/Toast.scss';
+import './Toast.scss';
 
 const TOAST_DURATION = 5000;
 

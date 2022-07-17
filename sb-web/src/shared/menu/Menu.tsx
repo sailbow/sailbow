@@ -27,8 +27,7 @@ import {
     SbQuestionIcon,
     SbTermsIcon,
 } from 'util/icons/Icons';
-
-import 'components/menu/Menu';
+import 'shared/menu/Menu';
 import { useProfile } from 'profile/Profile';
 import { Routes } from 'router/Router.Types';
 

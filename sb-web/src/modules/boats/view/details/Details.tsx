@@ -5,7 +5,7 @@ import { Box, Text } from '@chakra-ui/react';
 import { Boat } from 'modules/boats/Boat.Types';
 import { Banner } from 'modules/boats/components';
 import { TextEdit } from 'shared/text-edit/TextEdit';
-import { Input, TextArea } from 'components/input/Input';
+import { Input, TextArea } from 'shared/input/Input';
 
 interface Props {
     boat: Boat;

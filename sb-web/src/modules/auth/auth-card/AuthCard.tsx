@@ -3,16 +3,18 @@ import React, { FunctionComponent } from 'react';
 import { Box, Button, Center, Divider, Flex, Heading, Text, VStack } from '@chakra-ui/react';
 
 import { ReactComponent as LogoType } from 'assets/sb-gradient-logo-type.svg';
-import { login, Provider } from 'modules/auth/Auth.Service';
+import { Provider } from 'modules/auth/Auth.Service';
 import { SbRightArrowIcon, SbFacebookIcon, SbGoogleIcon } from 'util/icons/Icons';
 
-import 'auth/auth-card/AuthCard.scss';
+import './AuthCard.scss';
+import { useAuthStore } from '../Auth.Store';
 
 interface Props {
     path?: string;
 }
 
 export const AuthCard: FunctionComponent<Props> = ({ path }) => {
+    const [, { login }] = useAuthStore();
     const onLogin = async (provider: Provider) => {
         let state = '';
         if (path) {
@@ -22,7 +24,9 @@ export const AuthCard: FunctionComponent<Props> = ({ path }) => {
         try {
             const url = await login(provider, state);
 
-            window.open(url, '_self');
+            if (url) {
+                window.open(url, '_self');
+            }
         } catch (err: any) {
             console.log(err.response);
         }

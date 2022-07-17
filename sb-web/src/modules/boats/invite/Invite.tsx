@@ -2,11 +2,11 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { Box, Button, Heading, Flex, Text, Spinner, Center } from '@chakra-ui/react';
 
-import { acceptInvite, getInvite, InviteType } from 'modules/auth/invite/Invite.Service';
+import { InviteType } from 'modules/boats/invite/Invite.Service';
 import { Banner } from 'modules/boats/components';
-import { CheckMarkIcon } from 'components/button/ButtonIcons';
+import { CheckMarkIcon } from 'shared/button/ButtonIcons';
 import { Footer } from 'shared/footer/Footer';
-import { ToastActionType, useToast } from 'modules/toast/Toast';
+import { ToastActionType, useToast } from 'shared/toast/Toast';
 import { Routes } from 'router/Router.Types';
 import { ErrorCode, getErrorPath } from 'util/error/Error';
 import { HttpStatus } from 'util/http/Http';
@@ -18,49 +18,48 @@ export const Invite: FunctionComponent = () => {
     const inviteId: string | null = params.get('inviteId');
     const [invite, setInvite] = useState<InviteType | null>(null);
 
-    useEffect(() => {
-        (async () => {
-            if (!inviteId || !boatId) {
-                window.location.href = getErrorPath(ErrorCode.InviteError);
-                return null;
-            }
+    // useEffect(() => {
+    //     (async () => {
+    //         if (!inviteId || !boatId) {
+    //             window.location.href = getErrorPath(ErrorCode.InviteError);
+    //             return null;
+    //         }
 
-            try {
-                const data = await getInvite(boatId, inviteId);
+    //         try {
+    //             const data = await getInvite(boatId, inviteId);
 
-                if (!data) {
-                    throw new Error('No invite found');
-                }
+    //             if (!data) {
+    //                 throw new Error('No invite found');
+    //             }
 
-                setInvite(data);
-            } catch (error: any) {
-                switch (error.response.status) {
-                    case HttpStatus.NOT_FOUND:
-                        window.location.href = getErrorPath(ErrorCode.InviteNotFound);
-                        break;
-                    case 409:
-                        window.location.href = getErrorPath(ErrorCode.InviteConflict);
-                        break;
-                    case HttpStatus.FORBIDDEN:
-                        window.location.href = getErrorPath(ErrorCode.InviteForbidden);
-                        break;
-                    default:
-                        window.location.href = getErrorPath(ErrorCode.InviteError);
-                }
-                dispatch({ type: ToastActionType.ShowError, text: 'Invalid invite' });
-            }
-        })();
-    }, [dispatch, boatId, inviteId]);
+    //             setInvite(data);
+    //         } catch (error: any) {
+    //             switch (error.response.status) {
+    //                 case HttpStatus.NOT_FOUND:
+    //                     window.location.href = getErrorPath(ErrorCode.InviteNotFound);
+    //                     break;
+    //                 case 409:
+    //                     window.location.href = getErrorPath(ErrorCode.InviteConflict);
+    //                     break;
+    //                 case HttpStatus.FORBIDDEN:
+    //                     window.location.href = getErrorPath(ErrorCode.InviteForbidden);
+    //                     break;
+    //                 default:
+    //                     window.location.href = getErrorPath(ErrorCode.InviteError);
+    //             }
+    //             dispatch({ type: ToastActionType.ShowError, text: 'Invalid invite' });
+    //         }
+    //     })();
+    // }, [dispatch, boatId, inviteId]);
 
     const onAccept = async () => {
-        try {
-            const data = await acceptInvite(boatId!, inviteId!);
-
-            window.location.href = `${Routes.Private.Boats}/${data.id}`;
-        } catch (err: any) {
-            console.log(err.response);
-            dispatch({ type: ToastActionType.ShowError, text: 'Invalid invite' });
-        }
+        // try {
+        //     const data = await acceptInvite(boatId!, inviteId!);
+        //     window.location.href = `${Routes.Private.Boats}/${data.id}`;
+        // } catch (err: any) {
+        //     console.log(err.response);
+        //     dispatch({ type: ToastActionType.ShowError, text: 'Invalid invite' });
+        // }
     };
 
     return (

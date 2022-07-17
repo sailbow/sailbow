@@ -2,14 +2,14 @@ import React, { FunctionComponent } from 'react';
 
 import { Box, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react';
 
-import { CheckMarkIcon } from 'components/button/ButtonIcons';
-import { Modal } from 'components/modal/Modal';
+import { CheckMarkIcon } from 'shared/button/ButtonIcons';
+import { Modal } from 'shared/modal/Modal';
 import { BannerType } from 'modules/boats/Boat.Types';
 import { ColorBox } from 'modules/boats/components/banner/banner-change-modal/color-box/ColorBox';
 import { ImageSearch } from 'modules/boats/components/banner/banner-change-modal/image-search/ImageSearch';
 import { BannerColors, Color } from 'theme/Colors';
 
-import 'boats/components/banner/banner-change-modal/BannerChangeModal.scss';
+import './BannerChangeModal.scss';
 
 interface Props {
     isOpen: boolean;

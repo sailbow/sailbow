@@ -6,7 +6,7 @@ import { SizeMe } from 'react-sizeme';
 
 import { SbDragIcon } from 'util/icons/Icons';
 
-import 'boats/view/widgets/Widgets.scss';
+import './Widgets.scss';
 
 export const Widgets: FunctionComponent = () => {
     const [isDraggable, setIsDraggable] = useState<boolean>(false);

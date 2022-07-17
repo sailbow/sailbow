@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { SbErrorCircleIcon } from 'util/icons/Icons';
 
-import 'components/input/Input.scss';
+import './Input.scss';
 
 interface InputProps extends ChakraInputProps {
     loading?: boolean;

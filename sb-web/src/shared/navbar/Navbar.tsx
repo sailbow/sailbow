@@ -5,16 +5,16 @@ import { matchPath } from 'react-router-dom';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Menu } from 'components/menu/Menu';
+import { Menu } from 'shared/menu/Menu';
 import { UnAuthenticatedNavbar } from 'shared/navbar/UnauthenticatedNavbar';
 import { Notification } from 'shared/notifications/Notification';
 import { ProfileIcon } from 'profile/profile-icon/ProfileIcon';
 import { Routes } from 'router/Router.Types';
 import { SbClockIcon, SbFeedIcon, SbBoatIcon, SbPlusIcon, SbCopyIcon } from 'util/icons/Icons';
 import { useToast, ToastActionType } from 'shared/toast/Toast';
-import { LS, TokenStorageKeys } from 'util/http/Http';
 
-import 'modules/navbar/Navbar.scss';
+import './Navbar.scss';
+import { LocalStorageKeys, LS } from 'util/localstorage/LocalStorage';
 
 interface Props {
     isAuth: boolean;
@@ -68,7 +68,7 @@ export const Navbar: FunctionComponent<Props> = ({ isAuth }) => {
         };
 
         const copyAccessToken = () => {
-            const token = LS.getItem(TokenStorageKeys.AT);
+            const token = LS.getItem(LocalStorageKeys.AT);
             const toast =
                 token !== null
                     ? { type: ToastActionType.ShowSuccess, text: 'Copied!' }

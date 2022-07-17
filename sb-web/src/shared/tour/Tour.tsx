@@ -5,7 +5,7 @@ import { Step, Steps } from 'intro.js-react';
 
 import { SbQuestionIcon } from 'util/icons/Icons';
 
-import 'modules/tour/Tour.scss';
+import './Tour.scss';
 
 export interface TourType extends Step {
     title: string;

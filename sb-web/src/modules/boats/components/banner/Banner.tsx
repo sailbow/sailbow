@@ -6,7 +6,7 @@ import { BannerState, BannerType } from 'modules/boats/Boat.Types';
 import { BannerChangeModal } from 'modules/boats/components/banner/banner-change-modal/BannerChangeModal';
 import { Color } from 'theme/Colors';
 
-import 'boats/components/banner/Banner.scss';
+import './Banner.scss';
 
 interface Props {
     banner: BannerState;

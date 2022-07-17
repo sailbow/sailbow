@@ -3,14 +3,16 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { Flex, Heading } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 
-import { ToastActionType, useToast } from 'modules/toast/Toast';
+import { ToastActionType, useToast } from 'shared/toast/Toast';
 import { Routes } from 'router/Router.Types';
-import { setAuthorizationHeaders } from 'util/http/Http';
-import { authorize } from 'modules/auth/Auth.Service';
+import { setHeadersToLocalStorage } from 'util/http/Http';
+import { Provider } from 'modules/auth/Auth.Service';
+import { useAuthStore } from '../Auth.Store';
 
 export const Authorize: FunctionComponent = () => {
     const history = useHistory();
     const [, dispatch] = useToast();
+    const [, { authorize }] = useAuthStore();
 
     useEffect(() => {
         (async () => {
@@ -21,9 +23,11 @@ export const Authorize: FunctionComponent = () => {
 
             try {
                 if (code && provider) {
-                    const data = await authorize(provider, code);
+                    const success = await authorize(provider as unknown as Provider, code);
 
-                    setAuthorizationHeaders(data.accessToken, data.refreshToken);
+                    if (!success) {
+                        throw new Error('Could not login. Invalid redirect parameters.');
+                    }
 
                     if (state) {
                         const parsedState = JSON.parse(state);
