@@ -92,6 +92,8 @@ export enum Color {
     Pink900 = '#702459',
 }
 
+const BRAND_COLOR = Color.Teal400;
+
 export const DarkColors: ColorHues = {
     50: Color.Gray50,
     100: Color.Gray100,
@@ -105,7 +107,7 @@ export const DarkColors: ColorHues = {
     900: Color.Gray900,
 };
 
-export const BrandColors: BrandColorType= {
+export const BrandColors: BrandColorType = {
     50: Color.Teal50,
     100: Color.Teal100,
     200: Color.Teal200,
@@ -116,8 +118,9 @@ export const BrandColors: BrandColorType= {
     700: Color.Teal700,
     800: Color.Teal800,
     900: Color.Teal900,
-    dark: DarkColors[900],
+    dark: DarkColors[800],
     success: Color.Green300,
+    primary: BRAND_COLOR,
 };
 
 export enum Brand {

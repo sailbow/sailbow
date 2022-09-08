@@ -1,8 +1,37 @@
-import './App.scss';
-import { Button } from '@chakra-ui/react';
+import { FC, useEffect, useState } from 'react';
 
-export const App = () => {
-    return <div className="App">
-        <Button>Hello</Button>
-    </div>;
+import { Box } from '@chakra-ui/react';
+import { BrowserRouter } from 'react-router-dom';
+
+import { Authenticator, AuthStoreProvider } from 'modules/auth/Auth.Store';
+import { PrivateRouter, PublicRouter } from 'router/Router';
+import { HttpInterceptor } from 'shared/http/HttpInterceptor';
+// import { Navbar } from 'shared/navbar/Navbar';
+
+import './App.scss';
+
+export const App: FC = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    return (
+        <Box className="App">
+            <BrowserRouter>
+                <AuthStoreProvider>
+                    <HttpInterceptor />
+                    <Authenticator onAuthLoadingChange={setLoading} onLoggedInChange={setIsLoggedIn}>
+                        {!loading ? (
+                            <>
+                                {/* <Navbar /> */}
+
+                                {isLoggedIn ? <PrivateRouter /> : <PublicRouter />}
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                    </Authenticator>
+                </AuthStoreProvider>
+            </BrowserRouter>
+        </Box>
+    );
 };
