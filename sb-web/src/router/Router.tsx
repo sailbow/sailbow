@@ -17,6 +17,7 @@ const Authorize = lazy(() =>
     import('modules/auth/authorize/Authorize').then((module) => ({ default: module.Authorize })),
 );
 const Redirect = lazy(() => import('modules/auth/redirect/Redirect').then((module) => ({ default: module.Redirect })));
+const Login = lazy(() => import('modules/auth/login/Login').then((module) => ({ default: module.Login })));
 
 /** Whitelisted Content */
 const AboutUs = lazy(() => import('util/whitelisted/AboutUs').then((module) => ({ default: module.AboutUs })));
@@ -79,6 +80,7 @@ export const PublicRouter: FunctionComponent = () => {
         for (const path of PrivateRoutes) {
             const { search, pathname } = window.location;
             const match = matchPath(pathname, { path, strict: true, exact: true });
+
             if (match) {
                 window.location.href = `${Routes.Public.Redirect}?path=${pathname}${search}`;
                 break;
@@ -101,6 +103,9 @@ export const PublicRouter: FunctionComponent = () => {
                         <Route path={Routes.Public.Redirect}>
                             <Redirect />
                         </Route>
+                        {/* <Route path={Routes.Public.Login}>
+                            <Login />
+                        </Route> */}
                         <Route path="*">
                             <NotFound />
                         </Route>

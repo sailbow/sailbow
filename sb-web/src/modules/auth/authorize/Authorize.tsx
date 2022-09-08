@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 
 import { ToastActionType, useToast } from 'shared/toast/Toast';
 import { Routes } from 'router/Router.Types';
-import { setHeadersToLocalStorage } from 'util/http/Http';
 import { Provider } from 'modules/auth/Auth.Service';
 import { useAuthStore } from '../Auth.Store';
 
