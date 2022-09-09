@@ -5,7 +5,7 @@ import { Box, Flex, Heading, Stack, StackDivider, Text, Link, HStack, IconButton
 import { ReactComponent as IconLogoType } from 'assets/icon-logo-type.svg';
 import { SingleSelect } from 'shared/select/Select';
 import { Subscribe } from 'shared/footer/Subscribe';
-// import { SbFacebookIcon, SbInstagramIcon, SbGitHubIcon } from 'util/icons/Icons';
+import { SbFacebookIcon, SbInstagramIcon, SbGitHubIcon } from 'shared/icons/Icons';
 import { Routes } from 'router/Router.Types';
 
 const Languages = [
@@ -65,13 +65,13 @@ export const Footer: FunctionComponent = () => {
                         <IconLogoType width="150px" />
                         <HStack spacing="4">
                             <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl" borderRadius="xl">
-                                {/* <SbInstagramIcon /> */}
+                                <SbInstagramIcon />
                             </IconButton>
                             <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl" borderRadius="xl">
-                                {/* <SbFacebookIcon /> */}
+                                <SbFacebookIcon />
                             </IconButton>
                             <IconButton colorScheme="gray" aria-label="instagram" fontStyle="xxl" borderRadius="xl">
-                                {/* <SbGitHubIcon /> */}
+                                <SbGitHubIcon />
                             </IconButton>
                         </HStack>
                     </Box>

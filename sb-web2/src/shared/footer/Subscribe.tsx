@@ -17,7 +17,7 @@ import { Form, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
 import { showSuccessToast } from 'shared/toast/Toast';
-// import { SbMailIcon, SbErrorCircleIcon } from 'shared/icons/Icons';
+import { SbMailIcon, SbErrorCircleIcon } from 'shared/icons/Icons';
 
 interface FormValues {
     email: string;
@@ -57,7 +57,7 @@ export const Subscribe: FunctionComponent = () => {
                                 <FormControl isInvalid={Boolean(errors.email && touched.email)} onChange={setForm}>
                                     <InputGroup variant="brand" size="sm">
                                         <InputLeftAddon position="absolute" p="0">
-                                            {/* <SbMailIcon /> */}
+                                            <SbMailIcon />
                                         </InputLeftAddon>
                                         <Input
                                             {...getFieldProps('email')}
@@ -70,7 +70,7 @@ export const Subscribe: FunctionComponent = () => {
                                         {errors.email && touched.email ? (
                                             <Tooltip label="Please enter a valid email address!">
                                                 <InputRightElement color="brand.error">
-                                                    {/* <SbErrorCircleIcon /> */}
+                                                    <SbErrorCircleIcon />
                                                 </InputRightElement>
                                             </Tooltip>
                                         ) : null}

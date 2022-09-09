@@ -32,23 +32,24 @@ export const ButtonStyles: ComponentStyleConfig = {
         //         color: 'brand.dark',
         //     }
         // },
-        outline: (props: any) => ({
-            ...props.theme.components.Button.variants.outline,
-            borderRadius: '12px',
-            color: 'brand.dark',
-            borderColor: 'brand.dark',
-            borderWidth: '2px',
-            _hover: {
-                color: 'white',
+        outline: (props: any) => {
+            return {
+                ...props.theme.components.Button.variants.outline,
+                color: 'brand.dark',
                 borderColor: 'brand.dark',
-                backgroundColor: 'brand.dark',
-            },
-            _active: {
-                color: 'white',
-                borderColor: 'brand.dark',
-                backgroundColor: 'gray.700',
-            },
-        }),
+                borderWidth: '2px',
+                _hover: {
+                    color: 'white',
+                    borderColor: 'brand.dark',
+                    backgroundColor: 'brand.dark',
+                },
+                _active: {
+                    color: 'white',
+                    borderColor: 'brand.dark',
+                    backgroundColor: 'gray.700',
+                },
+            };
+        },
         icon: (props: any) => {
             return {
                 ...props.theme.components.Button.variants.ghost,

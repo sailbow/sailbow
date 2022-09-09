@@ -119,8 +119,14 @@ export const BrandColors: BrandColorType = {
     800: Color.Teal800,
     900: Color.Teal900,
     dark: DarkColors[800],
+    dark2: DarkColors[700],
     success: Color.Green300,
     primary: BRAND_COLOR,
+    error: Color.Red300,
+    muted: Color.Gray300,
+    warning: Color.Orange300,
+    secondary: Color.Gray600,
+    'border-light': Color.Gray100,
 };
 
 export enum Brand {

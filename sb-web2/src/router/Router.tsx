@@ -91,7 +91,7 @@ export const PublicRouter: FunctionComponent = () => {
     return (
         <>
             {/* <Navbar isAuth={false} /> */}
-            <Box className="sb-public-router" pt={NavbarHeight}>
+            <Box className="sb-public-router" pt={NavbarHeight} h="100%" w="100%">
                 <Suspense fallback={null}>
                     <Routes>
                         <Route path={AppRoutes.Public.Landing} element={<Login />} />

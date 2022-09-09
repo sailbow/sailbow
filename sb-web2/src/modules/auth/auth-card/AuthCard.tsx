@@ -1,20 +1,33 @@
-import React, { FunctionComponent } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 
-import { Box, Button, Center, Divider, Flex, Heading, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, FormControl, Heading, Link, Text, VStack } from '@chakra-ui/react';
+import { Formik, FormikProps } from 'formik';
+import * as Yup from 'yup';
 
-import { ReactComponent as LogoType } from 'assets/sb-gradient-logo-type.svg';
 import { Provider } from 'modules/auth/Auth.Service';
-// import { SbRightArrowIcon, SbFacebookIcon, SbGoogleIcon } from 'util/icons/Icons';
+import { SbRightArrowIcon, SbFacebookIcon, SbGoogleIcon, SbMailIcon, SbPasswordIcon, Logo } from 'shared/icons/Icons';
+import { Input } from 'shared/input/Input';
 
 import { useAuthStore } from '../Auth.Store';
-import { showErrorToast } from 'shared/toast/Toast';
+import './AuthCard.scss';
 
 interface Props {
     path?: string;
 }
 
-export const AuthCard: FunctionComponent<Props> = ({ path }) => {
+interface FormValues {
+    email: string;
+    password: string;
+}
+
+const FormSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Required'),
+    password: Yup.string().required('required'),
+});
+
+export const AuthCard: FC<Props> = ({ path }) => {
     const [, { providerLogin }] = useAuthStore();
+    const [signInForm, setSignInForm] = useState<FormValues>({ email: '', password: '' });
 
     const onLogin = async (provider: Provider) => {
         let state = '';
@@ -33,45 +46,112 @@ export const AuthCard: FunctionComponent<Props> = ({ path }) => {
         }
     };
 
+    const setForm = (e: ChangeEvent<HTMLInputElement>) => {
+        setSignInForm({
+            ...signInForm,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const onSubmit = () => {
+        console.log('logged in');
+    };
+
+    const TextDivider: FC<{ text: string }> = ({ text }) => {
+        return (
+            <Box className="text-divider" _before={{ bg: 'brand.muted' }} _after={{ bg: 'brand.muted' }}>
+                {text}
+            </Box>
+        );
+    };
+
     return (
-        <Box boxShadow="xl" bg="white" p="12" pb="4" borderRadius="xl" className="sb-auth-card">
-            <VStack spacing="32">
-                <Flex textAlign="center" justifyContent="center" flexDir="column">
-                    <LogoType />
-                    <Text fontSize="10px" pt="2" fontWeight="semibold" color="gray.500">
-                        Get The Crew. Plan The Voyage. <br />
-                        Set Sail.
-                    </Text>
-                </Flex>
-                <VStack spacing="6">
-                    <Box textAlign="center">
-                        <Heading fontSize="md">Start Sailing!</Heading>
-                        <Center>
-                            <Divider pt="1" width="20%" borderColor="gray.500" />
-                        </Center>
+        <Box
+            bg="white"
+            p="16"
+            borderRadius="xl"
+            className="sb-auth-card"
+            border="2px solid"
+            borderColor="brand.border-light"
+            minW="450px"
+        >
+            <VStack spacing="24" w="100%" className="wrapper">
+                <Box textAlign="center">
+                    <Box>
+                        <Logo width="28px" height="28px" />
                     </Box>
-                    <VStack spacing="5" pb="8">
-                        <Button
-                            className="social-outline-button"
-                            variant="outline"
-                            colorScheme="gray"
-                            // leftIcon={<SbGoogleIcon />}
-                            // rightIcon={<SbRightArrowIcon />}
-                            onClick={() => onLogin(Provider.Google)}
-                        >
-                            <Text style={{ paddingRight: '2rem' }}>Log In with Google</Text>
-                        </Button>
-                        <Button
-                            className="social-outline-button"
-                            variant="outline"
-                            colorScheme="gray"
-                            // leftIcon={<SbFacebookIcon />}
-                            // rightIcon={<SbRightArrowIcon />}
-                            onClick={() => onLogin(Provider.Facebook)}
-                        >
-                            <Text pr="3.5">Log In with Facebook</Text>
-                        </Button>
-                    </VStack>
+                    <Heading fontSize="3xl" mb="2">
+                        Start Sailing
+                    </Heading>
+                    <Text as="span">
+                        Not a member yet? <Link>Sign Up!</Link>
+                    </Text>
+                </Box>
+                <VStack spacing="6" w="100%" className="content">
+                    <Formik initialValues={signInForm} onSubmit={onSubmit} validationSchema={FormSchema}>
+                        {({ errors, touched, getFieldProps }: FormikProps<FormValues>) => (
+                            <VStack w="100%" spacing="6">
+                                <FormControl isInvalid={Boolean(errors.email && touched.email)} onChange={setForm}>
+                                    <Input
+                                        label="Email"
+                                        field={{ ...getFieldProps('email') }}
+                                        error={Boolean(errors.email && touched.email)}
+                                        errorLabel={errors.email}
+                                        required
+                                        name="email"
+                                        id="email"
+                                        placeholder="Enter your email"
+                                        leftIcon={<SbMailIcon />}
+                                    />
+                                </FormControl>
+                                <FormControl
+                                    isInvalid={Boolean(errors.password && touched.password)}
+                                    onChange={setForm}
+                                >
+                                    <Input
+                                        type="password"
+                                        label="Password"
+                                        field={{ ...getFieldProps('password') }}
+                                        error={Boolean(errors.password && touched.password)}
+                                        errorLabel={errors.password}
+                                        required
+                                        name="password"
+                                        id="password"
+                                        placeholder="Enter password"
+                                        leftIcon={<SbPasswordIcon />}
+                                    />
+                                </FormControl>
+                                <Button w="100%" size="lg">
+                                    Log in
+                                </Button>
+                            </VStack>
+                        )}
+                    </Formik>
+                    <TextDivider text="or" />
+                    <Button
+                        w="100%"
+                        size="lg"
+                        variant="outline"
+                        colorScheme="gray"
+                        leftIcon={<SbGoogleIcon />}
+                        rightIcon={<SbRightArrowIcon />}
+                        onClick={() => onLogin(Provider.Google)}
+                    >
+                        <Text pr="6">Log In with Google</Text>
+                    </Button>
+                    <Button
+                        w="100%"
+                        size="lg"
+                        variant="outline"
+                        colorScheme="gray"
+                        leftIcon={<SbFacebookIcon />}
+                        rightIcon={<SbRightArrowIcon />}
+                        onClick={() => onLogin(Provider.Facebook)}
+                    >
+                        <Text pr="2">Log In with Facebook</Text>
+                    </Button>
+
+                    <Link>Issues logging in?</Link>
                 </VStack>
             </VStack>
         </Box>
