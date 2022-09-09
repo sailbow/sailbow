@@ -1,5 +1,21 @@
 import { ComponentStyleConfig, theme as ChakraTheme } from '@chakra-ui/react';
 
+const OUTLINE_STYLES = {
+    color: 'brand.dark',
+    borderColor: 'brand.dark',
+    borderWidth: '2px',
+    _hover: {
+        color: 'white',
+        borderColor: 'brand.dark',
+        backgroundColor: 'brand.dark',
+    },
+    _active: {
+        color: 'white',
+        borderColor: 'brand.dark',
+        backgroundColor: 'gray.700',
+    },
+};
+
 export const ButtonStyles: ComponentStyleConfig = {
     defaultProps: {
         colorScheme: 'brand',
@@ -35,19 +51,15 @@ export const ButtonStyles: ComponentStyleConfig = {
         outline: (props: any) => {
             return {
                 ...props.theme.components.Button.variants.outline,
-                color: 'brand.dark',
-                borderColor: 'brand.dark',
-                borderWidth: '2px',
-                _hover: {
-                    color: 'white',
-                    borderColor: 'brand.dark',
-                    backgroundColor: 'brand.dark',
-                },
-                _active: {
-                    color: 'white',
-                    borderColor: 'brand.dark',
-                    backgroundColor: 'gray.700',
-                },
+                ...OUTLINE_STYLES,
+            };
+        },
+        social: (props: any) => {
+            return {
+                ...props.theme.components.Button.variants.outline,
+                ...OUTLINE_STYLES,
+                display: 'flex',
+                justifyContent: 'space-between',
             };
         },
         icon: (props: any) => {

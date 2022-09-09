@@ -39,7 +39,7 @@ export const Authorize: FunctionComponent = () => {
                 }
             } catch (err) {
                 showErrorToast((err as Error).message);
-                navigate(Routes.Public.Landing);
+                navigate(Routes.Public.Auth);
             }
         })();
     });

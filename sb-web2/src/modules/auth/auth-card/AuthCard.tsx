@@ -1,33 +1,27 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { FC } from 'react';
 
-import { Box, Button, FormControl, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
-import { Formik, FormikProps } from 'formik';
-import * as Yup from 'yup';
+import { Box, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
 
 import { Provider } from 'modules/auth/Auth.Service';
-import { SbRightArrowIcon, SbFacebookIcon, SbGoogleIcon, SbMailIcon, SbPasswordIcon, Logo } from 'shared/icons/Icons';
-import { Input } from 'shared/input/Input';
+import { SignIn } from 'modules/auth/sign-in/SignIn';
+import { SocialButtons } from 'modules/auth/social-buttons/SocialButtons';
+import { Logo } from 'shared/icons/Icons';
 
 import { useAuthStore } from '../Auth.Store';
 import './AuthCard.scss';
 
+export enum AuthCardType {
+    SIGNIN,
+    SIGNUP,
+}
+
 interface Props {
     path?: string;
+    type: AuthCardType;
 }
 
-interface FormValues {
-    email: string;
-    password: string;
-}
-
-const FormSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string().required('required'),
-});
-
-export const AuthCard: FC<Props> = ({ path }) => {
+export const AuthCard: FC<Props> = ({ path, type }) => {
     const [, { providerLogin }] = useAuthStore();
-    const [signInForm, setSignInForm] = useState<FormValues>({ email: '', password: '' });
     const colors = {
         card: useColorModeValue('white', 'brand.dark2'),
         cardBorder: useColorModeValue('brand.border-light', 'brand.border-dark'),
@@ -50,17 +44,6 @@ export const AuthCard: FC<Props> = ({ path }) => {
         }
     };
 
-    const setForm = (e: ChangeEvent<HTMLInputElement>) => {
-        setSignInForm({
-            ...signInForm,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const onSubmit = () => {
-        console.log('logged in');
-    };
-
     const TextDivider: FC<{ text: string }> = ({ text }) => {
         return (
             <Box className="text-divider" _before={{ bg: 'brand.muted' }} _after={{ bg: 'brand.muted' }}>
@@ -72,90 +55,37 @@ export const AuthCard: FC<Props> = ({ path }) => {
     return (
         <Box
             bg={colors.card}
-            p={{ base: '8', md: '16' }}
+            p={{ base: '8', md: '12' }}
             borderRadius="xl"
             className="sb-auth-card"
-            border="2px solid"
-            borderColor={colors.cardBorder}
-            minW={{ lg: '450px', base: '100%' }}
+            border={{ base: 'none', md: '2px solid' }}
+            borderColor={{ base: 'none', md: 'brand.border-light' }}
+            w={{ md: '450px', base: '100%' }}
+            maxW="450px"
             mx={{ base: '12px', md: '0' }}
         >
             <VStack spacing="24" w="100%" className="wrapper">
                 <Box textAlign="center">
-                    <Box>
+                    <Box mb="4">
                         <Logo width="28px" height="28px" />
                     </Box>
                     <Heading fontSize="3xl" mb="2">
                         Start Sailing
                     </Heading>
-                    <Text as="span">
-                        Not a member yet? <Link>Sign Up!</Link>
-                    </Text>
+                    {type === AuthCardType.SIGNIN ? (
+                        <Text as="span">
+                            Not a member yet? <Link>Sign Up!</Link>
+                        </Text>
+                    ) : (
+                        <Text as="span">
+                            Already a member? <Link>Sign In!</Link>
+                        </Text>
+                    )}
                 </Box>
                 <VStack spacing="6" w="100%" className="content">
-                    <Formik initialValues={signInForm} onSubmit={onSubmit} validationSchema={FormSchema}>
-                        {({ errors, touched, getFieldProps }: FormikProps<FormValues>) => (
-                            <VStack w="100%" spacing="6">
-                                <FormControl isInvalid={Boolean(errors.email && touched.email)} onChange={setForm}>
-                                    <Input
-                                        label="Email"
-                                        field={{ ...getFieldProps('email') }}
-                                        error={Boolean(errors.email && touched.email)}
-                                        errorLabel={errors.email}
-                                        required
-                                        name="email"
-                                        id="email"
-                                        placeholder="Enter your email"
-                                        leftIcon={<SbMailIcon />}
-                                    />
-                                </FormControl>
-                                <FormControl
-                                    isInvalid={Boolean(errors.password && touched.password)}
-                                    onChange={setForm}
-                                >
-                                    <Input
-                                        type="password"
-                                        label="Password"
-                                        field={{ ...getFieldProps('password') }}
-                                        error={Boolean(errors.password && touched.password)}
-                                        errorLabel={errors.password}
-                                        required
-                                        name="password"
-                                        id="password"
-                                        placeholder="Enter password"
-                                        leftIcon={<SbPasswordIcon />}
-                                    />
-                                </FormControl>
-                                <Button w="100%" size="lg">
-                                    Log in
-                                </Button>
-                            </VStack>
-                        )}
-                    </Formik>
+                    <SignIn />
                     <TextDivider text="or" />
-                    <Button
-                        w="100%"
-                        size="lg"
-                        variant="outline"
-                        colorScheme="gray"
-                        leftIcon={<SbGoogleIcon />}
-                        rightIcon={<SbRightArrowIcon />}
-                        onClick={() => onLogin(Provider.Google)}
-                    >
-                        <Text pr="6">Log In with Google</Text>
-                    </Button>
-                    <Button
-                        w="100%"
-                        size="lg"
-                        variant="outline"
-                        colorScheme="gray"
-                        leftIcon={<SbFacebookIcon />}
-                        rightIcon={<SbRightArrowIcon />}
-                        onClick={() => onLogin(Provider.Facebook)}
-                    >
-                        <Text pr="2">Log In with Facebook</Text>
-                    </Button>
-
+                    <SocialButtons path={path} />
                     <Link>Issues logging in?</Link>
                 </VStack>
             </VStack>

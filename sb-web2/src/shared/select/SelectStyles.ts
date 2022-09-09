@@ -8,11 +8,11 @@ export const customStyles: StylesConfig<any, true> = {
         return {
             ...provided,
             '&:hover': {
-                border: `1px solid ${theme.colors.teal[200]}`,
+                border: `2px solid ${theme.colors.teal[200]}`,
             },
             outline: '0 0 0 3px #f98fffCC',
             boxSizing: 'border-box',
-            border: state.isFocused ? `1px solid ${theme.colors.teal[300]}` : `1px solid ${theme.colors.gray[200]}`,
+            border: state.isFocused ? `2px solid ${theme.colors.teal[300]}` : `2px solid ${theme.colors.gray[200]}`,
             boxShadow: 'none',
             color: 'gray.600',
             cursor: 'pointer',

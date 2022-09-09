@@ -62,7 +62,7 @@ export const Subscribe: FunctionComponent = () => {
                                         <Input
                                             {...getFieldProps('email')}
                                             name="email"
-                                            id="email"
+                                            id="subEmail"
                                             placeholder="Enter your email *"
                                             className="contact-input"
                                             paddingLeft="24px"
