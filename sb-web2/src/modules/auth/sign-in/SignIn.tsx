@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useState } from 'react';
 
-import { Box, Button, FormControl, VStack } from '@chakra-ui/react';
+import { Box, Button, FormControl, Link, VStack } from '@chakra-ui/react';
 import { Form, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
@@ -63,6 +63,7 @@ export const SignIn: FC = () => {
                                     placeholder="Enter password"
                                     leftIcon={<SbPasswordIcon />}
                                 />
+                                <Link fontSize="xs">Forgot Password</Link>
                             </FormControl>
                             <Button w="100%" size="lg" type="submit">
                                 Log in

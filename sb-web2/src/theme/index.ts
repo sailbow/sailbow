@@ -10,9 +10,10 @@ const config: ThemeConfig = {
 };
 
 const fonts = {
-    body: "'Urbanist', sans-serif",
-    heading: "'Urbanist', sans-serif",
+    body: "'Inter', sans-serif",
+    heading: "'Inter', sans-serif",
 };
+
 const colors = {
     brand: {
         ...BrandColors,

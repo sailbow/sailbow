@@ -2,12 +2,10 @@ import { FC } from 'react';
 
 import { Box, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
 
-import { Provider } from 'modules/auth/Auth.Service';
 import { SignIn } from 'modules/auth/sign-in/SignIn';
 import { SocialButtons } from 'modules/auth/social-buttons/SocialButtons';
 import { Logo } from 'shared/icons/Icons';
 
-import { useAuthStore } from '../Auth.Store';
 import './AuthCard.scss';
 
 export enum AuthCardType {
@@ -21,32 +19,19 @@ interface Props {
 }
 
 export const AuthCard: FC<Props> = ({ path, type }) => {
-    const [, { providerLogin }] = useAuthStore();
     const colors = {
         card: useColorModeValue('white', 'brand.dark2'),
         cardBorder: useColorModeValue('brand.border-light', 'brand.border-dark'),
     };
 
-    const onLogin = async (provider: Provider) => {
-        let state = '';
-        if (path) {
-            state = encodeURI(JSON.stringify({ path }));
-        }
-
-        try {
-            const url = await providerLogin(provider, state);
-
-            if (url) {
-                window.open(url, '_self');
-            }
-        } catch (err: any) {
-            console.log(err.response);
-        }
-    };
-
     const TextDivider: FC<{ text: string }> = ({ text }) => {
         return (
-            <Box className="text-divider" _before={{ bg: 'brand.muted' }} _after={{ bg: 'brand.muted' }}>
+            <Box
+                className="text-divider"
+                _before={{ bg: 'brand.muted' }}
+                _after={{ bg: 'brand.muted' }}
+                color="brand.secondary"
+            >
                 {text}
             </Box>
         );
@@ -64,7 +49,7 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
             maxW="450px"
             mx={{ base: '12px', md: '0' }}
         >
-            <VStack spacing="24" w="100%" className="wrapper">
+            <VStack spacing="16" w="100%" className="wrapper">
                 <Box textAlign="center">
                     <Box mb="4">
                         <Logo width="28px" height="28px" />
@@ -86,7 +71,7 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
                     <SignIn />
                     <TextDivider text="or" />
                     <SocialButtons path={path} />
-                    <Link>Issues logging in?</Link>
+                    <Link>Having trouble?</Link>
                 </VStack>
             </VStack>
         </Box>

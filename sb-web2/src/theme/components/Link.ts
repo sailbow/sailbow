@@ -5,7 +5,7 @@ import { Color } from 'theme/colors/Colors';
 export const LinkStyles: ComponentStyleConfig = {
     baseStyle: (props: any) => {
         return {
-            fontWeight: 700,
+            fontWeight: 500,
             color: Color.Teal800,
             _hover: {
                 color: 'teal.500',

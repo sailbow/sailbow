@@ -8,6 +8,7 @@ export {
     BsClock as SbClockIcon,
     BsLayers as SbFeedIcon,
     BsLink45Deg as SbLinkIcon,
+    BsShieldLock as SbPasswordIcon
 } from 'react-icons/bs';
 export {
     IoCloseOutline as SbCloseIcon,
@@ -26,7 +27,7 @@ export {
     HiArrowDown as SbArrowDownIcon,
     HiArrowLeft as SbArrowLeftIcon,
     HiOutlinePencil as SbEditIcon,
-    HiOutlineLockClosed as SbPasswordIcon,
+    // HiOutlineLockClosed as SbPasswordIcon,
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';

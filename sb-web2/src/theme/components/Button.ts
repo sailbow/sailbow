@@ -38,6 +38,12 @@ export const ButtonStyles: ComponentStyleConfig = {
                 return {
                     ...props.theme.components.Button.variants.solid,
                     color: 'brand.dark',
+                    _hover: {
+                        bg: 'brand.100',
+                    },
+                    _active: {
+                        bg: 'brand.600',
+                    },
                 };
             }
         },
