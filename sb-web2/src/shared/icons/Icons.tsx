@@ -1,3 +1,6 @@
+import { Icon } from '@chakra-ui/react';
+import { FiCheck } from 'react-icons/fi';
+
 export {
     BsExclamation as SbWarningIcon,
     BsImage as Image,
@@ -50,3 +53,5 @@ export {
 export { ReactComponent as SbBoatIcon } from 'assets/icons/boat.svg';
 export { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 export { ReactComponent as LogoType } from 'assets/icon-logo-type.svg';
+
+export const SbCheckMarkIcon = <Icon as={FiCheck} w={5} h={5} />;

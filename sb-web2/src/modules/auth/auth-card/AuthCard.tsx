@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useState } from 'react';
 
-import { Box, Button, FormControl, Heading, Link, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, FormControl, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
@@ -28,6 +28,10 @@ const FormSchema = Yup.object().shape({
 export const AuthCard: FC<Props> = ({ path }) => {
     const [, { providerLogin }] = useAuthStore();
     const [signInForm, setSignInForm] = useState<FormValues>({ email: '', password: '' });
+    const colors = {
+        card: useColorModeValue('white', 'brand.dark2'),
+        cardBorder: useColorModeValue('brand.border-light', 'brand.border-dark'),
+    };
 
     const onLogin = async (provider: Provider) => {
         let state = '';
@@ -67,13 +71,14 @@ export const AuthCard: FC<Props> = ({ path }) => {
 
     return (
         <Box
-            bg="white"
-            p="16"
+            bg={colors.card}
+            p={{ base: '8', md: '16' }}
             borderRadius="xl"
             className="sb-auth-card"
             border="2px solid"
-            borderColor="brand.border-light"
-            minW="450px"
+            borderColor={colors.cardBorder}
+            minW={{ lg: '450px', base: '100%' }}
+            mx={{ base: '12px', md: '0' }}
         >
             <VStack spacing="24" w="100%" className="wrapper">
                 <Box textAlign="center">

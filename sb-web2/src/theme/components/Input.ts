@@ -1,4 +1,4 @@
-import { ComponentStyleConfig, theme as ChakraTheme } from '@chakra-ui/react';
+import { ComponentStyleConfig } from '@chakra-ui/react';
 
 export const InputStyles: ComponentStyleConfig = {
     variants: {

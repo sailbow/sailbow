@@ -3,7 +3,6 @@ import { createStandaloneToast } from '@chakra-ui/react';
 import { theme } from 'theme';
 
 const { toast } = createStandaloneToast({ theme });
-let ID = 0;
 
 enum ToastId {
     Error,
@@ -24,6 +23,7 @@ export const showErrorToast = (message: string) => {
 };
 
 export const showSuccessToast = (message: string, title?: string) => {
+    toast.closeAll();
     toast.close(ToastId.Success);
 
     toast({

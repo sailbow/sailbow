@@ -1,6 +1,6 @@
-import { ComponentStyleConfig, theme as ChakraTheme } from '@chakra-ui/react';
+import { ComponentStyleConfig } from '@chakra-ui/react';
 
-export const Textarea: ComponentStyleConfig = {
+export const TextareaStyles: ComponentStyleConfig = {
     defaultProps: {
         focusBorderColor: 'transparent',
     },

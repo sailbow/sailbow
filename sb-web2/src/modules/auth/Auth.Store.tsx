@@ -2,7 +2,7 @@ import React, { createContext, ReactNode, useReducer, useContext, Dispatch, FC, 
 
 import { resetLocalStorage, setHeadersToLocalStorage } from 'shared/http/Http';
 import { PageSpinner } from 'shared/page-spinner/PageSpinner';
-import { showErrorToast, showSuccessToast } from 'shared/toast/Toast';
+import { showErrorToast } from 'shared/toast/Toast';
 import { User, getUser } from 'shared/user/User';
 import { LocalStorageKeys, LS } from 'util/localstorage/LocalStorage';
 

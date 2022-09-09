@@ -127,6 +127,7 @@ export const BrandColors: BrandColorType = {
     warning: Color.Orange300,
     secondary: Color.Gray600,
     'border-light': Color.Gray100,
+    'border-dark': Color.Gray600,
 };
 
 export enum Brand {
