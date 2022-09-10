@@ -16,7 +16,7 @@ const Login = lazy(() => import('modules/auth/login/Login').then((module) => ({ 
 const Authorize = lazy(() =>
     import('modules/auth/authorize/Authorize').then((module) => ({ default: module.Authorize })),
 );
-// const Redirect = lazy(() => import('modules/auth/redirect/Redirect').then((module) => ({ default: module.Redirect })));
+const Redirect = lazy(() => import('modules/auth/redirect/Redirect').then((module) => ({ default: module.Redirect })));
 // const Login = lazy(() => import('modules/auth/login/Login').then((module) => ({ default: module.Login })));
 
 /** Whitelisted Content */
@@ -84,7 +84,7 @@ export const PublicRouter: FunctionComponent = () => {
                     <Routes>
                         <Route path={AppRoutes.Public.Auth} element={<Login />} />
                         <Route path={AppRoutes.Public.Login} element={<Authorize />} />
-
+                        <Route path={AppRoutes.Public.Redirect} element={<Redirect />} />
                         {/* <Route path={AppRoutes.Public.Redirect}>
                             <Redirect />
                         </Route> */}

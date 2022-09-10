@@ -61,7 +61,7 @@ export const Input: FunctionComponent<InputProps> = ({
                 </Text>
             )}
             <InputGroup variant="brand" alignItems="center" className="sb-input">
-                <InputLeftAddon position="absolute" p="0" color='brand.secondary'>
+                <InputLeftAddon position="absolute" p="0" color="brand.secondary">
                     {leftIcon}
                 </InputLeftAddon>
                 <ChakraInput p="0" pl={leftIcon ? '24px' : '0'} {...field} {...props} />

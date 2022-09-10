@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { Box, Button, Text } from '@chakra-ui/react';
 
@@ -13,6 +13,10 @@ interface Props {
 
 export const SocialButtons: FC<Props> = ({ path }) => {
     const [, { providerLogin }] = useAuthStore();
+    const [loader, setLoader] = useState({
+        [Provider.Facebook]: false,
+        [Provider.Google]: false,
+    });
 
     const onLogin = async (provider: Provider) => {
         let state = '';
@@ -21,9 +25,12 @@ export const SocialButtons: FC<Props> = ({ path }) => {
         }
 
         try {
+            setLoader((l) => ({ ...l, [provider]: true }));
             const url = await providerLogin(provider, state);
 
             if (url) {
+                setLoader((l) => ({ ...l, [provider]: false }));
+
                 window.open(url, '_self');
             }
         } catch (err: any) {
@@ -34,6 +41,7 @@ export const SocialButtons: FC<Props> = ({ path }) => {
     return (
         <>
             <Button
+                isLoading={loader[Provider.Google]}
                 w="100%"
                 size="lg"
                 variant="social"
@@ -45,6 +53,7 @@ export const SocialButtons: FC<Props> = ({ path }) => {
                 <Box />
             </Button>
             <Button
+                isLoading={loader[Provider.Facebook]}
                 w="100%"
                 size="lg"
                 variant="social"

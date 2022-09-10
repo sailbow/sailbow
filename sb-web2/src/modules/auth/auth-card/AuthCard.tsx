@@ -11,6 +11,7 @@ import './AuthCard.scss';
 export enum AuthCardType {
     SIGNIN,
     SIGNUP,
+    REDIRECT,
 }
 
 interface Props {
@@ -50,13 +51,19 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
             mx={{ base: '12px', md: '0' }}
         >
             <VStack spacing="16" w="100%" className="wrapper">
-                <Box textAlign="center">
+                <Box>
                     <Box mb="4">
                         <Logo width="28px" height="28px" />
                     </Box>
-                    <Heading fontSize="3xl" mb="2">
-                        Start Sailing
-                    </Heading>
+                    {type === AuthCardType.REDIRECT ? (
+                        <Heading fontSize="2xl" mb="2">
+                            Log in to start sailing
+                        </Heading>
+                    ) : (
+                        <Heading fontSize="3xl" mb="2">
+                            Start Sailing
+                        </Heading>
+                    )}
                     {type === AuthCardType.SIGNIN ? (
                         <Text as="span">
                             Not a member yet? <Link>Sign Up!</Link>

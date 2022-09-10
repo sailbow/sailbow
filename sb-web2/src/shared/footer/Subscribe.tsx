@@ -43,7 +43,7 @@ export const Subscribe: FunctionComponent = () => {
 
     return (
         <Box>
-            <Heading size="sm" textTransform="uppercase" letterSpacing="wider" color="gray.400">
+            <Heading fontSize="sm" textTransform="uppercase" letterSpacing="wider" color="gray.400">
                 Subscribe to our newsletter
             </Heading>
             <Flex textAlign="start" flexDir="column" pt="4">

@@ -78,12 +78,12 @@ export const Footer: FunctionComponent = () => {
                     <Stack direction={{ base: 'column', md: 'row' }} spacing={{ base: '10', md: '20' }}>
                         {FooterSections.map((section) => (
                             <Box key={section.heading}>
-                                <Heading size="sm" textTransform="uppercase" letterSpacing="wider" color="gray.400">
+                                <Heading fontSize="sm" textTransform="uppercase" letterSpacing="wider" color="gray.400">
                                     {section.heading}
                                 </Heading>
                                 <Flex textAlign="start" flexDir="column" pt="4">
                                     {section.content.map((route) => (
-                                        <Link href={route.href} key={route.label}>
+                                        <Link href={route.href} key={route.label} fontSize="sm">
                                             {route.label}
                                         </Link>
                                     ))}

@@ -8,7 +8,7 @@ type UserEndpointLabels = 'Me' | 'Update' | 'UpdatePassword';
 export const ProfileEndpoints: Record<UserEndpointLabels, EndpointFunction> = {
     Me: () => ({
         method: 'GET',
-        url: '/users/me',
+        url: 'api/identity/me',
     }),
     Update: <T>(data: T) => ({
         method: 'PUT',

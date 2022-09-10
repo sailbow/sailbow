@@ -66,6 +66,9 @@ export const ButtonStyles: ComponentStyleConfig = {
                 ...OUTLINE_STYLES,
                 display: 'flex',
                 justifyContent: 'space-between',
+                _loading: {
+                    justifyContent: 'center',
+                },
             };
         },
         icon: (props: any) => {
