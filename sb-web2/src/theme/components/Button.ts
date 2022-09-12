@@ -39,7 +39,7 @@ export const ButtonStyles: ComponentStyleConfig = {
                     ...props.theme.components.Button.variants.solid,
                     color: 'brand.dark',
                     _hover: {
-                        bg: 'brand.100',
+                        bg: 'brand.300',
                     },
                     _active: {
                         bg: 'brand.600',
@@ -47,13 +47,14 @@ export const ButtonStyles: ComponentStyleConfig = {
                 };
             }
         },
-        // link: (props: any) => {
-        //     let color = 'brand.dark';
-
-        //     return {
-        //         color: 'brand.dark',
-        //     }
-        // },
+        'menu-link': (props: any) => {
+            return {
+                color: 'brand.dark',
+                _hover: {
+                    color: 'brand.800',
+                },
+            };
+        },
         outline: (props: any) => {
             return {
                 ...props.theme.components.Button.variants.outline,

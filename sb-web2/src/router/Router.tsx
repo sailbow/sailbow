@@ -10,6 +10,7 @@ import { Footer } from 'shared/footer/Footer';
 import { PrivateRoutes, Routes as AppRoutes } from 'router/Router.Types';
 
 import { NavbarHeight } from 'theme';
+import { PublicNavbar } from 'shared/navbar/public/PublicNavbar';
 
 /** Public Content */
 const Login = lazy(() => import('modules/auth/login/Login').then((module) => ({ default: module.Login })));
@@ -39,7 +40,7 @@ const License = lazy(() => import('util/whitelist-pages/License').then((module) 
 export const WhitelistedRouter: FunctionComponent = () => {
     return (
         <>
-            {/* <BaseNavbar /> */}
+            <PublicNavbar />
             <Container className="sb-whitelisted-router" maxW="container.lg">
                 <Suspense fallback={null}>
                     <Routes>
@@ -78,8 +79,8 @@ export const PublicRouter: FunctionComponent = () => {
 
     return (
         <>
-            {/* <Navbar isAuth={false} /> */}
-            <Box className="sb-public-router" pt={NavbarHeight} h="100%" w="100%">
+            <PublicNavbar />
+            <Box className="sb-public-router" h="100%" w="100%">
                 <Suspense fallback={null}>
                     <Routes>
                         <Route path={AppRoutes.Public.Auth} element={<Login />} />

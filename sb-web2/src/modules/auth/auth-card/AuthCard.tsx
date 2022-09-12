@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Box, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
+import { Box, Center, Flex, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
 
 import { SignIn } from 'modules/auth/sign-in/SignIn';
 import { SocialButtons } from 'modules/auth/social-buttons/SocialButtons';
@@ -43,7 +43,6 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
             bg={colors.card}
             p={{ base: '8', md: '12' }}
             borderRadius="xl"
-            className="sb-auth-card"
             border={{ base: 'none', md: '2px solid' }}
             borderColor={{ base: 'none', md: 'brand.border-light' }}
             w={{ md: '450px', base: '100%' }}
@@ -52,9 +51,10 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
         >
             <VStack spacing="16" w="100%" className="wrapper">
                 <Box>
-                    <Box mb="4">
+                    <Center mb="4">
                         <Logo width="28px" height="28px" />
-                    </Box>
+                    </Center>
+
                     {type === AuthCardType.REDIRECT ? (
                         <Heading fontSize="2xl" mb="2">
                             Log in to start sailing
