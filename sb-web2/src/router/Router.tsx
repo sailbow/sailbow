@@ -10,6 +10,7 @@ import { Footer } from 'shared/footer/Footer';
 import { PrivateRoutes, Routes as AppRoutes } from 'router/Router.Types';
 
 import { NavbarHeight } from 'theme';
+import { Navbar } from 'shared/navbar/Navbar';
 
 /** Public Content */
 const Login = lazy(() => import('modules/auth/login/Login').then((module) => ({ default: module.Login })));
@@ -106,6 +107,7 @@ export const PrivateRouter: FunctionComponent = () => {
         <>
             {/* <Navbar isAuth />
             <CreateEdit /> */}
+            <Navbar />
             <Box className="sb-private-router" pt={NavbarHeight}>
                 <Routes>
                     <Route path="/boats" element={<span>Private stuff</span>} />
