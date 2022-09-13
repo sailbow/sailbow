@@ -12,7 +12,7 @@ export const Redirect: FunctionComponent = () => {
     const path: string | null = urlSearchParams.get('path');
 
     if (!path) {
-        window.location.href = Routes.Public.Landing;
+        window.location.href = Routes.Public.Auth;
     }
 
     return (

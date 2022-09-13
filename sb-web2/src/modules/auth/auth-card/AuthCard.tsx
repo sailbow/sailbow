@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Box, Center, Flex, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
+import { Box, Center, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
 
 import { SignIn } from 'modules/auth/sign-in/SignIn';
 import { SocialButtons } from 'modules/auth/social-buttons/SocialButtons';
@@ -41,18 +41,16 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
     return (
         <Box
             bg={colors.card}
-            p={{ base: '8', md: '12' }}
-            borderRadius="xl"
-            border={{ base: 'none', md: '2px solid' }}
-            borderColor={{ base: 'none', md: 'brand.border-light' }}
             w={{ md: '450px', base: '100%' }}
             maxW="450px"
             mx={{ base: '12px', md: '0' }}
+            py="16"
+            px="4"
         >
             <VStack spacing="16" w="100%" className="wrapper">
-                <Box>
-                    <Center mb="4">
-                        <Logo width="28px" height="28px" />
+                <Box textAlign="center">
+                    <Center mb="6">
+                        <Logo width="40px" height="40px" />
                     </Center>
 
                     {type === AuthCardType.REDIRECT ? (

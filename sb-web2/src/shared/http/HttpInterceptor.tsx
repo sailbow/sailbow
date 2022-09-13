@@ -41,7 +41,7 @@ export const HttpInterceptor: FunctionComponent = () => {
                         if (originalRequest.url?.includes(AuthEndpoints.Refresh().url)) {
                             console.log('Should go to login page');
                             resetLocalStorage();
-                            window.location.href = Routes.Public.Landing;
+                            window.location.href = Routes.Public.Auth;
                             showErrorToast("Unauthorized! Looks like you aren't on the manifest");
                         } else if (!originalRequest.retry) {
                             originalRequest.retry = true;

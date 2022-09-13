@@ -1,7 +1,6 @@
-type PublicRoutesLabel = 'Landing' | 'Login' | 'Redirect' | 'Authorize' | 'Auth';
+type PublicRoutesLabel = 'Login' | 'Redirect' | 'Authorize' | 'Auth';
 type PrivateRoutesLabel = 'Error' | 'Boats' | 'Invite' | 'Boat';
 type WhitelistedRoutesLabel = 'AboutUs' | 'Contact' | 'FAQ' | 'HowItWorks' | 'Privacy' | 'Terms' | 'License';
-
 
 interface Route {
     Public: Record<PublicRoutesLabel, string>;
@@ -11,11 +10,10 @@ interface Route {
 
 export const Routes: Route = {
     Public: {
-        Landing: '/',
         Login: '/login',
         Redirect: '/redirect',
         Authorize: '/authorize',
-        Auth: '/auth'
+        Auth: '/',
     },
     Private: {
         Error: '/error',
