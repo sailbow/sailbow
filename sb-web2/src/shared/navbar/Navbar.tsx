@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import { Box, Button, Flex, IconButton, HStack } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, HStack, Link } from '@chakra-ui/react';
 import { matchPath } from 'react-router-dom';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
@@ -39,7 +39,6 @@ export const Navbar: FunctionComponent = () => {
 
     const getActiveState = (link: LinkLabels): 'solid' | 'ghost' => {
         const check = (currentLink: string) => {
-            // eslint-disable-next-line
             if (!!matchPath(window.location.pathname, currentLink)) {
                 return 'solid';
             }
@@ -69,10 +68,13 @@ export const Navbar: FunctionComponent = () => {
             boxShadow={navbarBg ? 'sm' : 'none'}
             id="sb-navbar"
         >
-            <HStack alignItems="center" spacing="4">
+            <HStack alignItems="center" spacing="4" pl="2">
                 <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
-                <Box display={{ base: 'none', md: 'flex' }}>
-                    <Button
+                <Box display="flex" gap="2">
+                    <Link variant="navbar" fontSize="lg">
+                        Boats
+                    </Link>
+                    {/* <Button
                         variant={getActiveState(LinkLabels.Boats)}
                         colorScheme="gray"
                         leftIcon={<SbBoatIcon />}
@@ -85,7 +87,7 @@ export const Navbar: FunctionComponent = () => {
                     </Button>
                     <Button variant="ghost" colorScheme="gray" leftIcon={<SbClockIcon />}>
                         Memories
-                    </Button>
+                    </Button> */}
                 </Box>
             </HStack>
             <Flex alignItems="center" justifyContent="space-between" gap="4">

@@ -1,6 +1,6 @@
 import { ComponentStyleConfig } from '@chakra-ui/react';
 
-import { Color } from 'theme/colors/Colors';
+import { Color, BrandColors } from 'theme/colors/Colors';
 
 export const LinkStyles: ComponentStyleConfig = {
     baseStyle: (props: any) => {
@@ -15,5 +15,13 @@ export const LinkStyles: ComponentStyleConfig = {
                 textDecoration: 'none',
             },
         };
+    },
+    variants: {
+        navbar: (props: any) => {
+            return {
+                fontWeight: 700,
+                color: BrandColors.dark,
+            };
+        },
     },
 };

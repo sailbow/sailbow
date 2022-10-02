@@ -3,12 +3,19 @@ import { AxiosResponse } from 'axios';
 import { Http } from 'shared/http/Http';
 import { EndpointFunction } from 'shared/http/Endpoints';
 
-type UserEndpointLabels = 'Me' | 'Update' | 'UpdatePassword';
+type UserEndpointLabels = 'Me' | 'Update' | 'UpdatePassword' | 'Search';
 
 export const ProfileEndpoints: Record<UserEndpointLabels, EndpointFunction> = {
     Me: () => ({
         method: 'GET',
         url: 'api/identity/me',
+    }),
+    Search: <T>(q: T) => ({
+        method: 'GET',
+        url: '/api/users/search',
+        params: {
+            q,
+        },
     }),
     Update: <T>(data: T) => ({
         method: 'PUT',
@@ -64,6 +71,11 @@ export const getUser = async (): Promise<User> => {
     return data.user;
 };
 
+export const searchUsers = async (query: string): Promise<User[]> => {
+    const { data }: AxiosResponse<any> = await Http(ProfileEndpoints.Search(query));
+    console.log(data);
+    return data;
+};
 // export const updateUser = async (updatedData: BasicInfoFormState) => {
 //     const { data }: AxiosResponse<User> = await Http(ProfileEndpoints.Update<BasicInfoFormState>(updatedData));
 

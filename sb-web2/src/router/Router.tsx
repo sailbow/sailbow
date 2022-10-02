@@ -1,12 +1,9 @@
-import React, { FunctionComponent, lazy, Suspense, useEffect } from 'react';
+import { FunctionComponent, lazy, Suspense, useEffect } from 'react';
 
 import { Routes, Route, matchPath } from 'react-router-dom';
 import { Box, Container } from '@chakra-ui/react';
 
-// import { CreateEdit } from 'modules/boats/create-edit/CreateEdit';
 import { Footer } from 'shared/footer/Footer';
-// import { Navbar } from 'shared/navbar/Navbar';
-// import { BaseNavbar } from 'util/whitelisted/Base';
 import { PrivateRoutes, Routes as AppRoutes } from 'router/Router.Types';
 
 import { NavbarHeight } from 'theme';
@@ -33,7 +30,7 @@ const License = lazy(() => import('util/whitelist-pages/License').then((module) 
 // const NotFound = lazy(() => import('util/not-found/NotFound').then((module) => ({ default: module.NotFound })));
 
 /** Private Content */
-// const Boat = lazy(() => import('modules/boats/Boat').then((module) => ({ default: module.Boat })));
+const Boat = lazy(() => import('modules/boats/Boat').then((module) => ({ default: module.Boat })));
 // const Invite = lazy(() => import('modules/boats/invite/Invite').then((module) => ({ default: module.Invite })));
 // const Error = lazy(() => import('util/error/Error').then((module) => ({ default: module.Error })));
 
@@ -110,7 +107,7 @@ export const PrivateRouter: FunctionComponent = () => {
             <Navbar />
             <Box className="sb-private-router" pt={NavbarHeight}>
                 <Routes>
-                    <Route path="/boats" element={<span>Private stuff</span>} />
+                    <Route path="/boats" element={<Boat />} />
                 </Routes>
                 {/* <Suspense fallback={null}>
                     <Switch>

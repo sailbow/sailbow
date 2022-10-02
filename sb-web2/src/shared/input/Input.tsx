@@ -55,7 +55,7 @@ export const Input: FunctionComponent<InputProps> = ({
     return (
         <Box className={`sb-input-wrapper ${customClass}`}>
             {label && (
-                <Text fontSize="sm" fontWeight="bold" className="sb-input-label">
+                <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
                     {label}
                     {required && <span className="required">*</span>}
                 </Text>
@@ -104,7 +104,7 @@ export const TextArea: FunctionComponent<TextareaProps> = ({
     return (
         <Box className={`sb-input-wrapper ${customClass}`}>
             {label && (
-                <Text fontSize="sm" fontWeight="bold" className="sb-input-label">
+                <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
                     {label}
                     {required && <span className="required">*</span>}
                 </Text>
