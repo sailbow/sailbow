@@ -66,9 +66,9 @@ export interface User {
 // type UpdatePasswordPayload = Pick<UpdatePasswordFormState, 'oldPassword' | 'newPassword'>;
 
 export const getUser = async (): Promise<User> => {
-    const { data }: AxiosResponse<{ user: User }> = await Http(ProfileEndpoints.Me());
+    const { data }: AxiosResponse<User> = await Http(ProfileEndpoints.Me());
 
-    return data.user;
+    return data;
 };
 
 export const searchUsers = async (query: string): Promise<User[]> => {

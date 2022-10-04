@@ -14,9 +14,9 @@ export const customStyles: StylesConfig<any, true> = {
             borderRight: '0',
             borderRadius: '0',
             paddingLeft: '24px',
-            borderColor: state.isFocused ? theme.colors.brand.muted : theme.colors.gray[200],
+            borderColor: state.isFocused ? theme.colors.brand.secondary : theme.colors.gray[200],
             '&:hover': {
-                borderColor: theme.colors.brand.muted,
+                borderColor: theme.colors.brand.secondary,
             },
         };
     },

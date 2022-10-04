@@ -22,7 +22,7 @@ export const ButtonStyles: ComponentStyleConfig = {
     },
     baseStyle: (props: any) => {
         return {
-            fontWeight: ChakraTheme.fontWeights.bold,
+            fontWeight: ChakraTheme.fontWeights.semibold,
             borderColor: 'transparent',
             borderWidth: '1px',
             // _focus: {
