@@ -102,13 +102,14 @@ export const PublicRouter: FunctionComponent = () => {
 export const PrivateRouter: FunctionComponent = () => {
     return (
         <>
-            {/* <Navbar isAuth />
-            <CreateEdit /> */}
             <Navbar />
-            <Box className="sb-private-router" pt={NavbarHeight}>
-                <Routes>
-                    <Route path="/boats" element={<Boat />} />
-                </Routes>
+            <Box className="sb-private-router">
+                <Suspense fallback={null}>
+                    <Routes>
+                        <Route path={`${AppRoutes.Private.Boats}/*`} element={<Boat />} />
+                    </Routes>
+                </Suspense>
+
                 {/* <Suspense fallback={null}>
                     <Switch>
                         <Route exact path="/">

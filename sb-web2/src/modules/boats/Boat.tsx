@@ -1,17 +1,15 @@
-import React, { FunctionComponent, useEffect, lazy } from 'react';
+import { FunctionComponent, useEffect, lazy } from 'react';
 
-import { Box, Button } from '@chakra-ui/react';
-import { Route } from 'react-router-dom';
+import { Box } from '@chakra-ui/react';
+import { Route, Routes } from 'react-router-dom';
 
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Routes } from 'router/Router.Types';
 import { HttpStatus } from 'shared/http/Http';
 import { ErrorCode, getErrorPath } from 'shared/error/Error';
-import { searchUsers } from 'shared/user/User';
 import { CreateEdit } from './create-edit/CreateEdit';
 
 // const BoatView = lazy(() => import('modules/boats/view/BoatView').then((module) => ({ default: module.BoatView })));
-// const Home = lazy(() => import('modules/boats/home/Home').then((module) => ({ default: module.Home })));
+const Home = lazy(() => import('modules/boats/home/Home').then((module) => ({ default: module.Home })));
 
 enum BoatRoutes {
     AllBoats = '/',
@@ -37,12 +35,12 @@ export const Boat: FunctionComponent = () => {
     }, [error]);
 
     return (
-        <Box px="4" h="100%" id="sb-main">
+        <Box p="4" h="100%" id="sb-main">
             <CreateEdit />
-            {/* <Route path={Routes.Private.Boats}>
-                <Home />
-            </Route>
-            <Route path={`${Routes.Private.Boats}${BoatRoutes.View}`}>
+            <Routes>
+                <Route path={BoatRoutes.AllBoats} element={<Home />} />
+            </Routes>
+            {/* <Route path={`${Routes.Private.Boats}${BoatRoutes.View}`}>
                 <BoatView />
             </Route> */}
         </Box>

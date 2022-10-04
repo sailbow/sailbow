@@ -82,6 +82,7 @@ export interface BoatState {
     loading: {
         create: boolean;
         get: boolean;
+        getAll: boolean;
     };
     createOpen: boolean;
 }

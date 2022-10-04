@@ -8,13 +8,17 @@ export enum BoatActionType {
     SetError,
     SetBoat,
     SetCreateLoading,
-    SetGetLoading,
+    SetGetAllLoading,
     SetAllBoats,
 }
 
 interface PayloadCreateBoat extends CreateBoat {}
 
 interface PayloadSetBoat extends Boat {}
+
+interface PayloadLoading {
+    loading: boolean;
+}
 
 interface PayloadSetAllBoats {
     boats: Boat[];
@@ -30,7 +34,13 @@ interface PayloadError {
 
 interface BoatAction {
     type: BoatActionType;
-    payload: PayloadCreateBoat | PayloadSetBoat | PayloadError | boolean | PayloadSetCreateNav | PayloadSetAllBoats;
+    payload:
+        | PayloadCreateBoat
+        | PayloadSetBoat
+        | PayloadError
+        | PayloadLoading
+        | PayloadSetCreateNav
+        | PayloadSetAllBoats;
 }
 
 interface BoatProviderProps {
@@ -42,6 +52,7 @@ export const initialBoatState: BoatState = {
     loading: {
         create: false,
         get: false,
+        getAll: false,
     },
     createOpen: false,
     boats: [],
@@ -59,8 +70,8 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
             return nextState;
         }
         case BoatActionType.SetCreateLoading: {
-            const payload = action.payload as boolean;
-            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, create: payload } };
+            const { loading } = action.payload as PayloadLoading;
+            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, create: loading } };
 
             return nextState;
         }
@@ -70,9 +81,9 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
 
             return nextState;
         }
-        case BoatActionType.SetGetLoading: {
-            const payload = action.payload as boolean;
-            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, get: payload } };
+        case BoatActionType.SetGetAllLoading: {
+            const { loading } = action.payload as PayloadLoading;
+            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, getAll: loading } };
 
             return nextState;
         }
@@ -145,14 +156,14 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             dispatch({ type: BoatActionType.SetCreateNav, payload: { open: false } });
         },
         createBoat: async (boat: CreateBoat) => {
-            dispatch({ type: BoatActionType.SetCreateLoading, payload: true });
+            dispatch({ type: BoatActionType.SetCreateLoading, payload: { loading: true } });
             try {
                 const response = await createBoat(boat);
 
-                dispatch({ type: BoatActionType.SetCreateLoading, payload: false });
+                dispatch({ type: BoatActionType.SetCreateLoading, payload: { loading: false } });
                 return response;
             } catch (error: any) {
-                dispatch({ type: BoatActionType.SetCreateLoading, payload: false });
+                dispatch({ type: BoatActionType.SetCreateLoading, payload: { loading: false } });
                 dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
                 return null;
             }
@@ -176,16 +187,16 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             return getBannerImages(value, page);
         },
         getBoats: async () => {
-            dispatch({ type: BoatActionType.SetGetLoading, payload: true });
+            dispatch({ type: BoatActionType.SetGetAllLoading, payload: { loading: true } });
             try {
                 const response = await getAllBoats();
 
                 dispatch({ type: BoatActionType.SetAllBoats, payload: { boats: response } });
-                dispatch({ type: BoatActionType.SetGetLoading, payload: false });
+                dispatch({ type: BoatActionType.SetGetAllLoading, payload: { loading: false } });
 
                 return response;
             } catch (error: any) {
-                dispatch({ type: BoatActionType.SetGetLoading, payload: false });
+                dispatch({ type: BoatActionType.SetGetAllLoading, payload: { loading: false } });
                 dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
                 return null;
             }

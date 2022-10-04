@@ -10,8 +10,8 @@ const config: ThemeConfig = {
 };
 
 const fonts = {
-    body: "'Inter', sans-serif",
-    heading: "'Inter', sans-serif",
+    body: "'Plus Jakarta Sans', sans-serif",
+    heading: "'Plus Jakarta Sans', sans-serif",
 };
 
 const colors = {
