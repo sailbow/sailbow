@@ -32,7 +32,7 @@ export const Banner: FunctionComponent<Props> = ({ banner, id, showControls, onC
                 onChange={onSubmit}
                 banner={banner}
             />
-            <Box className={`sb-cover sb-cover--${id}`} borderRadius="xl">
+            <Box className={`sb-cover sb-cover--${id}`} zIndex="-1" borderRadius="lg">
                 <Button
                     display={showControls ? 'flex' : 'none'}
                     size="sm"

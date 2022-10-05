@@ -6,7 +6,6 @@ import { Box, Container } from '@chakra-ui/react';
 import { Footer } from 'shared/footer/Footer';
 import { PrivateRoutes, Routes as AppRoutes } from 'router/Router.Types';
 
-import { NavbarHeight } from 'theme';
 import { Navbar } from 'shared/navbar/Navbar';
 
 /** Public Content */
