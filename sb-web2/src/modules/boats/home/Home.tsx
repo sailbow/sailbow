@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect } from 'react';
 
-import { Box, Flex, Heading, IconButton, SimpleGrid } from '@chakra-ui/react';
+import { Box, Center, Flex, Heading, SimpleGrid } from '@chakra-ui/react';
 
 import { Boat } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
@@ -10,6 +10,7 @@ import { SbSearchIcon } from 'shared/icons/Icons';
 import { Input } from 'shared/input/Input';
 
 import { HomeFilter } from './home-filter/HomeFilter';
+import { HomeSort } from './home-sort/HomeSort';
 import './Home.scss';
 
 export const Home: FunctionComponent = () => {
@@ -22,21 +23,31 @@ export const Home: FunctionComponent = () => {
     }, []); // eslint-disable-line
 
     return (
-        <Box px="4" className="sb-home" w="100%">
-            {/* <Heading fontSize="4xl">Your Boats</Heading> */}
-            <Flex w="100%" justifyContent="space-between" alignItems="center" gap="4">
-                <Input leftIcon={<SbSearchIcon />} placeholder="Search boats..." w="100%" />
+        <Box px={{ base: 0, md: 4 }} className="sb-home" w="100%">
+            <Heading fontSize="3xl">Your Boats</Heading>
 
-                <Flex>
-                    <HomeFilter />
-                </Flex>
-            </Flex>
             {!loading.getAll && boats ? (
-                <SimpleGrid pt="8" minChildWidth="300px" spacing="48px">
-                    {boats.map((boat: Boat) => {
-                        return <BoatCard boat={boat} key={boat.id} />;
-                    })}
-                </SimpleGrid>
+                <>
+                    {boats.length ? (
+                        <>
+                            <Flex w="100%" justifyContent="space-between" alignItems="center" gap="4" pt="4">
+                                <Input leftIcon={<SbSearchIcon />} placeholder="Search boats..." w="100%" />
+
+                                <Flex>
+                                    <HomeFilter />
+                                    <HomeSort />
+                                </Flex>
+                            </Flex>
+                            <SimpleGrid pt="8" minChildWidth="300px" spacing={{ base: '24px', md: '36px' }}>
+                                {boats.map((boat: Boat) => {
+                                    return <BoatCard boat={boat} key={boat.id} />;
+                                })}
+                            </SimpleGrid>
+                        </>
+                    ) : (
+                        <Center>No Boats</Center>
+                    )}
+                </>
             ) : (
                 <PageSpinner loading={loading.getAll} />
             )}

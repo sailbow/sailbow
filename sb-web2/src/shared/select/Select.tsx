@@ -1,10 +1,10 @@
-import React, { FunctionComponent } from 'react';
+import { FunctionComponent } from 'react';
 
 import { Icon, Flex, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
 import { customStyles } from './SelectStyles';
-// import { SbCheckIcon } from 'util/icons/Icons';
+import { SbCheckIcon } from 'shared/icons/Icons';
 
 interface Option {
     value: string | number | boolean;
@@ -25,8 +25,8 @@ export const SelectOption: FunctionComponent<any> = (props) => {
         <components.Option {...props}>
             <Flex justifyContent="space-between" alignItems="center">
                 <Text>{data.label}</Text>
-                {/* {isSelected && <Icon as={SbCheckIcon} w={4} h={4} zIndex="2" color="teal.500" fontWeight="bold" />} */}
-                {isSelected && <Icon w={4} h={4} zIndex="2" color="teal.500" fontWeight="bold" />}
+                {isSelected && <Icon as={SbCheckIcon} w={4} h={4} zIndex="2" color="teal.500" fontWeight="bold" />}
+                {/* {isSelected && <Icon w={4} h={4} zIndex="2" color="teal.500" fontWeight="bold" />} */}
             </Flex>
         </components.Option>
     );

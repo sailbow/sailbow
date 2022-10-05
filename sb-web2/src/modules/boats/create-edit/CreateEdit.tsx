@@ -116,7 +116,7 @@ export const CreateEdit: FunctionComponent = () => {
 
                 <DrawerBody pb="8">
                     <Stack spacing="6">
-                        <Box height="260px" className="banner">
+                        <Box height={{ base: '200px', md: '260px' }} className="banner">
                             <Banner id="create" banner={boatForm.banner} onChange={onBannerChange} />
                         </Box>
                         <Input

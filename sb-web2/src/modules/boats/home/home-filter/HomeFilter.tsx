@@ -26,18 +26,12 @@ export const HomeFilter: FC = () => {
             </PopoverTrigger>
             <PopoverContent right="16px" p="2">
                 <PopoverHeader>
-                    <Text fontWeight="bold" fontSize="lg">
-                        Filter
-                    </Text>
+                    <Text fontWeight="semibold">Filter By</Text>
                 </PopoverHeader>
                 <PopoverBody>
                     <Stack mb="4">
-                        <Checkbox pt="2" size="lg">
-                            Shared
-                        </Checkbox>
-                        <Checkbox pt="2" size="lg">
-                            Completed
-                        </Checkbox>
+                        <Checkbox pt="2">Shared</Checkbox>
+                        <Checkbox pt="2">Completed</Checkbox>
                     </Stack>
                 </PopoverBody>
                 <Flex justifyContent="space-between" alignItems="center" gap="4" p="3">

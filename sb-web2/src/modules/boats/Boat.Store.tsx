@@ -1,4 +1,4 @@
-import React, { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
+import { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
 import { createBoat, getAllBoats, getBannerImages } from 'modules/boats/Boat.Service';
 import { Boat, BoatState, CreateBoat, Crew, Photo } from 'modules/boats/Boat.Types';
