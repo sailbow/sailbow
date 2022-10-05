@@ -8,7 +8,7 @@ import { HttpStatus } from 'shared/http/Http';
 import { ErrorCode, getErrorPath } from 'shared/error/Error';
 import { CreateEdit } from './create-edit/CreateEdit';
 
-// const BoatView = lazy(() => import('modules/boats/view/BoatView').then((module) => ({ default: module.BoatView })));
+const BoatView = lazy(() => import('modules/boats/view/BoatView').then((module) => ({ default: module.BoatView })));
 const Home = lazy(() => import('modules/boats/home/Home').then((module) => ({ default: module.Home })));
 
 enum BoatRoutes {
@@ -39,6 +39,7 @@ export const Boat: FunctionComponent = () => {
             <CreateEdit />
             <Routes>
                 <Route path={BoatRoutes.AllBoats} element={<Home />} />
+                <Route path={BoatRoutes.View} element={<BoatView />} />
             </Routes>
             {/* <Route path={`${Routes.Private.Boats}${BoatRoutes.View}`}>
                 <BoatView />

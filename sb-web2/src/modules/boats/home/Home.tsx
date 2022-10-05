@@ -30,7 +30,7 @@ export const Home: FunctionComponent = () => {
                 <>
                     {boats.length ? (
                         <>
-                            <Flex w="100%" justifyContent="space-between" alignItems="center" gap="4" pt="4">
+                            <Flex w="100%" justifyContent="space-between" alignItems="center" gap="4" pt="6">
                                 <Input leftIcon={<SbSearchIcon />} placeholder="Search boats..." w="100%" />
 
                                 <Flex>

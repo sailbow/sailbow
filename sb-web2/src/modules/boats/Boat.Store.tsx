@@ -1,6 +1,6 @@
 import { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
-import { createBoat, getAllBoats, getBannerImages } from 'modules/boats/Boat.Service';
+import { createBoat, getAllBoats, getBannerImages, getBoat } from 'modules/boats/Boat.Service';
 import { Boat, BoatState, CreateBoat, Crew, Photo } from 'modules/boats/Boat.Types';
 
 export enum BoatActionType {
@@ -9,6 +9,7 @@ export enum BoatActionType {
     SetBoat,
     SetCreateLoading,
     SetGetAllLoading,
+    SetGetLoading,
     SetAllBoats,
 }
 
@@ -87,6 +88,12 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
 
             return nextState;
         }
+        case BoatActionType.SetGetLoading: {
+            const { loading } = action.payload as PayloadLoading;
+            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, get: loading } };
+
+            return nextState;
+        }
         case BoatActionType.SetCreateNav: {
             const payload = action.payload as PayloadSetCreateNav;
             const nextState: BoatState = { ...boatState, createOpen: payload.open };
@@ -140,7 +147,7 @@ interface BoatActionApis {
     closeCreateBoat: () => void;
     createBoat: (boat: PayloadCreateBoat) => Promise<Boat | null>;
     getImages: (value: string, page: number) => Promise<Photo[]>;
-    // getBoat: (boatId: string) => Promise<Boat | null>;
+    getBoat: (boatId: string) => Promise<Boat | null>;
     getBoats: () => Promise<Boat[] | null>;
     // getCrewByQuery: (query: string) => Promise<Crew[] | null>;
 }
@@ -168,21 +175,21 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 return null;
             }
         },
-        // getBoat: async (boatId: string) => {
-        //     dispatch({ type: BoatActionType.SetGetLoading, payload: true });
-        //     try {
-        //         const response = await getBoatService(boatId);
+        getBoat: async (boatId: string) => {
+            dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: true } });
+            try {
+                const response = await getBoat(boatId);
 
-        //         dispatch({ type: BoatActionType.SetBoat, payload: response });
-        //         dispatch({ type: BoatActionType.SetGetLoading, payload: false });
+                dispatch({ type: BoatActionType.SetBoat, payload: response });
+                dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: false } });
 
-        //         return response;
-        //     } catch (error: any) {
-        //         dispatch({ type: BoatActionType.SetGetLoading, payload: false });
-        //         dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
-        //         return null;
-        //     }
-        // },
+                return response;
+            } catch (error: any) {
+                dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: false } });
+                dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
+                return null;
+            }
+        },
         getImages: (value: string, page: number) => {
             return getBannerImages(value, page);
         },
