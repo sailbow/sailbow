@@ -107,7 +107,7 @@ export const Menu: FunctionComponent<Props> = ({ display }) => {
 
     return (
         <Box display={display}>
-            <IconButton aria-label="menu" variant="icon" icon={<SbMenuIcon />} onClick={onOpen} />
+            <IconButton aria-label="menu" variant="icon" fontSize="xl" icon={<SbMenuIcon />} onClick={onOpen} />
             <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
                 <DrawerOverlay />
                 <DrawerContent className="sb-menu" w="100%">

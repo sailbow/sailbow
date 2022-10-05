@@ -53,7 +53,7 @@ export const Input: FunctionComponent<InputProps> = ({
     ...props
 }) => {
     return (
-        <Box className={`sb-input-wrapper ${customClass}`}>
+        <Box className={`sb-input-wrapper ${customClass}`} w="100%">
             {label && (
                 <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
                     {label}

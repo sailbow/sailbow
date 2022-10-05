@@ -8,7 +8,9 @@ export {
     BsClock as SbClockIcon,
     BsLayers as SbFeedIcon,
     BsLink45Deg as SbLinkIcon,
-    BsShieldLock as SbPasswordIcon
+    BsShieldLock as SbPasswordIcon,
+    BsFilter as SbFilterIcon,
+    BsSortAlphaDown as SbSortIcon,
 } from 'react-icons/bs';
 export {
     IoCloseOutline as SbCloseIcon,
