@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import { FunctionComponent } from 'react';
 
 import { Flex, IconButton, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 
@@ -15,11 +15,11 @@ export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
         <Flex justifyContent="space-between" pb="4" bg="white" alignItems="center">
             <Breadcrumb spacing="8px" fontWeight="semibold" fontSize="xl">
                 <BreadcrumbItem>
-                    <BreadcrumbLink color="brand.muted">Your Boats</BreadcrumbLink>
+                    <BreadcrumbLink color="brand.secondary">Your Boats</BreadcrumbLink>
                 </BreadcrumbItem>
 
                 <BreadcrumbItem>
-                    <BreadcrumbLink isCurrentPage color="teal.600">
+                    <BreadcrumbLink isCurrentPage color="brand.700">
                         {boat.name}
                     </BreadcrumbLink>
                 </BreadcrumbItem>

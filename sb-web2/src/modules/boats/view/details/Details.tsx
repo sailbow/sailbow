@@ -39,8 +39,8 @@ export const Details: FunctionComponent<Props> = ({ boat }) => {
     };
 
     return (
-        <Box flex="0.2" display={{ base: 'none', md: 'block' }}>
-            <Box px="2">
+        <Box w="100%">
+            <Box maxH="300px">
                 <Banner id="details" banner={boat.banner} showControls={false} />
             </Box>
             <Box pt="4">
