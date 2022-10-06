@@ -13,12 +13,12 @@ interface Props {
 export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
     return (
         <Flex justifyContent="space-between" pb="4" bg="white" alignItems="center">
-            <Breadcrumb spacing="8px" fontWeight="semibold" fontSize="xl">
+            <Breadcrumb spacing="8px" fontWeight="semibold">
                 <BreadcrumbItem>
                     <BreadcrumbLink color="brand.secondary">Your Boats</BreadcrumbLink>
                 </BreadcrumbItem>
 
-                <BreadcrumbItem>
+                <BreadcrumbItem fontSize="2xl">
                     <BreadcrumbLink isCurrentPage color="brand.700">
                         {boat.name}
                     </BreadcrumbLink>

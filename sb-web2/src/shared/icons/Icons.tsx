@@ -22,6 +22,9 @@ export {
     IoMailOutline as SbMailIcon,
     IoBugOutline as SbBugIcon,
     IoSettingsOutline as SbSettingsIcon,
+    IoLocationOutline as SbLocationIcon,
+    IoCalendarOutline as SbCalendarIcon,
+    IoInformationCircleOutline as SbInfoIcon,
 } from 'react-icons/io5';
 export {
     HiArrowRight as SbRightArrowIcon,

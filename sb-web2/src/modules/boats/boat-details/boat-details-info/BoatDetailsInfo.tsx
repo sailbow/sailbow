@@ -1,17 +1,20 @@
-import React, { ChangeEvent, FunctionComponent, useState } from 'react';
+import { FC, useState, ChangeEvent } from 'react';
 
 import { Box, Text } from '@chakra-ui/react';
 
 import { Boat } from 'modules/boats/Boat.Types';
 import { Banner } from 'modules/boats/components';
 import { TextEdit } from 'shared/text-edit/TextEdit';
+import { SbInfoIcon } from 'shared/icons/Icons';
 import { Input, TextArea } from 'shared/input/Input';
+
+import { BoatDetailsItem } from '../boat-details-item/BoatDetailsItem';
 
 interface Props {
     boat: Boat;
 }
 
-export const Details: FunctionComponent<Props> = ({ boat }) => {
+export const BoatInfo: FC<Props> = ({ boat }) => {
     const [boatForm, setBoatForm] = useState<{ name: string; description?: string }>({
         name: boat.name,
         description: boat.description,
@@ -40,7 +43,7 @@ export const Details: FunctionComponent<Props> = ({ boat }) => {
 
     return (
         <Box w="100%">
-            <Box maxH="300px">
+            <Box h="240px">
                 <Banner id="details" banner={boat.banner} showControls={false} />
             </Box>
             <Box pt="4">
@@ -103,4 +106,8 @@ export const Details: FunctionComponent<Props> = ({ boat }) => {
             </Box>
         </Box>
     );
+};
+
+export const BoatDetailsInfo: FC<Props> = ({ boat }) => {
+    return <BoatDetailsItem icon={<SbInfoIcon />} isButton label="Information" panel={<BoatInfo boat={boat} />} />;
 };

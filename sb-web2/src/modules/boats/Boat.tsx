@@ -35,7 +35,7 @@ export const Boat: FunctionComponent = () => {
     }, [error]);
 
     return (
-        <Box p="4" h="100%" id="sb-main">
+        <Box px="4" h="100%" id="sb-main">
             <CreateEdit />
             <Routes>
                 <Route path={BoatRoutes.AllBoats} element={<Home />} />
