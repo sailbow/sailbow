@@ -1,4 +1,5 @@
 import { ComponentStyleConfig, theme as ChakraTheme } from '@chakra-ui/react';
+import { BrandColors } from 'theme/colors/Colors';
 
 const OUTLINE_STYLES = {
     color: 'brand.dark',
@@ -53,6 +54,13 @@ export const ButtonStyles: ComponentStyleConfig = {
                 _hover: {
                     color: 'brand.800',
                 },
+            };
+        },
+        link: (props: any) => {
+            return {
+                ...props.theme.components.Button.variants.link,
+                fontWeight: 700,
+                color: BrandColors.dark,
             };
         },
         outline: (props: any) => {

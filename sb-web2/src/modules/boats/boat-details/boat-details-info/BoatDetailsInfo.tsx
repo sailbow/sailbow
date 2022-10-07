@@ -43,8 +43,8 @@ export const BoatInfo: FC<Props> = ({ boat }) => {
 
     return (
         <Box w="100%">
-            <Box h="240px">
-                <Banner id="details" banner={boat.banner} showControls={false} />
+            <Box h={{ base: '260px', md: '200px' }}>
+                <Banner id="details" banner={boat.banner} />
             </Box>
             <Box pt="4">
                 <TextEdit
@@ -79,12 +79,13 @@ export const BoatInfo: FC<Props> = ({ boat }) => {
                     fontWeight="normal"
                     color="gray.500"
                     editable
+                    placeholder="Add a description..."
                     onSave={onSave}
                     onCancel={() => onCancel('description')}
                     editElement={
                         <>
                             <TextArea
-                                label="Edit Description"
+                                label={boatForm.description ? 'Edit Description' : 'Add Description'}
                                 customClass="create-boat-description"
                                 onChange={onFormDetailsChange}
                                 name="description"
@@ -101,7 +102,7 @@ export const BoatInfo: FC<Props> = ({ boat }) => {
                         </>
                     }
                 >
-                    {boat.description}
+                    {boat.description || 'Add a description...'}
                 </TextEdit>
             </Box>
         </Box>

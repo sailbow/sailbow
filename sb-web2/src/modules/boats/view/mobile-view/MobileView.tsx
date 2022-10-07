@@ -9,7 +9,7 @@ interface Props {
 
 export const MobileView: FC<Props> = ({ details, widgets }) => {
     return (
-        <Tabs colorScheme="brand" h="100%">
+        <Tabs colorScheme="teal" h="100%" isFitted>
             <TabList>
                 <Tab>Details</Tab>
                 <Tab>Widgets</Tab>

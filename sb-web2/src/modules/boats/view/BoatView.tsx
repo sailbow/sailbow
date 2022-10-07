@@ -4,7 +4,6 @@ import { Box, Flex, Button, useBreakpointValue, Heading } from '@chakra-ui/react
 import { useParams } from 'react-router-dom';
 
 import { useBoat } from 'modules/boats/Boat.Store';
-import { BoatTabs } from 'modules/boats/view/boat-tabs/BoatTabs';
 import { Toolbar } from 'modules/boats/view/toolbar/Toolbar';
 import { Boat } from 'modules/boats/Boat.Types';
 import { SbPlusIcon } from 'shared/icons/Icons';
@@ -29,26 +28,26 @@ export const BoatView: FunctionComponent = () => {
         return (
             <Box px="2">
                 <Toolbar boat={data} />
-                {!isMobile ? (
-                    <Flex gap="8">
-                        <Box flex="0.25" display={{ base: 'none', md: 'block' }} flexShrink="0">
-                            <Heading fontSize="lg" mb="4">
-                                Details
-                            </Heading>
-                            {/* <Details boat={data} /> */}
-                            <BoatDetails boat={data} />
-                        </Box>
-                        <Box flex={{ base: '1', md: '0.75' }} pr={{ base: 0, md: 8 }}>
-                            <Heading fontSize="lg" mb="4">
-                                Widgets
-                            </Heading>
-                            Widgets go here
-                        </Box>
-                    </Flex>
-                ) : (
-                    <></>
-                    // <MobileView details={<Details boat={data} />} widgets={<span>Widgets</span>} />
-                )}
+                <Box className="details-widget-box">
+                    {!isMobile ? (
+                        <Flex gap="8" pt="4">
+                            <Box width="360px" flexShrink="0">
+                                <Heading fontSize="lg" mb="4">
+                                    Details
+                                </Heading>
+                                <BoatDetails boat={data} />
+                            </Box>
+                            <Box flex="0.75" flexShrink="0">
+                                <Heading fontSize="lg" mb="4">
+                                    Widgets
+                                </Heading>
+                                Widgets go here
+                            </Box>
+                        </Flex>
+                    ) : (
+                        <MobileView details={<BoatDetails boat={data} />} widgets={<span>Widgets</span>} />
+                    )}
+                </Box>
 
                 <Button
                     colorScheme="brand"

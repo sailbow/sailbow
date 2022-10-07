@@ -3,7 +3,7 @@ import { InputStyles } from './Input';
 import { LinkStyles } from './Link';
 import { TextareaStyles } from './Textarea';
 // import { MenuStyles } from './Menu';
-// import { TabStyles } from './Tabs';
+import { TabStyles } from './Tabs';
 // import { TextareaStyles } from './Textarea';
 
 export const components = {
@@ -12,6 +12,6 @@ export const components = {
     Input: { ...InputStyles },
     Textarea: { ...TextareaStyles },
     // Menu: { ...MenuStyles },
-    // Tabs: { ...TabStyles },
+    Tabs: { ...TabStyles },
     // Textarea: { ...TextareaStyles }
 };
