@@ -5,17 +5,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { SignInForm } from 'modules/auth/auth-card/sign-in-form/SignInForm';
 import { SocialButtons } from 'modules/auth/social-buttons/SocialButtons';
+import { Routes } from 'router/Router.Types';
 import { Logo } from 'shared/icons/Icons';
 
-import './AuthCard.scss';
 import { SignUpForm } from './sing-up-form/SignUpForm';
-import { Routes } from 'router/Router.Types';
+import { AuthCardType } from '../Auth.Types';
 
-export enum AuthCardType {
-    SIGNIN,
-    SIGNUP,
-    REDIRECT,
-}
+import './AuthCard.scss';
 
 interface Props {
     path?: string;
@@ -79,7 +75,7 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
                 <VStack spacing="6" w="100%" className="content">
                     {type === AuthCardType.SIGNIN || type === AuthCardType.REDIRECT ? <SignInForm /> : <SignUpForm />}
                     <TextDivider text="or" />
-                    <SocialButtons path={path} />
+                    <SocialButtons path={path} mode={type} />
                     <Link>Having trouble?</Link>
                 </VStack>
             </VStack>

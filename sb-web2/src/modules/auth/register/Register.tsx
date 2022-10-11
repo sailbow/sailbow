@@ -2,8 +2,10 @@ import { FC } from 'react';
 
 import { Flex } from '@chakra-ui/react';
 
-import { AuthCard, AuthCardType } from 'modules/auth/auth-card/AuthCard';
+import { AuthCard } from 'modules/auth/auth-card/AuthCard';
 import { NavbarHeight } from 'theme';
+
+import { AuthCardType } from '../Auth.Types';
 
 export const Register: FC = () => {
     return (

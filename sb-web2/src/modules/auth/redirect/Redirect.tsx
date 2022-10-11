@@ -2,8 +2,10 @@ import { FunctionComponent } from 'react';
 
 import { Box, Flex } from '@chakra-ui/react';
 
-import { AuthCard, AuthCardType } from 'modules/auth/auth-card/AuthCard';
+import { AuthCard } from 'modules/auth/auth-card/AuthCard';
 import { Routes } from 'router/Router.Types';
+
+import { AuthCardType } from '../Auth.Types';
 
 import './Redirect.scss';
 
