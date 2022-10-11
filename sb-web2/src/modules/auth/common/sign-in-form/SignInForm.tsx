@@ -2,8 +2,10 @@ import { ChangeEvent, FC, useState } from 'react';
 
 import { Box, Button, FormControl, Link, VStack } from '@chakra-ui/react';
 import { Form, Formik, FormikProps } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
+import { Routes } from 'router/Router.Types';
 import { SbMailIcon, SbPasswordIcon } from 'shared/icons/Icons';
 import { Input } from 'shared/input/Input';
 
@@ -18,6 +20,7 @@ const FormSchema = Yup.object().shape({
 });
 
 export const SignInForm: FC = () => {
+    const navigate = useNavigate();
     const [signInForm, setSignInForm] = useState<FormValues>({ email: '', password: '' });
 
     const setForm = (e: ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +66,11 @@ export const SignInForm: FC = () => {
                                     placeholder="Enter password"
                                     leftIcon={<SbPasswordIcon />}
                                 />
-                                <Link fontSize="xs" fontWeight="600">
+                                <Link
+                                    fontSize="xs"
+                                    fontWeight="600"
+                                    onClick={() => navigate(Routes.Public.ForgotPassword)}
+                                >
                                     Forgot Password
                                 </Link>
                             </FormControl>

@@ -15,6 +15,9 @@ const Authorize = lazy(() =>
 );
 const Redirect = lazy(() => import('modules/auth/redirect/Redirect').then((module) => ({ default: module.Redirect })));
 const Register = lazy(() => import('modules/auth/register/Register').then((module) => ({ default: module.Register })));
+const ForgotPassword = lazy(() =>
+    import('modules/auth/forgot-password/ForgotPassword').then((module) => ({ default: module.ForgotPassword })),
+);
 
 /** Whitelisted Content */
 const AboutUs = lazy(() => import('util/whitelist-pages/AboutUs').then((module) => ({ default: module.AboutUs })));
@@ -74,7 +77,6 @@ export const PublicRouter: FunctionComponent = () => {
 
     return (
         <>
-            {/* <PublicNavbar /> */}
             <Box className="sb-public-router" h="100%" w="100%">
                 <Suspense fallback={null}>
                     <Routes>
@@ -82,16 +84,7 @@ export const PublicRouter: FunctionComponent = () => {
                         <Route path={AppRoutes.Public.Register} element={<Register />} />
                         <Route path={AppRoutes.Public.Login} element={<Authorize />} />
                         <Route path={AppRoutes.Public.Redirect} element={<Redirect />} />
-
-                        {/* <Route path={AppRoutes.Public.Redirect}>
-                            <Redirect />
-                        </Route> */}
-                        {/* <Route path={Routes.Public.Login}>
-                            <Login />
-                        </Route> */}
-                        {/* <Route path="*">
-                            <NotFound />
-                        </Route> */}
+                        <Route path={AppRoutes.Public.ForgotPassword} element={<ForgotPassword />} />
                     </Routes>
                 </Suspense>
                 <Footer />
