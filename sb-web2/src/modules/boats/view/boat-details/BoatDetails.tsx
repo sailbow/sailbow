@@ -7,7 +7,7 @@ import { BoatDetailsCrew } from './boat-details-crew/BoatDetailsCrew';
 import { BoatDetailsInfo } from './boat-details-info/BoatDetailsInfo';
 import { BoatDetailsLocation } from './boat-details-location/BoatDetailsLocation';
 
-import { Boat } from '../Boat.Types';
+import { Boat } from '../../Boat.Types';
 
 interface Props {
     boat: Boat;

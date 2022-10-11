@@ -6,7 +6,7 @@ import { Boat } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
 import { BoatCard } from 'modules/boats/components';
 import { PageSpinner } from 'shared/page-spinner/PageSpinner';
-import { SbSearchIcon } from 'shared/icons/Icons';
+import { SbFilterIcon, SbSearchIcon } from 'shared/icons/Icons';
 import { Input } from 'shared/input/Input';
 
 import { HomeFilter } from './home-filter/HomeFilter';
@@ -29,12 +29,12 @@ export const Home: FunctionComponent = () => {
                     {boats.length ? (
                         <>
                             <Flex w="100%" justifyContent="space-between" alignItems="center" gap="4" pt="6">
-                                <Input leftIcon={<SbSearchIcon />} placeholder="Search boats..." w="100%" />
-
-                                <Flex>
-                                    <HomeFilter />
-                                    <HomeSort />
-                                </Flex>
+                                <Input
+                                    leftIcon={<SbSearchIcon />}
+                                    rightIconButton={<SbFilterIcon />}
+                                    placeholder="Search boats..."
+                                    w="100%"
+                                />
                             </Flex>
                             <SimpleGrid pt="8" minChildWidth="300px" spacing={{ base: '24px', md: '36px' }}>
                                 {boats.map((boat: Boat) => {

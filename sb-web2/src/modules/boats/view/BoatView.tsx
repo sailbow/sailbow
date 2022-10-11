@@ -9,7 +9,7 @@ import { Boat } from 'modules/boats/Boat.Types';
 import { SbPlusIcon } from 'shared/icons/Icons';
 import { PageSpinner } from 'shared/page-spinner/PageSpinner';
 import { MobileView } from './mobile-view/MobileView';
-import { BoatDetails } from '../boat-details/BoatDetails';
+import { BoatDetails } from './boat-details/BoatDetails';
 
 export const BoatView: FunctionComponent = () => {
     const isMobile = useBreakpointValue({ base: true, md: false });
@@ -31,13 +31,13 @@ export const BoatView: FunctionComponent = () => {
                 <Box className="details-widget-box">
                     {!isMobile ? (
                         <Flex gap="8" pt="4">
-                            <Box width="360px" flexShrink="0" borderRight="1px solid #ececec" pr="4">
+                            <Box width="360px" borderRight="1px solid #ececec" pr="4">
                                 <Heading fontSize="lg" mb="4">
                                     Details
                                 </Heading>
                                 <BoatDetails boat={data} />
                             </Box>
-                            <Box flex="0.75" flexShrink="0">
+                            <Box>
                                 <Heading fontSize="lg" mb="4">
                                     Widgets
                                 </Heading>

@@ -1,16 +1,14 @@
-import { IconButton, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react';
 import { FC } from 'react';
-import { SbSortIcon } from 'shared/icons/Icons';
 
-import { SingleSelect } from 'shared/select/Select';
+import { IconButton, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react';
+
+import { SbSortIcon } from 'shared/icons/Icons';
 
 export const HomeSort: FC = () => {
     return (
         <Menu>
             <MenuButton as={IconButton} variant="icon" fontSize="2xl">
-                <IconButton aria-label="filter" variant="icon" fontSize="2xl">
-                    <SbSortIcon />
-                </IconButton>
+                <SbSortIcon />
             </MenuButton>
             <MenuList fontWeight="normal">
                 <MenuGroup title="Sort By" fontSize="medium">

@@ -1,16 +1,15 @@
 import { FC, useState } from 'react';
 
-import { Box, Container } from '@chakra-ui/react';
+import { Container } from '@chakra-ui/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Authenticator, AuthStoreProvider } from 'modules/auth/Auth.Store';
+import { BoatProvider } from 'modules/boats/Boat.Store';
 import { PrivateRouter, PublicRouter, WhitelistedRouter } from 'router/Router';
+import { WhitelistedRoutes } from 'router/Router.Types';
 import { HttpInterceptor } from 'shared/http/HttpInterceptor';
-// import { Navbar } from 'shared/navbar/Navbar';
 
 import './App.scss';
-import { WhitelistedRoutes } from 'router/Router.Types';
-import { BoatProvider } from 'modules/boats/Boat.Store';
 
 export const App: FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -34,8 +33,6 @@ export const App: FC = () => {
                     <Authenticator onAuthLoadingChange={setLoading} onLoggedInChange={setIsLoggedIn}>
                         {!loading ? (
                             <>
-                                {/* <Navbar /> */}
-
                                 {isLoggedIn ? (
                                     <BoatProvider>
                                         <PrivateRouter />

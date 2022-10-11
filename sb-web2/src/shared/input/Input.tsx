@@ -12,6 +12,7 @@ import {
     Spinner,
     Box,
     InputLeftAddon,
+    IconButton,
 } from '@chakra-ui/react';
 import { SbErrorCircleIcon } from 'shared/icons/Icons';
 
@@ -27,6 +28,7 @@ interface InputProps extends ChakraInputProps {
     required?: boolean;
     customClass?: string;
     leftIcon?: ReactNode;
+    rightIconButton?: ReactNode;
 }
 
 interface TextareaProps extends ChakraTextareaProps {
@@ -50,6 +52,7 @@ export const Input: FunctionComponent<InputProps> = ({
     required,
     customClass,
     leftIcon,
+    rightIconButton,
     ...props
 }) => {
     return (
@@ -64,6 +67,11 @@ export const Input: FunctionComponent<InputProps> = ({
                 <InputLeftAddon position="absolute" p="0" color="brand.secondary">
                     {leftIcon}
                 </InputLeftAddon>
+                <InputRightElement p="0" color="brand.secondary">
+                    <IconButton aria-label="input-right-element" variant="icon" fontSize="xl" size="sm">
+                        {rightIconButton}
+                    </IconButton>
+                </InputRightElement>
                 <ChakraInput p="0" pl={leftIcon ? '24px' : '0'} {...field} {...props} />
                 {loading && (
                     <InputRightElement color="brand.error">
