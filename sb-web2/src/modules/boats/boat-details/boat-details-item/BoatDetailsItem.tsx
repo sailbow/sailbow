@@ -1,6 +1,8 @@
 import { FC, ReactNode } from 'react';
 
-import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Flex, Icon, Text } from '@chakra-ui/react';
+import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Flex, Text } from '@chakra-ui/react';
+
+import './BoatDetailsItem.scss';
 
 interface Props {
     icon: ReactNode;
@@ -8,33 +10,42 @@ interface Props {
     value?: string;
     isButton?: boolean;
     panel?: ReactNode;
+    children?: ReactNode;
 }
 
-export const BoatDetailsItem: FC<Props> = ({ icon, label, value, isButton = false, panel }) => {
+export const BoatDetailsItem: FC<Props> = ({ icon, label, value, isButton = false, panel, children }) => {
     const DetailsItem: FC = () => {
         return (
-            <Flex alignItems="center" w="100%" p="4" textAlign="start">
-                <Box flexShrink="0" fontSize="xl">
-                    {icon}
-                </Box>
-                <Flex pl="4" alignItems="center" w="100%" flexShrink="0">
-                    <Text fontWeight="semibold" flex={value ? 0.3 : 1} flexShrink="0">
-                        {label}
-                    </Text>
-                    <Text color="brand.secondary" pl="2" flex="0.7" flexShrink="0" noOfLines={1}>
+            <Box py={{ base: 3, md: 2 }}>
+                <Flex alignItems="center" w="100%" textAlign="start" color="brand.secondary" pb="2">
+                    <Box flexShrink="0" className="panel-icon" fontSize="sm">
+                        {icon}
+                    </Box>
+                    <Flex pl="2" alignItems="center" w="100%" fontSize="sm">
+                        <Text fontWeight="semibold" flex={value ? 0.3 : 1} flexShrink="0" className="panel-title">
+                            {label}
+                        </Text>
+                    </Flex>
+                </Flex>
+
+                {children ? (
+                    <>{children}</>
+                ) : (
+                    <Text noOfLines={1} fontWeight="semibold">
                         {value}
                     </Text>
-                </Flex>
-            </Flex>
+                )}
+            </Box>
         );
     };
+
     return isButton ? (
-        <AccordionItem border="0">
-            <AccordionButton p="0">
+        <AccordionItem border="0" className="sb-boat-details-item">
+            <AccordionButton p="0" _hover={{ bg: 'none' }}>
                 <DetailsItem />
                 <AccordionIcon />
             </AccordionButton>
-            <AccordionPanel pb={4}>{panel && <>{panel}</>}</AccordionPanel>
+            <AccordionPanel px="0">{panel && <>{panel}</>}</AccordionPanel>
         </AccordionItem>
     ) : (
         <AccordionItem border="0">

@@ -49,7 +49,7 @@ export const BoatInfo: FC<Props> = ({ boat }) => {
             <Box pt="4">
                 <TextEdit
                     px="2"
-                    fontSize="xl"
+                    fontSize="lg"
                     type="heading"
                     editable
                     onSave={onSave}
@@ -110,5 +110,9 @@ export const BoatInfo: FC<Props> = ({ boat }) => {
 };
 
 export const BoatDetailsInfo: FC<Props> = ({ boat }) => {
-    return <BoatDetailsItem icon={<SbInfoIcon />} isButton label="Information" panel={<BoatInfo boat={boat} />} />;
+    return (
+        <BoatDetailsItem icon={<SbInfoIcon />} label="Information">
+            <BoatInfo boat={boat} />
+        </BoatDetailsItem>
+    );
 };

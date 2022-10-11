@@ -31,7 +31,7 @@ export const BoatView: FunctionComponent = () => {
                 <Box className="details-widget-box">
                     {!isMobile ? (
                         <Flex gap="8" pt="4">
-                            <Box width="360px" flexShrink="0">
+                            <Box width="360px" flexShrink="0" borderRight="1px solid #ececec" pr="4">
                                 <Heading fontSize="lg" mb="4">
                                     Details
                                 </Heading>

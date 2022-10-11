@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect } from 'react';
 
-import { Box, Center, Flex, Heading, SimpleGrid } from '@chakra-ui/react';
+import { Box, Center, Flex, SimpleGrid } from '@chakra-ui/react';
 
 import { Boat } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
@@ -24,8 +24,6 @@ export const Home: FunctionComponent = () => {
 
     return (
         <Box px={{ base: 0, md: 4 }} className="sb-home" w="100%">
-            <Heading fontSize="3xl">Your Boats</Heading>
-
             {!loading.getAll && boats ? (
                 <>
                     {boats.length ? (

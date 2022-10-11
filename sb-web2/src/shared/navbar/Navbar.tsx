@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
-import { Box, Button, Flex, IconButton, HStack } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, HStack, Link } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 import { useBoat } from 'modules/boats/Boat.Store';
@@ -71,9 +71,8 @@ export const Navbar: FunctionComponent = () => {
             <HStack alignItems="center" spacing="4" pl="2">
                 <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
                 <Box display="flex" gap="2">
-                    {/* <Link variant="navbar" fontSize="lg">
-                        Boats
-                    </Link> */}
+                    {/* <Link variant="navbar">Your Boats</Link> */}
+
                     {/* <Button
                         variant={getActiveState(LinkLabels.Boats)}
                         colorScheme="gray"

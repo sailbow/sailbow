@@ -13,7 +13,7 @@ interface Props {
 
 export const BoatDetails: FC<Props> = ({ boat }) => {
     return (
-        <Accordion allowToggle allowMultiple>
+        <Accordion allowMultiple defaultIndex={[]}>
             <BoatDetailsDate />
             <BoatDetailsCrew crew={boat.crew} />
             <BoatDetailsInfo boat={boat} />
