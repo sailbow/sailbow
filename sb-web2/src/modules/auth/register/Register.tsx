@@ -5,13 +5,12 @@ import { Form, Formik, FormikProps } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
+import { AuthCard } from 'modules/auth/common/auth-card/AuthCard';
+import { AuthCardType } from 'modules/auth/Auth.Types';
 import { SbMailIcon, SbPasswordIcon, SbUserIcon } from 'shared/icons/Icons';
-import { Routes } from 'router/Router.Types';
 import { Input } from 'shared/input/Input';
+import { Routes } from 'router/Router.Types';
 import { NavbarHeight } from 'theme';
-
-import { AuthCard } from '../common/auth-card/AuthCard';
-import { AuthCardType } from '../Auth.Types';
 
 interface FormValues {
     name: string;

@@ -5,8 +5,8 @@ import { Box, Button, Text } from '@chakra-ui/react';
 import { Provider } from 'modules/auth/Auth.Service';
 import { SbFacebookIcon, SbGoogleIcon } from 'shared/icons/Icons';
 
-import { useAuthStore } from '../../Auth.Store';
-import { AuthCardType } from '../../Auth.Types';
+import { useAuthStore } from 'modules/auth/Auth.Store';
+import { AuthCardType } from 'modules/auth/Auth.Types';
 
 interface Props {
     path?: string;

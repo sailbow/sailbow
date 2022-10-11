@@ -2,11 +2,11 @@ import { FC, ReactNode } from 'react';
 
 import { Box, Center, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
 
+import { AuthCardType } from 'modules/auth/Auth.Types';
 import { SocialButtons } from 'modules/auth/common/social-buttons/SocialButtons';
 import { Logo } from 'shared/icons/Icons';
 
 import './AuthCard.scss';
-import { AuthCardType } from 'modules/auth/Auth.Types';
 
 interface Props {
     path?: string;

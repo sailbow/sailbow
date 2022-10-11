@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { showErrorToast } from 'shared/toast/Toast';
 import { Routes } from 'router/Router.Types';
 import { Provider } from 'modules/auth/Auth.Service';
-import { useAuthStore } from '../Auth.Store';
+import { useAuthStore } from 'modules/auth/Auth.Store';
 
 export const Authorize: FunctionComponent = () => {
     const navigate = useNavigate();
