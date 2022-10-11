@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useState } from 'react';
 
-import { Box, Button, FormControl, Link, VStack } from '@chakra-ui/react';
+import { Box, Button, FormControl, Text, VStack } from '@chakra-ui/react';
 import { Form, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
@@ -17,7 +17,12 @@ interface FormValues {
 const FormSchema = Yup.object().shape({
     name: Yup.string().required('Required').length(2),
     email: Yup.string().email('Invalid email').required('Required'),
-    password1: Yup.string().required('Please enter your password.').min(8, 'Your password is too short.'),
+    password1: Yup.string()
+        .required('Please enter your password.')
+        .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+            'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
+        ),
     password2: Yup.string()
         .required('Please enter your password.')
         .min(8, 'Your password is too short.')
@@ -83,6 +88,10 @@ export const SignUpForm: FC = () => {
                                     placeholder="Enter password"
                                     leftIcon={<SbPasswordIcon />}
                                 />
+                                <Text fontSize="xs" color="gray.400" pt="2">
+                                    Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special
+                                    Case Character
+                                </Text>
                             </FormControl>
                             <FormControl isInvalid={Boolean(errors.password2 && touched.password2)} onChange={setForm}>
                                 <Input

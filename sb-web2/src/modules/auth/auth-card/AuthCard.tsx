@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { Box, Center, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 import { SignInForm } from 'modules/auth/auth-card/sign-in-form/SignInForm';
 import { SocialButtons } from 'modules/auth/social-buttons/SocialButtons';
@@ -8,6 +9,7 @@ import { Logo } from 'shared/icons/Icons';
 
 import './AuthCard.scss';
 import { SignUpForm } from './sing-up-form/SignUpForm';
+import { Routes } from 'router/Router.Types';
 
 export enum AuthCardType {
     SIGNIN,
@@ -21,6 +23,7 @@ interface Props {
 }
 
 export const AuthCard: FC<Props> = ({ path, type }) => {
+    const navigate = useNavigate();
     const colors = {
         card: useColorModeValue('white', 'brand.dark2'),
         cardBorder: useColorModeValue('brand.border-light', 'brand.border-dark'),
@@ -65,11 +68,11 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
                     )}
                     {type === AuthCardType.SIGNIN || type === AuthCardType.REDIRECT ? (
                         <Text as="span">
-                            Not a member yet? <Link>Sign Up!</Link>
+                            Not a member yet? <Link onClick={() => navigate(Routes.Public.Register)}>Sign Up</Link>
                         </Text>
                     ) : (
                         <Text as="span">
-                            Already a member? <Link>Sign In!</Link>
+                            Already a member? <Link onClick={() => navigate(Routes.Public.Auth)}>Sign In</Link>
                         </Text>
                     )}
                 </Box>
