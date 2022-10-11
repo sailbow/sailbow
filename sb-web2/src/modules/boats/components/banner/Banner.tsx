@@ -32,7 +32,7 @@ export const Banner: FunctionComponent<Props> = ({ banner, id, showControls, onC
                 onChange={onSubmit}
                 banner={banner}
             />
-            <Box className={`sb-cover sb-cover--${id}`} borderRadius="lg">
+            <Box className={`sb-cover sb-cover--${id}`} borderRadius="lg" zIndex={showControls ? 1 : -1}>
                 <Button
                     display={showControls ? 'flex' : 'none'}
                     size="sm"
@@ -42,13 +42,14 @@ export const Banner: FunctionComponent<Props> = ({ banner, id, showControls, onC
                     bg="white"
                     boxShadow="sm"
                     onClick={() => setIsBannerSelectOpen(!isBannerSelectOpen)}
+                    zIndex="1"
                 >
-                    Change Banner
+                    Change Image
                 </Button>
                 {banner.type === BannerType.Color ? (
-                    <Box bg={banner.value} className="sb-cover-image" zIndex="-1" />
+                    <Box bg={banner.value} className="sb-cover-image" />
                 ) : (
-                    <Image draggable="false" src={banner.value} className="sb-cover-image" zIndex="-1" />
+                    <Image draggable="false" src={banner.value} className="sb-cover-image" />
                 )}
             </Box>
         </>

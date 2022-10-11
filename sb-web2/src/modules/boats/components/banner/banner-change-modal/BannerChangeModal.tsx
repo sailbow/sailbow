@@ -2,14 +2,14 @@ import { FunctionComponent } from 'react';
 
 import { Box, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react';
 
-import { Modal } from 'shared/modal/Modal';
 import { BannerType } from 'modules/boats/Boat.Types';
 import { ColorBox } from 'modules/boats/components/banner/banner-change-modal/color-box/ColorBox';
 import { ImageSearch } from 'modules/boats/components/banner/banner-change-modal/image-search/ImageSearch';
+import { SbCheckMarkIcon } from 'shared/icons/Icons';
+import { Modal } from 'shared/modal/Modal';
 import { BannerColors, Color } from 'theme/colors/Colors';
 
 import './BannerChangeModal.scss';
-import { SbCheckMarkIcon } from 'shared/icons/Icons';
 
 interface Props {
     isOpen: boolean;
@@ -35,7 +35,7 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
             title="Change Banner"
             bodyClass="sb-cover-select-modal"
         >
-            <Tabs colorScheme='teal'>
+            <Tabs colorScheme="teal">
                 <TabList>
                     <Tab fontWeight="semibold">Our Picks</Tab>
                     <Tab fontWeight="semibold">Search Images</Tab>

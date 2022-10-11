@@ -170,7 +170,6 @@ export const CreateEdit: FunctionComponent = () => {
                             isLoading={loading.create}
                             onClick={onSubmit}
                             rightIcon={SbCheckMarkIcon}
-                            size="lg"
                         >
                             <Text>Start Boat</Text>
                         </Button>
