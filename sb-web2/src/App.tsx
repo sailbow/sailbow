@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 
-import { Box } from '@chakra-ui/react';
+import { Box, Container } from '@chakra-ui/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Authenticator, AuthStoreProvider } from 'modules/auth/Auth.Store';
@@ -27,7 +27,7 @@ export const App: FC = () => {
     }
 
     return (
-        <Box className="App">
+        <Container className="App" maxW="8xl" p="0">
             <BrowserRouter>
                 <AuthStoreProvider>
                     <HttpInterceptor />
@@ -50,6 +50,6 @@ export const App: FC = () => {
                     </Authenticator>
                 </AuthStoreProvider>
             </BrowserRouter>
-        </Box>
+        </Container>
     );
 };

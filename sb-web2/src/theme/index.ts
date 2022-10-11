@@ -25,7 +25,7 @@ const colors = {
 
 export const bgLight = "white";
 export const bgDark = DarkColors[900];
-export const NavbarHeight = "80px";
+export const NavbarHeight = "60px";
 
 export const theme = extendTheme(
     {

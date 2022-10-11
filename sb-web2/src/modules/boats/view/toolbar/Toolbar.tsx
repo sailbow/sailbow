@@ -16,7 +16,7 @@ export const Toolbar: FunctionComponent<Props> = ({ boat }) => {
     const navigate = useNavigate();
 
     return (
-        <Flex justifyContent="space-between" pb="4" bg="white" alignItems="center">
+        <Flex justifyContent="space-between" pb="4" pt="2" alignItems="center">
             <Breadcrumb spacing="8px" fontWeight="semibold">
                 <BreadcrumbItem>
                     <BreadcrumbLink color="brand.secondary" onClick={() => navigate(Routes.Private.Boats)}>

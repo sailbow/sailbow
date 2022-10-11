@@ -56,7 +56,6 @@ export const BoatView: FunctionComponent = () => {
                     position="fixed"
                     bottom="16px"
                     right="16px"
-                    size="lg"
                 >
                     Add Widgets
                 </Button>

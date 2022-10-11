@@ -62,7 +62,8 @@ export const Navbar: FunctionComponent = () => {
             className="sb-navbar"
             justifyContent="space-between"
             alignItems="center"
-            p="4"
+            px="4"
+            py="2"
             bg={navbarBg ? 'white' : 'transparent'}
             transition="all 0.25s ease-in-out"
             boxShadow={navbarBg ? 'sm' : 'none'}
@@ -90,12 +91,7 @@ export const Navbar: FunctionComponent = () => {
                 </Box>
             </HStack>
             <Flex alignItems="center" justifyContent="space-between" gap="4">
-                <Button
-                    rightIcon={<SbPlusIcon />}
-                    onClick={openCreateBoat}
-                    size="lg"
-                    display={{ base: 'none', md: 'flex' }}
-                >
+                <Button rightIcon={<SbPlusIcon />} onClick={openCreateBoat} display={{ base: 'none', md: 'flex' }}>
                     Start Boat
                 </Button>
                 <Notifications display={{ base: 'none', md: 'block' }} />
@@ -107,7 +103,6 @@ export const Navbar: FunctionComponent = () => {
                     aria-label="add"
                     icon={<SbPlusIcon />}
                     display={{ base: 'flex', md: 'none' }}
-                    size="lg"
                     onClick={openCreateBoat}
                 />
                 <Box mr="-3">
