@@ -1,4 +1,4 @@
-type PublicRoutesLabel = 'Login' | 'Redirect' | 'Authorize' | 'Auth';
+type PublicRoutesLabel = 'Login' | 'Redirect' | 'Authorize' | 'Auth' | 'Register';
 type PrivateRoutesLabel = 'Error' | 'Boats' | 'Invite' | 'Boat';
 type WhitelistedRoutesLabel = 'AboutUs' | 'Contact' | 'FAQ' | 'HowItWorks' | 'Privacy' | 'Terms' | 'License';
 
@@ -13,6 +13,7 @@ export const Routes: Route = {
         Login: '/login',
         Redirect: '/redirect',
         Authorize: '/authorize',
+        Register: '/register',
         Auth: '/',
     },
     Private: {

@@ -17,7 +17,7 @@ const FormSchema = Yup.object().shape({
     password: Yup.string().required('Required'),
 });
 
-export const SignIn: FC = () => {
+export const SignInForm: FC = () => {
     const [signInForm, setSignInForm] = useState<FormValues>({ email: '', password: '' });
 
     const setForm = (e: ChangeEvent<HTMLInputElement>) => {

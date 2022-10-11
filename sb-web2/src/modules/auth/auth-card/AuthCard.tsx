@@ -2,11 +2,12 @@ import { FC } from 'react';
 
 import { Box, Center, Heading, Link, Text, useColorModeValue, VStack } from '@chakra-ui/react';
 
-import { SignIn } from 'modules/auth/sign-in/SignIn';
+import { SignInForm } from 'modules/auth/auth-card/sign-in-form/SignInForm';
 import { SocialButtons } from 'modules/auth/social-buttons/SocialButtons';
 import { Logo } from 'shared/icons/Icons';
 
 import './AuthCard.scss';
+import { SignUpForm } from './sing-up-form/SignUpForm';
 
 export enum AuthCardType {
     SIGNIN,
@@ -62,7 +63,7 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
                             Start Sailing
                         </Heading>
                     )}
-                    {type === AuthCardType.SIGNIN ? (
+                    {type === AuthCardType.SIGNIN || type === AuthCardType.REDIRECT ? (
                         <Text as="span">
                             Not a member yet? <Link>Sign Up!</Link>
                         </Text>
@@ -73,7 +74,7 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
                     )}
                 </Box>
                 <VStack spacing="6" w="100%" className="content">
-                    <SignIn />
+                    {type === AuthCardType.SIGNIN || type === AuthCardType.REDIRECT ? <SignInForm /> : <SignUpForm />}
                     <TextDivider text="or" />
                     <SocialButtons path={path} />
                     <Link>Having trouble?</Link>

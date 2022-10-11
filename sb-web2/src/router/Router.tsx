@@ -14,7 +14,7 @@ const Authorize = lazy(() =>
     import('modules/auth/authorize/Authorize').then((module) => ({ default: module.Authorize })),
 );
 const Redirect = lazy(() => import('modules/auth/redirect/Redirect').then((module) => ({ default: module.Redirect })));
-// const Login = lazy(() => import('modules/auth/login/Login').then((module) => ({ default: module.Login })));
+const Register = lazy(() => import('modules/auth/register/Register').then((module) => ({ default: module.Register })));
 
 /** Whitelisted Content */
 const AboutUs = lazy(() => import('util/whitelist-pages/AboutUs').then((module) => ({ default: module.AboutUs })));
@@ -79,8 +79,10 @@ export const PublicRouter: FunctionComponent = () => {
                 <Suspense fallback={null}>
                     <Routes>
                         <Route path={AppRoutes.Public.Auth} element={<Login />} />
+                        <Route path={AppRoutes.Public.Register} element={<Register />} />
                         <Route path={AppRoutes.Public.Login} element={<Authorize />} />
                         <Route path={AppRoutes.Public.Redirect} element={<Redirect />} />
+
                         {/* <Route path={AppRoutes.Public.Redirect}>
                             <Redirect />
                         </Route> */}
