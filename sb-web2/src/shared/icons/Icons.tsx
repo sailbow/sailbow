@@ -9,7 +9,6 @@ export {
     BsLayers as SbFeedIcon,
     BsLink45Deg as SbLinkIcon,
     BsShieldLock as SbPasswordIcon,
-    BsFilter as SbFilterIcon,
     BsSortAlphaDown as SbSortIcon,
 } from 'react-icons/bs';
 export {
@@ -32,7 +31,6 @@ export {
     HiArrowDown as SbArrowDownIcon,
     HiArrowLeft as SbArrowLeftIcon,
     HiOutlinePencil as SbEditIcon,
-    // HiOutlineLockClosed as SbPasswordIcon,
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';
@@ -55,6 +53,7 @@ export {
     AiOutlineLogout as SbLogoutIcon,
     AiOutlineUsergroupAdd as SbUserGroup,
 } from 'react-icons/ai';
+export { VscFilter as SbFilterIcon } from 'react-icons/vsc';
 
 export { ReactComponent as SbBoatIcon } from 'assets/icons/boat.svg';
 export { ReactComponent as Logo } from 'assets/sailboat-logo.svg';

@@ -63,7 +63,9 @@ export const SignInForm: FC = () => {
                                     placeholder="Enter password"
                                     leftIcon={<SbPasswordIcon />}
                                 />
-                                <Link fontSize="xs">Forgot Password</Link>
+                                <Link fontSize="xs" fontWeight="600">
+                                    Forgot Password
+                                </Link>
                             </FormControl>
                             <Button w="100%" type="submit">
                                 Log in

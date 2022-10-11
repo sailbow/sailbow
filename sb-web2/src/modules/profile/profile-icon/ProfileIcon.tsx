@@ -69,7 +69,7 @@ export const ProfileIcon: FunctionComponent<Props> = ({ display }) => {
                 <MenuButton className="button">
                     <Avatar name={user?.name} size="sm" h="40px" w="40px" />
                 </MenuButton>
-                <MenuList fontWeight="normal">
+                <MenuList fontWeight="normal" zIndex="5">
                     <MenuGroup title="Profile">
                         <MenuItem icon={<SbUserIcon height="20px" />}>My Profile</MenuItem>
                     </MenuGroup>
