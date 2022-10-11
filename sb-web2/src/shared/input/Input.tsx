@@ -67,11 +67,14 @@ export const Input: FunctionComponent<InputProps> = ({
                 <InputLeftAddon position="absolute" p="0" color="brand.secondary">
                     {leftIcon}
                 </InputLeftAddon>
-                <InputRightElement p="0" color="brand.secondary">
-                    <IconButton aria-label="input-right-element" variant="icon" fontSize="xl" size="sm">
-                        {rightIconButton}
-                    </IconButton>
-                </InputRightElement>
+                {rightIconButton && (
+                    <InputRightElement p="0" color="brand.secondary">
+                        <IconButton aria-label="input-right-element" variant="icon" fontSize="xl" size="sm">
+                            {rightIconButton}
+                        </IconButton>
+                    </InputRightElement>
+                )}
+
                 <ChakraInput p="0" pl={leftIcon ? '24px' : '0'} {...field} {...props} />
                 {loading && (
                     <InputRightElement color="brand.error">

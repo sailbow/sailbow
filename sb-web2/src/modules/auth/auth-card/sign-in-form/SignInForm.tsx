@@ -13,8 +13,8 @@ interface FormValues {
 }
 
 const FormSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string().required('Required'),
+    email: Yup.string().email('Invalid email').required('Please enter your email'),
+    password: Yup.string().required('Please enter your password'),
 });
 
 export const SignInForm: FC = () => {
@@ -65,7 +65,7 @@ export const SignInForm: FC = () => {
                                 />
                                 <Link fontSize="xs">Forgot Password</Link>
                             </FormControl>
-                            <Button w="100%" size="lg" type="submit">
+                            <Button w="100%" type="submit">
                                 Log in
                             </Button>
                         </VStack>

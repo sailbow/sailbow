@@ -15,8 +15,8 @@ interface FormValues {
 }
 
 const FormSchema = Yup.object().shape({
-    name: Yup.string().required('Required').length(2),
-    email: Yup.string().email('Invalid email').required('Required'),
+    name: Yup.string().required('Please enter your full name').length(2),
+    email: Yup.string().email('Invalid email').required('Please neter your email'),
     password1: Yup.string()
         .required('Please enter your password.')
         .matches(
@@ -88,7 +88,7 @@ export const SignUpForm: FC = () => {
                                     placeholder="Enter password"
                                     leftIcon={<SbPasswordIcon />}
                                 />
-                                <Text fontSize="xs" color="gray.400" pt="2">
+                                <Text fontSize="xs" color="gray.400" pt="2" fontWeight="normal">
                                     Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special
                                     Case Character
                                 </Text>
@@ -107,7 +107,7 @@ export const SignUpForm: FC = () => {
                                     leftIcon={<SbPasswordIcon />}
                                 />
                             </FormControl>
-                            <Button w="100%" size="lg" type="submit">
+                            <Button w="100%" type="submit">
                                 Sign Up
                             </Button>
                         </VStack>

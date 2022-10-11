@@ -48,7 +48,6 @@ export const SocialButtons: FC<Props> = ({ path, mode }) => {
             <Button
                 isLoading={loader[Provider.Google]}
                 w="100%"
-                size="lg"
                 variant="social"
                 colorScheme="gray"
                 leftIcon={<SbGoogleIcon />}
@@ -60,7 +59,6 @@ export const SocialButtons: FC<Props> = ({ path, mode }) => {
             <Button
                 isLoading={loader[Provider.Facebook]}
                 w="100%"
-                size="lg"
                 variant="social"
                 colorScheme="gray"
                 leftIcon={<SbFacebookIcon />}

@@ -46,6 +46,7 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
             mx={{ base: '12px', md: '0' }}
             py="16"
             px="4"
+            className="sb-auth-card"
         >
             <VStack spacing="16" w="100%" className="wrapper">
                 <Box textAlign="center">
@@ -72,7 +73,7 @@ export const AuthCard: FC<Props> = ({ path, type }) => {
                         </Text>
                     )}
                 </Box>
-                <VStack spacing="6" w="100%" className="content">
+                <VStack spacing="4" w="100%" className="content">
                     {type === AuthCardType.SIGNIN || type === AuthCardType.REDIRECT ? <SignInForm /> : <SignUpForm />}
                     <TextDivider text="or" />
                     <SocialButtons path={path} mode={type} />

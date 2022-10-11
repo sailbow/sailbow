@@ -33,6 +33,14 @@ export const ButtonStyles: ComponentStyleConfig = {
             // },
         };
     },
+    sizes: {
+        md: (props: any) => {
+            return {
+                ...props.theme.components.Button.sizes.md,
+                py: '5',
+            };
+        },
+    },
     variants: {
         solid: (props: any) => {
             if (props.colorScheme === 'brand') {
