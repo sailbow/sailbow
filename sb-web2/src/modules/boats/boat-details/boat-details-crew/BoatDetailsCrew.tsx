@@ -15,7 +15,7 @@ export const BoatDetailsCrew: FC<Props> = ({ crew }) => {
     // you have to populate the users here
 
     return (
-        <BoatDetailsItem icon={<SbUserGroup />} label="Crew (5)">
+        <BoatDetailsItem icon={<SbUserGroup />} label="Crew (5)" confirmed>
             <Flex justifyContent="space-between" alignItems="center">
                 <AvatarGroup size="sm" max={4}>
                     <Avatar name="Ryan Florence" src="https://bit.ly/ryan-florence" />

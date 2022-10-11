@@ -42,15 +42,14 @@ export const BoatInfo: FC<Props> = ({ boat }) => {
     };
 
     return (
-        <Box w="100%">
+        <Box w="100%" py="1">
             <Box h={{ base: '260px', md: '200px' }}>
                 <Banner id="details" banner={boat.banner} />
             </Box>
             <Box pt="4">
                 <TextEdit
-                    px="2"
-                    fontSize="lg"
                     type="heading"
+                    fontSize="md"
                     editable
                     onSave={onSave}
                     onCancel={() => onCancel('name')}
@@ -73,11 +72,11 @@ export const BoatInfo: FC<Props> = ({ boat }) => {
                     {boat.name}
                 </TextEdit>
                 <TextEdit
-                    px="2"
-                    mt="2"
+                    mt="1"
                     type="text"
                     fontWeight="normal"
                     color="gray.500"
+                    fontSize="sm"
                     editable
                     placeholder="Add a description..."
                     onSave={onSave}
@@ -111,7 +110,7 @@ export const BoatInfo: FC<Props> = ({ boat }) => {
 
 export const BoatDetailsInfo: FC<Props> = ({ boat }) => {
     return (
-        <BoatDetailsItem icon={<SbInfoIcon />} label="Information">
+        <BoatDetailsItem icon={<SbInfoIcon />} label="Information" confirmed>
             <BoatInfo boat={boat} />
         </BoatDetailsItem>
     );

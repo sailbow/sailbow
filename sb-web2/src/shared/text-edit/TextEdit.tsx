@@ -62,12 +62,13 @@ export const TextEdit: FunctionComponent<Props> = ({
     const textRender = () => {
         const properties = {
             ...props,
-            _hover: editable && !open ? { py: '2', bg: 'gray.100' } : {},
+            _hover: editable && !open ? { py: '2', bg: 'gray.100', px: 2 } : {},
             bg: open && editable ? 'gray.100' : 'transparent',
             borderRadius: 'lg',
             transition: 'all 0.2s ease-in-out',
             cursor: editable ? 'pointer' : 'inherit',
             py: open ? '2' : '0',
+            px: open ? 2 : 0,
         };
 
         switch (type) {

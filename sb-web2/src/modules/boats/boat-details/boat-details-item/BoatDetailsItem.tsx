@@ -1,10 +1,23 @@
 import { FC, ReactNode } from 'react';
 
-import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Flex, Text } from '@chakra-ui/react';
+import {
+    AccordionButton,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel,
+    Badge,
+    Box,
+    Flex,
+    Text,
+} from '@chakra-ui/react';
 
 import './BoatDetailsItem.scss';
 
-interface Props {
+export interface ItemProps {
+    confirmed?: boolean;
+}
+
+interface Props extends ItemProps {
     icon: ReactNode;
     label: string;
     value?: string;
@@ -13,27 +26,33 @@ interface Props {
     children?: ReactNode;
 }
 
-export const BoatDetailsItem: FC<Props> = ({ icon, label, value, isButton = false, panel, children }) => {
+export const BoatDetailsItem: FC<Props> = ({ icon, label, value, isButton = false, panel, children, confirmed }) => {
     const DetailsItem: FC = () => {
         return (
-            <Box py={{ base: 3, md: 2 }}>
+            <Box py="3">
                 <Flex alignItems="center" w="100%" textAlign="start" color="brand.secondary" pb="2">
                     <Box flexShrink="0" className="panel-icon" fontSize="sm">
                         {icon}
                     </Box>
                     <Flex pl="2" alignItems="center" w="100%" fontSize="sm">
-                        <Text fontWeight="semibold" flex={value ? 0.3 : 1} flexShrink="0" className="panel-title">
+                        <Text fontWeight="semibold" className="panel-title">
                             {label}
                         </Text>
                     </Flex>
                 </Flex>
 
-                {children ? (
-                    <>{children}</>
+                {confirmed ? (
+                    <>
+                        {children ? (
+                            <>{children}</>
+                        ) : (
+                            <Text noOfLines={1} fontWeight="semibold">
+                                {value}
+                            </Text>
+                        )}
+                    </>
                 ) : (
-                    <Text noOfLines={1} fontWeight="semibold">
-                        {value}
-                    </Text>
+                    <Badge colorScheme="orange">In Discussion</Badge>
                 )}
             </Box>
         );
