@@ -50,7 +50,7 @@ export const Register: FC = () => {
     };
 
     return (
-        <Flex className="sb-login" w="100%" justifyContent="center" pt={{ base: 0, md: NavbarHeight }}>
+        <Flex className="sb-register" w="100%" justifyContent="center" pt={{ base: 0, md: NavbarHeight }}>
             <AuthCard
                 title="Start Sailing"
                 showSocialButtons
