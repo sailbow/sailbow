@@ -7,9 +7,9 @@ interface Props {
     widgets: ReactNode;
 }
 
-export const BoatViewTabls: FC<Props> = ({ manifest, widgets }) => {
+export const BoatViewTabs: FC<Props> = ({ manifest, widgets }) => {
     return (
-        <Tabs colorScheme="teal" h="100%" isFitted>
+        <Tabs colorScheme="teal" h="100%" isFitted display={{ base: 'block', md: 'none' }}>
             <TabList>
                 <Tab>Manifest</Tab>
                 <Tab>Widgets</Tab>

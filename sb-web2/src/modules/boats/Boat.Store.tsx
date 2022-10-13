@@ -229,7 +229,7 @@ interface BoatActionApis {
     getBoat: (boatId: string) => Promise<Boat | null>;
     getBoats: () => Promise<Boat[] | null>;
     removeActiveBoat: () => void;
-    getModuleManifestData: (boatId: string, moduleId: ModuleId) => Promise<ManifestDataType | null>;
+    getModuleManifestData: (boatId: string, moduleId: ModuleId) => Promise<void>;
     // getCrewByQuery: (query: string) => Promise<Crew[] | null>;
 }
 
@@ -305,8 +305,6 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                                     data: { data: 'Sat, 7th Sep - Mon 9th Sep' } as DateManifestProps,
                                 },
                             });
-
-                            res('');
                         }, 1000);
                     case ModuleId.Location:
                         return setTimeout(() => {

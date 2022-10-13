@@ -1,9 +1,0 @@
-@import "theme/base";
-
-.sb-boat-details-item {
-    &:hover {
-        .panel-title, .panel-icon, .chakra-accordion__icon {
-            color: $sb-brand-hover;
-        }
-    }
-}

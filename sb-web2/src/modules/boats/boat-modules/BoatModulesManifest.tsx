@@ -1,10 +1,13 @@
 import { FC, useEffect } from 'react';
 
+import { Box } from '@chakra-ui/react';
+
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Boat, ModuleExtended, ModuleId } from 'modules/boats/Boat.Types';
 import { DateManifest, DateManifestProps } from 'modules/boats/boat-modules/date/DateManifest';
-import { InfoManifest } from './info/InfoManifest';
-import { LocationManifest, LocationManifestProps } from './location/LocationManifest';
+import { InfoManifest } from 'modules/boats/boat-modules/info/InfoManifest';
+import { LocationManifest, LocationManifestProps } from 'modules/boats/boat-modules/location/LocationManifest';
+import { CrewManifest } from './crew/CrewManifest';
 
 interface Props {
     boat: Boat;
@@ -12,7 +15,7 @@ interface Props {
 
 interface BoatModuleManifestItemProps {
     boatId: string;
-    getModuleManifestData: (boatId: string, moduleId: ModuleId) => Promise<any | null>;
+    getModuleManifestData: (boatId: string, moduleId: ModuleId) => Promise<void>;
     dataLoaded?: boolean;
     module: ModuleExtended;
 }
@@ -51,8 +54,9 @@ export const BoatModuleManifest: FC<Props> = ({ boat }) => {
     const [, { getModuleManifestData }] = useBoat();
 
     return (
-        <>
+        <Box mt="-2">
             <InfoManifest data={boat} />
+            <CrewManifest data={boat} />
             {boat.modules.map((module) => (
                 <BoatModuleManifestItem
                     key={`${module.id}-${module.order}`}
@@ -62,6 +66,6 @@ export const BoatModuleManifest: FC<Props> = ({ boat }) => {
                     module={module}
                 />
             ))}
-        </>
+        </Box>
     );
 };

@@ -7,7 +7,7 @@ import { useBoat } from 'modules/boats/Boat.Store';
 import { BoatViewToolbar } from 'modules/boats/boat-view/boat-view-toolbar/BoatViewToolbar';
 import { Boat } from 'modules/boats/Boat.Types';
 import { PageSpinner } from 'shared/page-spinner/PageSpinner';
-import { BoatViewTabls } from './boat-view-tabs/BoatViewTabs';
+import { BoatViewTabs } from './boat-view-tabs/BoatViewTabs';
 import { BoatModuleManifest } from '../boat-modules/BoatModulesManifest';
 
 export const BoatView: FunctionComponent = () => {
@@ -30,7 +30,7 @@ export const BoatView: FunctionComponent = () => {
         <Box px="2" className="sb-boat-view">
             <BoatViewToolbar boat={data} />
             <Box className="details-widget-box">
-                <Flex gap="8" pt="4">
+                <Flex gap="8" pt="4" display={{ base: 'none', md: 'flex' }}>
                     <Box width="360px" borderRight="1px solid #ececec" pr="4">
                         <Heading fontSize="lg" mb="4">
                             Manifest
@@ -44,12 +44,8 @@ export const BoatView: FunctionComponent = () => {
                         Widgets go here
                     </Box>
                 </Flex>
-                {/* {!isMobile ? (
-                    <></>
-                ) : (
-                    <></>
-                    // <BoatViewTabls manifest={<BoatManifest boat={data} />} widgets={<span>Widgets</span>} />
-                )} */}
+
+                <BoatViewTabs manifest={<BoatModuleManifest boat={data} />} widgets={<span>Widgets</span>} />
             </Box>
         </Box>
     );

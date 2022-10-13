@@ -1,9 +1,8 @@
 import { FC, ReactNode } from 'react';
 
-import { Badge, Box, Flex, Skeleton, Spinner, Text } from '@chakra-ui/react';
+import { Badge, Box, Flex, Skeleton, Text } from '@chakra-ui/react';
 
 import './BoatManifest.scss';
-import { PageSpinner } from 'shared/page-spinner/PageSpinner';
 
 interface Props {
     icon: ReactNode;
