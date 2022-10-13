@@ -1,7 +1,7 @@
 import { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
 import { createBoat, getAllBoats, getBannerImages, getBoat } from 'modules/boats/Boat.Service';
-import { Boat, BoatState, CreateBoat, Photo } from 'modules/boats/Boat.Types';
+import { Boat, BoatState, CreateBoat, ModuleId, Photo, WidgetId } from 'modules/boats/Boat.Types';
 
 export enum BoatActionType {
     SetCreateNav,
@@ -71,7 +71,27 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
 
             return {
                 ...boatState,
-                activeBoat: boat,
+                activeBoat: boat
+                    ? {
+                          ...boat,
+                          modules: [
+                              {
+                                  id: ModuleId.Date,
+                                  order: 1,
+                                  widget: {
+                                      id: '11',
+                                      widgetId: WidgetId.Date, // will be used to identify which widget
+                                      responses: [], // members that have voted
+                                      actionRequired: true,
+                                      description: 'this is a test widget',
+                                      deadline: new Date(), // will be used to send reminders
+                                      data: [],
+                                      selected: null, // id of the widget data that is voted
+                                  },
+                              },
+                          ],
+                      }
+                    : undefined,
             };
         }
         case BoatActionType.SetCreateLoading: {
@@ -154,6 +174,7 @@ interface BoatActionApis {
     getBoat: (boatId: string) => Promise<Boat | null>;
     getBoats: () => Promise<Boat[] | null>;
     removeActiveBoat: () => void;
+    getModuleManifestData: (boatId: string, moduleId: ModuleId) => Promise<any | null>;
     // getCrewByQuery: (query: string) => Promise<Crew[] | null>;
 }
 
@@ -215,6 +236,16 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
                 return null;
             }
+        },
+        getModuleManifestData: async (boatId: string, moduleId: ModuleId) => {
+            return new Promise<any | null>((res, rej) => {
+                switch (moduleId) {
+                    case ModuleId.Date:
+                        return setTimeout(() => {
+                            res(`getModuleManifestData - boatId: ${boatId}, moduleId: ${moduleId}`);
+                        }, 1000);
+                }
+            });
         },
         // getCrewByQuery: async (query) => {
         //     try {
