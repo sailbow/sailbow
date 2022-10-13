@@ -6,10 +6,10 @@ import { Route, Routes } from 'react-router-dom';
 import { useBoat } from 'modules/boats/Boat.Store';
 import { HttpStatus } from 'shared/http/Http';
 import { ErrorCode, getErrorPath } from 'shared/error/Error';
-import { CreateEdit } from './create-edit/CreateEdit';
+import { BoatCreate } from './boat-create/BoatCreate';
 
-const BoatView = lazy(() => import('modules/boats/view/BoatView').then((module) => ({ default: module.BoatView })));
-const Home = lazy(() => import('modules/boats/home/Home').then((module) => ({ default: module.Home })));
+const BoatView = lazy(() => import('modules/boats/boat-view/BoatView').then((module) => ({ default: module.BoatView })));
+const BoatHome = lazy(() => import('modules/boats/boat-home/BoatHome').then((module) => ({ default: module.BoatHome })));
 
 enum BoatRoutes {
     AllBoats = '/',
@@ -36,9 +36,9 @@ export const Boat: FunctionComponent = () => {
 
     return (
         <Box px="4" h="100%" id="sb-main">
-            <CreateEdit />
+            <BoatCreate />
             <Routes>
-                <Route path={BoatRoutes.AllBoats} element={<Home />} />
+                <Route path={BoatRoutes.AllBoats} element={<BoatHome />} />
                 <Route path={BoatRoutes.View} element={<BoatView />} />
             </Routes>
         </Box>
