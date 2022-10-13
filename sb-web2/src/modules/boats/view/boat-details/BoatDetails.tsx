@@ -16,10 +16,11 @@ interface Props {
 export const BoatDetails: FC<Props> = ({ boat }) => {
     return (
         <Accordion allowMultiple defaultIndex={[]}>
-            <BoatDetailsDate />
+            <BoatDetailsInfo boat={boat} />
+
+            <BoatDetailsDate confirmed={true} />
             <BoatDetailsLocation confirmed={true} />
             <BoatDetailsCrew crew={boat.crew} />
-            <BoatDetailsInfo boat={boat} />
         </Accordion>
     );
 };

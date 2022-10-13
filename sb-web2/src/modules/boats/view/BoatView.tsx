@@ -26,7 +26,7 @@ export const BoatView: FunctionComponent = () => {
 
     const BoatRenderer: FunctionComponent<{ data: Boat }> = ({ data }) => {
         return (
-            <Box px="2">
+            <Box px="2" className="sb-boat-view">
                 <Toolbar boat={data} />
                 <Box className="details-widget-box">
                     {!isMobile ? (
@@ -48,17 +48,6 @@ export const BoatView: FunctionComponent = () => {
                         <MobileView details={<BoatDetails boat={data} />} widgets={<span>Widgets</span>} />
                     )}
                 </Box>
-
-                <Button
-                    colorScheme="brand"
-                    rightIcon={<SbPlusIcon />}
-                    ml="4"
-                    position="fixed"
-                    bottom="16px"
-                    right="16px"
-                >
-                    Add Widgets
-                </Button>
             </Box>
         );
     };
