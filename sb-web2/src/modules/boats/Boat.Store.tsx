@@ -1,12 +1,12 @@
 import { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
 import { createBoat, getAllBoats, getBannerImages, getBoat } from 'modules/boats/Boat.Service';
-import { Boat, BoatState, CreateBoat, Crew, Photo } from 'modules/boats/Boat.Types';
+import { Boat, BoatState, CreateBoat, Photo } from 'modules/boats/Boat.Types';
 
 export enum BoatActionType {
     SetCreateNav,
     SetError,
-    SetBoat,
+    SetActiveBoat,
     SetCreateLoading,
     SetGetAllLoading,
     SetGetLoading,
@@ -15,7 +15,9 @@ export enum BoatActionType {
 
 interface PayloadCreateBoat extends CreateBoat {}
 
-interface PayloadSetBoat extends Boat {}
+interface PayloadSetActiveBoat {
+    boat?: Boat;
+}
 
 interface PayloadLoading {
     loading: boolean;
@@ -37,7 +39,7 @@ interface BoatAction {
     type: BoatActionType;
     payload:
         | PayloadCreateBoat
-        | PayloadSetBoat
+        | PayloadSetActiveBoat
         | PayloadError
         | PayloadLoading
         | PayloadSetCreateNav
@@ -49,7 +51,7 @@ interface BoatProviderProps {
 }
 
 export const initialBoatState: BoatState = {
-    boat: undefined,
+    activeBoat: undefined,
     loading: {
         create: false,
         get: false,
@@ -64,11 +66,13 @@ const BoatDispatchContext = createContext<Dispatch<BoatAction> | undefined>(unde
 
 const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
     switch (action.type) {
-        case BoatActionType.SetBoat: {
-            const payload = action.payload as PayloadSetBoat;
-            const nextState = { ...boatState, boat: { ...payload } };
+        case BoatActionType.SetActiveBoat: {
+            const { boat } = action.payload as PayloadSetActiveBoat;
 
-            return nextState;
+            return {
+                ...boatState,
+                activeBoat: boat,
+            };
         }
         case BoatActionType.SetCreateLoading: {
             const { loading } = action.payload as PayloadLoading;
@@ -149,6 +153,7 @@ interface BoatActionApis {
     getImages: (value: string, page: number) => Promise<Photo[]>;
     getBoat: (boatId: string) => Promise<Boat | null>;
     getBoats: () => Promise<Boat[] | null>;
+    removeActiveBoat: () => void;
     // getCrewByQuery: (query: string) => Promise<Crew[] | null>;
 }
 
@@ -175,12 +180,15 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 return null;
             }
         },
+        removeActiveBoat: () => {
+            dispatch({ type: BoatActionType.SetActiveBoat, payload: { boat: undefined } });
+        },
         getBoat: async (boatId: string) => {
             dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: true } });
             try {
                 const response = await getBoat(boatId);
 
-                dispatch({ type: BoatActionType.SetBoat, payload: response });
+                dispatch({ type: BoatActionType.SetActiveBoat, payload: { boat: response } });
                 dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: false } });
 
                 return response;

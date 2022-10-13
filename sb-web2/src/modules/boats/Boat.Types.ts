@@ -77,7 +77,7 @@ export interface Boat {
 
 export interface BoatState {
     boats?: Boat[];
-    boat?: Boat;
+    activeBoat?: Boat;
     error?: any;
     loading: {
         create: boolean;
