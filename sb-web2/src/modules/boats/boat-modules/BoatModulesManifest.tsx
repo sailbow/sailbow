@@ -7,7 +7,7 @@ import { Boat, ModuleExtended, ModuleId } from 'modules/boats/Boat.Types';
 import { DateManifest, DateManifestProps } from 'modules/boats/boat-modules/date/DateManifest';
 import { InfoManifest } from 'modules/boats/boat-modules/info/InfoManifest';
 import { LocationManifest, LocationManifestProps } from 'modules/boats/boat-modules/location/LocationManifest';
-import { CrewManifest } from './crew/CrewManifest';
+import { CrewManifest } from 'modules/boats/boat-modules/crew/CrewManifest';
 
 interface Props {
     boat: Boat;
@@ -59,7 +59,7 @@ export const BoatModuleManifest: FC<Props> = ({ boat }) => {
             <CrewManifest data={boat} />
             {boat.modules.map((module) => (
                 <BoatModuleManifestItem
-                    key={`${module.id}-${module.order}`}
+                    key={`manifest-${module.id}-${module.order}`}
                     boatId={boat.id}
                     getModuleManifestData={getModuleManifestData}
                     dataLoaded={module.manifest.dataLoaded}

@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect } from 'react';
 
-import { Box, Flex, useBreakpointValue, Heading } from '@chakra-ui/react';
+import { Box, Flex, useBreakpointValue, Heading, Stack } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 import { useBoat } from 'modules/boats/Boat.Store';
@@ -9,6 +9,8 @@ import { Boat } from 'modules/boats/Boat.Types';
 import { PageSpinner } from 'shared/page-spinner/PageSpinner';
 import { BoatViewTabs } from './boat-view-tabs/BoatViewTabs';
 import { BoatModuleManifest } from '../boat-modules/BoatModulesManifest';
+import { BoatWidget } from '../common/boat-widget/BoatWidget';
+import { BoatModulesWidget } from '../boat-modules/BoatModulesWidget';
 
 export const BoatView: FunctionComponent = () => {
     const [{ activeBoat: boat, loading, error }, { getBoat, removeActiveBoat }] = useBoat();
@@ -37,11 +39,11 @@ export const BoatView: FunctionComponent = () => {
                         </Heading>
                         <BoatModuleManifest boat={data} />
                     </Box>
-                    <Box>
+                    <Box w="100%">
                         <Heading fontSize="lg" mb="4">
                             Widgets
                         </Heading>
-                        Widgets go here
+                        <BoatModulesWidget boat={data} />
                     </Box>
                 </Flex>
 

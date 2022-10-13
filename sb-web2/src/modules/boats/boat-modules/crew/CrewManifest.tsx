@@ -1,10 +1,9 @@
 import { FC } from 'react';
 
-import { Box, Button, Flex, Link, Text } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
 
 import { BoatManifest } from 'modules/boats/common/boat-manifest/BoatManifest';
 import { SbInfoIcon, SbPlusIcon } from 'shared/icons/Icons';
-import { BoatBanner } from 'modules/boats/common';
 import { Boat } from 'modules/boats/Boat.Types';
 import { CrewGroup } from 'shared/crew/crew-group/CrewGroup';
 

@@ -53,14 +53,6 @@ export interface Photo {
     height: number;
 }
 
-// export interface Crew {
-//     role: RoleType;
-//     email: string;
-//     name: string;
-//     id?: string;
-//     info?: string;
-// }
-
 export interface Crew extends Pick<User, 'id' | 'email' | 'name'> {
     role: Role;
     info?: string;
@@ -74,10 +66,11 @@ export interface Comment {
 
 export interface WidgetData {
     id: string;
-    option: string;
+    text: string;
     votes: number;
     voted: string | null; // id of the data that the user voted for. if not voted its null
     description?: string;
+    author: Pick<User, 'id' | 'email' | 'name'>;
 }
 
 export interface Widget {
@@ -87,13 +80,8 @@ export interface Widget {
     description: string;
     deadline: Date; // will be used to send reminders
     data: Array<WidgetData>;
+    totalVotes: number; // will need this to show percentage voted in the option
     selected: string | null; // id of the widget data that is voted
-}
-
-export interface Anchor {
-    name: string;
-    id: string;
-    widgets: Widget[];
 }
 
 export type Manifest = ManifestDataType & {

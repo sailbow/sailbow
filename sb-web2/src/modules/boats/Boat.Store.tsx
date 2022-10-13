@@ -100,6 +100,7 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
                 activeBoat: boat
                     ? {
                           ...boat,
+
                           modules: [
                               {
                                   id: ModuleId.Date,
@@ -111,7 +112,8 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
                                       description: 'this is a test date widget',
                                       deadline: new Date(),
                                       data: [],
-                                      selected: 'sadlkajsflj',
+                                      selected: null,
+                                      totalVotes: 5,
                                   },
                                   manifest: { data: null },
                               },
@@ -127,6 +129,7 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
                                       deadline: new Date(),
                                       data: [],
                                       selected: null,
+                                      totalVotes: 5,
                                   },
                               },
                           ],
@@ -230,6 +233,7 @@ interface BoatActionApis {
     getBoats: () => Promise<Boat[] | null>;
     removeActiveBoat: () => void;
     getModuleManifestData: (boatId: string, moduleId: ModuleId) => Promise<void>;
+    getModuleWidgetData: (boatId: string, moduleId: ModuleId) => Promise<void>;
     // getCrewByQuery: (query: string) => Promise<Crew[] | null>;
 }
 
@@ -294,6 +298,29 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             }
         },
         getModuleManifestData: async (boatId: string, moduleId: ModuleId) => {
+            return new Promise<any | null>((res, rej) => {
+                switch (moduleId) {
+                    case ModuleId.Date:
+                        return setTimeout(() => {
+                            dispatch({
+                                type: BoatActionType.SetModuleManifest,
+                                payload: {
+                                    moduleId,
+                                    data: { data: 'Sat, 7th Sep - Mon 9th Sep' } as DateManifestProps,
+                                },
+                            });
+                        }, 1000);
+                    case ModuleId.Location:
+                        return setTimeout(() => {
+                            dispatch({
+                                type: BoatActionType.SetModuleManifest,
+                                payload: { moduleId, data: null },
+                            });
+                        }, 2000);
+                }
+            });
+        },
+        getModuleWidgetData: async (boatId: string, moduleId: ModuleId) => {
             return new Promise<any | null>((res, rej) => {
                 switch (moduleId) {
                     case ModuleId.Date:

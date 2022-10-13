@@ -29,13 +29,13 @@ export {
     HiArrowUp as SbArrowUpIcon,
     HiArrowDown as SbArrowDownIcon,
     HiArrowLeft as SbArrowLeftIcon,
-    HiOutlinePencil as SbEditIcon,
+    // HiOutlinePencil as SbEditIcon,
     HiOutlineFilter as SbFilterIcon,
     HiOutlineSearch as SbSearchIcon,
     HiPlus as SbPlusIcon,
     HiOutlineCalendar as SbCalendarIcon,
     HiOutlineLocationMarker as SbLocationIcon,
-    HiOutlineCog as SbSettingsIcon
+    HiOutlineCog as SbSettingsIcon,
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';
@@ -58,9 +58,11 @@ export {
     AiOutlineLogout as SbLogoutIcon,
     AiOutlineUsergroupAdd as SbUserGroup,
 } from 'react-icons/ai';
+export { TbPencil as SbEditIcon } from 'react-icons/tb';
 
 export { ReactComponent as SbBoatIcon } from 'assets/icons/boat.svg';
 export { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 export { ReactComponent as LogoType } from 'assets/icon-logo-type.svg';
+export { ReactComponent as ModuleDateImage } from 'assets/icons/module-date-image.svg';
 
 export const SbCheckMarkIcon = <Icon as={FiCheck} w={5} h={5} />;
