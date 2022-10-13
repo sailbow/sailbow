@@ -7,12 +7,13 @@ import { SbCalendarIcon } from 'shared/icons/Icons';
 
 export interface DateManifestProps {
     data: string | null;
+    loading: boolean;
 }
 
-export const DateManifest: FC<DateManifestProps> = ({ data }) => {
+export const DateManifest: FC<DateManifestProps> = ({ data, loading }) => {
     return (
-        <BoatManifest icon={<SbCalendarIcon />} label="Date">
-            <Text>{data}</Text>
+        <BoatManifest icon={<SbCalendarIcon />} label="Date" loading={loading}>
+            {data && <Text>{data}</Text>}
         </BoatManifest>
     );
 };

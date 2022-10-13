@@ -19,12 +19,12 @@ interface BoatModuleManifestItemProps {
 
 export type ManifestDataType = any;
 
-const getManifest = (moduleId: ModuleId, data: ManifestDataType | null) => {
+const getManifest = (moduleId: ModuleId, data: ManifestDataType | null, loading: boolean) => {
     switch (moduleId) {
         case ModuleId.Date:
-            return <DateManifest {...(data as DateManifestProps)} />;
+            return <DateManifest {...({ ...data, loading } as DateManifestProps)} />;
         case ModuleId.Location:
-            return <LocationManifest {...(data as LocationManifestProps)} />;
+            return <LocationManifest {...({ ...data, loading } as LocationManifestProps)} />;
         default:
             throw Error(`Invalid moduleId: ${moduleId}`);
     }
@@ -44,7 +44,7 @@ export const BoatModuleManifestItem: FC<BoatModuleManifestItemProps> = ({
         })();
     }, []);
 
-    return <>{getManifest(module.id, module.manifest)}</>;
+    return <>{getManifest(module.id, module.manifest, !dataLoaded)}</>;
 };
 
 export const BoatModuleManifest: FC<Props> = ({ boat }) => {

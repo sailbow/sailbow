@@ -7,13 +7,14 @@ import { SbLocationIcon } from 'shared/icons/Icons';
 
 export interface LocationManifestProps {
     location: string;
-    isLink: true;
+    isLink: boolean;
+    loading: boolean;
 }
 
-export const LocationManifest: FC<LocationManifestProps> = ({ location, isLink }) => {
+export const LocationManifest: FC<LocationManifestProps> = ({ location, isLink, loading }) => {
     return (
-        <BoatManifest icon={<SbLocationIcon />} label="Location">
-            <Text>{location ? location : 'In discussion'}</Text>
+        <BoatManifest icon={<SbLocationIcon />} label="Location" loading={loading}>
+            {location && <Text>{location}</Text>}
         </BoatManifest>
     );
 };

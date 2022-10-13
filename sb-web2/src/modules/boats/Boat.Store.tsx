@@ -111,7 +111,7 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
                                       description: 'this is a test date widget',
                                       deadline: new Date(),
                                       data: [],
-                                      selected: null,
+                                      selected: 'sadlkajsflj',
                                   },
                                   manifest: { data: null },
                               },

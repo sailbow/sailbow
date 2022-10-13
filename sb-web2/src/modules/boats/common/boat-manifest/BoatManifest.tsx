@@ -1,26 +1,19 @@
 import { FC, ReactNode } from 'react';
 
-import {
-    AccordionButton,
-    AccordionIcon,
-    AccordionItem,
-    AccordionPanel,
-    Badge,
-    Box,
-    Flex,
-    Text,
-} from '@chakra-ui/react';
+import { Badge, Box, Flex, Skeleton, Spinner, Text } from '@chakra-ui/react';
 
 import './BoatManifest.scss';
+import { PageSpinner } from 'shared/page-spinner/PageSpinner';
 
 interface Props {
     icon: ReactNode;
     label: string;
     children: ReactNode | null;
     action?: ReactNode;
+    loading?: boolean;
 }
 
-export const BoatManifest: FC<Props> = ({ action, icon, label, children }) => {
+export const BoatManifest: FC<Props> = ({ action, icon, label, children, loading }) => {
     return (
         <Box py="3">
             <Flex alignItems="center" w="100%" textAlign="start" color="brand.secondary" pb="2">
@@ -34,8 +27,11 @@ export const BoatManifest: FC<Props> = ({ action, icon, label, children }) => {
                     {action && action}
                 </Flex>
             </Flex>
-
-            {children ? <>{children}</> : <Badge colorScheme="orange">In Discussion</Badge>}
+            {loading ? (
+                <Skeleton startColor="gray.100" endColor="gray.300" h="24px" />
+            ) : (
+                <> {children ? <>{children}</> : <Badge colorScheme="orange">In Discussion</Badge>}</>
+            )}
         </Box>
     );
 };
