@@ -24,9 +24,19 @@ interface Props extends ItemProps {
     isButton?: boolean;
     panel?: ReactNode;
     children?: ReactNode;
+    action?: ReactNode;
 }
 
-export const BoatDetailsItem: FC<Props> = ({ icon, label, value, isButton = false, panel, children, confirmed }) => {
+export const BoatDetailsItem: FC<Props> = ({
+    action,
+    icon,
+    label,
+    value,
+    isButton = false,
+    panel,
+    children,
+    confirmed,
+}) => {
     const DetailsItem: FC = () => {
         return (
             <Box py="3">
@@ -34,10 +44,11 @@ export const BoatDetailsItem: FC<Props> = ({ icon, label, value, isButton = fals
                     <Box flexShrink="0" className="panel-icon" fontSize="sm">
                         {icon}
                     </Box>
-                    <Flex pl="2" alignItems="center" w="100%" fontSize="sm">
+                    <Flex pl="2" alignItems="center" w="100%" fontSize="sm" justifyContent="space-between">
                         <Text fontWeight="semibold" className="panel-title">
                             {label}
                         </Text>
+                        {action && action}
                     </Flex>
                 </Flex>
 

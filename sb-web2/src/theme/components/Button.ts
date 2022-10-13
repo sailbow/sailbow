@@ -56,6 +56,19 @@ export const ButtonStyles: ComponentStyleConfig = {
                 };
             }
         },
+        secondary: (props: any) => {
+            return {
+                ...props.theme.components.Button.variants.solid,
+                color: 'brand.dark',
+                bg: 'gray.100',
+                _hover: {
+                    bg: 'gray.200',
+                },
+                _active: {
+                    bg: 'gray.300',
+                },
+            };
+        },
         'menu-link': (props: any) => {
             return {
                 color: 'brand.dark',

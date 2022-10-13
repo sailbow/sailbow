@@ -1,6 +1,6 @@
 import { FC, useState, ChangeEvent } from 'react';
 
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Link, Text } from '@chakra-ui/react';
 
 import { Boat } from 'modules/boats/Boat.Types';
 import { Banner } from 'modules/boats/components';
@@ -44,7 +44,7 @@ export const BoatInfo: FC<Props> = ({ boat }) => {
     return (
         <Box w="100%" py="1">
             <Box h={{ base: '260px', md: '200px' }}>
-                <Banner id="details" banner={boat.banner} />
+                <Banner id="details" banner={boat.banner} showControls={false} />
             </Box>
             <Box pt="4">
                 <TextEdit
@@ -110,7 +110,7 @@ export const BoatInfo: FC<Props> = ({ boat }) => {
 
 export const BoatDetailsInfo: FC<Props> = ({ boat }) => {
     return (
-        <BoatDetailsItem icon={<SbInfoIcon />} label="Information" confirmed>
+        <BoatDetailsItem icon={<SbInfoIcon />} label="Information" confirmed action={<Link fontSize="sm">Edit</Link>}>
             <BoatInfo boat={boat} />
         </BoatDetailsItem>
     );

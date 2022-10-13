@@ -20,7 +20,7 @@ export const BoatDetailsCrew: FC<Props> = ({ crew }) => {
             <Flex justifyContent="space-between" alignItems="center">
                 <CrewGroup crew={crew} />
 
-                <Button size="sm" rightIcon={<SbPlusIcon />}>
+                <Button size="sm" rightIcon={<SbPlusIcon />} variant="secondary" colorScheme="gray">
                     Invite
                 </Button>
             </Flex>

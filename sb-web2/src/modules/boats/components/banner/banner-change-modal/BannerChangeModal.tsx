@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 
 import { Box, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react';
 
@@ -22,13 +22,19 @@ interface Props {
 }
 
 export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, onChange, banner }) => {
+    const [bannerForm, setBannerForm] = useState<{ type: BannerType; value: string }>({ ...banner });
+
+    const onSubmit = () => {
+        onChange(bannerForm.type, bannerForm.value);
+        onClose();
+    };
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
             size="4xl"
             positiveButton={
-                <Button onClick={onClose} rightIcon={SbCheckMarkIcon} mt="4">
+                <Button onClick={onSubmit} rightIcon={SbCheckMarkIcon} mt="4">
                     <Text>Done</Text>
                 </Button>
             }
@@ -49,8 +55,8 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
                                     <ColorBox
                                         color={color}
                                         key={color.toString()}
-                                        selected={color.toString() === banner.value}
-                                        onChange={onChange}
+                                        selected={color.toString() === bannerForm.value}
+                                        onChange={(type, value) => setBannerForm({ type, value })}
                                     />
                                 );
                             })}
@@ -58,7 +64,7 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
                     </TabPanel>
                     <TabPanel p="0">
                         <Box pt="4">
-                            <ImageSearch onChange={onChange} />
+                            <ImageSearch onChange={(type, value) => setBannerForm({ type, value })} />
                         </Box>
                     </TabPanel>
                 </TabPanels>

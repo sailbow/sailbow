@@ -41,9 +41,6 @@ export const Boat: FunctionComponent = () => {
                 <Route path={BoatRoutes.AllBoats} element={<Home />} />
                 <Route path={BoatRoutes.View} element={<BoatView />} />
             </Routes>
-            {/* <Route path={`${Routes.Private.Boats}${BoatRoutes.View}`}>
-                <BoatView />
-            </Route> */}
         </Box>
     );
 };
