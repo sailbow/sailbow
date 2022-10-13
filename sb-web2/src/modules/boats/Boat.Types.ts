@@ -1,4 +1,7 @@
 import { User } from 'shared/user/User';
+import { ManifestDataType } from './boat-modules/BoatModulesManifest';
+import { DateManifestProps } from './boat-modules/date/DateManifest';
+import { LocationManifestProps } from './boat-modules/location/LocationManifest';
 
 export enum BannerType {
     Color = 'Color',
@@ -33,14 +36,9 @@ export enum ModuleId {
 }
 
 export enum WidgetId {
-    Date = 'widget-date',
-    Location = 'widget-location',
+    Date = 'module-widget-date',
+    Location = 'module-widget-location',
 }
-
-export const WidgetName = {
-    [WidgetId.Date]: 'Date',
-    [WidgetId.Location]: 'Location',
-};
 
 export enum ModuleType {
     Manifest = 'manifest',
@@ -83,8 +81,7 @@ export interface WidgetData {
 }
 
 export interface Widget {
-    id: string;
-    widgetId: WidgetId; // will be used to identify which widget
+    id: WidgetId;
     responses: Array<Crew>; // members that have voted
     actionRequired?: boolean;
     description: string;
@@ -99,17 +96,27 @@ export interface Anchor {
     widgets: Widget[];
 }
 
+export type Manifest = ManifestDataType & {
+    dataLoaded?: boolean;
+};
+
+export interface Module {
+    id: ModuleId;
+    order: number;
+    widget: Widget;
+}
+
+export interface ModuleExtended extends Module {
+    manifest: Manifest;
+}
+
 export interface Boat {
     id: string;
     name: string;
     description?: string;
     banner: BannerState;
     crew: Crew[];
-    modules: {
-        id: ModuleId;
-        order: number;
-        widget: Widget;
-    }[];
+    modules: ModuleExtended[];
 }
 
 export interface BoatState {

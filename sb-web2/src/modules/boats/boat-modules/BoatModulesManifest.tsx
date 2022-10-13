@@ -1,42 +1,50 @@
-import { FC, useEffect, useState } from 'react';
-
-import { Accordion } from '@chakra-ui/react';
+import { FC, useEffect } from 'react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Boat, ModuleId } from 'modules/boats/Boat.Types';
-import { DateManifest } from 'modules/boats/boat-modules/date/DateManifest';
+import { Boat, ModuleExtended, ModuleId } from 'modules/boats/Boat.Types';
+import { DateManifest, DateManifestProps } from 'modules/boats/boat-modules/date/DateManifest';
 import { InfoManifest } from './info/InfoManifest';
+import { LocationManifest, LocationManifestProps } from './location/LocationManifest';
 
 interface Props {
     boat: Boat;
 }
 
-interface BoatModuleManifestItem {
-    moduleId: ModuleId;
+interface BoatModuleManifestItemProps {
     boatId: string;
     getModuleManifestData: (boatId: string, moduleId: ModuleId) => Promise<any | null>;
+    dataLoaded?: boolean;
+    module: ModuleExtended;
 }
 
-const getManifest = (moduleId: ModuleId, data: any) => {
+export type ManifestDataType = any;
+
+const getManifest = (moduleId: ModuleId, data: ManifestDataType | null) => {
     switch (moduleId) {
         case ModuleId.Date:
-            return <DateManifest data={data} />;
+            return <DateManifest {...(data as DateManifestProps)} />;
+        case ModuleId.Location:
+            return <LocationManifest {...(data as LocationManifestProps)} />;
         default:
             throw Error(`Invalid moduleId: ${moduleId}`);
     }
 };
 
-export const BoatModuleManifestItem: FC<BoatModuleManifestItem> = ({ boatId, moduleId, getModuleManifestData }) => {
-    const [data, setData] = useState<any | null>(null);
-
+export const BoatModuleManifestItem: FC<BoatModuleManifestItemProps> = ({
+    boatId,
+    dataLoaded,
+    module,
+    getModuleManifestData,
+}) => {
     useEffect(() => {
         (async () => {
-            const response = await getModuleManifestData(boatId, moduleId);
-            setData(response);
+            if (!dataLoaded) {
+                await getModuleManifestData(boatId, module.id);
+            }
         })();
     }, []);
 
-    return <>{getManifest(moduleId, data)}</>;
+    return <>{getManifest(module.id, module.manifest)}</>;
 };
 
 export const BoatModuleManifest: FC<Props> = ({ boat }) => {
@@ -44,17 +52,16 @@ export const BoatModuleManifest: FC<Props> = ({ boat }) => {
 
     return (
         <>
-            <Accordion allowMultiple defaultIndex={[]}>
-                <InfoManifest data={boat} />
-                {boat.modules.map((module) => (
-                    <BoatModuleManifestItem
-                        key={module.id}
-                        boatId={boat.id}
-                        moduleId={module.id}
-                        getModuleManifestData={getModuleManifestData}
-                    />
-                ))}
-            </Accordion>
+            <InfoManifest data={boat} />
+            {boat.modules.map((module) => (
+                <BoatModuleManifestItem
+                    key={`${module.id}-${module.order}`}
+                    boatId={boat.id}
+                    getModuleManifestData={getModuleManifestData}
+                    dataLoaded={module.manifest.dataLoaded}
+                    module={module}
+                />
+            ))}
         </>
     );
 };
