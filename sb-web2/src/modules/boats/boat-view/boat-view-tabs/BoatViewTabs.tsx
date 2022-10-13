@@ -19,7 +19,9 @@ export const BoatViewTabs: FC<Props> = ({ manifest, widgets }) => {
                 <TabPanel w="100%" h="100%" p="0" pt="4">
                     {manifest}
                 </TabPanel>
-                <TabPanel>{widgets}</TabPanel>
+                <TabPanel w="100%" h="100%" p="0" pt="4">
+                    {widgets}
+                </TabPanel>
             </TabPanels>
         </Tabs>
     );

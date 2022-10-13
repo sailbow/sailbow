@@ -5,6 +5,7 @@ import { Stack } from '@chakra-ui/react';
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Boat, ModuleExtended, ModuleId } from 'modules/boats/Boat.Types';
 import { DateWidget } from './date/DateWidget';
+import { LocationWidget } from './location/LocationWidget';
 
 interface Props {
     boat: Boat;
@@ -23,9 +24,8 @@ const getWidget = (moduleId: ModuleId, data: WidgetDataType | null, loading: boo
     switch (moduleId) {
         case ModuleId.Date:
             return <DateWidget />;
-        // return <DateWidget {...({ ...data, loading } as DateWidgetProps)} />;
         case ModuleId.Location:
-            return <div>location widget</div>;
+            return <LocationWidget />;
         default:
             throw Error(`Invalid moduleId: ${moduleId}`);
     }

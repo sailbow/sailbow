@@ -63,6 +63,8 @@ export { TbPencil as SbEditIcon } from 'react-icons/tb';
 export { ReactComponent as SbBoatIcon } from 'assets/icons/boat.svg';
 export { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
 export { ReactComponent as LogoType } from 'assets/icon-logo-type.svg';
+
 export { ReactComponent as ModuleDateImage } from 'assets/icons/module-date-image.svg';
+export { ReactComponent as ModuleLocationImage } from 'assets/icons/module-location-image.svg';
 
 export const SbCheckMarkIcon = <Icon as={FiCheck} w={5} h={5} />;

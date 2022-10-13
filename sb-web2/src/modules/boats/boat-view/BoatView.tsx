@@ -47,7 +47,10 @@ export const BoatView: FunctionComponent = () => {
                     </Box>
                 </Flex>
 
-                <BoatViewTabs manifest={<BoatModuleManifest boat={data} />} widgets={<span>Widgets</span>} />
+                <BoatViewTabs
+                    manifest={<BoatModuleManifest boat={data} />}
+                    widgets={<BoatModulesWidget boat={data} />}
+                />
             </Box>
         </Box>
     );
