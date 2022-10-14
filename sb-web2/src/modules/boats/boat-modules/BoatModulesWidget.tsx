@@ -3,8 +3,8 @@ import { FC, useEffect } from 'react';
 import { Stack } from '@chakra-ui/react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Boat, ModuleExtended, ModuleId } from 'modules/boats/Boat.Types';
-import { DateWidget } from './date/DateWidget';
+import { Boat, ModuleExtended, ModuleName, Widget, WidgetData } from 'modules/boats/Boat.Types';
+import { DateWidget, DateWidgetData } from './date/DateWidget';
 import { LocationWidget } from './location/LocationWidget';
 
 interface Props {
@@ -13,21 +13,23 @@ interface Props {
 
 interface BoatModulesWidgetItemProps {
     boatId: string;
-    getModuleWidgetData: (boatId: string, moduleId: ModuleId) => Promise<void>;
+    getModuleWidgetData: (boatId: string, moduleId: string) => Promise<void>;
     dataLoaded?: boolean;
     module: ModuleExtended;
 }
 
-export type WidgetDataType = any;
+export interface WidgetDataType extends Widget {
+    data: DateWidgetData[];
+}
 
-const getWidget = (moduleId: ModuleId, data: WidgetDataType | null, loading: boolean) => {
-    switch (moduleId) {
-        case ModuleId.Date:
-            return <DateWidget />;
-        case ModuleId.Location:
+const getWidget = (moduleName: ModuleName, widgetData: WidgetDataType, loading: boolean) => {
+    switch (moduleName) {
+        case ModuleName.Date:
+            return <DateWidget data={widgetData.data as DateWidgetData[]} loading={loading} />;
+        case ModuleName.Location:
             return <LocationWidget />;
         default:
-            throw Error(`Invalid moduleId: ${moduleId}`);
+            throw Error(`Invalid moduleName: ${moduleName}`);
     }
 };
 
@@ -45,7 +47,7 @@ export const BoatModulesWidgetItem: FC<BoatModulesWidgetItemProps> = ({
         })();
     }, []);
 
-    return <>{getWidget(module.id, module.manifest, !dataLoaded)}</>;
+    return <>{getWidget(module.name, module.widget!, !dataLoaded)}</>;
 };
 
 export const BoatModulesWidget: FC<Props> = ({ boat }) => {
@@ -58,7 +60,7 @@ export const BoatModulesWidget: FC<Props> = ({ boat }) => {
                     key={`widget-${module.id}-${module.order}`}
                     boatId={boat.id}
                     getModuleWidgetData={getModuleWidgetData}
-                    dataLoaded={module.manifest.dataLoaded}
+                    dataLoaded={module.widget?.dataLoaded}
                     module={module}
                 />
             ))}

@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 import { Box } from '@chakra-ui/react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Boat, ModuleExtended, ModuleId } from 'modules/boats/Boat.Types';
+import { Boat, Manifest, ModuleExtended, ModuleName } from 'modules/boats/Boat.Types';
 import { DateManifest, DateManifestProps } from 'modules/boats/boat-modules/date/DateManifest';
 import { InfoManifest } from 'modules/boats/boat-modules/info/InfoManifest';
 import { LocationManifest, LocationManifestProps } from 'modules/boats/boat-modules/location/LocationManifest';
@@ -15,21 +15,22 @@ interface Props {
 
 interface BoatModuleManifestItemProps {
     boatId: string;
-    getModuleManifestData: (boatId: string, moduleId: ModuleId) => Promise<void>;
+    getModuleManifestData: (boatId: string, moduleId: string) => Promise<void>;
     dataLoaded?: boolean;
     module: ModuleExtended;
 }
 
-export type ManifestDataType = any;
+export interface ManifestDataType extends LocationManifestProps, DateManifestProps {}
+export interface ManifestDataTypeExtended extends Manifest {}
 
-const getManifest = (moduleId: ModuleId, data: ManifestDataType | null, loading: boolean) => {
-    switch (moduleId) {
-        case ModuleId.Date:
+const getManifest = (moduleName: ModuleName, data: ManifestDataTypeExtended | null, loading: boolean) => {
+    switch (moduleName) {
+        case ModuleName.Date:
             return <DateManifest {...({ ...data, loading } as DateManifestProps)} />;
-        case ModuleId.Location:
+        case ModuleName.Location:
             return <LocationManifest {...({ ...data, loading } as LocationManifestProps)} />;
         default:
-            throw Error(`Invalid moduleId: ${moduleId}`);
+            throw Error(`Invalid moduleName: ${moduleName}`);
     }
 };
 
@@ -47,7 +48,7 @@ export const BoatModuleManifestItem: FC<BoatModuleManifestItemProps> = ({
         })();
     }, []);
 
-    return <>{getManifest(module.id, module.manifest, !dataLoaded)}</>;
+    return <>{getManifest(module.name, module.manifest!, !dataLoaded)}</>;
 };
 
 export const BoatModuleManifest: FC<Props> = ({ boat }) => {
@@ -62,7 +63,7 @@ export const BoatModuleManifest: FC<Props> = ({ boat }) => {
                     key={`manifest-${module.id}-${module.order}`}
                     boatId={boat.id}
                     getModuleManifestData={getModuleManifestData}
-                    dataLoaded={module.manifest.dataLoaded}
+                    dataLoaded={module.manifest?.dataLoaded}
                     module={module}
                 />
             ))}

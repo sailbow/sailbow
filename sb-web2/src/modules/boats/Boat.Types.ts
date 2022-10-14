@@ -1,7 +1,4 @@
 import { User } from 'shared/user/User';
-import { ManifestDataType } from './boat-modules/BoatModulesManifest';
-import { DateManifestProps } from './boat-modules/date/DateManifest';
-import { LocationManifestProps } from './boat-modules/location/LocationManifest';
 
 export enum BannerType {
     Color = 'Color',
@@ -29,15 +26,9 @@ export enum RoleLabel {
     Sailor = 'Sailor',
 }
 
-export enum ModuleId {
-    Static = 'static',
+export enum ModuleName {
     Date = 'date',
     Location = 'location',
-}
-
-export enum WidgetId {
-    Date = 'module-widget-date',
-    Location = 'module-widget-location',
 }
 
 export enum ModuleType {
@@ -66,36 +57,36 @@ export interface Comment {
 
 export interface WidgetData {
     id: string;
-    text: string;
     votes: number;
     voted: string | null; // id of the data that the user voted for. if not voted its null
     description?: string;
     author: Pick<User, 'id' | 'email' | 'name'>;
 }
 
+export interface Manifest {
+    data: any;
+    dataLoaded?: boolean;
+}
+
 export interface Widget {
-    id: WidgetId;
-    responses: Array<Crew>; // members that have voted
+    data: any;
+    dataLoaded?: boolean;
+}
+
+export interface Module {
+    id: string;
+    name: ModuleName;
+    order: number;
     actionRequired?: boolean;
     description: string;
     deadline: Date; // will be used to send reminders
-    data: Array<WidgetData>;
     totalVotes: number; // will need this to show percentage voted in the option
-    selected: string | null; // id of the widget data that is voted
-}
-
-export type Manifest = ManifestDataType & {
-    dataLoaded?: boolean;
-};
-
-export interface Module {
-    id: ModuleId;
-    order: number;
-    widget: Widget;
+    confirmed?: string; // id of the widget data that is voted
 }
 
 export interface ModuleExtended extends Module {
-    manifest: Manifest;
+    manifest?: Manifest;
+    widget: Widget;
 }
 
 export interface Boat {

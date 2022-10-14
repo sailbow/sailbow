@@ -1,10 +1,7 @@
 import { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
 import { createBoat, getAllBoats, getBannerImages, getBoat } from 'modules/boats/Boat.Service';
-import { Boat, BoatState, CreateBoat, ModuleExtended, ModuleId, Photo, WidgetId } from 'modules/boats/Boat.Types';
-import { LocationManifestProps } from './boat-modules/location/LocationManifest';
-import { ManifestDataType } from './boat-modules/BoatModulesManifest';
-import { DateManifestProps } from './boat-modules/date/DateManifest';
+import { Boat, BoatState, CreateBoat, ModuleExtended, ModuleName, Photo } from 'modules/boats/Boat.Types';
 
 export enum BoatActionType {
     SetCreateNav,
@@ -15,6 +12,7 @@ export enum BoatActionType {
     SetGetLoading,
     SetAllBoats,
     SetModuleManifest,
+    SetModuleWidget,
 }
 
 interface PayloadCreateBoat extends CreateBoat {}
@@ -40,8 +38,13 @@ interface PayloadError {
 }
 
 interface PayloadSetModuleManifest {
-    data: ManifestDataType | null;
-    moduleId: ModuleId;
+    data: any;
+    moduleId: string;
+}
+
+interface PayloadSetModuleWidget {
+    data: any;
+    moduleId: string;
 }
 
 interface BoatAction {
@@ -53,7 +56,8 @@ interface BoatAction {
         | PayloadLoading
         | PayloadSetCreateNav
         | PayloadSetAllBoats
-        | PayloadSetModuleManifest;
+        | PayloadSetModuleManifest
+        | PayloadSetModuleWidget;
 }
 
 interface BoatProviderProps {
@@ -82,7 +86,7 @@ const getBoatById = (boats: Boat[], boatId: string): Boat => {
     return foundBoat;
 };
 
-const getModuleById = (modules: ModuleExtended[], moduleId: ModuleId): ModuleExtended => {
+const getModuleById = (modules: ModuleExtended[], moduleId: string): ModuleExtended => {
     const foundModule = modules.find((module) => module.id === moduleId);
 
     if (!foundModule) throw Error(`Invalid module: ${moduleId}`);
@@ -103,33 +107,27 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
 
                           modules: [
                               {
-                                  id: ModuleId.Date,
+                                  id: '1',
+                                  name: ModuleName.Date,
                                   order: 1,
+                                  actionRequired: true,
+                                  description: 'this is a test date widget',
+                                  deadline: new Date(),
+                                  totalVotes: 5,
                                   widget: {
-                                      id: WidgetId.Date,
-                                      responses: [],
-                                      actionRequired: true,
-                                      description: 'this is a test date widget',
-                                      deadline: new Date(),
                                       data: [],
-                                      selected: null,
-                                      totalVotes: 5,
                                   },
-                                  manifest: { data: null },
                               },
                               {
-                                  id: ModuleId.Location,
+                                  id: '2',
+                                  name: ModuleName.Location,
                                   order: 2,
-                                  manifest: { data: null },
+                                  actionRequired: true,
+                                  description: 'this is a test location widget',
+                                  deadline: new Date(),
+                                  totalVotes: 5,
                                   widget: {
-                                      id: WidgetId.Location,
-                                      responses: [],
-                                      actionRequired: true,
-                                      description: 'this is a test location widget',
-                                      deadline: new Date(),
                                       data: [],
-                                      selected: null,
-                                      totalVotes: 5,
                                   },
                               },
                           ],
@@ -177,14 +175,30 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
             const payload = action.payload as PayloadSetModuleManifest;
             const activeBoat = boatState.activeBoat!;
             const modules = activeBoat.modules;
+            const moduleIdx = modules.findIndex((module) => module.id === payload.moduleId);
 
-            const moduleIdx = modules.findIndex((m) => m.id === payload.moduleId);
             if (moduleIdx !== -1) {
                 const module = modules[moduleIdx];
+
                 module.manifest = { ...payload.data, dataLoaded: true };
                 activeBoat.modules = [...modules];
             }
 
+            return { ...boatState };
+        }
+
+        case BoatActionType.SetModuleWidget: {
+            const payload = action.payload as PayloadSetModuleManifest;
+            const activeBoat = boatState.activeBoat!;
+            const modules = activeBoat.modules;
+            const moduleIdx = modules.findIndex((module) => module.id === payload.moduleId);
+
+            if (moduleIdx !== -1) {
+                const module = modules[moduleIdx];
+
+                module.widget = { data: payload.data, dataLoaded: true };
+                activeBoat.modules = [...modules];
+            }
             return { ...boatState };
         }
 
@@ -232,8 +246,8 @@ interface BoatActionApis {
     getBoat: (boatId: string) => Promise<Boat | null>;
     getBoats: () => Promise<Boat[] | null>;
     removeActiveBoat: () => void;
-    getModuleManifestData: (boatId: string, moduleId: ModuleId) => Promise<void>;
-    getModuleWidgetData: (boatId: string, moduleId: ModuleId) => Promise<void>;
+    getModuleManifestData: (boatId: string, moduleId: string) => Promise<void>;
+    getModuleWidgetData: (boatId: string, moduleId: string) => Promise<void>;
     // getCrewByQuery: (query: string) => Promise<Crew[] | null>;
 }
 
@@ -297,20 +311,20 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 return null;
             }
         },
-        getModuleManifestData: async (boatId: string, moduleId: ModuleId) => {
+        getModuleManifestData: async (boatId: string, moduleId: string) => {
             return new Promise<any | null>((res, rej) => {
                 switch (moduleId) {
-                    case ModuleId.Date:
+                    case '1':
                         return setTimeout(() => {
                             dispatch({
                                 type: BoatActionType.SetModuleManifest,
                                 payload: {
                                     moduleId,
-                                    data: { data: 'Sat, 7th Sep - Mon 9th Sep' } as DateManifestProps,
+                                    data: { data: 'Sat, 7th Sep - Mon 9th Sep' },
                                 },
                             });
                         }, 1000);
-                    case ModuleId.Location:
+                    case '2':
                         return setTimeout(() => {
                             dispatch({
                                 type: BoatActionType.SetModuleManifest,
@@ -320,24 +334,24 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 }
             });
         },
-        getModuleWidgetData: async (boatId: string, moduleId: ModuleId) => {
+        getModuleWidgetData: async (boatId: string, moduleId: string) => {
             return new Promise<any | null>((res, rej) => {
                 switch (moduleId) {
-                    case ModuleId.Date:
+                    case '1':
                         return setTimeout(() => {
                             dispatch({
-                                type: BoatActionType.SetModuleManifest,
+                                type: BoatActionType.SetModuleWidget,
                                 payload: {
                                     moduleId,
-                                    data: { data: 'Sat, 7th Sep - Mon 9th Sep' } as DateManifestProps,
+                                    data: [],
                                 },
                             });
                         }, 1000);
-                    case ModuleId.Location:
+                    case '2':
                         return setTimeout(() => {
                             dispatch({
-                                type: BoatActionType.SetModuleManifest,
-                                payload: { moduleId, data: null },
+                                type: BoatActionType.SetModuleWidget,
+                                payload: { moduleId, data: [] },
                             });
                         }, 2000);
                 }

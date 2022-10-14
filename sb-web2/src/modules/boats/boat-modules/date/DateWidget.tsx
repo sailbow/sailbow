@@ -3,8 +3,19 @@ import { FC } from 'react';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
 import { ModuleDateImage, SbCalendarIcon } from 'shared/icons/Icons';
 import { DateWidgetSettings } from './DateWidgetSettings';
+import { WidgetData } from 'modules/boats/Boat.Types';
 
-export const DateWidget: FC = () => {
+export interface DateWidgetData extends WidgetData {
+    startDate: string;
+    endData?: string;
+}
+
+interface Props {
+    data: DateWidgetData[];
+    loading: boolean;
+}
+
+export const DateWidget: FC<Props> = ({ data }) => {
     return (
         <BoatWidget
             label="Date"
