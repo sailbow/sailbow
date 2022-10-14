@@ -79,7 +79,7 @@ export interface Module {
     order: number;
     actionRequired?: boolean;
     description: string;
-    deadline: Date; // will be used to send reminders
+    deadline?: Date; // will be used to send reminders
     totalVotes: number; // will need this to show percentage voted in the option
     confirmed?: string; // id of the widget data that is voted
 }

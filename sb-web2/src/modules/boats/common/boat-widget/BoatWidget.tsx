@@ -10,6 +10,7 @@ import {
     SbCalendarIcon,
     ModuleLocationImage,
     SbLocationIcon,
+    SbDeleteIcon,
 } from 'shared/icons/Icons';
 import { BoatWidgetDetails } from './BoatWidgetDetails';
 import { ModuleName } from 'modules/boats/Boat.Types';
@@ -38,7 +39,7 @@ enum Mode {
     Settings,
 }
 
-const ModuleMapper: Record<ModuleName, WidgetMetaData> = {
+export const ModuleMapper: Record<ModuleName, WidgetMetaData> = {
     [ModuleName.Date]: {
         image: <ModuleDateImage />,
         icon: <SbCalendarIcon />,
@@ -77,7 +78,7 @@ export const BoatWidget: FC<Props> = ({ children, settings, name }) => {
                 </PopoverTrigger>
                 <PopoverContent borderRadius="xl">
                     <PopoverBody w="100%">
-                        <BoatWidgetDetails image={module.image} label={module.name} info={module.info} />
+                        <BoatWidgetDetails {...module} />
                     </PopoverBody>
                 </PopoverContent>
             </Popover>
@@ -109,7 +110,7 @@ export const BoatWidget: FC<Props> = ({ children, settings, name }) => {
                 </Flex>
                 <Flex alignItems="center">
                     <IconButton
-                        fontSize="2xl"
+                        fontSize="xl"
                         aria-label="settings"
                         colorScheme="gray"
                         variant="ghost"
@@ -117,11 +118,19 @@ export const BoatWidget: FC<Props> = ({ children, settings, name }) => {
                         onClick={() => setMode(Mode.View)}
                     />
                     <IconButton
-                        fontSize="2xl"
+                        fontSize="xl"
                         aria-label="settings"
                         colorScheme="gray"
                         variant="ghost"
                         icon={<SbSettingsIcon />}
+                        onClick={toggleMode}
+                    />
+                    <IconButton
+                        fontSize="xl"
+                        aria-label="settings"
+                        colorScheme="gray"
+                        variant="ghost"
+                        icon={<SbDeleteIcon />}
                         onClick={toggleMode}
                     />
                 </Flex>

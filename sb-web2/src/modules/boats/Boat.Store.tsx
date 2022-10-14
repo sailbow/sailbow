@@ -13,6 +13,7 @@ export enum BoatActionType {
     SetAllBoats,
     SetModuleManifest,
     SetModuleWidget,
+    SetModules,
 }
 
 interface PayloadCreateBoat extends CreateBoat {}
@@ -47,6 +48,10 @@ interface PayloadSetModuleWidget {
     moduleId: string;
 }
 
+interface PayloadSetModules {
+    modules: ModuleExtended[];
+}
+
 interface BoatAction {
     type: BoatActionType;
     payload:
@@ -57,7 +62,8 @@ interface BoatAction {
         | PayloadSetCreateNav
         | PayloadSetAllBoats
         | PayloadSetModuleManifest
-        | PayloadSetModuleWidget;
+        | PayloadSetModuleWidget
+        | PayloadSetModules;
 }
 
 interface BoatProviderProps {
@@ -105,30 +111,30 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
                     ? {
                           ...boat,
                           modules: [
-                              {
-                                  id: '1',
-                                  name: ModuleName.Date,
-                                  order: 1,
-                                  actionRequired: true,
-                                  description: 'this is a test date widget',
-                                  deadline: new Date(),
-                                  totalVotes: 5,
-                                  widget: {
-                                      data: [],
-                                  },
-                              },
-                              {
-                                  id: '2',
-                                  name: ModuleName.Location,
-                                  order: 2,
-                                  actionRequired: true,
-                                  description: 'this is a test location widget',
-                                  deadline: new Date(),
-                                  totalVotes: 5,
-                                  widget: {
-                                      data: [],
-                                  },
-                              },
+                              //   {
+                              //       id: '1',
+                              //       name: ModuleName.Date,
+                              //       order: 1,
+                              //       actionRequired: true,
+                              //       description: 'this is a test date widget',
+                              //       deadline: new Date(),
+                              //       totalVotes: 5,
+                              //       widget: {
+                              //           data: [],
+                              //       },
+                              //   },
+                              //   {
+                              //       id: '2',
+                              //       name: ModuleName.Location,
+                              //       order: 2,
+                              //       actionRequired: true,
+                              //       description: 'this is a test location widget',
+                              //       deadline: new Date(),
+                              //       totalVotes: 5,
+                              //       widget: {
+                              //           data: [],
+                              //       },
+                              //   },
                           ],
                       }
                     : undefined,
@@ -201,6 +207,16 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
             return { ...boatState };
         }
 
+        case BoatActionType.SetModules: {
+            return {
+                ...boatState,
+                activeBoat: {
+                    ...boatState.activeBoat!,
+                    modules: (action.payload as PayloadSetModules).modules,
+                },
+            };
+        }
+
         default: {
             throw new Error(`Invalid action -- ${action.type}`);
         }
@@ -247,6 +263,7 @@ interface BoatActionApis {
     removeActiveBoat: () => void;
     getModuleManifestData: (boatId: string, moduleId: string) => Promise<void>;
     getModuleWidgetData: (boatId: string, moduleId: string) => Promise<void>;
+    addModule: (moduleName: ModuleName, moduleForm: any) => void;
     // getCrewByQuery: (query: string) => Promise<Crew[] | null>;
 }
 
@@ -319,7 +336,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                                 type: BoatActionType.SetModuleManifest,
                                 payload: {
                                     moduleId,
-                                    data: { data: 'Sat, 7th Sep - Mon 9th Sep' },
+                                    data: { data: null },
                                 },
                             });
                         }, 1000);
@@ -354,6 +371,30 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                             });
                         }, 2000);
                 }
+            });
+        },
+        addModule: (moduleName: ModuleName, moduleForm: any) => {
+            // make api call to add module here
+            const newBoat = { ...state.activeBoat! };
+
+            const module: ModuleExtended = {
+                id: '1',
+                name: moduleName,
+                order: newBoat!.modules.length,
+                description: '',
+                totalVotes: 5,
+                widget: {
+                    data: moduleForm.data,
+                },
+            };
+
+            const newModules = [...newBoat.modules, module];
+
+            dispatch({
+                type: BoatActionType.SetModules,
+                payload: {
+                    modules: newModules,
+                },
             });
         },
         // getCrewByQuery: async (query) => {
