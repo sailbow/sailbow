@@ -1,8 +1,6 @@
 ﻿
 using System.Reflection;
 
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 
@@ -20,8 +18,15 @@ namespace Sb.Data.MongoDB
             if (attributes.Length == 0)
                 throw new ArgumentException($"Cannot initialize MongoRepository with entity '{typeof(TEntity)}': missing MongoCollectionAttribute");
 
-            var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
-            ConventionRegistry.Register("camelCase", conventionPack, t => true);
+            ConventionRegistry.Register(
+                name: "camelCase",
+                conventions: new ConventionPack { new CamelCaseElementNameConvention() },
+                filter: t => true);
+
+            ConventionRegistry.Register(
+                name: "stringObjectIds",
+                conventions: new ConventionPack { new StringObjectIdConvention() },
+                filter: testc => true);
 
             MongoClient client = new(config.ConnectionString);
             Collection = client
@@ -47,7 +52,6 @@ namespace Sb.Data.MongoDB
 
         public async Task<TEntity> InsertAsync(TEntity element, CancellationToken cancellation = default)
         {
-            element.Id = Guid.NewGuid().ToString();
             await Collection.InsertOneAsync(element, null, cancellation);
             return element;
         }
