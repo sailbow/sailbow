@@ -4,10 +4,10 @@ import { Box } from '@chakra-ui/react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Boat, Manifest, ModuleExtended, ModuleName } from 'modules/boats/Boat.Types';
-import { DateManifest, DateManifestProps } from 'modules/boats/boat-modules/date/DateManifest';
-import { InfoManifest } from 'modules/boats/boat-modules/info/InfoManifest';
-import { LocationManifest, LocationManifestProps } from 'modules/boats/boat-modules/location/LocationManifest';
-import { CrewManifest } from 'modules/boats/boat-modules/crew/CrewManifest';
+import { DateManifest, DateManifestProps } from 'modules/boats/boat-modules/modules/date/DateManifest';
+import { InfoManifest } from 'modules/boats/boat-modules/modules/info/InfoManifest';
+import { LocationManifest, LocationManifestProps } from 'modules/boats/boat-modules/modules/location/LocationManifest';
+import { CrewManifest } from 'modules/boats/boat-modules/modules/crew/CrewManifest';
 
 interface Props {
     boat: Boat;

@@ -10,6 +10,7 @@ import { WhitelistedRoutes } from 'router/Router.Types';
 import { HttpInterceptor } from 'shared/http/HttpInterceptor';
 
 import './App.scss';
+import { SystemProvider } from 'modules/system/System.Store';
 
 export const App: FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -34,9 +35,11 @@ export const App: FC = () => {
                         {!loading ? (
                             <>
                                 {isLoggedIn ? (
-                                    <BoatProvider>
-                                        <PrivateRouter />
-                                    </BoatProvider>
+                                    <SystemProvider>
+                                        <BoatProvider>
+                                            <PrivateRouter />
+                                        </BoatProvider>
+                                    </SystemProvider>
                                 ) : (
                                     <PublicRouter />
                                 )}

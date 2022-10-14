@@ -1,11 +1,12 @@
 import { FC, useEffect } from 'react';
 
-import { Stack } from '@chakra-ui/react';
+import { Button, Stack } from '@chakra-ui/react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Boat, ModuleExtended, ModuleName, Widget, WidgetData } from 'modules/boats/Boat.Types';
-import { DateWidget, DateWidgetData } from './date/DateWidget';
-import { LocationWidget } from './location/LocationWidget';
+import { DateWidget, DateWidgetData } from './modules/date/DateWidget';
+import { LocationWidget } from './modules/location/LocationWidget';
+import { useSystem } from 'modules/system/System.Store';
 
 interface Props {
     boat: Boat;
@@ -52,6 +53,7 @@ export const BoatModulesWidgetItem: FC<BoatModulesWidgetItemProps> = ({
 
 export const BoatModulesWidget: FC<Props> = ({ boat }) => {
     const [, { getModuleWidgetData }] = useBoat();
+    const [, { openPicker }] = useSystem();
 
     return (
         <Stack w="100%" spacing="4">
@@ -64,6 +66,8 @@ export const BoatModulesWidget: FC<Props> = ({ boat }) => {
                     module={module}
                 />
             ))}
+
+            <Button onClick={openPicker}>Add Widget</Button>
         </Stack>
     );
 };

@@ -22,7 +22,7 @@ export const DateWidget: FC<Props> = ({ data }) => {
             icon={<SbCalendarIcon />}
             settings={<DateWidgetSettings />}
             widgetImage={<ModuleDateImage />}
-            widgetInfo="This is a date widget to set a date or a rade range"
+            widgetInfo="This is a date widget to set a date or a date range"
         >
             <>Poll goes here</>
         </BoatWidget>

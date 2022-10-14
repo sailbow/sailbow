@@ -1,19 +1,6 @@
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
 
-import {
-    Box,
-    Text,
-    Button,
-    Flex,
-    Heading,
-    Stack,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerHeader,
-    DrawerBody,
-    DrawerFooter,
-    IconButton,
-} from '@chakra-ui/react';
+import { Box, Text, Button, Stack } from '@chakra-ui/react';
 
 import { useAuthStore } from 'modules/auth/Auth.Store';
 import { useBoat } from 'modules/boats/Boat.Store';

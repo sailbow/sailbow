@@ -4,6 +4,7 @@ import { Box } from '@chakra-ui/react';
 import { Route, Routes } from 'react-router-dom';
 
 import { BoatCreate } from './boat-create/BoatCreate';
+import { BoatModulesPicker } from './boat-modules/boat-modules-picker/BoatModulesPicker';
 
 const BoatView = lazy(() =>
     import('modules/boats/boat-view/BoatView').then((module) => ({ default: module.BoatView })),
@@ -21,6 +22,7 @@ export const Boat: FunctionComponent = () => {
     return (
         <Box px="4" h="100%" id="sb-main">
             <BoatCreate />
+            <BoatModulesPicker />
             <Routes>
                 <Route path={BoatRoutes.AllBoats} element={<BoatHome />} />
                 <Route path={BoatRoutes.View} element={<BoatView />} />
