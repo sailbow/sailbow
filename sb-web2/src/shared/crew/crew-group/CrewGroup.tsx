@@ -12,11 +12,11 @@ interface Props {
 export const CrewGroup: FC<Props> = ({ crew }) => {
     return (
         <AvatarGroup size="sm" max={8} className="sb-crew-group">
-            <Avatar className="crew-avatar" name="Ryan Florence" src="https://bit.ly/ryan-florence" />
-            <Avatar className="crew-avatar" name="Segun Adebayo" src="https://bit.ly/sage-adebayo" />
-            <Avatar className="crew-avatar" name="Kent Dodds" src="https://bit.ly/kent-c-dodds" />
-            <Avatar className="crew-avatar" name="Prosper Otemuyiwa" src="https://bit.ly/prosper-baba" />
-            <Avatar className="crew-avatar" name="Christian Nwamba" src="https://bit.ly/code-beast" />
+            <Avatar className="crew-avatar" name="Ryan Florence" />
+            <Avatar className="crew-avatar" name="Segun Adebayo" />
+            <Avatar className="crew-avatar" name="Kent Dodds" />
+            <Avatar className="crew-avatar" name="Prosper Otemuyiwa" />
+            <Avatar className="crew-avatar" name="Christian Nwamba" />
         </AvatarGroup>
     );
 };

@@ -1,16 +1,36 @@
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useMemo, useState } from 'react';
 
 import { Box, Flex, IconButton, Text, Popover, PopoverTrigger, PopoverContent, PopoverBody } from '@chakra-ui/react';
 
-import { SbSettingsIcon, SbArrowLeftIcon, SbEditIcon } from 'shared/icons/Icons';
+import {
+    SbSettingsIcon,
+    SbArrowLeftIcon,
+    SbEditIcon,
+    ModuleDateImage,
+    SbCalendarIcon,
+    ModuleLocationImage,
+    SbLocationIcon,
+} from 'shared/icons/Icons';
+import { BoatWidgetDetails } from './BoatWidgetDetails';
+import { ModuleName } from 'modules/boats/Boat.Types';
+
+export interface WidgetProps {
+    name: ModuleName;
+    loading: boolean;
+    data: any[];
+}
+
+interface WidgetMetaData {
+    image: ReactNode;
+    icon: ReactNode;
+    name: string;
+    info: string;
+}
 
 interface Props {
-    label: string;
-    icon: ReactNode;
     settings: ReactNode;
-    widgetInfo: string;
-    widgetImage: ReactNode;
     children: ReactNode;
+    name: ModuleName;
 }
 
 enum Mode {
@@ -18,8 +38,24 @@ enum Mode {
     Settings,
 }
 
-export const BoatWidget: FC<Props> = ({ label, icon, children, settings, widgetInfo, widgetImage }) => {
+const ModuleMapper: Record<ModuleName, WidgetMetaData> = {
+    [ModuleName.Date]: {
+        image: <ModuleDateImage />,
+        icon: <SbCalendarIcon />,
+        name: 'Date',
+        info: 'Pin a date or a date range to your trip',
+    },
+    [ModuleName.Location]: {
+        image: <ModuleLocationImage />,
+        icon: <SbLocationIcon />,
+        name: 'Location',
+        info: 'List all the location options you want your group to see!',
+    },
+};
+
+export const BoatWidget: FC<Props> = ({ children, settings, name }) => {
     const [mode, setMode] = useState<Mode>(Mode.View);
+    const module = useMemo(() => ModuleMapper[name], []);
 
     const toggleMode = () => {
         if (mode === Mode.View) setMode(Mode.Settings);
@@ -36,20 +72,12 @@ export const BoatWidget: FC<Props> = ({ label, icon, children, settings, widgetI
                         colorScheme="gray"
                         variant="ghost"
                         size="sm"
-                        icon={<>{icon}</>}
+                        icon={<>{module.icon}</>}
                     />
                 </PopoverTrigger>
                 <PopoverContent borderRadius="xl">
                     <PopoverBody w="100%">
-                        <Flex w="100%" gap="4" alignItems="flex-start">
-                            <Box flex="0.2" width="80px" height="80px">
-                                {widgetImage}
-                            </Box>
-                            <Box flex="0.8">
-                                <Text fontWeight="semibold">{label}</Text>
-                                <Text fontSize="sm">{widgetInfo}</Text>
-                            </Box>
-                        </Flex>
+                        <BoatWidgetDetails image={module.image} label={module.name} info={module.info} />
                     </PopoverBody>
                 </PopoverContent>
             </Popover>
@@ -76,7 +104,7 @@ export const BoatWidget: FC<Props> = ({ label, icon, children, settings, widgetI
                         )}
                     </Box>
                     <Text fontWeight="semibold" pl="1">
-                        {mode === Mode.View ? <>{label}</> : 'Settings'}
+                        {mode === Mode.View ? <>{module.name}</> : 'Settings'}
                     </Text>
                 </Flex>
                 <Flex alignItems="center">

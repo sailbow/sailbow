@@ -1,17 +1,20 @@
 import { FC } from 'react';
 
-import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
-import { ModuleLocationImage, SbLocationIcon } from 'shared/icons/Icons';
+import { BoatWidget, WidgetProps } from 'modules/boats/common/boat-widget/BoatWidget';
+import { WidgetData } from 'modules/boats/Boat.Types';
 
-export const LocationWidget: FC = () => {
+export interface LocationWidgetData extends WidgetData {
+    text: string;
+    link: string;
+}
+
+interface Props extends WidgetProps {
+    data: LocationWidgetData[];
+}
+
+export const LocationWidget: FC<Props> = ({ name, loading, data }) => {
     return (
-        <BoatWidget
-            label="Location"
-            icon={<SbLocationIcon />}
-            settings={<>Location Widget Settings</>}
-            widgetImage={<ModuleLocationImage />}
-            widgetInfo="List all the location options you want your group to see!"
-        >
+        <BoatWidget name={name} settings={<>Location Widget Settings</>}>
             <>Poll goes here</>
         </BoatWidget>
     );

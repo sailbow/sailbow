@@ -5,7 +5,7 @@ import { Button, Stack } from '@chakra-ui/react';
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Boat, ModuleExtended, ModuleName, Widget, WidgetData } from 'modules/boats/Boat.Types';
 import { DateWidget, DateWidgetData } from './modules/date/DateWidget';
-import { LocationWidget } from './modules/location/LocationWidget';
+import { LocationWidget, LocationWidgetData } from './modules/location/LocationWidget';
 import { useSystem } from 'modules/system/System.Store';
 
 interface Props {
@@ -20,15 +20,17 @@ interface BoatModulesWidgetItemProps {
 }
 
 export interface WidgetDataType extends Widget {
-    data: DateWidgetData[];
+    data: DateWidgetData[] | LocationWidgetData[];
 }
 
 const getWidget = (moduleName: ModuleName, widgetData: WidgetDataType, loading: boolean) => {
     switch (moduleName) {
         case ModuleName.Date:
-            return <DateWidget data={widgetData.data as DateWidgetData[]} loading={loading} />;
+            return <DateWidget data={widgetData.data as DateWidgetData[]} loading={loading} name={moduleName} />;
         case ModuleName.Location:
-            return <LocationWidget />;
+            return (
+                <LocationWidget data={widgetData.data as LocationWidgetData[]} loading={loading} name={moduleName} />
+            );
         default:
             throw Error(`Invalid moduleName: ${moduleName}`);
     }

@@ -1,7 +1,6 @@
 import { FC } from 'react';
 
-import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
-import { ModuleDateImage, SbCalendarIcon } from 'shared/icons/Icons';
+import { BoatWidget, WidgetProps } from 'modules/boats/common/boat-widget/BoatWidget';
 import { DateWidgetSettings } from './DateWidgetSettings';
 import { WidgetData } from 'modules/boats/Boat.Types';
 
@@ -10,20 +9,13 @@ export interface DateWidgetData extends WidgetData {
     endData?: string;
 }
 
-interface Props {
+interface Props extends WidgetProps {
     data: DateWidgetData[];
-    loading: boolean;
 }
 
-export const DateWidget: FC<Props> = ({ data }) => {
+export const DateWidget: FC<Props> = ({ name, loading, data }) => {
     return (
-        <BoatWidget
-            label="Date"
-            icon={<SbCalendarIcon />}
-            settings={<DateWidgetSettings />}
-            widgetImage={<ModuleDateImage />}
-            widgetInfo="This is a date widget to set a date or a date range"
-        >
+        <BoatWidget name={name} settings={<DateWidgetSettings />}>
             <>Poll goes here</>
         </BoatWidget>
     );
