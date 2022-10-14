@@ -104,7 +104,6 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
                 activeBoat: boat
                     ? {
                           ...boat,
-
                           modules: [
                               {
                                   id: '1',

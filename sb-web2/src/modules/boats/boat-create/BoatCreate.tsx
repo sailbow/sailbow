@@ -7,7 +7,6 @@ import {
     Flex,
     Heading,
     Stack,
-    Drawer,
     DrawerOverlay,
     DrawerContent,
     DrawerHeader,
@@ -26,6 +25,7 @@ import { Color } from 'theme/colors/Colors';
 import { SbCheckMarkIcon, SbCloseIcon } from 'shared/icons/Icons';
 
 import './BoatCreate.scss';
+import { Drawer } from 'shared/drawer/Drawer';
 
 export const BoatCreate: FunctionComponent = () => {
     const [{ createOpen, loading }, { createBoat, closeCreateBoat }] = useBoat();
@@ -88,95 +88,150 @@ export const BoatCreate: FunctionComponent = () => {
 
     return (
         <Drawer
+            title="Start a Boat"
             isOpen={createOpen}
+            onClose={closeCreateBoat}
             placement="right"
-            onClose={() => {
-                closeCreateBoat();
-            }}
             size="md"
             allowPinchZoom
+            footer={
+                <Box className="create-boat-actions">
+                    <Button variant="menu-link" mr="4" onClick={() => closeCreateBoat()}>
+                        Cancel
+                    </Button>
+                    <Button
+                        disabled={!boatForm.name}
+                        isLoading={loading.create}
+                        onClick={onSubmit}
+                        rightIcon={SbCheckMarkIcon}
+                    >
+                        <Text>Start Boat</Text>
+                    </Button>
+                </Box>
+            }
         >
-            <DrawerOverlay />
-            <DrawerContent>
-                <DrawerHeader>
-                    <Flex alignItems="center" justifyContent="space-between">
-                        <Heading fontSize="2xl">Start a Boat</Heading>
-                        <Flex>
-                            <IconButton
-                                mr="-3"
-                                onClick={() => closeCreateBoat()}
-                                aria-label="close-icon"
-                                icon={<SbCloseIcon />}
-                                colorScheme="gray"
-                                fontSize="2xl"
-                                variant="ghost"
-                            />
-                        </Flex>
-                    </Flex>
-                </DrawerHeader>
+            <Stack spacing="6">
+                <Box height={{ base: '200px', md: '260px' }} className="banner">
+                    <BoatBanner id="create" banner={boatForm.banner} onChange={onBannerChange} />
+                </Box>
+                <Input
+                    label="Name"
+                    customClass="create-boat-name"
+                    required
+                    onChange={onFormDetailsChange}
+                    placeholder="Boat name..."
+                    id="name"
+                    name="name"
+                    py="4"
+                    autoFocus
+                />
+                <Box>
+                    <TextArea
+                        label="Description"
+                        customClass="create-boat-description"
+                        onChange={onFormDetailsChange}
+                        name="description"
+                        id="description"
+                        rows={3}
+                        variant="brand"
+                        placeholder="What is your boat about?"
+                        maxLength={300}
+                    />
+                    <Text fontWeight="normal" textAlign="right" fontSize="xs">
+                        {boatForm.description?.length}/300
+                    </Text>
+                </Box>
+                <Box className="create-boat-gather-crew">
+                    <Text fontSize="sm" fontWeight="semibold" color="brand.secondary" pb="1">
+                        Invite Crew
+                    </Text>
 
-                <DrawerBody pb="8">
-                    <Stack spacing="6">
-                        <Box height={{ base: '200px', md: '260px' }} className="banner">
-                            <BoatBanner id="create" banner={boatForm.banner} onChange={onBannerChange} />
-                        </Box>
-                        <Input
-                            label="Name"
-                            customClass="create-boat-name"
-                            required
-                            onChange={onFormDetailsChange}
-                            placeholder="Boat name..."
-                            id="name"
-                            name="name"
-                            py="4"
-                            autoFocus
-                        />
-                        <Box>
-                            <TextArea
-                                label="Description"
-                                customClass="create-boat-description"
-                                onChange={onFormDetailsChange}
-                                name="description"
-                                id="description"
-                                rows={3}
-                                variant="brand"
-                                placeholder="What is your boat about?"
-                                maxLength={300}
-                            />
-                            <Text fontWeight="normal" textAlign="right" fontSize="xs">
-                                {boatForm.description?.length}/300
-                            </Text>
-                        </Box>
-                        <Box className="create-boat-gather-crew">
-                            <Text fontSize="sm" fontWeight="semibold" color="brand.secondary" pb="1">
-                                Invite Crew
-                            </Text>
+                    <UserSearch onChange={onAddCrewMember} />
 
-                            <UserSearch onChange={onAddCrewMember} />
-
-                            <Box mt="4">
-                                <UserList actions crew={boatForm.crew} onDelete={onRemoveCrewMember} />
-                            </Box>
-                        </Box>
-                    </Stack>
-                </DrawerBody>
-
-                <DrawerFooter>
-                    <Box className="create-boat-actions">
-                        <Button variant="menu-link" mr="4" onClick={() => closeCreateBoat()}>
-                            Cancel
-                        </Button>
-                        <Button
-                            disabled={!boatForm.name}
-                            isLoading={loading.create}
-                            onClick={onSubmit}
-                            rightIcon={SbCheckMarkIcon}
-                        >
-                            <Text>Start Boat</Text>
-                        </Button>
+                    <Box mt="4">
+                        <UserList actions crew={boatForm.crew} onDelete={onRemoveCrewMember} />
                     </Box>
-                </DrawerFooter>
-            </DrawerContent>
+                </Box>
+            </Stack>
         </Drawer>
+        // <Drawer
+        //     isOpen={createOpen}
+        //     placement="right"
+        //     onClose={() => {
+        //         closeCreateBoat();
+        //     }}
+        //     size="md"
+        //     allowPinchZoom
+        // >
+        //     <DrawerOverlay />
+        //     <DrawerContent>
+        //         <DrawerHeader>
+        //             <Flex alignItems="center" justifyContent="space-between">
+        //                 <Heading fontSize="2xl">Start a Boat</Heading>
+        //                 <Flex>
+        //                     <IconButton
+        //                         mr="-3"
+        //                         onClick={() => closeCreateBoat()}
+        //                         aria-label="close-icon"
+        //                         icon={<SbCloseIcon />}
+        //                         colorScheme="gray"
+        //                         fontSize="2xl"
+        //                         variant="ghost"
+        //                     />
+        //                 </Flex>
+        //             </Flex>
+        //         </DrawerHeader>
+
+        //         <DrawerBody pb="8">
+        //             <Stack spacing="6">
+        //                 <Box height={{ base: '200px', md: '260px' }} className="banner">
+        //                     <BoatBanner id="create" banner={boatForm.banner} onChange={onBannerChange} />
+        //                 </Box>
+        //                 <Input
+        //                     label="Name"
+        //                     customClass="create-boat-name"
+        //                     required
+        //                     onChange={onFormDetailsChange}
+        //                     placeholder="Boat name..."
+        //                     id="name"
+        //                     name="name"
+        //                     py="4"
+        //                     autoFocus
+        //                 />
+        //                 <Box>
+        //                     <TextArea
+        //                         label="Description"
+        //                         customClass="create-boat-description"
+        //                         onChange={onFormDetailsChange}
+        //                         name="description"
+        //                         id="description"
+        //                         rows={3}
+        //                         variant="brand"
+        //                         placeholder="What is your boat about?"
+        //                         maxLength={300}
+        //                     />
+        //                     <Text fontWeight="normal" textAlign="right" fontSize="xs">
+        //                         {boatForm.description?.length}/300
+        //                     </Text>
+        //                 </Box>
+        //                 <Box className="create-boat-gather-crew">
+        //                     <Text fontSize="sm" fontWeight="semibold" color="brand.secondary" pb="1">
+        //                         Invite Crew
+        //                     </Text>
+
+        //                     <UserSearch onChange={onAddCrewMember} />
+
+        //                     <Box mt="4">
+        //                         <UserList actions crew={boatForm.crew} onDelete={onRemoveCrewMember} />
+        //                     </Box>
+        //                 </Box>
+        //             </Stack>
+        //         </DrawerBody>
+
+        //         <DrawerFooter>
+
+        //         </DrawerFooter>
+        //     </DrawerContent>
+        // </Drawer>
     );
 };
