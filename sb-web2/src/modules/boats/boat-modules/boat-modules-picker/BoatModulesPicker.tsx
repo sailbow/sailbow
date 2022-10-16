@@ -23,6 +23,7 @@ export const BoatModulesPicker: FC = () => {
 
                     return (
                         <Box
+                            key={`picker-option-${module}`}
                             borderRadius="xl"
                             borderStyle="solid"
                             borderWidth="2px"

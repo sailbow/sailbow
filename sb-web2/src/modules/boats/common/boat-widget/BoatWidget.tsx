@@ -1,6 +1,17 @@
-import { FC, ReactNode, useMemo, useState } from 'react';
+import { FC, ReactNode, useEffect, useMemo, useState } from 'react';
 
-import { Box, Flex, IconButton, Text, Popover, PopoverTrigger, PopoverContent, PopoverBody } from '@chakra-ui/react';
+import {
+    Box,
+    Flex,
+    IconButton,
+    Text,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverBody,
+    Divider,
+    Button,
+} from '@chakra-ui/react';
 
 import {
     SbSettingsIcon,
@@ -11,14 +22,18 @@ import {
     ModuleLocationImage,
     SbLocationIcon,
     SbDeleteIcon,
+    SbCheckIcon,
 } from 'shared/icons/Icons';
 import { BoatWidgetDetails } from './BoatWidgetDetails';
-import { ModuleName } from 'modules/boats/Boat.Types';
+import { ModuleName, WidgetMode } from 'modules/boats/Boat.Types';
+import { useBoat } from 'modules/boats/Boat.Store';
 
 export interface WidgetProps {
+    id: string;
     name: ModuleName;
     loading: boolean;
     data: any[];
+    mode: WidgetMode;
 }
 
 interface WidgetMetaData {
@@ -32,11 +47,10 @@ interface Props {
     settings: ReactNode;
     children: ReactNode;
     name: ModuleName;
-}
-
-enum Mode {
-    View,
-    Settings,
+    id: string;
+    mode: WidgetMode;
+    onSave: () => void;
+    data: any[];
 }
 
 export const ModuleMapper: Record<ModuleName, WidgetMetaData> = {
@@ -54,14 +68,9 @@ export const ModuleMapper: Record<ModuleName, WidgetMetaData> = {
     },
 };
 
-export const BoatWidget: FC<Props> = ({ children, settings, name }) => {
-    const [mode, setMode] = useState<Mode>(Mode.View);
+export const BoatWidget: FC<Props> = ({ id, children, settings, name, mode, data, onSave }) => {
     const module = useMemo(() => ModuleMapper[name], []);
-
-    const toggleMode = () => {
-        if (mode === Mode.View) setMode(Mode.Settings);
-        else setMode(Mode.View);
-    };
+    const [, { setWidgetMode }] = useBoat();
 
     const WidgetDescriptionPopover: FC = () => {
         return (
@@ -90,7 +99,7 @@ export const BoatWidget: FC<Props> = ({ children, settings, name }) => {
             <Flex alignItems="center" justifyContent="space-between" className="widget-header">
                 <Flex alignItems="center">
                     <Box flexShrink="0" className="panel-icon">
-                        {mode === Mode.View ? (
+                        {mode === WidgetMode.View || mode === WidgetMode.Edit ? (
                             <WidgetDescriptionPopover />
                         ) : (
                             <IconButton
@@ -100,12 +109,16 @@ export const BoatWidget: FC<Props> = ({ children, settings, name }) => {
                                 variant="ghost"
                                 size="sm"
                                 icon={<SbArrowLeftIcon />}
-                                onClick={toggleMode}
+                                onClick={() => setWidgetMode(id, WidgetMode.View)}
                             />
                         )}
                     </Box>
                     <Text fontWeight="semibold" pl="1">
-                        {mode === Mode.View ? <>{module.name}</> : 'Settings'}
+                        {mode === WidgetMode.View || mode === WidgetMode.Edit ? (
+                            <>{module.name}</>
+                        ) : (
+                            `${module.name} Settings`
+                        )}
                     </Text>
                 </Flex>
                 <Flex alignItems="center">
@@ -115,7 +128,9 @@ export const BoatWidget: FC<Props> = ({ children, settings, name }) => {
                         colorScheme="gray"
                         variant="ghost"
                         icon={<SbEditIcon />}
-                        onClick={() => setMode(Mode.View)}
+                        onClick={() => {
+                            setWidgetMode(id, WidgetMode.Edit);
+                        }}
                     />
                     <IconButton
                         fontSize="xl"
@@ -123,7 +138,7 @@ export const BoatWidget: FC<Props> = ({ children, settings, name }) => {
                         colorScheme="gray"
                         variant="ghost"
                         icon={<SbSettingsIcon />}
-                        onClick={toggleMode}
+                        onClick={() => setWidgetMode(id, WidgetMode.Settings)}
                     />
                     <IconButton
                         fontSize="xl"
@@ -131,11 +146,36 @@ export const BoatWidget: FC<Props> = ({ children, settings, name }) => {
                         colorScheme="gray"
                         variant="ghost"
                         icon={<SbDeleteIcon />}
-                        onClick={toggleMode}
                     />
                 </Flex>
             </Flex>
-            <Box py="2">{mode === Mode.View ? <>{children}</> : <>{settings}</>}</Box>
+            <Box py="2">
+                {mode === WidgetMode.View || mode === WidgetMode.Edit ? (
+                    <>
+                        <>{children}</>
+
+                        {mode === WidgetMode.Edit && data.length ? (
+                            <>
+                                <Divider my="4" />
+                                <Flex justifyContent="flex-end">
+                                    <Button
+                                        onClick={() => {
+                                            onSave();
+                                        }}
+                                        rightIcon={<SbCheckIcon />}
+                                    >
+                                        Save
+                                    </Button>
+                                </Flex>
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                    </>
+                ) : (
+                    <>{settings}</>
+                )}
+            </Box>
         </Box>
     );
 };

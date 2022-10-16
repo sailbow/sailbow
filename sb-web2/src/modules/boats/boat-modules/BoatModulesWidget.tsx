@@ -3,10 +3,11 @@ import { FC, useEffect } from 'react';
 import { Button, Stack } from '@chakra-ui/react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Boat, ModuleExtended, ModuleName, Widget, WidgetData } from 'modules/boats/Boat.Types';
+import { Boat, ModuleExtended, ModuleName, Widget, WidgetData, WidgetMode } from 'modules/boats/Boat.Types';
 import { DateWidget, DateWidgetData } from './modules/date/DateWidget';
 import { LocationWidget, LocationWidgetData } from './modules/location/LocationWidget';
 import { useSystem } from 'modules/system/System.Store';
+import { SbPlusIcon } from 'shared/icons/Icons';
 
 interface Props {
     boat: Boat;
@@ -17,22 +18,28 @@ interface BoatModulesWidgetItemProps {
     getModuleWidgetData: (boatId: string, moduleId: string) => Promise<void>;
     dataLoaded?: boolean;
     module: ModuleExtended;
+    mode: WidgetMode;
 }
 
 export interface WidgetDataType extends Widget {
     data: DateWidgetData[] | LocationWidgetData[];
 }
 
-const getWidget = (moduleName: ModuleName, widgetData: WidgetDataType, loading: boolean) => {
-    switch (moduleName) {
+const getWidget = (module: ModuleExtended, widgetData: WidgetDataType, mode: WidgetMode, loading: boolean) => {
+    switch (module.name) {
         case ModuleName.Date:
-            return <DateWidget data={widgetData.data as DateWidgetData[]} loading={loading} name={moduleName} />;
+            return <DateWidget data={widgetData.data as DateWidgetData[]} loading={loading} {...module} mode={mode} />;
         case ModuleName.Location:
             return (
-                <LocationWidget data={widgetData.data as LocationWidgetData[]} loading={loading} name={moduleName} />
+                <LocationWidget
+                    data={widgetData.data as LocationWidgetData[]}
+                    loading={loading}
+                    {...module}
+                    mode={mode}
+                />
             );
         default:
-            throw Error(`Invalid moduleName: ${moduleName}`);
+            throw Error(`Invalid moduleName: ${module.name}`);
     }
 };
 
@@ -40,6 +47,7 @@ export const BoatModulesWidgetItem: FC<BoatModulesWidgetItemProps> = ({
     boatId,
     dataLoaded,
     module,
+    mode,
     getModuleWidgetData,
 }) => {
     useEffect(() => {
@@ -50,11 +58,11 @@ export const BoatModulesWidgetItem: FC<BoatModulesWidgetItemProps> = ({
         })();
     }, []);
 
-    return <>{getWidget(module.name, module.widget!, !dataLoaded)}</>;
+    return <>{getWidget(module, module.widget!, mode, !dataLoaded)}</>;
 };
 
 export const BoatModulesWidget: FC<Props> = ({ boat }) => {
-    const [, { getModuleWidgetData }] = useBoat();
+    const [{ widgetActivity }, { getModuleWidgetData }] = useBoat();
     const [, { openPicker }] = useSystem();
 
     return (
@@ -66,10 +74,13 @@ export const BoatModulesWidget: FC<Props> = ({ boat }) => {
                     getModuleWidgetData={getModuleWidgetData}
                     dataLoaded={module.widget?.dataLoaded}
                     module={module}
+                    mode={widgetActivity[module.id].mode}
                 />
             ))}
 
-            <Button onClick={openPicker}>Add Widget</Button>
+            <Button onClick={openPicker} variant="outline" rightIcon={<SbPlusIcon />}>
+                Add Widget
+            </Button>
         </Stack>
     );
 };

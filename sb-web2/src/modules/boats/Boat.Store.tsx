@@ -1,7 +1,7 @@
 import { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
 import { createBoat, getAllBoats, getBannerImages, getBoat } from 'modules/boats/Boat.Service';
-import { Boat, BoatState, CreateBoat, ModuleExtended, ModuleName, Photo } from 'modules/boats/Boat.Types';
+import { Boat, BoatState, CreateBoat, ModuleExtended, ModuleName, Photo, WidgetMode } from 'modules/boats/Boat.Types';
 
 export enum BoatActionType {
     SetCreateNav,
@@ -14,6 +14,7 @@ export enum BoatActionType {
     SetModuleManifest,
     SetModuleWidget,
     SetModules,
+    SetWidgetMode,
 }
 
 interface PayloadCreateBoat extends CreateBoat {}
@@ -48,6 +49,11 @@ interface PayloadSetModuleWidget {
     moduleId: string;
 }
 
+interface PayloadSetWidgetMode {
+    moduleId: string;
+    mode: WidgetMode;
+}
+
 interface PayloadSetModules {
     modules: ModuleExtended[];
 }
@@ -63,7 +69,8 @@ interface BoatAction {
         | PayloadSetAllBoats
         | PayloadSetModuleManifest
         | PayloadSetModuleWidget
-        | PayloadSetModules;
+        | PayloadSetModules
+        | PayloadSetWidgetMode;
 }
 
 interface BoatProviderProps {
@@ -79,6 +86,7 @@ export const initialBoatState: BoatState = {
     },
     createOpen: false,
     boats: [],
+    widgetActivity: {},
 };
 
 const BoatStateContext = createContext<BoatState | undefined>(undefined);
@@ -217,6 +225,19 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
             };
         }
 
+        case BoatActionType.SetWidgetMode: {
+            const { mode, moduleId } = action.payload as PayloadSetWidgetMode;
+            return {
+                ...boatState,
+                widgetActivity: {
+                    [moduleId]: {
+                        ...boatState.widgetActivity[moduleId],
+                        mode,
+                    },
+                },
+            };
+        }
+
         default: {
             throw new Error(`Invalid action -- ${action.type}`);
         }
@@ -264,6 +285,8 @@ interface BoatActionApis {
     getModuleManifestData: (boatId: string, moduleId: string) => Promise<void>;
     getModuleWidgetData: (boatId: string, moduleId: string) => Promise<void>;
     addModule: (moduleName: ModuleName, moduleForm: any) => void;
+    setWidgetMode: (moduleId: string, mode: WidgetMode) => void;
+    saveModuleData: <T>(moduleId: string, data: T) => void;
     // getCrewByQuery: (query: string) => Promise<Crew[] | null>;
 }
 
@@ -380,7 +403,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             const module: ModuleExtended = {
                 id: '1',
                 name: moduleName,
-                order: newBoat!.modules.length,
+                order: newBoat!.modules.length + 1,
                 description: '',
                 totalVotes: 5,
                 widget: {
@@ -396,14 +419,45 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                     modules: newModules,
                 },
             });
+            dispatch({
+                type: BoatActionType.SetWidgetMode,
+                payload: {
+                    moduleId: '1',
+                    mode: WidgetMode.Edit,
+                },
+            });
         },
-        // getCrewByQuery: async (query) => {
-        //     try {
-        //         return await getUsersByQuery(query);
-        //     } catch (error: any) {
-        //         return null;
-        //     }
-        // },
+        saveModuleData: (moduleId, data) => {
+            const newModules = state.activeBoat!.modules;
+            const foundModuleIdx = newModules.findIndex((m) => m.id === moduleId);
+
+            if (foundModuleIdx !== -1) {
+                newModules[foundModuleIdx].widget.data = data;
+            }
+
+            dispatch({
+                type: BoatActionType.SetModules,
+                payload: {
+                    modules: newModules,
+                },
+            });
+            dispatch({
+                type: BoatActionType.SetWidgetMode,
+                payload: {
+                    moduleId,
+                    mode: WidgetMode.View,
+                },
+            });
+        },
+        setWidgetMode: (moduleId: string, mode: WidgetMode) => {
+            dispatch({
+                type: BoatActionType.SetWidgetMode,
+                payload: {
+                    moduleId,
+                    mode,
+                },
+            });
+        },
     };
 
     return [useBoatState(), actionApis];

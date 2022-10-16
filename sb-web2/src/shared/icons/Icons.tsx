@@ -10,6 +10,8 @@ export {
     BsLink45Deg as SbLinkIcon,
     BsShieldLock as SbPasswordIcon,
     BsSortAlphaDown as SbSortIcon,
+    BsCircle as SbCircleIcon,
+    BsCheckCircle as SbCheckCircleIcon,
 } from 'react-icons/bs';
 export {
     IoCloseOutline as SbCloseIcon,
@@ -36,6 +38,7 @@ export {
     HiOutlineCalendar as SbCalendarIcon,
     HiOutlineLocationMarker as SbLocationIcon,
     HiOutlineCog as SbSettingsIcon,
+    HiOutlineMinusCircle as SbMinusCircleIcon,
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';

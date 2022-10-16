@@ -36,6 +36,12 @@ export enum ModuleType {
     Widget = 'widget',
 }
 
+export enum WidgetMode {
+    View,
+    Settings,
+    Edit,
+}
+
 export interface CreateBoat extends Omit<Boat, 'id' | 'anchors'> {}
 
 export interface Photo {
@@ -55,17 +61,19 @@ export interface Comment {
     likes: Array<string>; // ids of crew members
 }
 
-export interface WidgetData {
-    id: string;
-    votes: number;
-    voted: string | null; // id of the data that the user voted for. if not voted its null
-    description?: string;
-    author: Pick<User, 'id' | 'email' | 'name'>;
-}
-
 export interface Manifest {
     data: any;
     dataLoaded?: boolean;
+}
+
+export interface WidgetData {
+    id: string;
+    votes: number;
+    selected: boolean;
+    description?: string;
+    isEditing?: boolean;
+    text: string;
+    author: Pick<User, 'id' | 'email' | 'name'>;
 }
 
 export interface Widget {
@@ -89,6 +97,12 @@ export interface ModuleExtended extends Module {
     widget: Widget;
 }
 
+interface WidgetActivity {
+    [key: string]: {
+        mode: WidgetMode;
+    };
+}
+
 export interface Boat {
     id: string;
     name: string;
@@ -108,4 +122,5 @@ export interface BoatState {
         getAll: boolean;
     };
     createOpen: boolean;
+    widgetActivity: WidgetActivity;
 }

@@ -14,8 +14,9 @@ interface Props extends WidgetProps {
 
 export const LocationWidget: FC<Props> = ({ name, loading, data }) => {
     return (
-        <BoatWidget name={name} settings={<>Location Widget Settings</>}>
-            <>Poll goes here</>
-        </BoatWidget>
+        <></>
+        // <BoatWidget name={name} settings={<>Location Widget Settings</>}>
+        //     <>Poll goes here</>
+        // </BoatWidget>
     );
 };
