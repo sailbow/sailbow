@@ -77,7 +77,7 @@ export interface WidgetData {
 }
 
 export interface Widget {
-    data: any;
+    data: any[];
     dataLoaded?: boolean;
 }
 

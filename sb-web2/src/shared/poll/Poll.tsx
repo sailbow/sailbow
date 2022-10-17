@@ -1,7 +1,8 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 
-import { Box, Button, Center, Divider, Flex, IconButton, Stack, Text } from '@chakra-ui/react';
-import { User } from 'shared/user/User';
+import { Box, Button, Center, Flex, IconButton, Skeleton, Stack, Text } from '@chakra-ui/react';
+
+import { WidgetData, WidgetMode } from 'modules/boats/Boat.Types';
 import {
     SbCheckCircleIcon,
     SbCircleIcon,
@@ -10,26 +11,40 @@ import {
     SbMinusCircleIcon,
     SbPlusIcon,
 } from 'shared/icons/Icons';
-import { WidgetData, WidgetMode } from 'modules/boats/Boat.Types';
 
 interface Props {
     mode: WidgetMode;
     data: WidgetData[];
+    loading: boolean;
     onAddClick: () => void;
     getInputComponent: <T>(optionId: string, data: T) => JSX.Element;
     onOptionEdit: (optionId: string) => void;
-    onRemoveOption: (optionId: string) => void;
+    onRemoveOption?: <T>(data: T) => void;
+    selectOption: (moduleId: string, optionId: string) => void;
 }
 
 export const Poll: FC<Props> = ({
     mode = WidgetMode.View,
     data,
+    loading,
     onAddClick,
     getInputComponent,
     onOptionEdit,
     onRemoveOption,
+    selectOption,
 }) => {
-    return (
+    const onRemove = (optionId: string) => {
+        const updatedData = [...data];
+        const optionIdx = updatedData.findIndex((w) => w.id === optionId);
+
+        if (optionIdx !== -1) {
+            updatedData.splice(optionIdx, 1);
+        }
+
+        if (onRemoveOption) onRemoveOption(updatedData);
+    };
+
+    return !loading ? (
         <Box className="sb-poll">
             <Stack spacing="4" w="100%">
                 {data.map((item) => (
@@ -41,9 +56,16 @@ export const Poll: FC<Props> = ({
                         borderStyle="solid"
                         borderWidth="2px"
                         justifyContent="space-between"
-                        borderColor={item.isEditing ? 'brand.primary' : 'brand.border-light'}
+                        borderColor={item.isEditing || item.selected ? 'brand.primary' : 'brand.border-light'}
+                        transition="transform 0.15s ease-in-out, border 0.15s ease-in-out"
                         _hover={{ borderColor: 'brand.primary', cursor: 'pointer' }}
+                        _active={{ transform: !item.isEditing && mode !== WidgetMode.Edit ? 'scale(0.99)' : '' }}
                         p="4"
+                        onClick={() => {
+                            if (!item.isEditing || mode !== WidgetMode.Edit) {
+                                selectOption('1', item.id);
+                            }
+                        }}
                     >
                         {item.isEditing && mode !== WidgetMode.View && (
                             <Stack w="100%" spacing="4">
@@ -61,7 +83,7 @@ export const Poll: FC<Props> = ({
                                         variant="ghost"
                                         size="sm"
                                         icon={<SbDeleteIcon />}
-                                        onClick={() => onRemoveOption(item.id)}
+                                        onClick={() => onRemove(item.id)}
                                     />
                                 </Flex>
                             </Stack>
@@ -69,9 +91,11 @@ export const Poll: FC<Props> = ({
 
                         {!item.isEditing && (mode === WidgetMode.View || mode === WidgetMode.Edit) ? (
                             <Flex alignItems="center" flexWrap="wrap">
-                                <Box>{item.selected ? <SbCheckCircleIcon /> : <SbCircleIcon />}</Box>
+                                <Box color={item.selected ? 'brand.700' : 'inherit'} fontWeight="bold" fontSize="lg">
+                                    {item.selected ? <SbCheckCircleIcon /> : <SbCircleIcon />}
+                                </Box>
                                 <Box pl="2">
-                                    <Text>{item.text}</Text>
+                                    <Text fontWeight="semibold">{item.text}</Text>
                                     <Text>{item.description}</Text>
                                 </Box>
                             </Flex>
@@ -97,7 +121,7 @@ export const Poll: FC<Props> = ({
                                     variant="ghost"
                                     size="sm"
                                     icon={<SbMinusCircleIcon />}
-                                    onClick={() => onRemoveOption(item.id)}
+                                    onClick={() => onRemove(item.id)}
                                 />
                             </Flex>
                         )}
@@ -111,5 +135,7 @@ export const Poll: FC<Props> = ({
                 </Button>
             </Center>
         </Box>
+    ) : (
+        <Skeleton h="106px" startColor="gray.100" endColor="gray.300" />
     );
 };

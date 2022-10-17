@@ -70,7 +70,7 @@ export const ModuleMapper: Record<ModuleName, WidgetMetaData> = {
 
 export const BoatWidget: FC<Props> = ({ id, children, settings, name, mode, data, onSave }) => {
     const module = useMemo(() => ModuleMapper[name], []);
-    const [, { setWidgetMode }] = useBoat();
+    const [, { setWidgetMode, saveModuleData, removeModule }] = useBoat();
 
     const WidgetDescriptionPopover: FC = () => {
         return (
@@ -113,7 +113,7 @@ export const BoatWidget: FC<Props> = ({ id, children, settings, name, mode, data
                             />
                         )}
                     </Box>
-                    <Text fontWeight="semibold" pl="1">
+                    <Text fontWeight="bold" pl="1">
                         {mode === WidgetMode.View || mode === WidgetMode.Edit ? (
                             <>{module.name}</>
                         ) : (
@@ -146,6 +146,7 @@ export const BoatWidget: FC<Props> = ({ id, children, settings, name, mode, data
                         colorScheme="gray"
                         variant="ghost"
                         icon={<SbDeleteIcon />}
+                        onClick={() => removeModule(id)}
                     />
                 </Flex>
             </Flex>
@@ -161,6 +162,7 @@ export const BoatWidget: FC<Props> = ({ id, children, settings, name, mode, data
                                     <Button
                                         onClick={() => {
                                             onSave();
+                                            saveModuleData(id, data);
                                         }}
                                         rightIcon={<SbCheckIcon />}
                                     >

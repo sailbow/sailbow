@@ -1,13 +1,14 @@
 import { ChangeEvent, FC, useState } from 'react';
 
-import { BoatWidget, WidgetProps } from 'modules/boats/common/boat-widget/BoatWidget';
-import { DateWidgetSettings } from './DateWidgetSettings';
-import { WidgetData } from 'modules/boats/Boat.Types';
-import { Poll } from 'shared/poll/Poll';
-import { Flex, Skeleton } from '@chakra-ui/react';
-import { Input } from 'shared/input/Input';
+import { Flex } from '@chakra-ui/react';
+
 import { useAuthStore } from 'modules/auth/Auth.Store';
 import { useBoat } from 'modules/boats/Boat.Store';
+import { WidgetData } from 'modules/boats/Boat.Types';
+import { DateWidgetSettings } from 'modules/boats/boat-modules/modules/date/DateWidgetSettings';
+import { BoatWidget, WidgetProps } from 'modules/boats/common/boat-widget/BoatWidget';
+import { Input } from 'shared/input/Input';
+import { Poll } from 'shared/poll/Poll';
 
 export interface DateWidgetData extends WidgetData {
     startDate: string;
@@ -23,7 +24,7 @@ export const DateWidget: FC<Props> = ({ id, name, loading, data, mode }) => {
     const [optionsCounter, setOptionsCounter] = useState<number>(0);
     const [formError, setFormError] = useState<boolean>();
     const [{ user }] = useAuthStore();
-    const [, { saveModuleData }] = useBoat();
+    const [, { selectOption }] = useBoat();
 
     const onDataChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
         const updatedWidgetData = [...widgetData];
@@ -36,10 +37,20 @@ export const DateWidget: FC<Props> = ({ id, name, loading, data, mode }) => {
         setWidgetData([...updatedWidgetData]);
     };
 
+    const formatDate = (inputDate: string) => {
+        return new Date(inputDate).toLocaleDateString('en-us', {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+        });
+    };
+
     const onSave = () => {
         const updatedWidgetData = [...widgetData];
-        setFormError(false);
         let hasError = false;
+
+        setFormError(false);
 
         widgetData.forEach((d) => {
             const foundPollIdx = updatedWidgetData.findIndex((i) => i.id === d.id);
@@ -52,24 +63,19 @@ export const DateWidget: FC<Props> = ({ id, name, loading, data, mode }) => {
 
             if (foundPollIdx !== -1) {
                 updatedWidgetData[foundPollIdx].isEditing = false;
-                updatedWidgetData[foundPollIdx].text = `${d.startDate} ${d.endDate ? `- ${d.endDate}` : ''}`;
+                const startDate = formatDate(d.startDate);
+                const endDate = d.endDate ? formatDate(d.endDate) : null;
+
+                updatedWidgetData[foundPollIdx].text = `${startDate}${endDate ? ` - ${endDate}` : ''}`;
             }
         });
 
         if (hasError) return;
 
         setWidgetData([...updatedWidgetData]);
-        saveModuleData<DateWidgetData[]>(id, widgetData);
     };
 
-    const onRemoveOption = (optionId: string) => {
-        const updatedWidgetdata = [...widgetData];
-        const optionIdx = updatedWidgetdata.findIndex((w) => w.id === optionId);
-
-        if (optionIdx !== -1) {
-            updatedWidgetdata.splice(optionIdx, 1);
-        }
-
+    const onRemoveOption: any = (updatedWidgetdata: DateWidgetData[]) => {
         setWidgetData([...updatedWidgetdata]);
     };
 
@@ -106,39 +112,37 @@ export const DateWidget: FC<Props> = ({ id, name, loading, data, mode }) => {
             mode={mode}
             data={widgetData || []}
         >
-            {!loading ? (
-                <Poll
-                    mode={mode}
-                    data={widgetData}
-                    getInputComponent={getInputComponent}
-                    onAddClick={() => {
-                        const newData: DateWidgetData = {
-                            id: (optionsCounter + 1).toString(),
-                            author: { id: user?.id!, name: user!.name, email: user!.email },
-                            text: '',
-                            selected: false,
-                            votes: 0,
-                            isEditing: true,
-                            startDate: '',
-                            endDate: '',
-                        };
-                        setWidgetData([...widgetData, newData]);
-                        setOptionsCounter(optionsCounter + 1);
-                    }}
-                    onOptionEdit={(optionId: string) => {
-                        const newOptions = [...widgetData];
-                        const optionIdx = newOptions.findIndex((p) => p.id === optionId);
+            <Poll
+                loading={loading}
+                mode={mode}
+                data={widgetData}
+                selectOption={selectOption}
+                getInputComponent={getInputComponent}
+                onAddClick={() => {
+                    const newData: DateWidgetData = {
+                        id: (optionsCounter + 1).toString(),
+                        author: { id: user?.id!, name: user!.name, email: user!.email },
+                        text: '',
+                        selected: false,
+                        votes: 0,
+                        isEditing: true,
+                        startDate: '',
+                        endDate: '',
+                    };
+                    setWidgetData([...widgetData, newData]);
+                    setOptionsCounter(optionsCounter + 1);
+                }}
+                onOptionEdit={(optionId: string) => {
+                    const newOptions = [...widgetData];
+                    const optionIdx = newOptions.findIndex((p) => p.id === optionId);
 
-                        if (optionIdx !== -1) {
-                            newOptions[optionIdx].isEditing = true;
-                        }
-                        setWidgetData([...newOptions]);
-                    }}
-                    onRemoveOption={onRemoveOption}
-                />
-            ) : (
-                <Skeleton h="106px" startColor="gray.100" endColor="gray.300" />
-            )}
+                    if (optionIdx !== -1) {
+                        newOptions[optionIdx].isEditing = true;
+                    }
+                    setWidgetData([...newOptions]);
+                }}
+                onRemoveOption={onRemoveOption}
+            />
         </BoatWidget>
     );
 };

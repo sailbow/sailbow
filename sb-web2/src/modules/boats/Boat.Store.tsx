@@ -285,9 +285,10 @@ interface BoatActionApis {
     getModuleManifestData: (boatId: string, moduleId: string) => Promise<void>;
     getModuleWidgetData: (boatId: string, moduleId: string) => Promise<void>;
     addModule: (moduleName: ModuleName, moduleForm: any) => void;
+    removeModule: (moduleId: string) => void;
     setWidgetMode: (moduleId: string, mode: WidgetMode) => void;
-    saveModuleData: <T>(moduleId: string, data: T) => void;
-    // getCrewByQuery: (query: string) => Promise<Crew[] | null>;
+    saveModuleData: <T>(moduleId: string, data: T[]) => void;
+    selectOption: (moduleId: string, optionId: string) => void;
 }
 
 export const useBoat = (): [BoatState, BoatActionApis] => {
@@ -455,6 +456,37 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 payload: {
                     moduleId,
                     mode,
+                },
+            });
+        },
+        removeModule: (moduleId: string) => {
+            const modules = state.activeBoat!.modules;
+            const modulesIdx = modules.findIndex((m) => m.id === moduleId);
+
+            if (modulesIdx !== -1) {
+                modules.splice(modulesIdx, 1);
+            }
+
+            dispatch({
+                type: BoatActionType.SetModules,
+                payload: {
+                    modules,
+                },
+            });
+        },
+        selectOption: (moduleId: string, optionId: string) => {
+            const modules = state.activeBoat!.modules;
+            const module = modules.find((m) => m.id === moduleId);
+
+            if (module) {
+                const optionIdx = module.widget.data.findIndex((d) => d.id === optionId);
+                module.widget.data[optionIdx].selected = true;
+            }
+
+            dispatch({
+                type: BoatActionType.SetModules,
+                payload: {
+                    modules,
                 },
             });
         },
