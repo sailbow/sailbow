@@ -39,27 +39,30 @@ namespace Sb.Data.MongoDB
         public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
         {
             return await Connect()
-                .Find(predicate)
+                .AsQueryable()
+                .Where(predicate)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<TEntity>> GetPaginatedAsync(int skip, int take, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
         {
             return await Connect()
-                .Find(predicate)
+                .AsQueryable()
+                .Where(predicate)
                 .Skip(skip)
-                .Limit(take)
+                .Take(take)
                 .ToListAsync();
         }
 
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
         {
-            return (await GetAsync(predicate, cancellation)).FirstOrDefault();
+            var results = await GetAsync(predicate, cancellation);
+            return results.FirstOrDefault();
         }
 
         public Task<TEntity> GetByIdAsync(string id, CancellationToken cancellation = default)
         {
-            return FirstOrDefaultAsync(e => e.Id.Equals(id), cancellation);
+            return FirstOrDefaultAsync(e => e.Id == id, cancellation);
         }
 
         public async Task<TEntity> InsertAsync(TEntity element, CancellationToken cancellation = default)
@@ -76,12 +79,12 @@ namespace Sb.Data.MongoDB
         public Task UpdateAsync(TEntity element, CancellationToken cancellation = default)
         {
             return Connect()
-                .ReplaceOneAsync(e => e.Id.Equals(element.Id), element, cancellationToken: cancellation);
+                .ReplaceOneAsync(e => e.Id == element.Id, element, cancellationToken: cancellation);
         }
 
         public Task DeleteAsync(TEntity element, CancellationToken cancellation = default)
         {
-            return Connect().DeleteOneAsync(e => e.Id.Equals(element.Id), cancellation);
+            return Connect().DeleteOneAsync(e => e.Id == element.Id, cancellation);
         }
 
         private IMongoCollection<TEntity> Connect()

@@ -64,9 +64,9 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<Boat>> GetBoats()
+        public Task<IEnumerable<Boat>> GetBoats([FromQuery] GetBoatsRequest request)
         {
-            return _boatService.GetBoatsByUserId(HttpContext.GetClaim(CustomClaimTypes.Id));
+            return _boatService.GetBoats(HttpContext.GetClaim(CustomClaimTypes.Id), request);
         }
 
         [HttpGet("{boatId}")]

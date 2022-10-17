@@ -20,7 +20,7 @@ namespace Sb.Api.Controllers
         public async Task<ActionResult<IEnumerable<CrewMember>>> GetMates()
         {
             string userId = HttpContext.GetUserId();
-            var boats = await _boatService.GetBoatsByUserId(userId);
+            var boats = await _boatService.GetBoats(userId);
             IEnumerable<string> mateUserIds = boats
                 .SelectMany(boat => boat.Crew
                     .Where(cm => cm.UserId != userId))

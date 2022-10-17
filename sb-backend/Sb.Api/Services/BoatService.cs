@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Linq.Expressions;
 
 using Ardalis.GuardClauses;
 
@@ -53,10 +54,20 @@ namespace Sb.Api.Services
             return boat;
         }
 
-        public async Task<IEnumerable<Boat>> GetBoatsByUserId(string userId)
+        public async Task<IEnumerable<Boat>> GetBoats(string userId, GetBoatsRequest request = null)
         {
             User user = await _userRepo.GetByIdAsync(userId);
             Guard.Against.EntityMissing(user, nameof(user));
+
+            if (request != null)
+            {
+                return await _boatRepo.GetPaginatedAsync(
+                    skip: request.Page,
+                    take: request.PerPage,
+                    predicate: b =>
+                        b.Crew.Any(cm => cm.UserId == userId) &&
+                        (string.IsNullOrWhiteSpace(request.Search) || b.Name.ToLower().Contains(request.Search.ToLower())));
+            }
 
             return await _boatRepo.GetAsync(b => b.Crew.Any(cm => cm.UserId == userId));
         }
