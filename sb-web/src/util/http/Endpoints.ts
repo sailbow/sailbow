@@ -5,35 +5,7 @@ interface Endpoint {
     url: string;
 }
 
-type EndpointFunction = (...args: string[]) => Endpoint;
-
-type AuthEndpointsLabels = 'Login' | 'Authorize' | 'Refresh' | 'Logout' | 'GetInvite' | 'AcceptInvite';
-export const AuthEndpoints: Record<AuthEndpointsLabels, EndpointFunction> = {
-    Login: () => ({
-        method: 'GET',
-        url: 'api/auth/login',
-    }),
-    Authorize: () => ({
-        method: 'GET',
-        url: 'api/auth/authorize',
-    }),
-    Refresh: () => ({
-        method: 'POST',
-        url: 'api/auth/refresh',
-    }),
-    Logout: () => ({
-        method: 'POST',
-        url: 'api/auth/logout',
-    }),
-    GetInvite: (boatId: string, inviteId: string) => ({
-        method: 'GET',
-        url: `api/boats/${boatId}/invites/${inviteId}`,
-    }),
-    AcceptInvite: (boatId: string, inviteId: string) => ({
-        method: 'POST',
-        url: `/api/boats/${boatId}/invites/${inviteId}/accept`,
-    }),
-};
+export type EndpointFunction = <T>(args?: T) => Endpoint;
 
 type ProfileEndpointLabels = 'Me';
 export const ProfileEndpoints: Record<ProfileEndpointLabels, Endpoint> = {

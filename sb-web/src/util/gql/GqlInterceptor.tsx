@@ -3,9 +3,9 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { HttpLink, ApolloLink, from } from '@apollo/client';
 import { onError, ErrorResponse } from '@apollo/client/link/error';
 
-import { ToastActionType, useToast } from 'modules/toast/Toast';
+import { ToastActionType, useToast } from 'shared/toast/Toast';
 import { GqlClient, GqlUri } from 'util/gql/Gql';
-import { LS, TokenStorageKeys } from 'util/http/Http';
+import { LS, LocalStorageKeys } from 'util/localstorage/LocalStorage';
 
 export const GqlInterceptor: FunctionComponent = () => {
     const [, dispatch] = useToast();
@@ -17,7 +17,7 @@ export const GqlInterceptor: FunctionComponent = () => {
             operation.setContext(({ headers = {} }) => ({
                 headers: {
                     ...headers,
-                    authorization: `Bearer ${LS.getItem(TokenStorageKeys.AT) || ''}`,
+                    authorization: `Bearer ${LS.getItem(LocalStorageKeys.AT) || ''}`,
                 },
             }));
 

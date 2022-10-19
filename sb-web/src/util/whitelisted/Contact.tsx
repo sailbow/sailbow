@@ -4,8 +4,8 @@ import { Button, FormControl, Flex, Text, VStack } from '@chakra-ui/react';
 import { Form, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
-import { CheckMarkIcon } from 'components/button/ButtonIcons';
-import { Input, TextArea } from 'components/input/Input';
+import { CheckMarkIcon } from 'shared/button/ButtonIcons';
+import { Input, TextArea } from 'shared/input/Input';
 import { Base } from 'util/whitelisted/Base';
 
 interface FormValues {

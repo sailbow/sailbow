@@ -1,0 +1,496 @@
+import { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
+
+import { createBoat, getAllBoats, getBannerImages, getBoat } from 'modules/boats/Boat.Service';
+import { Boat, BoatState, CreateBoat, ModuleExtended, ModuleName, Photo, WidgetMode } from 'modules/boats/Boat.Types';
+
+export enum BoatActionType {
+    SetCreateNav,
+    SetError,
+    SetActiveBoat,
+    SetCreateLoading,
+    SetGetAllLoading,
+    SetGetLoading,
+    SetAllBoats,
+    SetModuleManifest,
+    SetModuleWidget,
+    SetModules,
+    SetWidgetMode,
+}
+
+interface PayloadCreateBoat extends CreateBoat {}
+
+interface PayloadSetActiveBoat {
+    boat?: Boat;
+}
+
+interface PayloadLoading {
+    loading: boolean;
+}
+
+interface PayloadSetAllBoats {
+    boats: Boat[];
+}
+
+interface PayloadSetCreateNav {
+    open: boolean;
+}
+
+interface PayloadError {
+    error: any;
+}
+
+interface PayloadSetModuleManifest {
+    data: any;
+    moduleId: string;
+}
+
+interface PayloadSetModuleWidget {
+    data: any;
+    moduleId: string;
+}
+
+interface PayloadSetWidgetMode {
+    moduleId: string;
+    mode: WidgetMode;
+}
+
+interface PayloadSetModules {
+    modules: ModuleExtended[];
+}
+
+interface BoatAction {
+    type: BoatActionType;
+    payload:
+        | PayloadCreateBoat
+        | PayloadSetActiveBoat
+        | PayloadError
+        | PayloadLoading
+        | PayloadSetCreateNav
+        | PayloadSetAllBoats
+        | PayloadSetModuleManifest
+        | PayloadSetModuleWidget
+        | PayloadSetModules
+        | PayloadSetWidgetMode;
+}
+
+interface BoatProviderProps {
+    children: ReactNode;
+}
+
+export const initialBoatState: BoatState = {
+    activeBoat: undefined,
+    loading: {
+        create: false,
+        get: false,
+        getAll: false,
+    },
+    createOpen: false,
+    boats: [],
+    widgetActivity: {},
+};
+
+const BoatStateContext = createContext<BoatState | undefined>(undefined);
+const BoatDispatchContext = createContext<Dispatch<BoatAction> | undefined>(undefined);
+
+const getBoatById = (boats: Boat[], boatId: string): Boat => {
+    const foundBoat = boats.find((boat) => boat.id === boatId);
+
+    if (!foundBoat) throw Error(`Invalid boatId: ${boatId}`);
+
+    return foundBoat;
+};
+
+const getModuleById = (modules: ModuleExtended[], moduleId: string): ModuleExtended => {
+    const foundModule = modules.find((module) => module.id === moduleId);
+
+    if (!foundModule) throw Error(`Invalid module: ${moduleId}`);
+
+    return foundModule;
+};
+
+const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
+    switch (action.type) {
+        case BoatActionType.SetActiveBoat: {
+            const { boat } = action.payload as PayloadSetActiveBoat;
+
+            return {
+                ...boatState,
+                activeBoat: boat
+                    ? {
+                          ...boat,
+                          modules: [
+                              //   {
+                              //       id: '1',
+                              //       name: ModuleName.Date,
+                              //       order: 1,
+                              //       actionRequired: true,
+                              //       description: 'this is a test date widget',
+                              //       deadline: new Date(),
+                              //       totalVotes: 5,
+                              //       widget: {
+                              //           data: [],
+                              //       },
+                              //   },
+                              //   {
+                              //       id: '2',
+                              //       name: ModuleName.Location,
+                              //       order: 2,
+                              //       actionRequired: true,
+                              //       description: 'this is a test location widget',
+                              //       deadline: new Date(),
+                              //       totalVotes: 5,
+                              //       widget: {
+                              //           data: [],
+                              //       },
+                              //   },
+                          ],
+                      }
+                    : undefined,
+            };
+        }
+        case BoatActionType.SetCreateLoading: {
+            const { loading } = action.payload as PayloadLoading;
+            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, create: loading } };
+
+            return nextState;
+        }
+        case BoatActionType.SetError: {
+            const payload = action.payload as PayloadError;
+            const nextState: BoatState = { ...boatState, error: { ...payload.error } };
+
+            return nextState;
+        }
+        case BoatActionType.SetGetAllLoading: {
+            const { loading } = action.payload as PayloadLoading;
+            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, getAll: loading } };
+
+            return nextState;
+        }
+        case BoatActionType.SetGetLoading: {
+            const { loading } = action.payload as PayloadLoading;
+            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, get: loading } };
+
+            return nextState;
+        }
+        case BoatActionType.SetCreateNav: {
+            const payload = action.payload as PayloadSetCreateNav;
+            const nextState: BoatState = { ...boatState, createOpen: payload.open };
+
+            return nextState;
+        }
+        case BoatActionType.SetAllBoats: {
+            const payload = action.payload as PayloadSetAllBoats;
+            const nextState: BoatState = { ...boatState, boats: payload.boats };
+
+            return nextState;
+        }
+        case BoatActionType.SetModuleManifest: {
+            const payload = action.payload as PayloadSetModuleManifest;
+            const activeBoat = boatState.activeBoat!;
+            const modules = activeBoat.modules;
+            const moduleIdx = modules.findIndex((module) => module.id === payload.moduleId);
+
+            if (moduleIdx !== -1) {
+                const module = modules[moduleIdx];
+
+                module.manifest = { ...payload.data, dataLoaded: true };
+                activeBoat.modules = [...modules];
+            }
+
+            return { ...boatState };
+        }
+
+        case BoatActionType.SetModuleWidget: {
+            const payload = action.payload as PayloadSetModuleManifest;
+            const activeBoat = boatState.activeBoat!;
+            const modules = activeBoat.modules;
+            const moduleIdx = modules.findIndex((module) => module.id === payload.moduleId);
+
+            if (moduleIdx !== -1) {
+                const module = modules[moduleIdx];
+
+                module.widget = { data: payload.data, dataLoaded: true };
+                activeBoat.modules = [...modules];
+            }
+            return { ...boatState };
+        }
+
+        case BoatActionType.SetModules: {
+            return {
+                ...boatState,
+                activeBoat: {
+                    ...boatState.activeBoat!,
+                    modules: (action.payload as PayloadSetModules).modules,
+                },
+            };
+        }
+
+        case BoatActionType.SetWidgetMode: {
+            const { mode, moduleId } = action.payload as PayloadSetWidgetMode;
+            return {
+                ...boatState,
+                widgetActivity: {
+                    [moduleId]: {
+                        ...boatState.widgetActivity[moduleId],
+                        mode,
+                    },
+                },
+            };
+        }
+
+        default: {
+            throw new Error(`Invalid action -- ${action.type}`);
+        }
+    }
+};
+
+export const BoatProvider: FunctionComponent<BoatProviderProps> = ({ children }) => {
+    const [state, dispatch] = useReducer(boatReducer, initialBoatState);
+
+    return (
+        <BoatStateContext.Provider value={state}>
+            <BoatDispatchContext.Provider value={dispatch}>{children}</BoatDispatchContext.Provider>
+        </BoatStateContext.Provider>
+    );
+};
+
+const useBoatState = (): BoatState => {
+    const context = useContext(BoatStateContext);
+
+    if (context === undefined) {
+        throw new Error('UseBoatState must be used within BoatProvider');
+    }
+
+    return context;
+};
+
+const useBoatDispatch = (): Dispatch<BoatAction> => {
+    const context = useContext(BoatDispatchContext);
+
+    if (context === undefined) {
+        throw new Error('UseBoatState must be used within BoatProvider');
+    }
+
+    return context;
+};
+
+interface BoatActionApis {
+    openCreateBoat: () => void;
+    closeCreateBoat: () => void;
+    createBoat: (boat: PayloadCreateBoat) => Promise<Boat | null>;
+    getImages: (value: string, page: number) => Promise<Photo[]>;
+    getBoat: (boatId: string) => Promise<Boat | null>;
+    getBoats: () => Promise<Boat[] | null>;
+    removeActiveBoat: () => void;
+    getModuleManifestData: (boatId: string, moduleId: string) => Promise<void>;
+    getModuleWidgetData: (boatId: string, moduleId: string) => Promise<void>;
+    addModule: (moduleName: ModuleName, moduleForm: any) => void;
+    removeModule: (moduleId: string) => void;
+    setWidgetMode: (moduleId: string, mode: WidgetMode) => void;
+    saveModuleData: <T>(moduleId: string, data: T[]) => void;
+    selectOption: (moduleId: string, optionId: string) => void;
+}
+
+export const useBoat = (): [BoatState, BoatActionApis] => {
+    const dispatch = useBoatDispatch();
+    const state = useBoatState();
+
+    const actionApis: BoatActionApis = {
+        openCreateBoat: () => {
+            dispatch({ type: BoatActionType.SetCreateNav, payload: { open: true } });
+        },
+        closeCreateBoat: () => {
+            dispatch({ type: BoatActionType.SetCreateNav, payload: { open: false } });
+        },
+        createBoat: async (boat: CreateBoat) => {
+            dispatch({ type: BoatActionType.SetCreateLoading, payload: { loading: true } });
+            try {
+                const response = await createBoat(boat);
+
+                dispatch({ type: BoatActionType.SetCreateLoading, payload: { loading: false } });
+                return response;
+            } catch (error: any) {
+                dispatch({ type: BoatActionType.SetCreateLoading, payload: { loading: false } });
+                dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
+                return null;
+            }
+        },
+        removeActiveBoat: () => {
+            dispatch({ type: BoatActionType.SetActiveBoat, payload: { boat: undefined } });
+        },
+        getBoat: async (boatId: string) => {
+            dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: true } });
+            try {
+                const response = await getBoat(boatId);
+
+                dispatch({ type: BoatActionType.SetActiveBoat, payload: { boat: response } });
+                dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: false } });
+
+                return response;
+            } catch (error: any) {
+                dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: false } });
+                dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
+                return null;
+            }
+        },
+        getImages: (value: string, page: number) => {
+            return getBannerImages(value, page);
+        },
+        getBoats: async () => {
+            dispatch({ type: BoatActionType.SetGetAllLoading, payload: { loading: true } });
+            try {
+                const response = await getAllBoats();
+
+                dispatch({ type: BoatActionType.SetAllBoats, payload: { boats: response } });
+                dispatch({ type: BoatActionType.SetGetAllLoading, payload: { loading: false } });
+
+                return response;
+            } catch (error: any) {
+                dispatch({ type: BoatActionType.SetGetAllLoading, payload: { loading: false } });
+                dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });
+                return null;
+            }
+        },
+        getModuleManifestData: async (boatId: string, moduleId: string) => {
+            return new Promise<any | null>((res, rej) => {
+                switch (moduleId) {
+                    case '1':
+                        return setTimeout(() => {
+                            dispatch({
+                                type: BoatActionType.SetModuleManifest,
+                                payload: {
+                                    moduleId,
+                                    data: { data: null },
+                                },
+                            });
+                        }, 1000);
+                    case '2':
+                        return setTimeout(() => {
+                            dispatch({
+                                type: BoatActionType.SetModuleManifest,
+                                payload: { moduleId, data: null },
+                            });
+                        }, 2000);
+                }
+            });
+        },
+        getModuleWidgetData: async (boatId: string, moduleId: string) => {
+            return new Promise<any | null>((res, rej) => {
+                switch (moduleId) {
+                    case '1':
+                        return setTimeout(() => {
+                            dispatch({
+                                type: BoatActionType.SetModuleWidget,
+                                payload: {
+                                    moduleId,
+                                    data: [],
+                                },
+                            });
+                        }, 1000);
+                    case '2':
+                        return setTimeout(() => {
+                            dispatch({
+                                type: BoatActionType.SetModuleWidget,
+                                payload: { moduleId, data: [] },
+                            });
+                        }, 2000);
+                }
+            });
+        },
+        addModule: (moduleName: ModuleName, moduleForm: any) => {
+            // make api call to add module here
+            const newBoat = { ...state.activeBoat! };
+
+            const module: ModuleExtended = {
+                id: '1',
+                name: moduleName,
+                order: newBoat!.modules.length + 1,
+                description: '',
+                totalVotes: 5,
+                widget: {
+                    data: moduleForm.data,
+                },
+            };
+
+            const newModules = [...newBoat.modules, module];
+
+            dispatch({
+                type: BoatActionType.SetModules,
+                payload: {
+                    modules: newModules,
+                },
+            });
+            dispatch({
+                type: BoatActionType.SetWidgetMode,
+                payload: {
+                    moduleId: '1',
+                    mode: WidgetMode.Edit,
+                },
+            });
+        },
+        saveModuleData: (moduleId, data) => {
+            const newModules = state.activeBoat!.modules;
+            const foundModuleIdx = newModules.findIndex((m) => m.id === moduleId);
+
+            if (foundModuleIdx !== -1) {
+                newModules[foundModuleIdx].widget.data = data;
+            }
+
+            dispatch({
+                type: BoatActionType.SetModules,
+                payload: {
+                    modules: newModules,
+                },
+            });
+            dispatch({
+                type: BoatActionType.SetWidgetMode,
+                payload: {
+                    moduleId,
+                    mode: WidgetMode.View,
+                },
+            });
+        },
+        setWidgetMode: (moduleId: string, mode: WidgetMode) => {
+            dispatch({
+                type: BoatActionType.SetWidgetMode,
+                payload: {
+                    moduleId,
+                    mode,
+                },
+            });
+        },
+        removeModule: (moduleId: string) => {
+            const modules = state.activeBoat!.modules;
+            const modulesIdx = modules.findIndex((m) => m.id === moduleId);
+
+            if (modulesIdx !== -1) {
+                modules.splice(modulesIdx, 1);
+            }
+
+            dispatch({
+                type: BoatActionType.SetModules,
+                payload: {
+                    modules,
+                },
+            });
+        },
+        selectOption: (moduleId: string, optionId: string) => {
+            const modules = state.activeBoat!.modules;
+            const module = modules.find((m) => m.id === moduleId);
+
+            if (module) {
+                const optionIdx = module.widget.data.findIndex((d) => d.id === optionId);
+                module.widget.data[optionIdx].selected = true;
+            }
+
+            dispatch({
+                type: BoatActionType.SetModules,
+                payload: {
+                    modules,
+                },
+            });
+        },
+    };
+
+    return [useBoatState(), actionApis];
+};

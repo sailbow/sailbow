@@ -3,9 +3,9 @@ import React, { FunctionComponent, lazy, Suspense, useEffect } from 'react';
 import { Switch, Route, Redirect as RouterRedirect, matchPath } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
 
-import { CreateEdit } from 'boats/create-edit/CreateEdit';
-import { Footer } from 'modules/footer/Footer';
-import { Navbar } from 'modules/navbar/Navbar';
+import { CreateEdit } from 'modules/boats/create-edit/CreateEdit';
+import { Footer } from 'shared/footer/Footer';
+import { Navbar } from 'shared/navbar/Navbar';
 import { BaseNavbar } from 'util/whitelisted/Base';
 import { PrivateRoutes, Routes } from 'router/Router.Types';
 
@@ -13,8 +13,11 @@ import 'router/Router.scss';
 
 /** Public Content */
 const Landing = lazy(() => import('util/landing/Landing').then((module) => ({ default: module.Landing })));
-const Authorize = lazy(() => import('auth/authorize/Authorize').then((module) => ({ default: module.Authorize })));
-const Redirect = lazy(() => import('auth/redirect/Redirect').then((module) => ({ default: module.Redirect })));
+const Authorize = lazy(() =>
+    import('modules/auth/authorize/Authorize').then((module) => ({ default: module.Authorize })),
+);
+const Redirect = lazy(() => import('modules/auth/redirect/Redirect').then((module) => ({ default: module.Redirect })));
+const Login = lazy(() => import('modules/auth/login/Login').then((module) => ({ default: module.Login })));
 
 /** Whitelisted Content */
 const AboutUs = lazy(() => import('util/whitelisted/AboutUs').then((module) => ({ default: module.AboutUs })));
@@ -27,8 +30,8 @@ const License = lazy(() => import('util/whitelisted/License').then((module) => (
 const NotFound = lazy(() => import('util/not-found/NotFound').then((module) => ({ default: module.NotFound })));
 
 /** Private Content */
-const Boat = lazy(() => import('boats/Boat').then((module) => ({ default: module.Boat })));
-const Invite = lazy(() => import('auth/invite/Invite').then((module) => ({ default: module.Invite })));
+const Boat = lazy(() => import('modules/boats/Boat').then((module) => ({ default: module.Boat })));
+const Invite = lazy(() => import('modules/boats/invite/Invite').then((module) => ({ default: module.Invite })));
 const Error = lazy(() => import('util/error/Error').then((module) => ({ default: module.Error })));
 
 export const WhitelistedRouter: FunctionComponent = () => {
@@ -77,6 +80,7 @@ export const PublicRouter: FunctionComponent = () => {
         for (const path of PrivateRoutes) {
             const { search, pathname } = window.location;
             const match = matchPath(pathname, { path, strict: true, exact: true });
+
             if (match) {
                 window.location.href = `${Routes.Public.Redirect}?path=${pathname}${search}`;
                 break;
@@ -99,6 +103,9 @@ export const PublicRouter: FunctionComponent = () => {
                         <Route path={Routes.Public.Redirect}>
                             <Redirect />
                         </Route>
+                        {/* <Route path={Routes.Public.Login}>
+                            <Login />
+                        </Route> */}
                         <Route path="*">
                             <NotFound />
                         </Route>

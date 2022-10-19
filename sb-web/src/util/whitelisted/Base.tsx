@@ -3,10 +3,10 @@ import React, { FunctionComponent, ReactElement, useEffect } from 'react';
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
-import { LS, TokenStorageKeys } from 'util/http/Http';
 import { SbRightArrowIcon } from 'util/icons/Icons';
 
 import 'util/whitelisted/Base.scss';
+import { LocalStorageKeys, LS } from 'util/localstorage/LocalStorage';
 
 interface Props {
     children: ReactElement | ReactElement[];
@@ -21,7 +21,7 @@ export const BaseNavbar: FunctionComponent = () => {
     };
 
     const displayLabel = (): string => {
-        if (LS.getItem(TokenStorageKeys.AT)) {
+        if (LS.getItem(LocalStorageKeys.AT)) {
             return 'Continue Sailing';
         }
         return 'Start Sailing';

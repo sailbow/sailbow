@@ -1,0 +1,40 @@
+@import 'theme/base';
+
+.sb-image-search {
+    .react-photo-gallery--gallery img {
+        border-radius: 8px;
+        margin-bottom: 6px;
+        border: 2px solid white;
+        transition: all 0.25s ease-in-out;
+        opacity: 1;
+
+        &:hover:not(.selected) {
+            border: 2px solid $sb-teal-400;
+            cursor: pointer;
+            opacity: 0.9;
+        }
+    }
+
+    .gallery-box {
+        position: relative;
+
+        .selected {
+            border: 2px solid white;
+            cursor: default !important;
+            opacity: 0.8;
+        }
+
+        .check {
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
