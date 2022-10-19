@@ -3,18 +3,12 @@ import { FC, PropsWithChildren, ReactNode, useMemo } from 'react';
 import { Box, Flex, IconButton, Text, Popover, PopoverTrigger, PopoverContent, PopoverBody } from '@chakra-ui/react';
 
 import { SbSettingsIcon, SbEditIcon, SbDeleteIcon } from 'shared/icons/Icons';
-import { BoatWidgetDetails } from './BoatWidgetDetails';
 import { Module, ModuleMode } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Poll, Props as PollProps } from 'shared/poll/Poll';
 import { ModulesMapper } from 'modules/boats/boat-modules/modules/Modules';
+import { Poll, Props as PollProps } from 'shared/poll/Poll';
 
-interface WidgetMetaData {
-    image: ReactNode;
-    icon: ReactNode;
-    name: string;
-    info: string;
-}
+import { BoatWidgetDetails } from './BoatWidgetDetails';
 
 interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption'> {
     settingsNode: ReactNode;
@@ -36,7 +30,7 @@ export const BoatWidget = <T extends {}>({
     onSave,
 }: PropsWithChildren<Props<T>>) => {
     const module = useMemo(() => ModulesMapper[name], []);
-    const [, { setWidgetMode, removeModule, selectOption, saveModuleData }] = useBoat();
+    const [, { setModuleMode, removeModule, selectOption, saveModuleData }] = useBoat();
 
     const WidgetDescriptionPopover: FC = () => {
         return (
@@ -62,7 +56,7 @@ export const BoatWidget = <T extends {}>({
     };
 
     return (
-        <Box w="100%" borderRadius="xl" border="2px solid #ececec" px="4" py="3" pt='1'>
+        <Box w="100%" borderRadius="xl" border="2px solid #ececec" px="4" py="3" pt="1">
             <Flex alignItems="center" justifyContent="space-between" className="widget-header" py="2">
                 <Flex alignItems="center">
                     <Box flexShrink="0" className="panel-icon">
@@ -82,7 +76,7 @@ export const BoatWidget = <T extends {}>({
                         variant={mode === ModuleMode.Edit ? 'solid' : 'ghost'}
                         icon={<SbEditIcon />}
                         onClick={() => {
-                            setWidgetMode(id, ModuleMode.Edit);
+                            setModuleMode(id, ModuleMode.Edit);
                         }}
                     />
                     <IconButton
@@ -91,7 +85,7 @@ export const BoatWidget = <T extends {}>({
                         colorScheme="gray"
                         variant="ghost"
                         icon={<SbSettingsIcon />}
-                        onClick={() => setWidgetMode(id, ModuleMode.Settings)}
+                        onClick={() => setModuleMode(id, ModuleMode.Settings)}
                     />
                     <IconButton
                         fontSize="xl"

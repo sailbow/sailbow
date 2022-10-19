@@ -86,7 +86,7 @@ export interface Module<T> {
     finalizedOptionId?: string;
 }
 
-interface ModuleExtended<T> {
+export interface ModuleExtended<T> {
     [key: string]: Module<T>;
 }
 

@@ -11,6 +11,7 @@ import {
     ModuleSettings,
     Module,
     ModuleData,
+    ModuleExtended,
 } from 'modules/boats/Boat.Types';
 
 export enum BoatActionType {
@@ -21,10 +22,9 @@ export enum BoatActionType {
     SetGetAllLoading,
     SetGetLoading,
     SetAllBoats,
-    SetModuleManifest,
-    SetModuleWidget,
     SetModule,
-    SetWidgetMode,
+    SetAllModules,
+    SetModuleMode,
 }
 
 interface PayloadCreateBoat extends CreateBoat {}
@@ -49,17 +49,7 @@ interface PayloadError {
     error: any;
 }
 
-interface PayloadSetModuleManifest {
-    data: any;
-    moduleId: string;
-}
-
-interface PayloadSetModuleWidget {
-    data: any;
-    moduleId: string;
-}
-
-interface PayloadSetWidgetMode {
+interface PayloadSetModuleMode {
     moduleId: string;
     mode: ModuleMode;
 }
@@ -67,6 +57,10 @@ interface PayloadSetWidgetMode {
 interface PayloadSetModule {
     moduleId: string;
     module: Module<any>;
+}
+
+interface PayloadSetAllModules {
+    modules: ModuleExtended<any>;
 }
 
 interface BoatAction {
@@ -78,10 +72,9 @@ interface BoatAction {
         | PayloadLoading
         | PayloadSetCreateNav
         | PayloadSetAllBoats
-        | PayloadSetModuleManifest
-        | PayloadSetModuleWidget
         | PayloadSetModule
-        | PayloadSetWidgetMode;
+        | PayloadSetModuleMode
+        | PayloadSetAllModules;
 }
 
 interface BoatProviderProps {
@@ -154,21 +147,6 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
             return nextState;
         }
 
-        // case BoatActionType.SetModuleWidget: {
-        //     const payload = action.payload as PayloadSetModuleManifest;
-        //     const activeBoat = boatState.activeBoat!;
-        //     const modules = activeBoat.modules;
-        //     const moduleIdx = modules.findIndex((module) => module.id === payload.moduleId);
-
-        //     if (moduleIdx !== -1) {
-        //         const module = modules[moduleIdx];
-
-        //         module.widget = { ...module.widget, data: payload.data, dataLoaded: true };
-        //         activeBoat.modules = [...modules];
-        //     }
-        //     return { ...boatState };
-        // }
-
         case BoatActionType.SetModule: {
             const { module, moduleId } = action.payload as PayloadSetModule;
 
@@ -184,8 +162,8 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
             };
         }
 
-        case BoatActionType.SetWidgetMode: {
-            const { mode, moduleId } = action.payload as PayloadSetWidgetMode;
+        case BoatActionType.SetModuleMode: {
+            const { mode, moduleId } = action.payload as PayloadSetModuleMode;
 
             return {
                 ...boatState,
@@ -198,6 +176,18 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
                             mode,
                         },
                     },
+                },
+            };
+        }
+
+        case BoatActionType.SetAllModules: {
+            const { modules } = action.payload as PayloadSetAllModules;
+
+            return {
+                ...boatState,
+                activeBoat: {
+                    ...boatState.activeBoat!,
+                    modules,
                 },
             };
         }
@@ -249,7 +239,7 @@ interface BoatActionApis {
     getModuleData: (boatId: string, moduleId: string) => Promise<void>;
     addModule: (moduleName: ModuleName, moduleForm: any) => void;
     removeModule: (moduleId: string) => void;
-    setWidgetMode: (moduleId: string, mode: ModuleMode) => void;
+    setModuleMode: (moduleId: string, mode: ModuleMode) => void;
     saveModuleData: <T>(moduleId: string, data: ModuleData<T>[]) => void;
     selectOption: (moduleId: string, optionId: string) => void;
     saveWidgetSettings: (moduleId: string, settings: ModuleSettings) => void;
@@ -337,7 +327,15 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                         return setTimeout(() => {
                             dispatch({
                                 type: BoatActionType.SetModule,
-                                payload: { moduleId, data: [] },
+                                payload: {
+                                    moduleId,
+                                    module: {
+                                        ...state.activeBoat!.modules[moduleId],
+                                        data: [],
+                                        dataLoaded: true,
+                                        loading: false,
+                                    },
+                                },
                             });
                         }, 2000);
                 }
@@ -374,6 +372,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
         },
         saveModuleData: <T,>(moduleId: string, data: ModuleData<T>[]) => {
             const module: Module<T> = state.activeBoat!.modules[moduleId];
+
             module.data = data;
             module.mode = ModuleMode.View;
 
@@ -384,28 +383,10 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                     module,
                 },
             });
-            // const newModules = state.activeBoat!.modules;
-            // const foundModuleIdx = newModules.findIndex((m) => m.id === moduleId);
-            // if (foundModuleIdx !== -1) {
-            //     newModules[foundModuleIdx].widget.data = data;
-            // }
-            // dispatch({
-            //     type: BoatActionType.SetModules,
-            //     payload: {
-            //         modules: newModules,
-            //     },
-            // });
-            // dispatch({
-            //     type: BoatActionType.SetWidgetMode,
-            //     payload: {
-            //         moduleId,
-            //         mode: WidgetMode.View,
-            //     },
-            // });
         },
-        setWidgetMode: (moduleId: string, mode: ModuleMode) => {
+        setModuleMode: (moduleId: string, mode: ModuleMode) => {
             dispatch({
-                type: BoatActionType.SetWidgetMode,
+                type: BoatActionType.SetModuleMode,
                 payload: {
                     moduleId,
                     mode,
@@ -413,17 +394,16 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             });
         },
         removeModule: (moduleId: string) => {
-            // const modules = state.activeBoat!.modules;
-            // const modulesIdx = modules.findIndex((m) => m.id === moduleId);
-            // if (modulesIdx !== -1) {
-            //     modules.splice(modulesIdx, 1);
-            // }
-            // dispatch({
-            //     type: BoatActionType.SetModules,
-            //     payload: {
-            //         modules,
-            //     },
-            // });
+            const modules = { ...state.activeBoat!.modules };
+            delete modules[moduleId];
+
+            dispatch({
+                type: BoatActionType.SetAllModules,
+                payload: {
+                    moduleId,
+                    modules,
+                },
+            });
         },
         selectOption: (moduleId: string, optionId: string) => {
             // const modules = state.activeBoat!.modules;
