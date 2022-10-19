@@ -1,29 +1,13 @@
-import { FC, ReactNode, useMemo } from 'react';
+import { FC, PropsWithChildren, ReactNode, useMemo } from 'react';
 
 import { Box, Flex, IconButton, Text, Popover, PopoverTrigger, PopoverContent, PopoverBody } from '@chakra-ui/react';
 
-import {
-    SbSettingsIcon,
-    SbArrowLeftIcon,
-    SbEditIcon,
-    ModuleDateImage,
-    SbCalendarIcon,
-    ModuleLocationImage,
-    SbLocationIcon,
-    SbDeleteIcon,
-} from 'shared/icons/Icons';
+import { SbSettingsIcon, SbEditIcon, SbDeleteIcon } from 'shared/icons/Icons';
 import { BoatWidgetDetails } from './BoatWidgetDetails';
-import { ModuleName, WidgetData, WidgetMode } from 'modules/boats/Boat.Types';
+import { Module, ModuleMode } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Poll, Props as PollProps } from 'shared/poll/Poll';
-
-export interface WidgetProps {
-    id: string;
-    name: ModuleName;
-    loading: boolean;
-    data: WidgetData[];
-    mode: WidgetMode;
-}
+import { ModulesMapper } from 'modules/boats/boat-modules/modules/Modules';
 
 interface WidgetMetaData {
     image: ReactNode;
@@ -32,27 +16,12 @@ interface WidgetMetaData {
     info: string;
 }
 
-interface Props extends WidgetProps, Omit<PollProps, 'selectOption'> {
-    settings: ReactNode;
+interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption'> {
+    settingsNode: ReactNode;
     children?: ReactNode;
 }
 
-export const ModuleMapper: Record<ModuleName, WidgetMetaData> = {
-    [ModuleName.Date]: {
-        image: <ModuleDateImage />,
-        icon: <SbCalendarIcon />,
-        name: 'Date',
-        info: 'Pin a date or a date range to your trip',
-    },
-    [ModuleName.Location]: {
-        image: <ModuleLocationImage />,
-        icon: <SbLocationIcon />,
-        name: 'Location',
-        info: 'List all the location options you want your group to see!',
-    },
-};
-
-export const BoatWidget: FC<Props> = ({
+export const BoatWidget = <T extends {}>({
     id,
     children,
     settings,
@@ -61,15 +30,13 @@ export const BoatWidget: FC<Props> = ({
     data,
     loading,
     getInputComponent,
-    onAddClick,
+    onAddOption,
     onOptionEdit,
     onRemoveOption,
     onSave,
-}) => {
-    const module = useMemo(() => ModuleMapper[name], []);
+}: PropsWithChildren<Props<T>>) => {
+    const module = useMemo(() => ModulesMapper[name], []);
     const [, { setWidgetMode, removeModule, selectOption, saveModuleData }] = useBoat();
-
-    console.log(data);
 
     const WidgetDescriptionPopover: FC = () => {
         return (
@@ -82,12 +49,12 @@ export const BoatWidget: FC<Props> = ({
                         variant="ghost"
                         size="sm"
                         as={Box}
-                        icon={<>{module.icon}</>}
+                        icon={<>{<module.icon />}</>}
                     />
                 </PopoverTrigger>
                 <PopoverContent borderRadius="xl">
                     <PopoverBody w="100%">
-                        <BoatWidgetDetails {...module} />
+                        <BoatWidgetDetails name={module.name} image={<module.image />} info={module.info} />
                     </PopoverBody>
                 </PopoverContent>
             </Popover>
@@ -95,28 +62,16 @@ export const BoatWidget: FC<Props> = ({
     };
 
     return (
-        <Box w="100%" borderRadius="xl" border="2px solid #ececec" px="4" py="2">
+        <Box w="100%" borderRadius="xl" border="2px solid #ececec" px="4" py="3">
             <Flex alignItems="center" justifyContent="space-between" className="widget-header">
                 <Flex alignItems="center">
                     <Box flexShrink="0" className="panel-icon">
-                        {mode === WidgetMode.View || mode === WidgetMode.Edit ? (
-                            <WidgetDescriptionPopover />
-                        ) : (
-                            <IconButton
-                                fontSize="xl"
-                                aria-label="settings"
-                                colorScheme="gray"
-                                variant="ghost"
-                                size="sm"
-                                icon={<SbArrowLeftIcon />}
-                                onClick={() => setWidgetMode(id, WidgetMode.View)}
-                            />
-                        )}
+                        <WidgetDescriptionPopover />
                     </Box>
                     <Text fontWeight="bold" pl="1">
-                        {mode === WidgetMode.View && <>{module.name}</>}
-                        {mode === WidgetMode.Edit && `Edit ${module.name}`}
-                        {mode === WidgetMode.Settings && `${module.name} Settings`}
+                        {mode === ModuleMode.View && <>{module.name}</>}
+                        {mode === ModuleMode.Edit && `Edit ${module.name}`}
+                        {mode === ModuleMode.Settings && `${module.name} Settings`}
                     </Text>
                 </Flex>
                 <Flex alignItems="center">
@@ -124,10 +79,10 @@ export const BoatWidget: FC<Props> = ({
                         fontSize="xl"
                         aria-label="settings"
                         colorScheme="gray"
-                        variant="ghost"
+                        variant={mode === ModuleMode.Edit ? 'solid' : 'ghost'}
                         icon={<SbEditIcon />}
                         onClick={() => {
-                            setWidgetMode(id, WidgetMode.Edit);
+                            setWidgetMode(id, ModuleMode.Edit);
                         }}
                     />
                     <IconButton
@@ -136,7 +91,7 @@ export const BoatWidget: FC<Props> = ({
                         colorScheme="gray"
                         variant="ghost"
                         icon={<SbSettingsIcon />}
-                        onClick={() => setWidgetMode(id, WidgetMode.Settings)}
+                        onClick={() => setWidgetMode(id, ModuleMode.Settings)}
                     />
                     <IconButton
                         fontSize="xl"
@@ -149,20 +104,21 @@ export const BoatWidget: FC<Props> = ({
                 </Flex>
             </Flex>
             <Box py="2">
-                {mode === WidgetMode.View || mode === WidgetMode.Edit ? (
+                {mode === ModuleMode.View || mode === ModuleMode.Edit ? (
                     <>
-                        <Poll
+                        <Poll<T>
                             loading={loading}
                             mode={mode}
                             data={data}
                             selectOption={selectOption}
                             getInputComponent={getInputComponent}
-                            onAddClick={onAddClick}
+                            onAddOption={onAddOption}
                             onOptionEdit={onOptionEdit}
                             onRemoveOption={onRemoveOption}
                             onSave={() => {
-                                onSave();
-                                saveModuleData(id, data);
+                                if (onSave()) saveModuleData(id, data);
+
+                                return true;
                             }}
                         />
                         {children}

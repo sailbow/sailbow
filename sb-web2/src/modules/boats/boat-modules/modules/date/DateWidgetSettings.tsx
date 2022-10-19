@@ -1,5 +1,14 @@
 import { FC } from 'react';
 
-export const DateWidgetSettings: FC = () => {
-    return <>Date Widget Settings</>;
+import { BoatWidgetSettings } from 'modules/boats/common/boat-widget-settings/BoatWidgetSettings';
+import { useBoat } from 'modules/boats/Boat.Store';
+import { ModuleSettings } from 'modules/boats/Boat.Types';
+
+interface Props {
+    id: string;
+    settings: ModuleSettings;
+}
+
+export const DateWidgetSettings: FC<Props> = ({ id, settings }) => {
+    return <BoatWidgetSettings id={id} settings={settings} />;
 };

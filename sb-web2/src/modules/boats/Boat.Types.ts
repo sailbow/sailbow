@@ -36,7 +36,7 @@ export enum ModuleType {
     Widget = 'widget',
 }
 
-export enum WidgetMode {
+export enum ModuleMode {
     View,
     Settings,
     Edit,
@@ -55,52 +55,39 @@ export interface Crew extends Pick<User, 'id' | 'email' | 'name'> {
     info?: string;
 }
 
-export interface Comment {
-    author: Crew;
-    body: string;
-    likes: Array<string>; // ids of crew members
+export interface ModuleSettings {
+    allowMultiple: boolean;
+    anonymousVoting: boolean;
+    [key: string]: any;
 }
 
-export interface Manifest {
-    data: any;
-    dataLoaded?: boolean;
-}
-
-export interface WidgetData {
+export type ModuleData<T> = {
     id: string;
     votes: number;
-    selected: boolean;
-    description?: string;
     isEditing?: boolean;
-    text: string;
+    text: string; // text to be shown in widget option and manifest
     author: Pick<User, 'id' | 'email' | 'name'>;
-}
+    selected: boolean; // if this option is selected by the current user. will have to save it differently in DB
+} & T;
 
-export interface Widget {
-    data: any[];
-    dataLoaded?: boolean;
-}
-
-export interface Module {
+export interface Module<T> {
     id: string;
     name: ModuleName;
     order: number;
-    actionRequired?: boolean;
     description: string;
-    deadline?: Date; // will be used to send reminders
     totalVotes: number; // will need this to show percentage voted in the option
-    confirmed?: string; // id of the widget data that is voted
+    data: ModuleData<T>[];
+    settings: ModuleSettings;
+    mode: ModuleMode;
+    loading: boolean;
+    actionRequired?: boolean;
+    dataLoaded?: boolean;
+    error?: any;
+    finalizedOptionId?: string;
 }
 
-export interface ModuleExtended extends Module {
-    manifest?: Manifest;
-    widget: Widget;
-}
-
-interface WidgetActivity {
-    [key: string]: {
-        mode: WidgetMode;
-    };
+interface ModuleExtended<T> {
+    [key: string]: Module<T>;
 }
 
 export interface Boat {
@@ -109,7 +96,7 @@ export interface Boat {
     description?: string;
     banner: BannerState;
     crew: Crew[];
-    modules: ModuleExtended[];
+    modules: ModuleExtended<any>;
 }
 
 export interface BoatState {
@@ -122,5 +109,4 @@ export interface BoatState {
         getAll: boolean;
     };
     createOpen: boolean;
-    widgetActivity: WidgetActivity;
 }

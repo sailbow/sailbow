@@ -1,7 +1,17 @@
 import { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
 import { createBoat, getAllBoats, getBannerImages, getBoat } from 'modules/boats/Boat.Service';
-import { Boat, BoatState, CreateBoat, ModuleExtended, ModuleName, Photo, WidgetMode } from 'modules/boats/Boat.Types';
+import {
+    Boat,
+    BoatState,
+    CreateBoat,
+    ModuleName,
+    Photo,
+    ModuleMode,
+    ModuleSettings,
+    Module,
+    ModuleData,
+} from 'modules/boats/Boat.Types';
 
 export enum BoatActionType {
     SetCreateNav,
@@ -13,7 +23,7 @@ export enum BoatActionType {
     SetAllBoats,
     SetModuleManifest,
     SetModuleWidget,
-    SetModules,
+    SetModule,
     SetWidgetMode,
 }
 
@@ -51,11 +61,12 @@ interface PayloadSetModuleWidget {
 
 interface PayloadSetWidgetMode {
     moduleId: string;
-    mode: WidgetMode;
+    mode: ModuleMode;
 }
 
-interface PayloadSetModules {
-    modules: ModuleExtended[];
+interface PayloadSetModule {
+    moduleId: string;
+    module: Module<any>;
 }
 
 interface BoatAction {
@@ -69,7 +80,7 @@ interface BoatAction {
         | PayloadSetAllBoats
         | PayloadSetModuleManifest
         | PayloadSetModuleWidget
-        | PayloadSetModules
+        | PayloadSetModule
         | PayloadSetWidgetMode;
 }
 
@@ -86,27 +97,10 @@ export const initialBoatState: BoatState = {
     },
     createOpen: false,
     boats: [],
-    widgetActivity: {},
 };
 
 const BoatStateContext = createContext<BoatState | undefined>(undefined);
 const BoatDispatchContext = createContext<Dispatch<BoatAction> | undefined>(undefined);
-
-const getBoatById = (boats: Boat[], boatId: string): Boat => {
-    const foundBoat = boats.find((boat) => boat.id === boatId);
-
-    if (!foundBoat) throw Error(`Invalid boatId: ${boatId}`);
-
-    return foundBoat;
-};
-
-const getModuleById = (modules: ModuleExtended[], moduleId: string): ModuleExtended => {
-    const foundModule = modules.find((module) => module.id === moduleId);
-
-    if (!foundModule) throw Error(`Invalid module: ${moduleId}`);
-
-    return foundModule;
-};
 
 const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
     switch (action.type) {
@@ -118,32 +112,7 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
                 activeBoat: boat
                     ? {
                           ...boat,
-                          modules: [
-                              //   {
-                              //       id: '1',
-                              //       name: ModuleName.Date,
-                              //       order: 1,
-                              //       actionRequired: true,
-                              //       description: 'this is a test date widget',
-                              //       deadline: new Date(),
-                              //       totalVotes: 5,
-                              //       widget: {
-                              //           data: [],
-                              //       },
-                              //   },
-                              //   {
-                              //       id: '2',
-                              //       name: ModuleName.Location,
-                              //       order: 2,
-                              //       actionRequired: true,
-                              //       description: 'this is a test location widget',
-                              //       deadline: new Date(),
-                              //       totalVotes: 5,
-                              //       widget: {
-                              //           data: [],
-                              //       },
-                              //   },
-                          ],
+                          modules: {},
                       }
                     : undefined,
             };
@@ -184,55 +153,50 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
 
             return nextState;
         }
-        case BoatActionType.SetModuleManifest: {
-            const payload = action.payload as PayloadSetModuleManifest;
-            const activeBoat = boatState.activeBoat!;
-            const modules = activeBoat.modules;
-            const moduleIdx = modules.findIndex((module) => module.id === payload.moduleId);
 
-            if (moduleIdx !== -1) {
-                const module = modules[moduleIdx];
+        // case BoatActionType.SetModuleWidget: {
+        //     const payload = action.payload as PayloadSetModuleManifest;
+        //     const activeBoat = boatState.activeBoat!;
+        //     const modules = activeBoat.modules;
+        //     const moduleIdx = modules.findIndex((module) => module.id === payload.moduleId);
 
-                module.manifest = { ...payload.data, dataLoaded: true };
-                activeBoat.modules = [...modules];
-            }
+        //     if (moduleIdx !== -1) {
+        //         const module = modules[moduleIdx];
 
-            return { ...boatState };
-        }
+        //         module.widget = { ...module.widget, data: payload.data, dataLoaded: true };
+        //         activeBoat.modules = [...modules];
+        //     }
+        //     return { ...boatState };
+        // }
 
-        case BoatActionType.SetModuleWidget: {
-            const payload = action.payload as PayloadSetModuleManifest;
-            const activeBoat = boatState.activeBoat!;
-            const modules = activeBoat.modules;
-            const moduleIdx = modules.findIndex((module) => module.id === payload.moduleId);
+        case BoatActionType.SetModule: {
+            const { module, moduleId } = action.payload as PayloadSetModule;
 
-            if (moduleIdx !== -1) {
-                const module = modules[moduleIdx];
-
-                module.widget = { data: payload.data, dataLoaded: true };
-                activeBoat.modules = [...modules];
-            }
-            return { ...boatState };
-        }
-
-        case BoatActionType.SetModules: {
             return {
                 ...boatState,
                 activeBoat: {
                     ...boatState.activeBoat!,
-                    modules: (action.payload as PayloadSetModules).modules,
+                    modules: {
+                        ...boatState.activeBoat!.modules,
+                        [moduleId]: module,
+                    },
                 },
             };
         }
 
         case BoatActionType.SetWidgetMode: {
             const { mode, moduleId } = action.payload as PayloadSetWidgetMode;
+
             return {
                 ...boatState,
-                widgetActivity: {
-                    [moduleId]: {
-                        ...boatState.widgetActivity[moduleId],
-                        mode,
+                activeBoat: {
+                    ...boatState.activeBoat!,
+                    modules: {
+                        ...boatState.activeBoat!.modules,
+                        [moduleId]: {
+                            ...boatState.activeBoat!.modules[moduleId],
+                            mode,
+                        },
                     },
                 },
             };
@@ -282,13 +246,13 @@ interface BoatActionApis {
     getBoat: (boatId: string) => Promise<Boat | null>;
     getBoats: () => Promise<Boat[] | null>;
     removeActiveBoat: () => void;
-    getModuleManifestData: (boatId: string, moduleId: string) => Promise<void>;
-    getModuleWidgetData: (boatId: string, moduleId: string) => Promise<void>;
+    getModuleData: (boatId: string, moduleId: string) => Promise<void>;
     addModule: (moduleName: ModuleName, moduleForm: any) => void;
     removeModule: (moduleId: string) => void;
-    setWidgetMode: (moduleId: string, mode: WidgetMode) => void;
-    saveModuleData: <T>(moduleId: string, data: T[]) => void;
+    setWidgetMode: (moduleId: string, mode: ModuleMode) => void;
+    saveModuleData: <T>(moduleId: string, data: ModuleData<T>[]) => void;
     selectOption: (moduleId: string, optionId: string) => void;
+    saveWidgetSettings: (moduleId: string, settings: ModuleSettings) => void;
 }
 
 export const useBoat = (): [BoatState, BoatActionApis] => {
@@ -351,106 +315,95 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 return null;
             }
         },
-        getModuleManifestData: async (boatId: string, moduleId: string) => {
+        getModuleData: async (boatId: string, moduleId: string) => {
             return new Promise<any | null>((res, rej) => {
                 switch (moduleId) {
                     case '1':
                         return setTimeout(() => {
                             dispatch({
-                                type: BoatActionType.SetModuleManifest,
+                                type: BoatActionType.SetModule,
                                 payload: {
                                     moduleId,
-                                    data: { data: null },
+                                    module: {
+                                        ...state.activeBoat!.modules[moduleId],
+                                        data: [],
+                                        dataLoaded: true,
+                                        loading: false,
+                                    },
                                 },
                             });
                         }, 1000);
                     case '2':
                         return setTimeout(() => {
                             dispatch({
-                                type: BoatActionType.SetModuleManifest,
-                                payload: { moduleId, data: null },
-                            });
-                        }, 2000);
-                }
-            });
-        },
-        getModuleWidgetData: async (boatId: string, moduleId: string) => {
-            return new Promise<any | null>((res, rej) => {
-                switch (moduleId) {
-                    case '1':
-                        return setTimeout(() => {
-                            dispatch({
-                                type: BoatActionType.SetModuleWidget,
-                                payload: {
-                                    moduleId,
-                                    data: [],
-                                },
-                            });
-                        }, 1000);
-                    case '2':
-                        return setTimeout(() => {
-                            dispatch({
-                                type: BoatActionType.SetModuleWidget,
+                                type: BoatActionType.SetModule,
                                 payload: { moduleId, data: [] },
                             });
                         }, 2000);
                 }
             });
         },
-        addModule: (moduleName: ModuleName, moduleForm: any) => {
+        addModule: <T,>(moduleName: ModuleName) => {
             // make api call to add module here
             const newBoat = { ...state.activeBoat! };
+            const tempId = (Object.keys(newBoat!.modules).length + 1).toString();
 
-            const module: ModuleExtended = {
-                id: '1',
+            const module: Module<T> = {
+                id: tempId,
                 name: moduleName,
-                order: newBoat!.modules.length + 1,
+                order: Object.keys(newBoat!.modules).length + 1,
                 description: '',
                 totalVotes: 5,
-                widget: {
-                    data: moduleForm.data,
+                dataLoaded: false,
+                data: [],
+                settings: {
+                    allowMultiple: true,
+                    anonymousVoting: true,
                 },
+                loading: true,
+                mode: ModuleMode.Edit,
             };
 
-            const newModules = [...newBoat.modules, module];
-
             dispatch({
-                type: BoatActionType.SetModules,
+                type: BoatActionType.SetModule,
                 payload: {
-                    modules: newModules,
-                },
-            });
-            dispatch({
-                type: BoatActionType.SetWidgetMode,
-                payload: {
-                    moduleId: '1',
-                    mode: WidgetMode.Edit,
+                    moduleId: tempId,
+                    module,
                 },
             });
         },
-        saveModuleData: (moduleId, data) => {
-            const newModules = state.activeBoat!.modules;
-            const foundModuleIdx = newModules.findIndex((m) => m.id === moduleId);
-
-            if (foundModuleIdx !== -1) {
-                newModules[foundModuleIdx].widget.data = data;
-            }
+        saveModuleData: <T,>(moduleId: string, data: ModuleData<T>[]) => {
+            const module: Module<T> = state.activeBoat!.modules[moduleId];
+            module.data = data;
+            module.mode = ModuleMode.View;
 
             dispatch({
-                type: BoatActionType.SetModules,
-                payload: {
-                    modules: newModules,
-                },
-            });
-            dispatch({
-                type: BoatActionType.SetWidgetMode,
+                type: BoatActionType.SetModule,
                 payload: {
                     moduleId,
-                    mode: WidgetMode.View,
+                    module,
                 },
             });
+            // const newModules = state.activeBoat!.modules;
+            // const foundModuleIdx = newModules.findIndex((m) => m.id === moduleId);
+            // if (foundModuleIdx !== -1) {
+            //     newModules[foundModuleIdx].widget.data = data;
+            // }
+            // dispatch({
+            //     type: BoatActionType.SetModules,
+            //     payload: {
+            //         modules: newModules,
+            //     },
+            // });
+            // dispatch({
+            //     type: BoatActionType.SetWidgetMode,
+            //     payload: {
+            //         moduleId,
+            //         mode: WidgetMode.View,
+            //     },
+            // });
         },
-        setWidgetMode: (moduleId: string, mode: WidgetMode) => {
+        setWidgetMode: (moduleId: string, mode: ModuleMode) => {
             dispatch({
                 type: BoatActionType.SetWidgetMode,
                 payload: {
@@ -460,35 +413,44 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             });
         },
         removeModule: (moduleId: string) => {
-            const modules = state.activeBoat!.modules;
-            const modulesIdx = modules.findIndex((m) => m.id === moduleId);
-
-            if (modulesIdx !== -1) {
-                modules.splice(modulesIdx, 1);
-            }
-
-            dispatch({
-                type: BoatActionType.SetModules,
-                payload: {
-                    modules,
-                },
-            });
+            // const modules = state.activeBoat!.modules;
+            // const modulesIdx = modules.findIndex((m) => m.id === moduleId);
+            // if (modulesIdx !== -1) {
+            //     modules.splice(modulesIdx, 1);
+            // }
+            // dispatch({
+            //     type: BoatActionType.SetModules,
+            //     payload: {
+            //         modules,
+            //     },
+            // });
         },
         selectOption: (moduleId: string, optionId: string) => {
-            const modules = state.activeBoat!.modules;
-            const module = modules.find((m) => m.id === moduleId);
-
-            if (module) {
-                const optionIdx = module.widget.data.findIndex((d) => d.id === optionId);
-                module.widget.data[optionIdx].selected = true;
-            }
-
-            dispatch({
-                type: BoatActionType.SetModules,
-                payload: {
-                    modules,
-                },
-            });
+            // const modules = state.activeBoat!.modules;
+            // const module = modules.find((m) => m.id === moduleId);
+            // if (module) {
+            //     const optionIdx = module.widget.data.findIndex((d) => d.id === optionId);
+            //     module.widget.data[optionIdx].selected = true;
+            // }
+            // dispatch({
+            //     type: BoatActionType.SetModules,
+            //     payload: {
+            //         modules,
+            //     },
+            // });
+        },
+        saveWidgetSettings: (moduleId: string, settings: ModuleSettings) => {
+            // const modules = state.activeBoat!.modules;
+            // const module = modules.find((m) => m.id === moduleId);
+            // if (module) {
+            //     module.widget.settings = settings;
+            // }
+            // dispatch({
+            //     type: BoatActionType.SetModules,
+            //     payload: {
+            //         modules,
+            //     },
+            // });
         },
     };
 
