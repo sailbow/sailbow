@@ -8,6 +8,7 @@ import { DateWidgetSettings } from 'modules/boats/boat-modules/modules/date/Date
 import { DateModuleDataType, getText } from 'modules/boats/boat-modules/modules/date/_DateModule';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
 import { Input } from 'shared/input/Input';
+import { DatePicker } from 'shared/date-picker/DatePicker';
 
 type DataType = ModuleData<DateModuleDataType>;
 
@@ -65,6 +66,7 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
     const getInputComponent: any = (optionId: string, data: DataType) => {
         return (
             <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }}>
+                <DatePicker date="" onChange={(date) => console.log('date', date)} />
                 <Input
                     label="Start Date"
                     type="date"

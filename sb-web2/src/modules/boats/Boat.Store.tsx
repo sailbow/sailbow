@@ -332,7 +332,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                                     },
                                 },
                             });
-                        }, 1000);
+                        }, 500);
                     case '2':
                         return setTimeout(() => {
                             dispatch({

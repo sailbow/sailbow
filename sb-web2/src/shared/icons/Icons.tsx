@@ -40,6 +40,10 @@ export {
     HiOutlineLocationMarker as SbLocationIcon,
     HiOutlineCog as SbSettingsIcon,
     HiOutlineMinusCircle as SbMinusCircleIcon,
+    HiChevronDown as SbChevronDownIcon,
+    HiChevronRight as SbChevronRightIcon,
+    HiChevronLeft as SbChevronLeftIcon,
+    HiChevronUp as SbChevronUpIcon
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';
