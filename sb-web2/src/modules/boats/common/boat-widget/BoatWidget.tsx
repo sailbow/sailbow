@@ -18,11 +18,11 @@ interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption'> {
 export const BoatWidget = <T extends {}>({
     id,
     children,
-    settings,
     name,
     mode,
     data,
     loading,
+    settingsNode,
     getInputComponent,
     onAddOption,
     onOptionEdit,
@@ -118,7 +118,7 @@ export const BoatWidget = <T extends {}>({
                         {children}
                     </>
                 ) : (
-                    <>{settings}</>
+                    <>{settingsNode}</>
                 )}
             </Box>
         </Box>

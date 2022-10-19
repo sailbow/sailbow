@@ -406,18 +406,24 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             });
         },
         selectOption: (moduleId: string, optionId: string) => {
-            // const modules = state.activeBoat!.modules;
-            // const module = modules.find((m) => m.id === moduleId);
-            // if (module) {
-            //     const optionIdx = module.widget.data.findIndex((d) => d.id === optionId);
-            //     module.widget.data[optionIdx].selected = true;
-            // }
-            // dispatch({
-            //     type: BoatActionType.SetModules,
-            //     payload: {
-            //         modules,
-            //     },
-            // });
+            // api call here
+
+            const modules = { ...state.activeBoat!.modules };
+            const module = { ...modules[moduleId] };
+
+            const optionIdx = module.data.findIndex((d) => d.id === optionId);
+
+            if (optionIdx !== -1) {
+                module.data[optionIdx].selected = true;
+            }
+
+            dispatch({
+                type: BoatActionType.SetModule,
+                payload: {
+                    moduleId,
+                    module,
+                },
+            });
         },
         saveWidgetSettings: (moduleId: string, settings: ModuleSettings) => {
             // const modules = state.activeBoat!.modules;
