@@ -1,38 +1,41 @@
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
-import { Box, Button, Center, Flex, IconButton, Skeleton, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, Skeleton, Stack, Text } from '@chakra-ui/react';
 
-import { WidgetData, WidgetMode } from 'modules/boats/Boat.Types';
+import { ModuleData, ModuleMode } from 'modules/boats/Boat.Types';
 import {
-    SbCheckCircleIcon,
-    SbCircleIcon,
+    SbCheckMarkIcon,
     SbDeleteIcon,
     SbEditIcon,
     SbMinusCircleIcon,
     SbPlusIcon,
+    SbRadioButtonOff,
+    SbRadioButtonOn,
 } from 'shared/icons/Icons';
 
-interface Props {
-    mode: WidgetMode;
-    data: WidgetData[];
+export interface Props<T> {
+    mode: ModuleMode;
+    data: ModuleData<T>[];
     loading: boolean;
-    onAddClick: () => void;
+    onAddOption: () => void;
     getInputComponent: <T>(optionId: string, data: T) => JSX.Element;
     onOptionEdit: (optionId: string) => void;
     onRemoveOption?: <T>(data: T) => void;
     selectOption: (moduleId: string, optionId: string) => void;
+    onSave: () => boolean;
 }
 
-export const Poll: FC<Props> = ({
-    mode = WidgetMode.View,
+export const Poll = <T extends {}>({
+    mode = ModuleMode.View,
     data,
     loading,
-    onAddClick,
+    onAddOption,
     getInputComponent,
     onOptionEdit,
     onRemoveOption,
     selectOption,
-}) => {
+    onSave,
+}: PropsWithChildren<Props<T>>) => {
     const onRemove = (optionId: string) => {
         const updatedData = [...data];
         const optionIdx = updatedData.findIndex((w) => w.id === optionId);
@@ -57,17 +60,17 @@ export const Poll: FC<Props> = ({
                         borderWidth="2px"
                         justifyContent="space-between"
                         borderColor={item.isEditing || item.selected ? 'brand.primary' : 'brand.border-light'}
-                        transition="transform 0.15s ease-in-out, border 0.15s ease-in-out"
+                        transition="transform 0.05s ease-in-out, border 0.15s ease-in-out"
                         _hover={{ borderColor: 'brand.primary', cursor: 'pointer' }}
-                        _active={{ transform: !item.isEditing && mode !== WidgetMode.Edit ? 'scale(0.99)' : '' }}
+                        _active={{ transform: !item.isEditing && mode !== ModuleMode.Edit ? 'scale(0.997)' : '' }}
                         p="4"
                         onClick={() => {
-                            if (!item.isEditing || mode !== WidgetMode.Edit) {
+                            if (!item.isEditing || mode !== ModuleMode.Edit) {
                                 selectOption('1', item.id);
                             }
                         }}
                     >
-                        {item.isEditing && mode !== WidgetMode.View && (
+                        {item.isEditing && mode !== ModuleMode.View && (
                             <Stack w="100%" spacing="4">
                                 <>
                                     {getInputComponent(
@@ -89,20 +92,20 @@ export const Poll: FC<Props> = ({
                             </Stack>
                         )}
 
-                        {!item.isEditing && (mode === WidgetMode.View || mode === WidgetMode.Edit) ? (
+                        {!item.isEditing && (mode === ModuleMode.View || mode === ModuleMode.Edit) ? (
                             <Flex alignItems="center" flexWrap="wrap">
                                 <Box color={item.selected ? 'brand.700' : 'inherit'} fontWeight="bold" fontSize="lg">
-                                    {item.selected ? <SbCheckCircleIcon /> : <SbCircleIcon />}
+                                    {item.selected ? <SbRadioButtonOn /> : <SbRadioButtonOff />}
                                 </Box>
                                 <Box pl="2">
                                     <Text fontWeight="semibold">{item.text}</Text>
-                                    <Text>{item.description}</Text>
+                                    {/* <Text>{item.description}</Text> */}
                                 </Box>
                             </Flex>
                         ) : (
                             <></>
                         )}
-                        {!item.isEditing && mode === WidgetMode.Edit && (
+                        {!item.isEditing && mode === ModuleMode.Edit && (
                             <Flex alignItems="center">
                                 <IconButton
                                     fontSize="xl"
@@ -129,11 +132,14 @@ export const Poll: FC<Props> = ({
                 ))}
             </Stack>
 
-            <Center my="4" display={mode === WidgetMode.Edit ? 'flex' : 'none'}>
-                <Button variant="secondary" leftIcon={<SbPlusIcon />} colorScheme="gray" onClick={onAddClick}>
+            <Flex mt="4" display={mode === ModuleMode.Edit ? 'flex' : 'none'} justifyContent="flex-end" gap={4}>
+                <Button variant="secondary" leftIcon={<SbPlusIcon />} colorScheme="gray" onClick={onAddOption}>
                     Add Option
                 </Button>
-            </Center>
+                <Button rightIcon={SbCheckMarkIcon} onClick={() => onSave()} disabled={!data.length}>
+                    Save
+                </Button>
+            </Flex>
         </Box>
     ) : (
         <Skeleton h="106px" startColor="gray.100" endColor="gray.300" />

@@ -13,7 +13,7 @@ interface Props {
 
 export const CrewManifest: FC<Props> = ({ data }) => {
     return (
-        <BoatManifest icon={<SbInfoIcon />} label={`Crew (${data.crew.length})`}>
+        <BoatManifest icon={<SbInfoIcon />} label={`Crew (${data.crew.length})`} finalized="Crew">
             <Flex w="100%" justifyContent="space-between" alignItems="center">
                 <CrewGroup crew={data.crew} />
                 <Button size="sm" rightIcon={<SbPlusIcon />} variant="secondary" colorScheme="gray">

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 
 import { Box, Divider, InputGroup, InputLeftAddon, Stack, Text } from '@chakra-ui/react';
 import { components } from 'react-select';

@@ -6,8 +6,8 @@ import { useSystem } from 'modules/system/System.Store';
 import { ModuleName } from 'modules/boats/Boat.Types';
 import { BoatWidgetDetails } from 'modules/boats/common/boat-widget/BoatWidgetDetails';
 import { Drawer } from 'shared/drawer/Drawer';
-import { ModuleMapper } from 'modules/boats/common/boat-widget/BoatWidget';
 import { useBoat } from 'modules/boats/Boat.Store';
+import { ModulesMapper } from '../modules/Modules';
 
 const moduleList = [ModuleName.Date, ModuleName.Location];
 
@@ -19,7 +19,7 @@ export const BoatModulesPicker: FC = () => {
         <Drawer isOpen={pickerOpen} onClose={closePicker} title="Pick a Widget" size="md">
             <Stack w="100%" spacing="4">
                 {moduleList.map((module) => {
-                    const m = ModuleMapper[module];
+                    const m = ModulesMapper[module];
 
                     return (
                         <Box
@@ -36,7 +36,7 @@ export const BoatModulesPicker: FC = () => {
                                 closePicker();
                             }}
                         >
-                            <BoatWidgetDetails {...m} />
+                            <BoatWidgetDetails name={m.name} image={<m.image />} info={m.info} />
                         </Box>
                     );
                 })}

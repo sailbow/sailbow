@@ -34,15 +34,15 @@ export const BoatView: FunctionComponent = () => {
             <Box className="details-widget-box">
                 <Flex gap="8" pt="4" display={{ base: 'none', md: 'flex' }}>
                     <Box width="400px" borderRight="1px solid #ececec" pr="4">
-                        <Heading fontSize="lg" mb="4">
+                        {/* <Heading fontSize="lg" mb="4">
                             Manifest
-                        </Heading>
+                        </Heading> */}
                         <BoatModuleManifest boat={data} />
                     </Box>
                     <Box w="100%">
-                        <Heading fontSize="lg" mb="4">
+                        {/* <Heading fontSize="lg" mb="4">
                             Widgets
-                        </Heading>
+                        </Heading> */}
                         <BoatModulesWidget boat={data} />
                     </Box>
                 </Flex>

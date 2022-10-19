@@ -10,9 +10,10 @@ interface Props {
     children: ReactNode | null;
     action?: ReactNode;
     loading?: boolean;
+    finalized?: string;
 }
 
-export const BoatManifest: FC<Props> = ({ action, icon, label, children, loading }) => {
+export const BoatManifest: FC<Props> = ({ action, icon, label, children, loading, finalized }) => {
     return (
         <Box py="3">
             <Flex alignItems="center" w="100%" textAlign="start" color="brand.secondary" pb="2">
@@ -29,7 +30,7 @@ export const BoatManifest: FC<Props> = ({ action, icon, label, children, loading
             {loading ? (
                 <Skeleton startColor="gray.100" endColor="gray.300" h="24px" />
             ) : (
-                <> {children ? <>{children}</> : <Badge colorScheme="orange">In Discussion</Badge>}</>
+                <> {finalized ? <>{children}</> : <Badge colorScheme="orange">In Discussion</Badge>}</>
             )}
         </Box>
     );

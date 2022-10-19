@@ -13,6 +13,7 @@ export {
     BsCircle as SbCircleIcon,
     BsCheckCircle as SbCheckCircleIcon,
 } from 'react-icons/bs';
+export { IoMdRadioButtonOff as SbRadioButtonOff, IoMdRadioButtonOn as SbRadioButtonOn } from 'react-icons/io';
 export {
     IoCloseOutline as SbCloseIcon,
     IoLogoInstagram as SbInstagramIcon,
@@ -39,6 +40,10 @@ export {
     HiOutlineLocationMarker as SbLocationIcon,
     HiOutlineCog as SbSettingsIcon,
     HiOutlineMinusCircle as SbMinusCircleIcon,
+    HiChevronDown as SbChevronDownIcon,
+    HiChevronRight as SbChevronRightIcon,
+    HiChevronLeft as SbChevronLeftIcon,
+    HiChevronUp as SbChevronUpIcon
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';

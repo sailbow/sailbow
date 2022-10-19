@@ -26,7 +26,7 @@ export const BoatCreate: FunctionComponent = () => {
             position: 50,
         },
         crew: [],
-        modules: [],
+        modules: {},
     });
 
     useEffect(() => {

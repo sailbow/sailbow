@@ -13,7 +13,12 @@ interface Props {
 
 export const InfoManifest: FC<Props> = ({ data }) => {
     return (
-        <BoatManifest icon={<SbInfoIcon />} label="Information" action={<Link fontSize="sm">Edit</Link>}>
+        <BoatManifest
+            icon={<SbInfoIcon />}
+            label="Information"
+            action={<Link fontSize="sm">Edit</Link>}
+            finalized="Info"
+        >
             <Box w="100%" py="1">
                 <Box h="200px">
                     <BoatBanner id="details" banner={data.banner} showControls={false} />
