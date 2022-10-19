@@ -1,18 +1,19 @@
 import { FC } from 'react';
 
-import { Box, Button, Center, Flex, IconButton, Skeleton, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, Skeleton, Stack, Text } from '@chakra-ui/react';
 
 import { WidgetData, WidgetMode } from 'modules/boats/Boat.Types';
 import {
-    SbCheckCircleIcon,
-    SbCircleIcon,
+    SbCheckMarkIcon,
     SbDeleteIcon,
     SbEditIcon,
     SbMinusCircleIcon,
     SbPlusIcon,
+    SbRadioButtonOff,
+    SbRadioButtonOn,
 } from 'shared/icons/Icons';
 
-interface Props {
+export interface Props {
     mode: WidgetMode;
     data: WidgetData[];
     loading: boolean;
@@ -21,6 +22,7 @@ interface Props {
     onOptionEdit: (optionId: string) => void;
     onRemoveOption?: <T>(data: T) => void;
     selectOption: (moduleId: string, optionId: string) => void;
+    onSave: () => void;
 }
 
 export const Poll: FC<Props> = ({
@@ -32,6 +34,7 @@ export const Poll: FC<Props> = ({
     onOptionEdit,
     onRemoveOption,
     selectOption,
+    onSave,
 }) => {
     const onRemove = (optionId: string) => {
         const updatedData = [...data];
@@ -57,9 +60,9 @@ export const Poll: FC<Props> = ({
                         borderWidth="2px"
                         justifyContent="space-between"
                         borderColor={item.isEditing || item.selected ? 'brand.primary' : 'brand.border-light'}
-                        transition="transform 0.15s ease-in-out, border 0.15s ease-in-out"
+                        transition="transform 0.05s ease-in-out, border 0.15s ease-in-out"
                         _hover={{ borderColor: 'brand.primary', cursor: 'pointer' }}
-                        _active={{ transform: !item.isEditing && mode !== WidgetMode.Edit ? 'scale(0.99)' : '' }}
+                        _active={{ transform: !item.isEditing && mode !== WidgetMode.Edit ? 'scale(0.997)' : '' }}
                         p="4"
                         onClick={() => {
                             if (!item.isEditing || mode !== WidgetMode.Edit) {
@@ -92,7 +95,7 @@ export const Poll: FC<Props> = ({
                         {!item.isEditing && (mode === WidgetMode.View || mode === WidgetMode.Edit) ? (
                             <Flex alignItems="center" flexWrap="wrap">
                                 <Box color={item.selected ? 'brand.700' : 'inherit'} fontWeight="bold" fontSize="lg">
-                                    {item.selected ? <SbCheckCircleIcon /> : <SbCircleIcon />}
+                                    {item.selected ? <SbRadioButtonOn /> : <SbRadioButtonOff />}
                                 </Box>
                                 <Box pl="2">
                                     <Text fontWeight="semibold">{item.text}</Text>
@@ -129,11 +132,14 @@ export const Poll: FC<Props> = ({
                 ))}
             </Stack>
 
-            <Center my="4" display={mode === WidgetMode.Edit ? 'flex' : 'none'}>
+            <Flex my="4" display={mode === WidgetMode.Edit ? 'flex' : 'none'} justifyContent="flex-end" gap={4}>
                 <Button variant="secondary" leftIcon={<SbPlusIcon />} colorScheme="gray" onClick={onAddClick}>
                     Add Option
                 </Button>
-            </Center>
+                <Button rightIcon={SbCheckMarkIcon} onClick={onSave} disabled={!data.length}>
+                    Save
+                </Button>
+            </Flex>
         </Box>
     ) : (
         <Skeleton h="106px" startColor="gray.100" endColor="gray.300" />

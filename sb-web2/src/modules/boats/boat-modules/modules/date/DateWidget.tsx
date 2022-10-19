@@ -3,12 +3,10 @@ import { ChangeEvent, FC, useState } from 'react';
 import { Flex } from '@chakra-ui/react';
 
 import { useAuthStore } from 'modules/auth/Auth.Store';
-import { useBoat } from 'modules/boats/Boat.Store';
 import { WidgetData } from 'modules/boats/Boat.Types';
 import { DateWidgetSettings } from 'modules/boats/boat-modules/modules/date/DateWidgetSettings';
 import { BoatWidget, WidgetProps } from 'modules/boats/common/boat-widget/BoatWidget';
 import { Input } from 'shared/input/Input';
-import { Poll } from 'shared/poll/Poll';
 
 export interface DateWidgetData extends WidgetData {
     startDate: string;
@@ -24,7 +22,6 @@ export const DateWidget: FC<Props> = ({ id, name, loading, data, mode }) => {
     const [optionsCounter, setOptionsCounter] = useState<number>(0);
     const [formError, setFormError] = useState<boolean>();
     const [{ user }] = useAuthStore();
-    const [, { selectOption }] = useBoat();
 
     const onDataChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
         const updatedWidgetData = [...widgetData];
@@ -107,42 +104,36 @@ export const DateWidget: FC<Props> = ({ id, name, loading, data, mode }) => {
         <BoatWidget
             id={id}
             name={name}
+            loading={loading}
             settings={<DateWidgetSettings />}
             onSave={onSave}
             mode={mode}
             data={widgetData || []}
-        >
-            <Poll
-                loading={loading}
-                mode={mode}
-                data={widgetData}
-                selectOption={selectOption}
-                getInputComponent={getInputComponent}
-                onAddClick={() => {
-                    const newData: DateWidgetData = {
-                        id: (optionsCounter + 1).toString(),
-                        author: { id: user?.id!, name: user!.name, email: user!.email },
-                        text: '',
-                        selected: false,
-                        votes: 0,
-                        isEditing: true,
-                        startDate: '',
-                        endDate: '',
-                    };
-                    setWidgetData([...widgetData, newData]);
-                    setOptionsCounter(optionsCounter + 1);
-                }}
-                onOptionEdit={(optionId: string) => {
-                    const newOptions = [...widgetData];
-                    const optionIdx = newOptions.findIndex((p) => p.id === optionId);
+            onAddClick={() => {
+                const newData: DateWidgetData = {
+                    id: (optionsCounter + 1).toString(),
+                    author: { id: user?.id!, name: user!.name, email: user!.email },
+                    text: '',
+                    selected: false,
+                    votes: 0,
+                    isEditing: true,
+                    startDate: '',
+                    endDate: '',
+                };
+                setWidgetData([...widgetData, newData]);
+                setOptionsCounter(optionsCounter + 1);
+            }}
+            getInputComponent={getInputComponent}
+            onOptionEdit={(optionId: string) => {
+                const newOptions = [...widgetData];
+                const optionIdx = newOptions.findIndex((p) => p.id === optionId);
 
-                    if (optionIdx !== -1) {
-                        newOptions[optionIdx].isEditing = true;
-                    }
-                    setWidgetData([...newOptions]);
-                }}
-                onRemoveOption={onRemoveOption}
-            />
-        </BoatWidget>
+                if (optionIdx !== -1) {
+                    newOptions[optionIdx].isEditing = true;
+                }
+                setWidgetData([...newOptions]);
+            }}
+            onRemoveOption={onRemoveOption}
+        ></BoatWidget>
     );
 };

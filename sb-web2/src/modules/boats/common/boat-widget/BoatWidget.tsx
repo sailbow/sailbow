@@ -1,17 +1,6 @@
-import { FC, ReactNode, useEffect, useMemo, useState } from 'react';
+import { FC, ReactNode, useMemo } from 'react';
 
-import {
-    Box,
-    Flex,
-    IconButton,
-    Text,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverBody,
-    Divider,
-    Button,
-} from '@chakra-ui/react';
+import { Box, Flex, IconButton, Text, Popover, PopoverTrigger, PopoverContent, PopoverBody } from '@chakra-ui/react';
 
 import {
     SbSettingsIcon,
@@ -22,17 +11,17 @@ import {
     ModuleLocationImage,
     SbLocationIcon,
     SbDeleteIcon,
-    SbCheckIcon,
 } from 'shared/icons/Icons';
 import { BoatWidgetDetails } from './BoatWidgetDetails';
-import { ModuleName, WidgetMode } from 'modules/boats/Boat.Types';
+import { ModuleName, WidgetData, WidgetMode } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
+import { Poll, Props as PollProps } from 'shared/poll/Poll';
 
 export interface WidgetProps {
     id: string;
     name: ModuleName;
     loading: boolean;
-    data: any[];
+    data: WidgetData[];
     mode: WidgetMode;
 }
 
@@ -43,14 +32,9 @@ interface WidgetMetaData {
     info: string;
 }
 
-interface Props {
+interface Props extends WidgetProps, Omit<PollProps, 'selectOption'> {
     settings: ReactNode;
-    children: ReactNode;
-    name: ModuleName;
-    id: string;
-    mode: WidgetMode;
-    onSave: () => void;
-    data: any[];
+    children?: ReactNode;
 }
 
 export const ModuleMapper: Record<ModuleName, WidgetMetaData> = {
@@ -68,9 +52,24 @@ export const ModuleMapper: Record<ModuleName, WidgetMetaData> = {
     },
 };
 
-export const BoatWidget: FC<Props> = ({ id, children, settings, name, mode, data, onSave }) => {
+export const BoatWidget: FC<Props> = ({
+    id,
+    children,
+    settings,
+    name,
+    mode,
+    data,
+    loading,
+    getInputComponent,
+    onAddClick,
+    onOptionEdit,
+    onRemoveOption,
+    onSave,
+}) => {
     const module = useMemo(() => ModuleMapper[name], []);
-    const [, { setWidgetMode, saveModuleData, removeModule }] = useBoat();
+    const [, { setWidgetMode, removeModule, selectOption, saveModuleData }] = useBoat();
+
+    console.log(data);
 
     const WidgetDescriptionPopover: FC = () => {
         return (
@@ -115,11 +114,9 @@ export const BoatWidget: FC<Props> = ({ id, children, settings, name, mode, data
                         )}
                     </Box>
                     <Text fontWeight="bold" pl="1">
-                        {mode === WidgetMode.View || mode === WidgetMode.Edit ? (
-                            <>{module.name}</>
-                        ) : (
-                            `${module.name} Settings`
-                        )}
+                        {mode === WidgetMode.View && <>{module.name}</>}
+                        {mode === WidgetMode.Edit && `Edit ${module.name}`}
+                        {mode === WidgetMode.Settings && `${module.name} Settings`}
                     </Text>
                 </Flex>
                 <Flex alignItems="center">
@@ -154,26 +151,21 @@ export const BoatWidget: FC<Props> = ({ id, children, settings, name, mode, data
             <Box py="2">
                 {mode === WidgetMode.View || mode === WidgetMode.Edit ? (
                     <>
-                        <>{children}</>
-
-                        {mode === WidgetMode.Edit && data.length ? (
-                            <>
-                                <Divider my="4" />
-                                <Flex justifyContent="flex-end">
-                                    <Button
-                                        onClick={() => {
-                                            onSave();
-                                            saveModuleData(id, data);
-                                        }}
-                                        rightIcon={<SbCheckIcon />}
-                                    >
-                                        Save
-                                    </Button>
-                                </Flex>
-                            </>
-                        ) : (
-                            <></>
-                        )}
+                        <Poll
+                            loading={loading}
+                            mode={mode}
+                            data={data}
+                            selectOption={selectOption}
+                            getInputComponent={getInputComponent}
+                            onAddClick={onAddClick}
+                            onOptionEdit={onOptionEdit}
+                            onRemoveOption={onRemoveOption}
+                            onSave={() => {
+                                onSave();
+                                saveModuleData(id, data);
+                            }}
+                        />
+                        {children}
                     </>
                 ) : (
                     <>{settings}</>

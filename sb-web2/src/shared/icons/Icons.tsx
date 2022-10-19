@@ -13,6 +13,7 @@ export {
     BsCircle as SbCircleIcon,
     BsCheckCircle as SbCheckCircleIcon,
 } from 'react-icons/bs';
+export { IoMdRadioButtonOff as SbRadioButtonOff, IoMdRadioButtonOn as SbRadioButtonOn } from 'react-icons/io';
 export {
     IoCloseOutline as SbCloseIcon,
     IoLogoInstagram as SbInstagramIcon,

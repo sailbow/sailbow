@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 import { Button, Stack } from '@chakra-ui/react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Boat, ModuleExtended, ModuleName, Widget, WidgetData, WidgetMode } from 'modules/boats/Boat.Types';
+import { Boat, ModuleExtended, ModuleName, Widget, WidgetMode } from 'modules/boats/Boat.Types';
 import { DateWidget, DateWidgetData } from './modules/date/DateWidget';
 import { LocationWidget, LocationWidgetData } from './modules/location/LocationWidget';
 import { useSystem } from 'modules/system/System.Store';
