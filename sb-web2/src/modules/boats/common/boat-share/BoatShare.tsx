@@ -6,7 +6,7 @@ import { SbCopyIcon, SbLinkIcon } from 'shared/icons/Icons';
 
 export const BoatShare: FunctionComponent = () => {
     const onCopy = () => {
-        navigator.clipboard.writeText('https://sailboatapp.com/xc7wg');
+        navigator.clipboard.writeText(window.location.href);
     };
     return (
         <Popover variant="brand">

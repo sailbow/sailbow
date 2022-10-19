@@ -7,7 +7,6 @@ export {
     BsQuestionCircle as SbQuestionIcon,
     BsClock as SbClockIcon,
     BsLayers as SbFeedIcon,
-    BsLink45Deg as SbLinkIcon,
     BsShieldLock as SbPasswordIcon,
     BsSortAlphaDown as SbSortIcon,
     BsCircle as SbCircleIcon,
@@ -22,9 +21,6 @@ export {
     IoDocumentTextOutline as SbTermsIcon,
     IoMailOutline as SbMailIcon,
     IoBugOutline as SbBugIcon,
-    // IoSettingsOutline as SbSettingsIcon,
-    // IoLocationOutline as SbLocationIcon,
-    // IoCalendarOutline as SbCalendarIcon,
     IoInformationCircleOutline as SbInfoIcon,
 } from 'react-icons/io5';
 export {
@@ -32,7 +28,6 @@ export {
     HiArrowUp as SbArrowUpIcon,
     HiArrowDown as SbArrowDownIcon,
     HiArrowLeft as SbArrowLeftIcon,
-    // HiOutlinePencil as SbEditIcon,
     HiOutlineFilter as SbFilterIcon,
     HiOutlineSearch as SbSearchIcon,
     HiPlus as SbPlusIcon,
@@ -43,12 +38,12 @@ export {
     HiChevronDown as SbChevronDownIcon,
     HiChevronRight as SbChevronRightIcon,
     HiChevronLeft as SbChevronLeftIcon,
-    HiChevronUp as SbChevronUpIcon
+    HiChevronUp as SbChevronUpIcon,
+    HiOutlineLink as SbLinkIcon,
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';
 export {
-    // FiPlus as SbPlusIcon,
     FiMinus as SbMinusIcon,
     FiCheck as SbCheckIcon,
     FiBell as SbBellIcon,
