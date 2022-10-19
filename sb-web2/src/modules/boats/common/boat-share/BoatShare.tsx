@@ -15,11 +15,11 @@ export const BoatShare: FunctionComponent = () => {
                     <SbLinkIcon />
                 </IconButton>
             </PopoverTrigger>
-            <PopoverContent w="100%" borderRadius="lg">
+            <PopoverContent borderRadius="lg">
                 <PopoverBody p="2">
-                    <Flex p="2" alignItems="center">
+                    <Flex p="2" alignItems="center" flexWrap="wrap">
                         <Text fontWeight="normal" pr="4">
-                            https://sailboatapp.com/xc7wg
+                            {window.location.href}
                         </Text>
                         <Button rightIcon={<SbCopyIcon />} size="sm" colorScheme="gray" onClick={onCopy}>
                             Copy

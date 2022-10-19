@@ -82,6 +82,7 @@ export const BoatWidget: FC<Props> = ({ id, children, settings, name, mode, data
                         colorScheme="gray"
                         variant="ghost"
                         size="sm"
+                        as={Box}
                         icon={<>{module.icon}</>}
                     />
                 </PopoverTrigger>
