@@ -62,8 +62,8 @@ export const BoatWidget = <T extends {}>({
     };
 
     return (
-        <Box w="100%" borderRadius="xl" border="2px solid #ececec" px="4" py="3">
-            <Flex alignItems="center" justifyContent="space-between" className="widget-header">
+        <Box w="100%" borderRadius="xl" border="2px solid #ececec" px="4" py="3" pt='1'>
+            <Flex alignItems="center" justifyContent="space-between" className="widget-header" py="2">
                 <Flex alignItems="center">
                     <Box flexShrink="0" className="panel-icon">
                         <WidgetDescriptionPopover />

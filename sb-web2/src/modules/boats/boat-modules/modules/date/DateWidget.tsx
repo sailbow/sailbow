@@ -7,7 +7,6 @@ import { Module, ModuleData } from 'modules/boats/Boat.Types';
 import { DateWidgetSettings } from 'modules/boats/boat-modules/modules/date/DateWidgetSettings';
 import { DateModuleDataType, getText } from 'modules/boats/boat-modules/modules/date/_DateModule';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
-import { Input } from 'shared/input/Input';
 import { DatePicker } from 'shared/date-picker/DatePicker';
 
 type DataType = ModuleData<DateModuleDataType>;
@@ -15,8 +14,8 @@ type DataType = ModuleData<DateModuleDataType>;
 export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
     const { id, settings, data } = props;
     const [widgetData, setWidgetData] = useState<DataType[]>(data);
-    const [optionsCounter, setOptionsCounter] = useState<number>(0);
-    const [formError, setFormError] = useState<boolean>();
+    const [startDateError, setStartDateError] = useState<string>('');
+    const [endDateError, setEndDateError] = useState<string>('');
     const [{ user }] = useAuthStore();
 
     const onDataChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,30 +33,29 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
         const updatedWidgetData = [...widgetData];
         let hasError = false;
 
-        setFormError(false);
+        setStartDateError('');
+        setEndDateError('');
 
         widgetData.forEach((d) => {
             const foundPollIdx = updatedWidgetData.findIndex((i) => i.id === d.id);
+            const { startDate, endDate } = updatedWidgetData[foundPollIdx];
 
-            if (!updatedWidgetData[foundPollIdx].startDate) {
-                setFormError(true);
+            if (!startDate) {
+                setStartDateError('Start date is required');
                 hasError = true;
                 return false;
             }
 
-            if (updatedWidgetData[foundPollIdx].endDate) {
-                const { startDate, endDate } = updatedWidgetData[foundPollIdx];
-
-                if (new Date(startDate).getTime() < new Date(endDate!).getTime()) {
-                    setFormError(true);
+            if (endDate) {
+                if (new Date(startDate).getTime() > new Date(endDate).getTime()) {
                     hasError = true;
+                    setEndDateError('End date has to be after start date');
                     return false;
                 }
             }
 
             if (foundPollIdx !== -1) {
                 updatedWidgetData[foundPollIdx].isEditing = false;
-
                 updatedWidgetData[foundPollIdx].text = getText(d);
             }
         });
@@ -83,14 +81,16 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
                     required
                     onChange={onDataChange(optionId)}
                     value={data.startDate}
-                    error={formError}
-                    errorLabel="Start date is required"
+                    error={!!startDateError}
+                    errorLabel={startDateError}
                 />
                 <DatePicker
                     label="End Date"
                     name="endDate"
                     placeholder="mm/dd/yyyy"
                     onChange={onDataChange(optionId)}
+                    error={!!endDateError}
+                    errorLabel={endDateError}
                     value={data.endDate}
                 />
             </Flex>
@@ -105,7 +105,7 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
             onSave={onSave}
             onAddOption={() => {
                 const newData: DataType = {
-                    id: (optionsCounter + 1).toString(),
+                    id: new Date().getTime().toString(),
                     author: { id: user?.id!, name: user!.name, email: user!.email },
                     text: '',
                     selected: false,
@@ -115,7 +115,6 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
                     endDate: '',
                 };
                 setWidgetData([...widgetData, newData]);
-                setOptionsCounter(optionsCounter + 1);
             }}
             getInputComponent={getInputComponent}
             onOptionEdit={(optionId: string) => {
