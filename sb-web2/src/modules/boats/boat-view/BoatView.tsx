@@ -1,16 +1,15 @@
 import { FunctionComponent, useEffect } from 'react';
 
-import { Box, Flex, useBreakpointValue, Heading, Stack } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 import { useBoat } from 'modules/boats/Boat.Store';
-import { BoatViewToolbar } from 'modules/boats/boat-view/boat-view-toolbar/BoatViewToolbar';
 import { Boat } from 'modules/boats/Boat.Types';
+import { BoatModuleManifest } from 'modules/boats/boat-modules/BoatModulesManifest';
+import { BoatModulesWidget } from 'modules/boats/boat-modules/BoatModulesWidget';
+import { BoatViewToolbar } from 'modules/boats/boat-view/boat-view-toolbar/BoatViewToolbar';
+import { BoatViewTabs } from 'modules/boats/boat-view/boat-view-tabs/BoatViewTabs';
 import { PageSpinner } from 'shared/page-spinner/PageSpinner';
-import { BoatViewTabs } from './boat-view-tabs/BoatViewTabs';
-import { BoatModuleManifest } from '../boat-modules/BoatModulesManifest';
-import { BoatWidget } from '../common/boat-widget/BoatWidget';
-import { BoatModulesWidget } from '../boat-modules/BoatModulesWidget';
 
 export const BoatView: FunctionComponent = () => {
     const [{ activeBoat: boat, loading, error }, { getBoat, removeActiveBoat }] = useBoat();

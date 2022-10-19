@@ -40,7 +40,7 @@ export const BoatModulesWidgetItem: FC<BoatModulesWidgetItemProps<ModuleDataType
                 await getModuleData(boatId, module.id);
             }
         })();
-    }, []);
+    }, [boatId, getModuleData, module.dataLoaded, module.id]);
 
     return <>{getWidget(module)}</>;
 };

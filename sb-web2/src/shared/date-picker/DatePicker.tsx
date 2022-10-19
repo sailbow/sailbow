@@ -17,9 +17,9 @@ import {
     PopoverTrigger,
     PopoverContent,
     PopoverBody,
-    PopoverArrow,
     useOutsideClick,
 } from '@chakra-ui/react';
+
 import { SbChevronDownIcon, SbChevronLeftIcon, SbChevronRightIcon, SbChevronUpIcon } from 'shared/icons/Icons';
 import { Input, InputProps } from 'shared/input/Input';
 
@@ -297,7 +297,7 @@ export const DatePicker: FC<Props> = ({ value, onChange, name, ...props }) => {
                         }}
                     />
 
-                    <Flex gap="4">
+                    <Flex gap="4" pt="4" pb="2">
                         <Button
                             variant="link"
                             w="100%"

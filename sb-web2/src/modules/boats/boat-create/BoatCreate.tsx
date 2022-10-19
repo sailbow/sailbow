@@ -9,10 +9,10 @@ import { BoatBanner, UserList, UserSearch } from 'modules/boats/common';
 import { Input, TextArea } from 'shared/input/Input';
 import { Routes } from 'router/Router.Types';
 import { Color } from 'theme/colors/Colors';
-import { SbCheckMarkIcon, SbCloseIcon } from 'shared/icons/Icons';
+import { Drawer } from 'shared/drawer/Drawer';
+import { SbCheckMarkIcon } from 'shared/icons/Icons';
 
 import './BoatCreate.scss';
-import { Drawer } from 'shared/drawer/Drawer';
 
 export const BoatCreate: FunctionComponent = () => {
     const [{ createOpen, loading }, { createBoat, closeCreateBoat }] = useBoat();
