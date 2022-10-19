@@ -23,7 +23,7 @@ export const getText = (data: ModuleData<DateModuleDataType> | null) => {
     const startDate = formatDate(data.startDate);
     const endDate = data.endDate ? formatDate(data.endDate) : null;
 
-    return `${startDate}${endDate ? ` - ${data.endDate}` : ''}`;
+    return `${startDate}${endDate ? ` - ${endDate}` : ''}`;
 };
 
 export const DateManifest: FC<Module<DateModuleDataType>> = ({ data, loading, finalizedOptionId }) => {

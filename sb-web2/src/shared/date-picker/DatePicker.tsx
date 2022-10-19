@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 
 import {
     Box,
@@ -13,8 +13,15 @@ import {
     IconButton,
     TableContainer,
     Stack,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverBody,
+    PopoverArrow,
+    useOutsideClick,
 } from '@chakra-ui/react';
 import { SbChevronDownIcon, SbChevronLeftIcon, SbChevronRightIcon, SbChevronUpIcon } from 'shared/icons/Icons';
+import { Input, InputProps } from 'shared/input/Input';
 
 const Months = [
     'January',
@@ -55,9 +62,9 @@ const WeekdayArray = [
     Weekday.Saturday,
 ];
 
-interface Props {
+interface CalendarProps {
     date: string;
-    onChange: (date: string) => void;
+    onDateChange: (date: string) => void;
 }
 
 const getAllDaysInMonth = (month: number, year: number) =>
@@ -82,7 +89,7 @@ interface Calander {
     id: string;
 }
 
-export const DatePicker: FC<Props> = ({ date, onChange }) => {
+export const Calendar: FC<CalendarProps> = ({ date, onDateChange }) => {
     const [selectedDate, setSelectedDate] = useState<string>(date || new Date().toLocaleDateString());
     const [year, setYear] = useState<number>(getYear(selectedDate));
     const [month, setMonth] = useState<number>(getMonth(selectedDate));
@@ -124,7 +131,7 @@ export const DatePicker: FC<Props> = ({ date, onChange }) => {
         setSelectedDate(date);
         setYear(getYear(date));
         setMonth(getMonth(date));
-        onChange(date);
+        onDateChange(date);
     };
 
     const onNextMonth = () => {
@@ -159,7 +166,7 @@ export const DatePicker: FC<Props> = ({ date, onChange }) => {
     };
 
     return (
-        <Box maxH="260px">
+        <Box>
             <Flex w="100%" py="2" justifyContent="space-between" alignItems="center">
                 <IconButton
                     fontSize="xl"
@@ -195,7 +202,7 @@ export const DatePicker: FC<Props> = ({ date, onChange }) => {
                             variant={m === Months[month - 1] ? 'solid' : 'ghost'}
                             colorScheme={m === Months[month - 1] ? 'brand' : 'gray'}
                             key={`month-${m}`}
-                            onClick={() => setMonth(Months.indexOf(m))}
+                            onClick={() => setMonth(Months.indexOf(m) + 1)}
                         >
                             {m}
                         </Button>
@@ -241,7 +248,7 @@ export const DatePicker: FC<Props> = ({ date, onChange }) => {
                                                 p="0"
                                                 fontSize="sm"
                                                 onClick={() => {
-                                                    if (day.id !== selectedDate) onSelect(day.id);
+                                                    onSelect(day.id);
                                                 }}
                                                 variant={day.id === selectedDate ? 'solid' : 'ghost'}
                                                 colorScheme={day.id === selectedDate ? 'brand' : 'gray'}
@@ -257,5 +264,63 @@ export const DatePicker: FC<Props> = ({ date, onChange }) => {
                 </Table>
             </TableContainer>
         </Box>
+    );
+};
+
+interface Props extends InputProps {}
+
+export const DatePicker: FC<Props> = ({ value, onChange, name, ...props }) => {
+    const [ev, setEv] = useState<any>();
+    const ref = useRef<any>();
+    const [pickerOpen, setPickerOpen] = useState<boolean>(false);
+
+    useOutsideClick({
+        ref: ref,
+        handler: () => {
+            if (pickerOpen) setPickerOpen(false);
+        },
+    });
+
+    return (
+        <Popover isLazy lazyBehavior="unmount" isOpen={pickerOpen}>
+            <PopoverTrigger>
+                <Input {...props} value={value} isReadOnly cursor="pointer" onClick={() => setPickerOpen(true)} />
+            </PopoverTrigger>
+            <PopoverContent borderWidth="2px" borderRadius="xl" ref={ref}>
+                <PopoverBody>
+                    <Calendar
+                        date={value as string}
+                        onDateChange={(date: string) => {
+                            const event = { target: { value: date, name } as HTMLInputElement };
+
+                            setEv(event);
+                        }}
+                    />
+
+                    <Flex gap="4">
+                        <Button
+                            variant="link"
+                            w="100%"
+                            onClick={() => {
+                                setPickerOpen(false);
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            w="100%"
+                            onClick={() => {
+                                if (onChange) {
+                                    onChange(ev as ChangeEvent<HTMLInputElement>);
+                                    setPickerOpen(false);
+                                }
+                            }}
+                        >
+                            Apply
+                        </Button>
+                    </Flex>
+                </PopoverBody>
+            </PopoverContent>
+        </Popover>
     );
 };

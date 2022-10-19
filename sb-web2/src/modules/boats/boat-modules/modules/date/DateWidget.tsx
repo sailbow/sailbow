@@ -45,6 +45,16 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
                 return false;
             }
 
+            if (updatedWidgetData[foundPollIdx].endDate) {
+                const { startDate, endDate } = updatedWidgetData[foundPollIdx];
+
+                if (new Date(startDate).getTime() < new Date(endDate!).getTime()) {
+                    setFormError(true);
+                    hasError = true;
+                    return false;
+                }
+            }
+
             if (foundPollIdx !== -1) {
                 updatedWidgetData[foundPollIdx].isEditing = false;
 
@@ -66,21 +76,20 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
     const getInputComponent: any = (optionId: string, data: DataType) => {
         return (
             <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }}>
-                <DatePicker date="" onChange={(date) => console.log('date', date)} />
-                <Input
+                <DatePicker
                     label="Start Date"
-                    type="date"
                     name="startDate"
+                    placeholder="mm/dd/yyyy"
                     required
                     onChange={onDataChange(optionId)}
                     value={data.startDate}
                     error={formError}
                     errorLabel="Start date is required"
                 />
-                <Input
+                <DatePicker
                     label="End Date"
-                    type="date"
                     name="endDate"
+                    placeholder="mm/dd/yyyy"
                     onChange={onDataChange(optionId)}
                     value={data.endDate}
                 />

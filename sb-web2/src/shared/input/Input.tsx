@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode } from 'react';
+import { forwardRef, FunctionComponent, ReactNode } from 'react';
 
 import {
     InputGroup,
@@ -18,7 +18,7 @@ import { SbErrorCircleIcon } from 'shared/icons/Icons';
 
 import './Input.scss';
 
-interface InputProps extends ChakraInputProps {
+export interface InputProps extends ChakraInputProps {
     loading?: boolean;
     field?: any;
     error?: boolean;
@@ -42,54 +42,65 @@ interface TextareaProps extends ChakraTextareaProps {
     customClass?: string;
 }
 
-export const Input: FunctionComponent<InputProps> = ({
-    label,
-    field,
-    error,
-    errorLabel,
-    errorIcon,
-    loading,
-    required,
-    customClass,
-    leftIcon,
-    rightIconButton,
-    ...props
-}) => {
-    return (
-        <Box className={`sb-input-wrapper ${customClass}`} w="100%">
-            {label && (
-                <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
-                    {label}
-                    {required && <span className="required">*</span>}
-                </Text>
-            )}
-            <InputGroup variant="brand" alignItems="center" className="sb-input">
-                <InputLeftAddon position="absolute" p="0" color="brand.secondary">
-                    {leftIcon}
-                </InputLeftAddon>
-                {rightIconButton && (
-                    <InputRightElement p="0" color="brand.secondary">
-                        <IconButton aria-label="input-right-element" variant="icon" fontSize="xl" size="sm">
-                            {rightIconButton}
-                        </IconButton>
-                    </InputRightElement>
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+    (
+        {
+            label,
+            field,
+            error,
+            errorLabel,
+            errorIcon,
+            loading,
+            required,
+            customClass,
+            leftIcon,
+            rightIconButton,
+            ...props
+        },
+        ref,
+    ) => {
+        return (
+            <Box className={`sb-input-wrapper ${customClass}`} w="100%" ref={ref}>
+                {label && (
+                    <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
+                        {label}
+                        {required && <span className="required">*</span>}
+                    </Text>
                 )}
+                <InputGroup variant="brand" alignItems="center" className="sb-input">
+                    <InputLeftAddon position="absolute" p="0" color="brand.secondary">
+                        {leftIcon}
+                    </InputLeftAddon>
+                    {rightIconButton && (
+                        <InputRightElement p="0" color="brand.secondary">
+                            <IconButton aria-label="input-right-element" variant="icon" fontSize="xl" size="sm">
+                                {rightIconButton}
+                            </IconButton>
+                        </InputRightElement>
+                    )}
 
-                <ChakraInput p="0" pl={leftIcon ? '24px' : '0'} {...field} {...props} />
-                {loading && (
-                    <InputRightElement color="brand.error">
-                        <Spinner size="sm" color="brand.dark" />
-                    </InputRightElement>
-                )}
-                {error ? (
-                    <Tooltip label={errorLabel}>
-                        <InputRightElement color="brand.error">{errorIcon}</InputRightElement>
-                    </Tooltip>
-                ) : null}
-            </InputGroup>
-        </Box>
-    );
-};
+                    <ChakraInput
+                        p="0"
+                        pl={leftIcon ? '24px' : '0'}
+                        {...field}
+                        {...props}
+                        borderColor={error ? 'brand.error' : 'brand.dark'}
+                    />
+                    {loading && (
+                        <InputRightElement color="brand.error">
+                            <Spinner size="sm" color="brand.dark" />
+                        </InputRightElement>
+                    )}
+                    {error ? (
+                        <Tooltip label={errorLabel}>
+                            <InputRightElement color="brand.error">{errorIcon}</InputRightElement>
+                        </Tooltip>
+                    ) : null}
+                </InputGroup>
+            </Box>
+        );
+    },
+);
 
 Input.defaultProps = {
     loading: undefined,
@@ -121,7 +132,14 @@ export const TextArea: FunctionComponent<TextareaProps> = ({
                 </Text>
             )}
             <InputGroup variant="brand">
-                <Textarea px="0" {...field} {...props} className="sb-input" borderRadius="0" />
+                <Textarea
+                    px="0"
+                    {...field}
+                    {...props}
+                    className="sb-input"
+                    borderRadius="0"
+                    borderColor={error ? 'brand.error' : 'brand.dark'}
+                />
                 {error ? (
                     <Tooltip label={errorLabel}>
                         <InputRightElement color="brand.error" h="0">
