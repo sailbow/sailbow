@@ -1,17 +1,16 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
-import { Box, Button, Flex, IconButton, HStack, Link } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, HStack } from '@chakra-ui/react';
 
 import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
-import { useBoat } from 'modules/boats/Boat.Store';
 import { ProfileIcon } from 'modules/profile/profile-icon/ProfileIcon';
+import { useSystem } from 'modules/system/System.Store';
 import { Notifications } from 'shared/notifications/Notifications';
 import { Menu } from 'shared/menu/Menu';
 import { Routes } from 'router/Router.Types';
 import { SbPlusIcon } from 'shared/icons/Icons';
 
 import './Navbar.scss';
-import { useSystem } from 'modules/system/System.Store';
 
 // enum LinkLabels {
 //     Boats = '/boats',

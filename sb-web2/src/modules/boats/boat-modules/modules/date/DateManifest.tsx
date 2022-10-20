@@ -8,7 +8,7 @@ import { DateModuleDataType } from './_DateModule';
 import { Module, ModuleData } from 'modules/boats/Boat.Types';
 import { getFinalizedData } from '../Modules';
 
-const formatDate = (inputDate: string) => {
+export const formatDate = (inputDate: string) => {
     return new Date(inputDate).toLocaleDateString('en-us', {
         weekday: 'short',
         year: 'numeric',

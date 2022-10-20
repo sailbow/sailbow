@@ -97,6 +97,10 @@ export const Calendar: FC<CalendarProps> = ({ date, onDateChange }) => {
     const [mode, setMode] = useState<DatePickerMode>(DatePickerMode.Calendar);
 
     useEffect(() => {
+        onDateChange(selectedDate);
+    }, []);
+
+    useEffect(() => {
         generateCalendar(year, month);
     }, [year, month]);
 

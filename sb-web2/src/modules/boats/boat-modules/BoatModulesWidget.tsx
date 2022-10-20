@@ -50,7 +50,7 @@ export const BoatModulesWidget: FC<Props> = ({ boat }) => {
     const [, { openPicker }] = useSystem();
 
     return (
-        <Box h={{ base: '100%', md: 'calc(100vh - 140px)' }} overflowY="auto">
+        <Box h={{ base: '100%', md: 'calc(100vh - 140px)' }} overflowY="auto" pt="2">
             <Stack w="100%" spacing="4" h="100%">
                 {Object.values(boat.modules).map((module) => (
                     <BoatModulesWidgetItem
@@ -68,7 +68,7 @@ export const BoatModulesWidget: FC<Props> = ({ boat }) => {
                     flexDir="column"
                 >
                     {!Object.values(boat.modules).length && (
-                        <Flex p="6" bg="brand.100" borderRadius="xl" m="6" alignItems="center">
+                        <Flex p="6" bg="orange.100" borderRadius="xl" m="6" alignItems="center">
                             <Box fontSize="2xl" mr="2">
                                 <SbBulbIcon />
                             </Box>

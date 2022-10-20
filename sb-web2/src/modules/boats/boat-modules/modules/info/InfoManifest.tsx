@@ -6,7 +6,6 @@ import { BoatManifest } from 'modules/boats/common/boat-manifest/BoatManifest';
 import { SbInfoIcon } from 'shared/icons/Icons';
 import { BoatBanner } from 'modules/boats/common';
 import { Boat } from 'modules/boats/Boat.Types';
-import { useBoat } from 'modules/boats/Boat.Store';
 import { useSystem } from 'modules/system/System.Store';
 
 interface Props {
@@ -14,7 +13,6 @@ interface Props {
 }
 
 export const InfoManifest: FC<Props> = ({ data }) => {
-    const [{ loading }, {}] = useBoat();
     const [{}, { openEditNav }] = useSystem();
 
     return (

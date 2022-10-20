@@ -68,9 +68,9 @@ export const BoatWidget = <T extends {}>({
                         {mode === ModuleMode.Settings && `${module.name} Settings`}
                     </Text>
                 </Flex>
-                <Flex alignItems="center">
+                <Flex alignItems="center" gap="1">
                     <IconButton
-                        fontSize="xl"
+                        fontSize="2xl"
                         aria-label="settings"
                         colorScheme="gray"
                         variant={mode === ModuleMode.Edit ? 'solid' : 'ghost'}
@@ -78,22 +78,24 @@ export const BoatWidget = <T extends {}>({
                         onClick={() => {
                             setModuleMode(id, ModuleMode.Edit);
                         }}
+                        display="flex"
                     />
                     <IconButton
-                        fontSize="xl"
+                        fontSize="2xl"
                         aria-label="settings"
                         colorScheme="gray"
-                        variant="ghost"
+                        variant={mode === ModuleMode.Settings ? 'solid' : 'ghost'}
                         icon={<SbSettingsIcon />}
                         onClick={() => setModuleMode(id, ModuleMode.Settings)}
                     />
                     <IconButton
-                        fontSize="xl"
+                        fontSize="2xl"
                         aria-label="settings"
                         colorScheme="gray"
                         variant="ghost"
                         icon={<SbDeleteIcon />}
                         onClick={() => removeModule(id)}
+                        display="flex"
                     />
                 </Flex>
             </Flex>
