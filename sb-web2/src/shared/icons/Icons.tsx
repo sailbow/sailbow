@@ -40,6 +40,7 @@ export {
     HiChevronLeft as SbChevronLeftIcon,
     HiChevronUp as SbChevronUpIcon,
     HiOutlineLink as SbLinkIcon,
+    HiOutlineLightBulb as SbBulbIcon,
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';

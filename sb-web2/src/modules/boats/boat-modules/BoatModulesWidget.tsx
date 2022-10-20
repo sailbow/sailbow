@@ -1,11 +1,11 @@
 import { FC, useEffect } from 'react';
 
-import { Box, Button, Stack } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Stack } from '@chakra-ui/react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Boat, Module, ModuleName } from 'modules/boats/Boat.Types';
 import { useSystem } from 'modules/system/System.Store';
-import { SbPlusIcon } from 'shared/icons/Icons';
+import { SbBulbIcon, SbPlusIcon } from 'shared/icons/Icons';
 import { ModuleDataType, ModulesMapper } from './modules/Modules';
 
 interface Props {
@@ -51,7 +51,7 @@ export const BoatModulesWidget: FC<Props> = ({ boat }) => {
 
     return (
         <Box h={{ base: '100%', md: 'calc(100vh - 140px)' }} overflowY="auto">
-            <Stack w="100%" spacing="4">
+            <Stack w="100%" spacing="4" h="100%">
                 {Object.values(boat.modules).map((module) => (
                     <BoatModulesWidgetItem
                         key={`widget-${module.id}-${module.order}`}
@@ -61,9 +61,25 @@ export const BoatModulesWidget: FC<Props> = ({ boat }) => {
                     />
                 ))}
 
-                <Button onClick={openPicker} variant="outline" rightIcon={<SbPlusIcon />}>
-                    Add Widget
-                </Button>
+                <Box
+                    as={Object.values(boat.modules).length ? Flex : Center}
+                    h="100%"
+                    alignItems="center"
+                    flexDir="column"
+                >
+                    {!Object.values(boat.modules).length && (
+                        <Flex p="6" bg="brand.100" borderRadius="xl" m="6" alignItems="center">
+                            <Box fontSize="2xl" mr="2">
+                                <SbBulbIcon />
+                            </Box>
+                            Get started by adding widgets so your crew can vote on various options!
+                        </Flex>
+                    )}
+
+                    <Button onClick={openPicker} variant="outline" rightIcon={<SbPlusIcon />}>
+                        Add Widget
+                    </Button>
+                </Box>
             </Stack>
         </Box>
     );

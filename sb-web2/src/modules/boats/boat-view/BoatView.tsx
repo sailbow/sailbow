@@ -32,7 +32,7 @@ export const BoatView: FunctionComponent = () => {
             <BoatViewToolbar boat={data} />
             <Box className="details-widget-box">
                 <Flex gap="8" pt="4" display={{ base: 'none', md: 'flex' }}>
-                    <Box width="400px" borderRight="1px solid #ececec" mr="4">
+                    <Box width="400px" borderRight="1px solid #ececec">
                         {/* <Heading fontSize="lg" mb="4">
                             Manifest
                         </Heading> */}
