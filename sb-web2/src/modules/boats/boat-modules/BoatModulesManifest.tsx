@@ -13,7 +13,13 @@ interface Props {
 
 export const BoatModuleManifest: FC<Props> = ({ boat }) => {
     return (
-        <Box mt="-2">
+        <Box
+            mt="-2"
+            h={{ base: '100%', md: 'calc(100vh - 140px)' }}
+            overflowY="auto"
+            pr="4"
+            className="sb-boat-module-manifest"
+        >
             <InfoManifest data={boat} />
             <CrewManifest data={boat} />
             {Object.values(boat.modules).map((module) => {

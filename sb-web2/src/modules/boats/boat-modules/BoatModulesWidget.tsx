@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 
-import { Button, Stack } from '@chakra-ui/react';
+import { Box, Button, Stack } from '@chakra-ui/react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Boat, Module, ModuleName } from 'modules/boats/Boat.Types';
@@ -50,19 +50,21 @@ export const BoatModulesWidget: FC<Props> = ({ boat }) => {
     const [, { openPicker }] = useSystem();
 
     return (
-        <Stack w="100%" spacing="4">
-            {Object.values(boat.modules).map((module) => (
-                <BoatModulesWidgetItem
-                    key={`widget-${module.id}-${module.order}`}
-                    boatId={boat.id}
-                    getModuleData={getModuleData}
-                    module={module}
-                />
-            ))}
+        <Box h={{ base: '100%', md: 'calc(100vh - 140px)' }} overflowY="auto">
+            <Stack w="100%" spacing="4">
+                {Object.values(boat.modules).map((module) => (
+                    <BoatModulesWidgetItem
+                        key={`widget-${module.id}-${module.order}`}
+                        boatId={boat.id}
+                        getModuleData={getModuleData}
+                        module={module}
+                    />
+                ))}
 
-            <Button onClick={openPicker} variant="outline" rightIcon={<SbPlusIcon />}>
-                Add Widget
-            </Button>
-        </Stack>
+                <Button onClick={openPicker} variant="outline" rightIcon={<SbPlusIcon />}>
+                    Add Widget
+                </Button>
+            </Stack>
+        </Box>
     );
 };

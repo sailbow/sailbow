@@ -16,7 +16,7 @@ export const BoatViewToolbar: FunctionComponent<Props> = ({ boat }) => {
     const navigate = useNavigate();
 
     return (
-        <Flex justifyContent="space-between" pb="4" pt="2" alignItems="center">
+        <Flex justifyContent="space-between" pb="4" pt="2" alignItems="center" w="100%">
             <Breadcrumb spacing="8px" fontWeight="semibold">
                 <BreadcrumbItem>
                     <BreadcrumbLink color="brand.secondary" onClick={() => navigate(Routes.Private.Boats)}>
@@ -31,7 +31,7 @@ export const BoatViewToolbar: FunctionComponent<Props> = ({ boat }) => {
                 </BreadcrumbItem>
             </Breadcrumb>
 
-            <Flex justifyContent="flex-end">
+            {/* <Flex justifyContent="flex-end">
                 <BoatShare />
 
                 <IconButton
@@ -41,7 +41,7 @@ export const BoatViewToolbar: FunctionComponent<Props> = ({ boat }) => {
                     variant="ghost"
                     icon={<SbSettingsIcon />}
                 />
-            </Flex>
+            </Flex> */}
         </Flex>
     );
 };

@@ -28,11 +28,11 @@ export const BoatView: FunctionComponent = () => {
     }, []); // eslint-disable-line
 
     const BoatRenderer: FunctionComponent<{ data: Boat }> = ({ data }) => (
-        <Box px="2" className="sb-boat-view">
+        <Box px={{ base: 0, md: 2 }} className="sb-boat-view">
             <BoatViewToolbar boat={data} />
             <Box className="details-widget-box">
                 <Flex gap="8" pt="4" display={{ base: 'none', md: 'flex' }}>
-                    <Box width="400px" borderRight="1px solid #ececec" pr="4">
+                    <Box width="400px" borderRight="1px solid #ececec" mr="4">
                         {/* <Heading fontSize="lg" mb="4">
                             Manifest
                         </Heading> */}
