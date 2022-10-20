@@ -1,72 +1,109 @@
 ﻿
-using System.Reflection;
+using System.Linq.Expressions;
 
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 using Sb.Data.Models;
 
 namespace Sb.Data.MongoDB
 {
-    public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
+    public class MongoRepository : IRepository
     {
-        public IMongoCollection<TEntity> Collection { get; private set; }
-
         public MongoRepository(MongoConfiguration config)
         {
-            var attributes = (PersistenceModelAttribute[])Attribute.GetCustomAttributes(typeof(TEntity), typeof(PersistenceModelAttribute));
-            if (attributes.Length == 0)
-                throw new ArgumentException($"Cannot initialize MongoRepository with entity '{typeof(TEntity)}': missing MongoCollectionAttribute");
+            if (config is null
+                || string.IsNullOrWhiteSpace(config.ConnectionString)
+                || string.IsNullOrWhiteSpace(config.DatabaseName))
+            {
+                throw new ArgumentException("Invalid MongoConfiguration");
+            }
 
-            var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
-            ConventionRegistry.Register("camelCase", conventionPack, t => true);
+            _config = config;
 
-            MongoClient client = new(config.ConnectionString);
-            Collection = client
-                .GetDatabase(config.DatabaseName)
-                .GetCollection<TEntity>(attributes[0].Name);
+            ConventionRegistry.Register(
+                name: "camelCase",
+                conventions: new ConventionPack { new CamelCaseElementNameConvention() },
+                filter: t => true);
+
+            ConventionRegistry.Register(
+                name: "stringObjectIds",
+                conventions: new ConventionPack { new StringObjectIdConvention() },
+                filter: testc => true);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAsync(Func<TEntity, bool> predicate, CancellationToken cancellation = default)
+        public async Task<IEnumerable<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
+             where TEntity : EntityBase
         {
-            return await Task.FromResult(Collection.AsQueryable().Where(predicate));
+            return await Connect<TEntity>()
+                .AsQueryable()
+                .Where(predicate)
+                .ToListAsync();
         }
 
-        public async Task<TEntity> FirstOrDefaultAsync(Func<TEntity, bool> predicate, CancellationToken cancellation = default)
+        public async Task<IEnumerable<TEntity>> GetPaginatedAsync<TEntity>(int skip, int take, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            return (await GetAsync(predicate, cancellation)).FirstOrDefault();
+            return await Connect<TEntity>()
+                .AsQueryable()
+                .Where(predicate)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
         }
 
-        public async Task<TEntity> GetByIdAsync(string id, CancellationToken cancellation = default)
+        public async Task<TEntity> FirstOrDefaultAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            return (await Collection.FindAsync(e => e.Id.Equals(id), cancellationToken: cancellation))
-                .FirstOrDefault();
+            var results = await GetAsync(predicate, cancellation);
+            return results.FirstOrDefault();
         }
 
-        public async Task<TEntity> InsertAsync(TEntity element, CancellationToken cancellation = default)
+        public Task<TEntity> GetByIdAsync<TEntity>(string id, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            element.Id = Guid.NewGuid().ToString();
-            await Collection.InsertOneAsync(element, null, cancellation);
+            return FirstOrDefaultAsync<TEntity>(e => e.Id == id, cancellation);
+        }
+
+        public async Task<TEntity> InsertAsync<TEntity>(TEntity element, CancellationToken cancellation = default)
+            where TEntity : EntityBase
+        {
+            await Connect<TEntity>().InsertOneAsync(element, null, cancellation);
             return element;
         }
 
-        public async Task InsertManyAsync(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
+        public async Task InsertManyAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            foreach (TEntity e in entities) e.Id = Guid.NewGuid().ToString();
-
-            await Collection.InsertManyAsync(entities, cancellationToken: cancellation);
+            await Connect<TEntity>().InsertManyAsync(entities, cancellationToken: cancellation);
         }
 
-        public Task UpdateAsync(TEntity element, CancellationToken cancellation = default)
+        public Task UpdateAsync<TEntity>(TEntity element, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            return Collection.ReplaceOneAsync(e => e.Id == element.Id, element, cancellationToken: cancellation);
+            return Connect<TEntity>()
+                .ReplaceOneAsync(e => e.Id == element.Id, element, cancellationToken: cancellation);
         }
 
-        public Task DeleteAsync(TEntity element, CancellationToken cancellation = default)
+        public Task DeleteAsync<TEntity>(TEntity element, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            return Collection.DeleteOneAsync(e => e.Id == element.Id, cancellation);
+            return Connect<TEntity>().DeleteOneAsync(e => e.Id == element.Id, cancellation);
         }
+
+        private IMongoCollection<TEntity> Connect<TEntity>()
+            where TEntity : EntityBase
+        {
+            var attributes = (PersistenceModelAttribute[])Attribute.GetCustomAttributes(typeof(TEntity), typeof(PersistenceModelAttribute));
+            if (attributes.Length == 0)
+                throw new ArgumentException($"Cannot connect to collection for entity '{typeof(TEntity)}': missing MongoCollectionAttribute");
+
+            return new MongoClient(_config.ConnectionString)
+                .GetDatabase(_config.DatabaseName)
+                .GetCollection<TEntity>(attributes[0].Name);
+        }
+
+        private readonly MongoConfiguration _config;
     }
 }

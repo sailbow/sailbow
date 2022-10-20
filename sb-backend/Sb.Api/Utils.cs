@@ -2,7 +2,6 @@
 
 using Newtonsoft.Json;
 
-using Sb.Api.Models;
 using Sb.OAuth2;
 
 namespace Sb.Api

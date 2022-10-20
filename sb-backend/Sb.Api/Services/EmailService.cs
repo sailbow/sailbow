@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using System.Xml.Linq;
-
-using Ardalis.GuardClauses;
+﻿using Ardalis.GuardClauses;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
@@ -17,8 +14,7 @@ namespace Sb.Api.Services
 {
     public class EmailService
     {
-        private readonly IRepository<Boat> _boatRepo;
-        private readonly IRepository<Invite> _inviteRepo;
+        private readonly IRepository _repo;
 
         private readonly HttpContext _httpContext;
         private readonly IAuthorizationService _authorizationService;
@@ -30,8 +26,7 @@ namespace Sb.Api.Services
         private readonly ILogger<EmailService> _logger;
 
         public EmailService(
-            IRepository<Boat> boatRepo,
-            IRepository<Invite> inviteRepo,
+            IRepository repo,
             IHttpContextAccessor contextAccessor,
             IAuthorizationService authorizationService,
             IEmailClient emailClient,
@@ -39,8 +34,7 @@ namespace Sb.Api.Services
             IOptions<SbApiConfig> sbApiConfig,
             ILogger<EmailService> logger)
         {
-            _boatRepo = boatRepo;
-            _inviteRepo = inviteRepo;
+            _repo = repo;
             _httpContext = contextAccessor.HttpContext;
             _authorizationService = authorizationService;
             _emailClient = emailClient;
@@ -54,7 +48,7 @@ namespace Sb.Api.Services
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
             Guard.Against.Null(invites, nameof(invites));
 
-            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Boat boat = await _repo.GetByIdAsync<Boat>(boatId);
             Guard.Against.EntityMissing(boat, nameof(boat));
 
             var authResult = await _authorizationService.AuthorizeAsync(_httpContext.User, boat, AuthorizationPolicies.EditBoatPolicy);

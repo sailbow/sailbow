@@ -1,7 +1,6 @@
 ﻿using System.Net;
 
 using Sb.Api.Services;
-using Sb.Data;
 using Sb.Data.Models;
 
 namespace Sb.Api.Middleware
@@ -20,7 +19,7 @@ namespace Sb.Api.Middleware
             {
                 string token = context.GetAccessToken();
                 string userId = context.GetUserId();
-                if(string.IsNullOrWhiteSpace(token)
+                if (string.IsNullOrWhiteSpace(token)
                     || string.IsNullOrWhiteSpace(userId)
                     || !(await _tokenService.IsTokenValid(userId, token, TokenType.Access)))
                 {

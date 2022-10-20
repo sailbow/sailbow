@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 using Newtonsoft.Json.Converters;
 
@@ -20,6 +21,33 @@ IConfiguration configuration = builder.Configuration;
 services
     .AddOptions()
     .AddHttpContextAccessor()
+    .AddSwaggerGen(opts =>
+    {
+        opts.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please enter a valid token",
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            Scheme = "Bearer"
+        });
+        opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type=ReferenceType.SecurityScheme,
+                        Id="Bearer"
+                    }
+                },
+                new string[] { }
+            }
+        });
+    })
+    .AddEndpointsApiExplorer()
     .Configure<JwtConfig>(configuration.GetSection("Jwt"))
     .Configure<EmailConfig>(configuration.GetSection("Email"))
     .Configure<SbApiConfig>(configuration.GetSection("SbApi"))
@@ -28,9 +56,9 @@ services
     .AddSingleton<OAuth2ClientFactory>()
     .AddTransient<BoatService>()
     .AddTransient<EmailService>()
-    .AddTransient<ITokenService,TokenService>()
+    .AddTransient<ITokenService, TokenService>()
     .AddTransient<ValidateAccessTokenMiddleware>()
-    .AddTransient<IUserService,UserService>()
+    .AddTransient<IUserService, UserService>()
     .AddAuthorization(opts =>
     {
         opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>
@@ -102,6 +130,8 @@ IWebHostEnvironment env = builder.Environment;
 if (env.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app

@@ -10,8 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
             MongoConfiguration config = new();
             configureAction(config);
             services.AddSingleton(config);
-            services.AddSingleton(typeof(IRepository<>), typeof(MongoRepository<>));
-            services.AddSingleton(typeof(MongoRepository<>));
+            services.AddTransient<IRepository, MongoRepository>();
             return services;
         }
     }

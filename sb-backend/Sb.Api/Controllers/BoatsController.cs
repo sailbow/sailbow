@@ -15,19 +15,16 @@ namespace Sb.Api.Controllers
     {
         private readonly BoatService _boatService;
         private readonly EmailService _emailService;
-        private readonly IRepository<User> _userRepo;
-        private readonly IRepository<Invite> _inviteRepo;
+        private readonly IRepository _repo;
 
         public BoatsController(
             BoatService boatService,
             EmailService emailService,
-            IRepository<User> userRepo,
-            IRepository<Invite> inviteRepo)
+            IRepository repo)
         {
             _boatService = boatService;
             _emailService = emailService;
-            _userRepo = userRepo;
-            _inviteRepo = inviteRepo;
+            _repo = repo;
         }
 
         [HttpPost]
@@ -64,7 +61,10 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<Boat>> GetBoats() => _boatService.GetBoatsByUserId(HttpContext.GetClaim(CustomClaimTypes.Id));
+        public Task<IEnumerable<Boat>> GetBoats([FromQuery] GetBoatsRequest request)
+        {
+            return _boatService.GetBoats(HttpContext.GetClaim(CustomClaimTypes.Id), request);
+        }
 
         [HttpGet("{boatId}")]
         public Task<Boat> GetBoatById(string boatId)
@@ -96,7 +96,7 @@ namespace Sb.Api.Controllers
         {
             // Perform read validation but don't need the result
             await _boatService.GetBoatById(boatId);
-            var invites = await _inviteRepo.GetAsync(i => i.BoatId == boatId);
+            var invites = await _repo.GetAsync<Invite>(i => i.BoatId == boatId);
             return Ok(invites);
         }
 
@@ -132,8 +132,9 @@ namespace Sb.Api.Controllers
         public async Task<IEnumerable<CrewMemberWithUserInfo>> GetCrew(string boatId)
         {
             Boat boat = await _boatService.GetBoatById(boatId);
-            IEnumerable<User> users = await _userRepo
-                .GetAsync(u => boat.Crew.Any(cm => cm.UserId == u.Id));
+            var crewUserIds = boat.Crew.Select(c => c.UserId);
+            IEnumerable<User> users = await _repo
+                .GetAsync<User>(u => crewUserIds.Contains(u.Id));
 
             List<CrewMemberWithUserInfo> crew = new();
             foreach (var user in users)

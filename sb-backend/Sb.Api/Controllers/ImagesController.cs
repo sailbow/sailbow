@@ -1,7 +1,6 @@
-﻿using Sb.HttpClients.Images;
+﻿using Microsoft.AspNetCore.Mvc;
 
-using Sb.Api.Models;
-using Microsoft.AspNetCore.Mvc;
+using Sb.HttpClients.Images;
 
 namespace Sb.Api.Controllers;
 public class ImagesController : ApiControllerBase

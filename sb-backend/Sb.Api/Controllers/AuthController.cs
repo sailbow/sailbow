@@ -1,13 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Security.Claims;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-
-using Newtonsoft.Json;
 
 using Sb.Api.Configuration;
 using Sb.Api.Models;
@@ -67,7 +62,7 @@ namespace Sb.Api.Controllers
             [FromQuery] string code,
             [FromQuery] string redirectUri,
             [FromQuery] string state,
-            [FromServices] IRepository<User> userRepository,
+            [FromServices] IRepository repo,
             [FromServices] ITokenService tokenService)
         {
             try
@@ -79,10 +74,10 @@ namespace Sb.Api.Controllers
                 if (string.IsNullOrWhiteSpace(user.Email))
                     return BadRequest("Invalid email");
 
-                User existingUser = await userRepository.FirstOrDefaultAsync(u => u.Email == user.Email);
+                User existingUser = await repo.FirstOrDefaultAsync<User>(u => u.Email == user.Email);
                 if (existingUser is null)
                 {
-                    existingUser = await userRepository.InsertAsync(new User
+                    existingUser = await repo.InsertAsync(new User
                     {
                         Name = user.Name,
                         Email = user.Email,
