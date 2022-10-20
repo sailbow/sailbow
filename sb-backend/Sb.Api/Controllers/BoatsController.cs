@@ -24,6 +24,7 @@ namespace Sb.Api.Controllers
         {
             _boatService = boatService;
             _emailService = emailService;
+            _repo = repo;
         }
 
         [HttpPost]
@@ -131,8 +132,9 @@ namespace Sb.Api.Controllers
         public async Task<IEnumerable<CrewMemberWithUserInfo>> GetCrew(string boatId)
         {
             Boat boat = await _boatService.GetBoatById(boatId);
+            var crewUserIds = boat.Crew.Select(c => c.UserId);
             IEnumerable<User> users = await _repo
-                .GetAsync<User>(u => boat.Crew.Any(cm => cm.UserId == u.Id));
+                .GetAsync<User>(u => crewUserIds.Contains(u.Id));
 
             List<CrewMemberWithUserInfo> crew = new();
             foreach (var user in users)
