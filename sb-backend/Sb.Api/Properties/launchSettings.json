@@ -11,16 +11,14 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "http://localhost:5000/swagger",
+      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:5000",
-      "dotnetRunMessages": "true"
+      }
     },
     "Docker": {
       "commandName": "Docker",
-      "publishAllPorts": true,
-      "useSSL": true
+      "environmentVariables": {}
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
