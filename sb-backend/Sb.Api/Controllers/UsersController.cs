@@ -16,6 +16,14 @@ namespace Sb.Api.Controllers
             _boatService = boatService;
         }
 
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<User>> GetUserById(
+            string userId,
+            [FromServices] IUserService userService)
+        {
+            return Ok(await userService.GetUserById(userId));
+        }
+
         [HttpGet("mates")]
         public async Task<ActionResult<IEnumerable<CrewMember>>> GetMates()
         {
@@ -40,5 +48,6 @@ namespace Sb.Api.Controllers
 
         private readonly IRepository _repo;
         private readonly BoatService _boatService;
+        private readonly IUserService _userService;
     }
 }

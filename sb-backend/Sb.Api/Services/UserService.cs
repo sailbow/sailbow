@@ -22,6 +22,14 @@ namespace Sb.Api.Services
             _tokenService = tokenService;
         }
 
+        public async Task<User> GetUserById(string userId)
+        {
+            Guard.Against.NullOrWhiteSpace(userId);
+            var user = await _repo.GetByIdAsync<User>(userId);
+            Guard.Against.EntityMissing(user, nameof(user));
+            return user;
+        }
+
         public async Task<JwtTokensResponse> CreateUserAsync(CreateUser user)
         {
             if (
