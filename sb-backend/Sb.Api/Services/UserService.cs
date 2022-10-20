@@ -11,14 +11,14 @@ namespace Sb.Api.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<User> _userRepo;
+        private readonly IRepository _repo;
         private readonly ITokenService _tokenService;
 
         public UserService(
-            IRepository<User> userRepo,
+            IRepository repo,
             ITokenService tokenService)
         {
-            _userRepo = userRepo;
+            _repo = repo;
             _tokenService = tokenService;
         }
 
@@ -32,10 +32,10 @@ namespace Sb.Api.Services
                 throw new ValidationException("Invalid email or passwords don't match");
             }
 
-            if (await _userRepo.FirstOrDefaultAsync(u => u.Email == user.Email) != null)
+            if (await _repo.FirstOrDefaultAsync<User>(u => u.Email == user.Email) != null)
                 throw new ValidationException("An account already exists with this email");
 
-            User u = await _userRepo.InsertAsync(new User
+            User u = await _repo.InsertAsync(new User
             {
                 Name = user.Name,
                 Email = user.Email,
@@ -51,7 +51,7 @@ namespace Sb.Api.Services
 
         public async Task<JwtTokensResponse> AuthenticateAsync(string email, string password)
         {
-            User u = await _userRepo.FirstOrDefaultAsync(u => u.Email == email);
+            User u = await _repo.FirstOrDefaultAsync<User>(u => u.Email == email);
             Guard.Against.EntityMissing(u, nameof(email));
             if (!BCrypt.Net.BCrypt.Verify(password, u.Hash)) throw new ValidationException("Invalid email or password");
             return new JwtTokensResponse

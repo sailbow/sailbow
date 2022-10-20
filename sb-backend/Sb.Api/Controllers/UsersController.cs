@@ -9,10 +9,10 @@ namespace Sb.Api.Controllers
     public class UsersController : ApiControllerBase
     {
         public UsersController(
-            IRepository<User> userRepo,
+            IRepository repo,
             BoatService boatService)
         {
-            _userRepo = userRepo;
+            _repo = repo;
             _boatService = boatService;
         }
 
@@ -26,19 +26,19 @@ namespace Sb.Api.Controllers
                     .Where(cm => cm.UserId != userId))
                 .Select(cm => cm.UserId);
 
-            var users = await _userRepo.GetAsync(u => mateUserIds.Contains(u.Id));
+            var users = await _repo.GetAsync<User>(u => mateUserIds.Contains(u.Id));
             return Ok(users);
         }
 
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<User>>> SearchUsers(string q)
         {
-            var searchResults = await _userRepo
-                .GetAsync(u => u.Email.Contains(q) || u.Name.Contains(q));
+            var searchResults = await _repo
+                .GetAsync<User>(u => u.Email.Contains(q) || u.Name.Contains(q));
             return Ok(searchResults);
         }
 
-        private readonly IRepository<User> _userRepo;
+        private readonly IRepository _repo;
         private readonly BoatService _boatService;
     }
 }

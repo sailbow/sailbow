@@ -16,22 +16,16 @@ namespace Sb.Api.Services
 {
     public class BoatService
     {
-        private readonly IRepository<Boat> _boatRepo;
-        private readonly IRepository<User> _userRepo;
-        private readonly IRepository<Invite> _inviteRepo;
+        private readonly IRepository _repo;
         private readonly HttpContext _context;
         private readonly IAuthorizationService _authService;
 
         public BoatService(
-            IRepository<Boat> boatRepo,
-            IRepository<User> userRepo,
-            IRepository<Invite> inviteRepo,
+            IRepository repo,
             IHttpContextAccessor contextAccessor,
             IAuthorizationService authService)
         {
-            _boatRepo = boatRepo;
-            _userRepo = userRepo;
-            _inviteRepo = inviteRepo;
+            _repo = repo;
             _context = contextAccessor.HttpContext;
             _authService = authService;
         }
@@ -39,7 +33,7 @@ namespace Sb.Api.Services
         public async Task<Boat> CreateBoat(Boat boat)
         {
             Guard.Against.Null(boat, nameof(boat));
-            Boat inserted = await _boatRepo.InsertAsync(boat);
+            Boat inserted = await _repo.InsertAsync(boat);
             return inserted;
         }
 
@@ -56,12 +50,12 @@ namespace Sb.Api.Services
 
         public async Task<IEnumerable<Boat>> GetBoats(string userId, GetBoatsRequest request = null)
         {
-            User user = await _userRepo.GetByIdAsync(userId);
+            User user = await _repo.GetByIdAsync<User>(userId);
             Guard.Against.EntityMissing(user, nameof(user));
 
             if (request != null)
             {
-                return await _boatRepo.GetPaginatedAsync(
+                return await _repo.GetPaginatedAsync<Boat>(
                     skip: request.Page,
                     take: request.PerPage,
                     predicate: b =>
@@ -69,7 +63,7 @@ namespace Sb.Api.Services
                         (string.IsNullOrWhiteSpace(request.Search) || b.Name.ToLower().Contains(request.Search.ToLower())));
             }
 
-            return await _boatRepo.GetAsync(b => b.Crew.Any(cm => cm.UserId == userId));
+            return await _repo.GetAsync<Boat>(b => b.Crew.Any(cm => cm.UserId == userId));
         }
 
         public async Task<Code> GenerateCodeInvite(string boatId, int? expiresUnix)
@@ -89,7 +83,7 @@ namespace Sb.Api.Services
                 ExpiresAt = offset.UtcDateTime
             };
             boat.Code = code;
-            await _boatRepo.UpdateAsync(boat);
+            await _repo.UpdateAsync(boat);
             return code;
         }
 
@@ -119,7 +113,7 @@ namespace Sb.Api.Services
                 Email = user.Email,
                 Role = Role.Sailor
             });
-            await _boatRepo.UpdateAsync(boat);
+            await _repo.UpdateAsync(boat);
             return boat;
         }
 
@@ -135,10 +129,10 @@ namespace Sb.Api.Services
 
             if (!boat.Crew.Any(member => member.UserId == crewMember.UserId))
             {
-                User user = await _userRepo.GetByIdAsync(crewMember.UserId);
+                User user = await _repo.GetByIdAsync<User>(crewMember.UserId);
                 Guard.Against.EntityMissing(user, nameof(user));
                 boat.Crew = boat.Crew.Append(crewMember);
-                await _boatRepo.UpdateAsync(boat);
+                await _repo.UpdateAsync(boat);
             }
             return boat;
         }
@@ -148,14 +142,14 @@ namespace Sb.Api.Services
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
             Guard.Against.NullOrWhiteSpace(userId, nameof(userId));
 
-            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Boat boat = await _repo.GetByIdAsync<Boat>(boatId);
             var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.CaptainPolicy);
             Guard.Against.Forbidden(authResult);
 
             if (boat != null)
             {
                 boat.Crew = boat.Crew.Where(cm => cm.UserId != userId);
-                await _boatRepo.UpdateAsync(boat);
+                await _repo.UpdateAsync(boat);
             }
         }
 
@@ -166,7 +160,7 @@ namespace Sb.Api.Services
             var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.EditBoatPolicy);
             Guard.Against.Forbidden(authResult);
 
-            var existingInvites = await _inviteRepo.GetAsync(i => i.BoatId == boatId);
+            var existingInvites = await _repo.GetAsync<Invite>(i => i.BoatId == boatId);
             var newInvites = invites
                 .Where((i) => !existingInvites.Any(ei => ei.BoatId == i.BoatId));
             List<Invite> created = new();
@@ -174,7 +168,7 @@ namespace Sb.Api.Services
             {
                 invite.InviterId = _context.GetUserFromClaims().Id;
                 invite.BoatId = boatId;
-                created.Add(await _inviteRepo.InsertAsync(invite));
+                created.Add(await _repo.InsertAsync(invite));
             }
 
             return created;
@@ -184,12 +178,12 @@ namespace Sb.Api.Services
         {
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
             Guard.Against.NullOrWhiteSpace(inviteId, nameof(inviteId));
-            Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
+            Invite invite = await _repo.GetByIdAsync<Invite>(inviteId);
             Guard.Against.EntityMissing(invite, nameof(invite));
-            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Boat boat = await _repo.GetByIdAsync<Boat>(boatId);
             Guard.Against.EntityMissing(boat, nameof(boat));
             CrewMember captain = boat.Crew.First(cm => cm.Role == Role.Captain);
-            User captainUserData = await _userRepo.GetByIdAsync(captain.UserId);
+            User captainUserData = await _repo.GetByIdAsync<User>(captain.UserId);
             return new InviteDetails
             {
                 Id = inviteId,
@@ -213,7 +207,7 @@ namespace Sb.Api.Services
             if (boat.Crew.Any(cm => cm.Email == email))
                 throw new ConflictException();
 
-            Invite invite = await _inviteRepo.GetByIdAsync(inviteId);
+            Invite invite = await _repo.GetByIdAsync<Invite>(inviteId);
             Guard.Against.EntityMissing(invite, nameof(invite));
             if (invite.Email != email) throw new ForbiddenResourceException();
             
@@ -225,20 +219,20 @@ namespace Sb.Api.Services
                 Email = email
             });
 
-            await _boatRepo.UpdateAsync(boat);
-            await _inviteRepo.DeleteAsync(invite);
+            await _repo.UpdateAsync(boat);
+            await _repo.DeleteAsync(invite);
         }
 
         public async Task<IEnumerable<Invite>> GetPendingInvites(string boatId)
         {
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
-            return await _inviteRepo.GetAsync(i => i.BoatId == boatId);
+            return await _repo.GetAsync<Invite>(i => i.BoatId == boatId);
         }
 
         private async Task<Boat> GetBoat(string boatId)
         {
             Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
-            Boat boat = await _boatRepo.GetByIdAsync(boatId);
+            Boat boat = await _repo.GetByIdAsync<Boat>(boatId);
             Guard.Against.EntityMissing(boat, nameof(boat));
             return boat;
         }

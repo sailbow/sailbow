@@ -1,6 +1,5 @@
 ﻿
 using System.Linq.Expressions;
-using System.Reflection;
 
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
@@ -10,10 +9,8 @@ using Sb.Data.Models;
 
 namespace Sb.Data.MongoDB
 {
-    public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
+    public class MongoRepository : IRepository
     {
-        public IMongoCollection<TEntity> Collection { get; private set; }
-
         public MongoRepository(MongoConfiguration config)
         {
             if (config is null 
@@ -36,17 +33,19 @@ namespace Sb.Data.MongoDB
                 filter: testc => true);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
+        public async Task<IEnumerable<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
+             where TEntity : EntityBase
         {
-            return await Connect()
+            return await Connect<TEntity>()
                 .AsQueryable()
                 .Where(predicate)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> GetPaginatedAsync(int skip, int take, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
+        public async Task<IEnumerable<TEntity>> GetPaginatedAsync<TEntity>(int skip, int take, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            return await Connect()
+            return await Connect<TEntity>()
                 .AsQueryable()
                 .Where(predicate)
                 .Skip(skip)
@@ -54,40 +53,47 @@ namespace Sb.Data.MongoDB
                 .ToListAsync();
         }
 
-        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
+        public async Task<TEntity> FirstOrDefaultAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
             var results = await GetAsync(predicate, cancellation);
             return results.FirstOrDefault();
         }
 
-        public Task<TEntity> GetByIdAsync(string id, CancellationToken cancellation = default)
+        public Task<TEntity> GetByIdAsync<TEntity>(string id, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            return FirstOrDefaultAsync(e => e.Id == id, cancellation);
+            return FirstOrDefaultAsync<TEntity>(e => e.Id == id, cancellation);
         }
 
-        public async Task<TEntity> InsertAsync(TEntity element, CancellationToken cancellation = default)
+        public async Task<TEntity> InsertAsync<TEntity>(TEntity element, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            await Connect().InsertOneAsync(element, null, cancellation);
+            await Connect<TEntity>().InsertOneAsync(element, null, cancellation);
             return element;
         }
 
-        public async Task InsertManyAsync(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
+        public async Task InsertManyAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            await Connect().InsertManyAsync(entities, cancellationToken: cancellation);
+            await Connect<TEntity>().InsertManyAsync(entities, cancellationToken: cancellation);
         }
 
-        public Task UpdateAsync(TEntity element, CancellationToken cancellation = default)
+        public Task UpdateAsync<TEntity>(TEntity element, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            return Connect()
+            return Connect<TEntity>()
                 .ReplaceOneAsync(e => e.Id == element.Id, element, cancellationToken: cancellation);
         }
 
-        public Task DeleteAsync(TEntity element, CancellationToken cancellation = default)
+        public Task DeleteAsync<TEntity>(TEntity element, CancellationToken cancellation = default)
+            where TEntity : EntityBase
         {
-            return Connect().DeleteOneAsync(e => e.Id == element.Id, cancellation);
+            return Connect<TEntity>().DeleteOneAsync(e => e.Id == element.Id, cancellation);
         }
 
-        private IMongoCollection<TEntity> Connect()
+        private IMongoCollection<TEntity> Connect<TEntity>()
+            where TEntity : EntityBase
         {
             var attributes = (PersistenceModelAttribute[])Attribute.GetCustomAttributes(typeof(TEntity), typeof(PersistenceModelAttribute));
             if (attributes.Length == 0)
