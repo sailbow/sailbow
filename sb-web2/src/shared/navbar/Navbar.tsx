@@ -11,6 +11,7 @@ import { Routes } from 'router/Router.Types';
 import { SbPlusIcon } from 'shared/icons/Icons';
 
 import './Navbar.scss';
+import { useSystem } from 'modules/system/System.Store';
 
 // enum LinkLabels {
 //     Boats = '/boats',
@@ -20,6 +21,7 @@ import './Navbar.scss';
 
 export const Navbar: FunctionComponent = () => {
     const [navbarBg, setNavbarBg] = useState<boolean>(false);
+    const [, { openCreateNav }] = useSystem();
 
     useEffect(() => {
         document.addEventListener('scroll', () => {
@@ -34,8 +36,6 @@ export const Navbar: FunctionComponent = () => {
     const onRoute = (path: string) => {
         if (window.location.pathname !== path) window.location.href = path;
     };
-
-    const [, { openCreateBoat }] = useBoat();
 
     // const getActiveState = (link: LinkLabels): 'solid' | 'ghost' => {
     //     const check = (currentLink: string) => {
@@ -91,7 +91,7 @@ export const Navbar: FunctionComponent = () => {
                 </Box>
             </HStack>
             <Flex alignItems="center" justifyContent="space-between" gap="4">
-                <Button rightIcon={<SbPlusIcon />} onClick={openCreateBoat} display={{ base: 'none', md: 'flex' }}>
+                <Button rightIcon={<SbPlusIcon />} onClick={openCreateNav} display={{ base: 'none', md: 'flex' }}>
                     Start Boat
                 </Button>
                 <Notifications display={{ base: 'none', md: 'block' }} />
@@ -103,7 +103,7 @@ export const Navbar: FunctionComponent = () => {
                     aria-label="add"
                     icon={<SbPlusIcon />}
                     display={{ base: 'flex', md: 'none' }}
-                    onClick={openCreateBoat}
+                    onClick={openCreateNav}
                 />
                 <Box mr="-3">
                     <Menu display={{ base: 'block', md: 'none' }} />

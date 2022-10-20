@@ -1,18 +1,24 @@
 import { ReactNode, createContext, useReducer, useContext, Dispatch, FC } from 'react';
 
-import { SystemState } from './System.Types';
+import { CreateNavMode, SystemState } from './System.Types';
 
 export enum SystemActionType {
     SetPickerNav,
+    SetCreateNav,
 }
 
 interface PayloadSetPickerNav {
     open: boolean;
 }
 
+interface PayloadSetCreateNav {
+    open: boolean;
+    mode: CreateNavMode;
+}
+
 interface SystemAction {
     type: SystemActionType;
-    payload?: PayloadSetPickerNav;
+    payload?: PayloadSetPickerNav | PayloadSetCreateNav;
 }
 
 interface SystemProviderProps {
@@ -21,6 +27,8 @@ interface SystemProviderProps {
 
 export const initialSystemState: SystemState = {
     pickerOpen: false,
+    createNavMode: CreateNavMode.Create,
+    createNavOpen: false,
 };
 
 const SystemStateContext = createContext<SystemState | undefined>(undefined);
@@ -34,6 +42,17 @@ const systemReducer = (state: SystemState, action: SystemAction): SystemState =>
                 pickerOpen: (action.payload as PayloadSetPickerNav).open,
             };
         }
+
+        case SystemActionType.SetCreateNav: {
+            const { mode, open } = action.payload as PayloadSetCreateNav;
+
+            return {
+                ...state,
+                createNavMode: mode,
+                createNavOpen: open,
+            };
+        }
+
         default: {
             throw new Error(`Invalid action -- ${action.type}`);
         }
@@ -73,6 +92,10 @@ export const useSystemDispatch = (): Dispatch<SystemAction> => {
 interface SystemActionApis {
     openPicker: () => void;
     closePicker: () => void;
+    openCreateNav: () => void;
+    closeCreateNav: () => void;
+    openEditNav: () => void;
+    closeEditNav: () => void;
 }
 
 export const useSystem = (): [SystemState, SystemActionApis] => {
@@ -89,6 +112,30 @@ export const useSystem = (): [SystemState, SystemActionApis] => {
             dispatch({
                 type: SystemActionType.SetPickerNav,
                 payload: { open: false },
+            });
+        },
+        openCreateNav: () => {
+            dispatch({
+                type: SystemActionType.SetCreateNav,
+                payload: { open: true, mode: CreateNavMode.Create },
+            });
+        },
+        closeCreateNav: () => {
+            dispatch({
+                type: SystemActionType.SetCreateNav,
+                payload: { open: false, mode: CreateNavMode.Create },
+            });
+        },
+        openEditNav: () => {
+            dispatch({
+                type: SystemActionType.SetCreateNav,
+                payload: { open: true, mode: CreateNavMode.Edit },
+            });
+        },
+        closeEditNav: () => {
+            dispatch({
+                type: SystemActionType.SetCreateNav,
+                payload: { open: false, mode: CreateNavMode.Edit },
             });
         },
     };

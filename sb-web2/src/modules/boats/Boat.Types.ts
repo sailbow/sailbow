@@ -42,7 +42,8 @@ export enum ModuleMode {
     Edit,
 }
 
-export interface CreateBoat extends Omit<Boat, 'id' | 'anchors'> {}
+export interface CreateBoat extends Omit<Boat, 'id' | 'modules'> {}
+export interface EditBoat extends Omit<Boat, 'modules'> {}
 
 export interface Photo {
     src: string;
@@ -108,5 +109,4 @@ export interface BoatState {
         get: boolean;
         getAll: boolean;
     };
-    createOpen: boolean;
 }

@@ -15,7 +15,6 @@ import {
 } from 'modules/boats/Boat.Types';
 
 export enum BoatActionType {
-    SetCreateNav,
     SetError,
     SetActiveBoat,
     SetCreateLoading,
@@ -27,8 +26,6 @@ export enum BoatActionType {
     SetModuleMode,
 }
 
-interface PayloadCreateBoat extends CreateBoat {}
-
 interface PayloadSetActiveBoat {
     boat?: Boat;
 }
@@ -39,10 +36,6 @@ interface PayloadLoading {
 
 interface PayloadSetAllBoats {
     boats: Boat[];
-}
-
-interface PayloadSetCreateNav {
-    open: boolean;
 }
 
 interface PayloadError {
@@ -66,11 +59,9 @@ interface PayloadSetAllModules {
 interface BoatAction {
     type: BoatActionType;
     payload:
-        | PayloadCreateBoat
         | PayloadSetActiveBoat
         | PayloadError
         | PayloadLoading
-        | PayloadSetCreateNav
         | PayloadSetAllBoats
         | PayloadSetModule
         | PayloadSetModuleMode
@@ -88,7 +79,6 @@ export const initialBoatState: BoatState = {
         get: false,
         getAll: false,
     },
-    createOpen: false,
     boats: [],
 };
 
@@ -134,12 +124,7 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
 
             return nextState;
         }
-        case BoatActionType.SetCreateNav: {
-            const payload = action.payload as PayloadSetCreateNav;
-            const nextState: BoatState = { ...boatState, createOpen: payload.open };
 
-            return nextState;
-        }
         case BoatActionType.SetAllBoats: {
             const payload = action.payload as PayloadSetAllBoats;
             const nextState: BoatState = { ...boatState, boats: payload.boats };
@@ -229,9 +214,7 @@ const useBoatDispatch = (): Dispatch<BoatAction> => {
 };
 
 interface BoatActionApis {
-    openCreateBoat: () => void;
-    closeCreateBoat: () => void;
-    createBoat: (boat: PayloadCreateBoat) => Promise<Boat | null>;
+    createBoat: (boat: CreateBoat) => Promise<Boat | null>;
     getImages: (value: string, page: number) => Promise<Photo[]>;
     getBoat: (boatId: string) => Promise<Boat | null>;
     getBoats: () => Promise<Boat[] | null>;
@@ -250,12 +233,6 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
     const state = useBoatState();
 
     const actionApis: BoatActionApis = {
-        openCreateBoat: () => {
-            dispatch({ type: BoatActionType.SetCreateNav, payload: { open: true } });
-        },
-        closeCreateBoat: () => {
-            dispatch({ type: BoatActionType.SetCreateNav, payload: { open: false } });
-        },
         createBoat: async (boat: CreateBoat) => {
             dispatch({ type: BoatActionType.SetCreateLoading, payload: { loading: true } });
             try {
