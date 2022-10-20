@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using System.Xml.Linq;
-
-using Ardalis.GuardClauses;
+﻿using Ardalis.GuardClauses;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;

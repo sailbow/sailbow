@@ -13,7 +13,7 @@ namespace Sb.Data.MongoDB
     {
         public MongoRepository(MongoConfiguration config)
         {
-            if (config is null 
+            if (config is null
                 || string.IsNullOrWhiteSpace(config.ConnectionString)
                 || string.IsNullOrWhiteSpace(config.DatabaseName))
             {

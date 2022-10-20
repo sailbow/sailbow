@@ -69,7 +69,7 @@ namespace Sb.Api.Services
         public async Task RevokeAllTokens(string userId)
         {
             IEnumerable<TokenBase> tokens = await _repo.GetAsync<TokenBase>(t => t.UserId == userId);
-            foreach(var token in tokens)
+            foreach (var token in tokens)
             {
                 await _repo.DeleteAsync(token);
             }

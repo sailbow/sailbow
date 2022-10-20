@@ -15,5 +15,5 @@
 
     internal class ForbiddenResourceException : ValidationException { }
 
-    internal class ConflictException: ValidationException { }
+    internal class ConflictException : ValidationException { }
 }

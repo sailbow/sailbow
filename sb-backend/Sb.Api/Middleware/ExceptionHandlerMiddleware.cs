@@ -1,7 +1,5 @@
 ﻿using System.Net;
 
-using Newtonsoft.Json;
-
 using Sb.Api.Validation;
 
 namespace Sb.Api.Middleware

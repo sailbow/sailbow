@@ -1,5 +1,4 @@
 ﻿using Sb.Api.Models;
-using Sb.Data.Models;
 
 namespace Sb.Api.Services
 {

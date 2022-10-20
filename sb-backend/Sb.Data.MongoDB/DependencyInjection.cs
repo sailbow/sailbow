@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
             MongoConfiguration config = new();
             configureAction(config);
             services.AddSingleton(config);
-            services.AddTransient<IRepository,MongoRepository>();
+            services.AddTransient<IRepository, MongoRepository>();
             return services;
         }
     }

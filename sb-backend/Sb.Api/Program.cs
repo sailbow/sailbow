@@ -56,9 +56,9 @@ services
     .AddSingleton<OAuth2ClientFactory>()
     .AddTransient<BoatService>()
     .AddTransient<EmailService>()
-    .AddTransient<ITokenService,TokenService>()
+    .AddTransient<ITokenService, TokenService>()
     .AddTransient<ValidateAccessTokenMiddleware>()
-    .AddTransient<IUserService,UserService>()
+    .AddTransient<IUserService, UserService>()
     .AddAuthorization(opts =>
     {
         opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>

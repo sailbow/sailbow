@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Linq.Expressions;
-
-using Ardalis.GuardClauses;
+﻿using Ardalis.GuardClauses;
 
 using Microsoft.AspNetCore.Authorization;
 
@@ -210,7 +207,7 @@ namespace Sb.Api.Services
             Invite invite = await _repo.GetByIdAsync<Invite>(inviteId);
             Guard.Against.EntityMissing(invite, nameof(invite));
             if (invite.Email != email) throw new ForbiddenResourceException();
-            
+
             boat.Crew = boat.Crew.Append(new CrewMember
             {
                 UserId = _context.GetClaim(CustomClaimTypes.Id),
