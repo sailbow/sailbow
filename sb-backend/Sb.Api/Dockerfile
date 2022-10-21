@@ -7,13 +7,13 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Sb.Api/Sb.Api.csproj", "Sb.Api/"]
-COPY ["lib/Sb.Email/Sb.Email.csproj", "lib/Sb.Email/"]
-COPY ["lib/Sb.OAuth2/Sb.OAuth2.csproj", "lib/Sb.OAuth2/"]
-COPY ["lib/Sb.HttpClients/Sb.HttpClients.csproj", "lib/Sb.HttpClients/"]
-COPY ["lib/Sb.Data/Sb.Data.csproj", "lib/Sb.Data/"]
-COPY ["lib/Sb.Data.MongoDB/Sb.Data.MongoDB.csproj", "lib/Sb.Data.MongoDB/"]
-RUN dotnet restore "Sb.Api/Sb.Api.csproj"
+COPY ["Sb.Api.csproj", "Sb.Api/"]
+COPY ["../lib/Sb.Email/Sb.Email.csproj", "lib/Sb.Email/"]
+COPY ["../lib/Sb.OAuth2/Sb.OAuth2.csproj", "lib/Sb.OAuth2/"]
+COPY ["../lib/Sb.HttpClients/Sb.HttpClients.csproj", "lib/Sb.HttpClients/"]
+COPY ["../lib/Sb.Data/Sb.Data.csproj", "lib/Sb.Data/"]
+COPY ["../lib/Sb.Data.MongoDB/Sb.Data.MongoDB.csproj", "lib/Sb.Data.MongoDB/"]
+RUN dotnet restore "Sb.Api.csproj"
 COPY . .
 WORKDIR "/src/Sb.Api"
 RUN dotnet build "Sb.Api.csproj" -c Release -o /app/build
