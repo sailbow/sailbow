@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{224B658B-2FCE-4175-B935-6247458CB306}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{7BEB4C74-1D76-4E49-918E-94AEB2AF61F0}"
@@ -20,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.Email", "lib\Sb.Email\Sb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.HttpClients", "lib\Sb.HttpClients\Sb.HttpClients.csproj", "{277C71BF-DD68-4CF4-830A-B0A3F3445AE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sb.Data.MongoDB", "Sb.Data.MongoDB\Sb.Data.MongoDB.csproj", "{3279B384-9CD0-48C5-BC1A-2A097A5EBA74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sb.Data.MongoDB", "Sb.Data.MongoDB\Sb.Data.MongoDB.csproj", "{3279B384-9CD0-48C5-BC1A-2A097A5EBA74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
