@@ -10,6 +10,7 @@ import { SbSearchIcon } from 'shared/icons/Icons';
 import { UserCard } from 'modules/boats/common/user-card/UserCard';
 import { Crew, Role } from 'modules/boats/Boat.Types';
 import { useDebounce } from 'util/hooks/Input';
+import { searchUsers, User } from 'shared/user/User';
 
 const FormSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -99,30 +100,35 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
         return inputText ? null : '';
     };
 
-    const getCrew = async (query: string) => {
+    const getCrew = async (query: string): Promise<any> => {
         setLoading(true);
 
         return new Promise((resolve) => {
             debounce(query, async (q) => {
-                setTimeout(() => resolve(''), 1000);
-                // const data = await getCrewByQuery(q);
+                // setTimeout(() => resolve(''), 1000);
+                const data = await searchUsers(q);
 
-                // setLoading(false);
+                setLoading(false);
 
-                // if (!data) {
-                //     return [];
-                // }
+                if (!data) {
+                    return [];
+                }
 
-                // const list: CrewListItem[] = [];
+                const list: CrewListItem[] = [];
 
-                // data.forEach((user: Crew) => {
-                //     list.push({
-                //         label: user.name,
-                //         value: user,
-                //     });
-                // });
+                data.forEach((user: User) => {
+                    list.push({
+                        label: user.name,
+                        value: {
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            role: Role.Sailor,
+                        },
+                    });
+                });
 
-                // resolve(list);
+                resolve(list);
             });
         });
     };
@@ -134,8 +140,8 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
                     <SbSearchIcon />
                 </InputLeftAddon>
                 <AsyncSelect
-                    cacheOptions
                     classNamePrefix="sb-select"
+                    loadOptions={getCrew}
                     blurInputOnSelect
                     placeholder="Type name or email..."
                     styles={customStyles}
@@ -150,7 +156,7 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
                     value=""
                     isLoading={loading}
                     onChange={onCrewSelect}
-                    noOptionsMessage={({ inputValue }) => showNoOpt(inputValue)} // eslint-disable-line
+                    noOptionsMessage={({ inputValue }) => (!inputValue ? null : 'No results found')}
                 />
             </InputGroup>
         </Stack>

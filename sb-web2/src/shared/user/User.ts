@@ -73,9 +73,10 @@ export const getUser = async (): Promise<User> => {
 
 export const searchUsers = async (query: string): Promise<User[]> => {
     const { data }: AxiosResponse<any> = await Http(ProfileEndpoints.Search(query));
-    console.log(data);
+    
     return data;
 };
+
 // export const updateUser = async (updatedData: BasicInfoFormState) => {
 //     const { data }: AxiosResponse<User> = await Http(ProfileEndpoints.Update<BasicInfoFormState>(updatedData));
 

@@ -40,7 +40,7 @@ export const BoatCreate: FunctionComponent = () => {
     }, [createNavOpen]);
 
     useEffect(() => {
-        if (activeBoat && createNavMode === CreateNavMode.Edit) {
+        if (activeBoat && createNavMode === CreateNavMode.Edit && createNavOpen) {
             setBoatForm({
                 ...boatForm,
                 id: activeBoat.id,
@@ -49,13 +49,13 @@ export const BoatCreate: FunctionComponent = () => {
                 banner: activeBoat.banner,
                 crew: activeBoat.crew,
             });
-        } else if (user && createNavMode === CreateNavMode.Create) {
+        } else if (user && createNavMode === CreateNavMode.Create && createNavOpen) {
             setBoatForm({
                 ...boatForm,
                 crew: [{ name: user.name, email: user.email, role: Role.Captain, info: '', id: user.id }],
             });
         }
-    }, [activeBoat, createNavMode, user]); // eslint-disable-line
+    }, [activeBoat, createNavMode, user, createNavOpen]); // eslint-disable-line
 
     const onAddCrewMember = (crew: Crew) => {
         setBoatForm({
