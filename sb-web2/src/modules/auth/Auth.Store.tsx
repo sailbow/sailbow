@@ -144,9 +144,12 @@ export const useAuthStore = (): [AuthStoreState, AuthStoreActionApis] => {
         },
         authorize: async (provider, code) => {
             try {
-                const data = await authorize(provider, code);
+                const {
+                    accessToken: { value: atValue },
+                    refreshToken: { value: rtValue },
+                } = await authorize(provider, code);
 
-                setHeadersToLocalStorage(data.accessToken, data.expiredAt);
+                setHeadersToLocalStorage(atValue, rtValue);
                 return true;
             } catch (error: any) {
                 showErrorToast(error.response.data.message);

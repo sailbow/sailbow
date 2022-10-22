@@ -24,5 +24,5 @@ export const resetLocalStorage = (): void => {
 };
 
 export const Http = axios.create({
-    baseURL: process.env.REACT_APP_BASE_URL,
+    baseURL: 'http://localhost:5000',
 });

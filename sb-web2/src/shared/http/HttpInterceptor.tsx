@@ -49,8 +49,11 @@ export const HttpInterceptor: FunctionComponent = () => {
 
                             const response = Http(AuthEndpoints.Refresh()).then(
                                 async ({ data }: AxiosResponse<RedirectResponse>) => {
-                                    const { accessToken, expiredAt } = data;
-                                    setHeadersToLocalStorage(accessToken, expiredAt);
+                                    const {
+                                        accessToken: { value: atValue },
+                                        refreshToken: { value: rtValue },
+                                    } = data;
+                                    setHeadersToLocalStorage(atValue, rtValue);
                                     originalRequest.headers = {
                                         Authorization: `Bearer ${LS.getItem(LocalStorageKeys.AT) || ''}`,
                                     };

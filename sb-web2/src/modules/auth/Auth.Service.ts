@@ -14,8 +14,12 @@ export const ProviderToUriMapper: Record<string, string> = {
 };
 
 export interface RedirectResponse {
-    accessToken: string;
-    expiredAt: string;
+    accessToken: {
+        value: string;
+    };
+    refreshToken: {
+        value: string;
+    };
 }
 
 type AuthEndpointsLabels = 'ProviderLogin' | 'Authorize' | 'Refresh' | 'Logout';
@@ -47,7 +51,7 @@ export const providerLogin = async (provider: Provider, state: string): Promise<
             redirectUri: encodeURI(ProviderToUriMapper[provider]),
         },
     });
-    
+
     return data;
 };
 

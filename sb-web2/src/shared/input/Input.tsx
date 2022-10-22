@@ -84,7 +84,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                         pl={leftIcon ? '24px' : '0'}
                         {...field}
                         {...props}
-                        borderColor={error ? 'brand.error' : 'brand.dark'}
+                        borderColor={error ? 'brand.error' : 'inherit'}
                     />
                     {loading && (
                         <InputRightElement color="brand.error">
@@ -138,7 +138,7 @@ export const TextArea: FunctionComponent<TextareaProps> = ({
                     {...props}
                     className="sb-input"
                     borderRadius="0"
-                    borderColor={error ? 'brand.error' : 'brand.dark'}
+                    borderColor={error ? 'brand.error' : 'inherit'}
                 />
                 {error ? (
                     <Tooltip label={errorLabel}>
