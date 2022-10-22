@@ -21,7 +21,7 @@ export const BoatModuleManifest: FC<Props> = ({ boat }) => {
             className="sb-boat-module-manifest"
         >
             <InfoManifest data={boat} />
-            <CrewManifest data={boat} />
+            <CrewManifest boatId={boat.id} />
             {Object.values(boat.modules).map((module) => {
                 const Module = ModulesMapper[module.name];
 

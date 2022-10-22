@@ -4,7 +4,7 @@ import { Boat, CreateBoat, Crew, Photo } from 'modules/boats/Boat.Types';
 import { Http } from 'shared/http/Http';
 import { EndpointFunction } from 'shared/http/Endpoints';
 
-type BoatEndpointLabels = 'Create' | 'GetAll' | 'Get';
+type BoatEndpointLabels = 'Create' | 'GetAll' | 'Get' | 'GetCrew';
 export const BoatEndpoints: Record<BoatEndpointLabels, EndpointFunction> = {
     GetAll: () => ({
         method: 'GET',
@@ -17,6 +17,10 @@ export const BoatEndpoints: Record<BoatEndpointLabels, EndpointFunction> = {
     Get: (boatId) => ({
         method: 'GET',
         url: `api/boats/${boatId}`,
+    }),
+    GetCrew: (boatId) => ({
+        method: 'GET',
+        url: `api/boats/${boatId}/crew`,
     }),
 };
 
@@ -75,6 +79,12 @@ export const getBoat = async (boatId: string): Promise<Boat> => {
 
 export const getAllBoats = async (): Promise<Boat[]> => {
     const { data }: AxiosResponse<Boat[]> = await Http(BoatEndpoints.GetAll());
+
+    return data;
+};
+
+export const getCrew = async (boatId: string): Promise<Crew[]> => {
+    const { data }: AxiosResponse<Crew[]> = await Http(BoatEndpoints.GetCrew(boatId));
 
     return data;
 };
