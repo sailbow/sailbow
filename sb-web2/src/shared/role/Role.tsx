@@ -3,7 +3,7 @@ import { FunctionComponent, useState } from 'react';
 import { Flex, Icon, Text } from '@chakra-ui/react';
 import Select, { components } from 'react-select';
 
-import { Crew, Role, RoleLabel } from 'modules/boats/Boat.Types';
+import { CrewMember, Role, RoleLabel } from 'modules/boats/Boat.Types';
 import { SbCheckIcon } from 'shared/icons/Icons';
 import { customStyles } from 'shared/select/SelectStyles';
 
@@ -28,7 +28,7 @@ export const GatherCrewRoleOptions = [
 ];
 
 interface Props {
-    user: Crew;
+    user: CrewMember;
 }
 
 export const RoleSelect: FunctionComponent<Props> = ({ user }) => {
@@ -37,7 +37,7 @@ export const RoleSelect: FunctionComponent<Props> = ({ user }) => {
         value: user.role,
     });
 
-    const onRoleChange = (role: string, data: Crew) => {
+    const onRoleChange = (role: string, data: CrewMember) => {
         switch (role) {
             case Role.Assistant: {
                 console.log('change to assistant', data);

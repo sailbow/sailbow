@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 
-import { Boat, CreateBoat, Crew, Photo } from 'modules/boats/Boat.Types';
+import { Boat, CreateBoat, CrewMember, Photo } from 'modules/boats/Boat.Types';
 import { Http } from 'shared/http/Http';
 import { EndpointFunction } from 'shared/http/Endpoints';
 
@@ -83,8 +83,8 @@ export const getAllBoats = async (): Promise<Boat[]> => {
     return data;
 };
 
-export const getCrew = async (boatId: string): Promise<Crew[]> => {
-    const { data }: AxiosResponse<Crew[]> = await Http(BoatEndpoints.GetCrew(boatId));
+export const getCrew = async (boatId: string): Promise<CrewMember[]> => {
+    const { data }: AxiosResponse<CrewMember[]> = await Http(BoatEndpoints.GetCrew(boatId));
 
     return data;
 };

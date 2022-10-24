@@ -1,12 +1,12 @@
 import { FunctionComponent } from 'react';
 import { Avatar, Box, Flex, HStack, IconButton, Text } from '@chakra-ui/react';
 
-import { Crew, Role } from 'modules/boats/Boat.Types';
+import { CrewMember, Role } from 'modules/boats/Boat.Types';
 import { SbDeleteIcon } from 'shared/icons/Icons';
 import { RoleSelect } from 'shared/role/Role';
 
 interface Props {
-    user: Crew;
+    user: CrewMember;
     actions?: boolean;
     onDelete?: ((email: string) => void) | null;
 }

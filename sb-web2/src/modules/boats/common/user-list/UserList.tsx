@@ -3,10 +3,10 @@ import React, { FunctionComponent } from 'react';
 import { Flex, VStack } from '@chakra-ui/react';
 
 import { UserCard } from 'modules/boats/common/user-card/UserCard';
-import { Crew } from 'modules/boats/Boat.Types';
+import { CrewMember } from 'modules/boats/Boat.Types';
 
 interface Props {
-    crew: Crew[];
+    crew: CrewMember[];
     actions?: boolean;
     onDelete?: ((email: string) => void) | null;
 }

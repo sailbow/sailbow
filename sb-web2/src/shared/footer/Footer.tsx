@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 import { Box, Flex, Heading, Stack, StackDivider, Text, Link, HStack, IconButton, Tooltip } from '@chakra-ui/react';
 
 import { ReactComponent as IconLogoType } from 'assets/icon-logo-type.svg';
-import { SingleSelect } from 'shared/select/Select';
+// import { SingleSelect } from 'shared/select/Select';
 import { Subscribe } from 'shared/footer/Subscribe';
 import { SbFacebookIcon, SbInstagramIcon, SbGitHubIcon } from 'shared/icons/Icons';
 import { Routes } from 'router/Router.Types';
@@ -108,14 +108,14 @@ export const Footer: FunctionComponent = () => {
                             <Text pr="2" fontWeight="normal">
                                 Language & Region:{' '}
                             </Text>
-                            <SingleSelect
+                            {/* <SingleSelect
                                 isSearchable={false}
                                 options={Languages}
                                 defaultValue={Languages[0]}
                                 onChange={(e: any) => {
                                     console.log('Language Selected', e.label);
                                 }}
-                            />
+                            /> */}
                         </Flex>
                         <Flex alignItems="center" fontSize="sm" pl={{ base: '0', md: '2' }}>
                             <Text pr="2" fontWeight="normal">

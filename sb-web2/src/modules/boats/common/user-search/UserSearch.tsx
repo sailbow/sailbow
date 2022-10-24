@@ -8,9 +8,10 @@ import * as Yup from 'yup';
 import { customStyles } from 'modules/boats/common/user-search/UserSearchSelectStyles';
 import { SbSearchIcon } from 'shared/icons/Icons';
 import { UserCard } from 'modules/boats/common/user-card/UserCard';
-import { Crew, Role } from 'modules/boats/Boat.Types';
+import { CrewMember, Role } from 'modules/boats/Boat.Types';
 import { useDebounce } from 'util/hooks/Input';
 import { searchUsers, User } from 'shared/user/User';
+import { CustomSelect } from 'shared/select/Select';
 
 const FormSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -18,17 +19,18 @@ const FormSchema = Yup.object().shape({
 
 interface CrewListItem {
     label: string;
-    value: Crew;
+    value: string;
 }
 
 interface Props {
-    onChange: (crew: Crew) => void;
+    onChange: (crew: CrewMember) => void;
 }
 
 export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
     // const [, { getCrewByQuery }] = useBoat();
     const [inputText, setInputText] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const [crew, setCrew] = useState<CrewListItem[]>([]);
     const [debounce] = useDebounce();
 
     const onCrewSelect = (e: any) => {
@@ -103,43 +105,45 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
     const getCrew = async (query: string): Promise<any> => {
         setLoading(true);
 
-        return new Promise((resolve) => {
-            debounce(query, async (q) => {
-                // setTimeout(() => resolve(''), 1000);
-                const data = await searchUsers(q);
+        // return new Promise((resolve) => {
+        //     debounce(query, async (q) => {
+        //         // setTimeout(() => resolve(''), 1000);
+        //         const data = await searchUsers(q);
 
-                setLoading(false);
+        //         setLoading(false);
 
-                if (!data) {
-                    return [];
-                }
+        //         if (!data) {
+        //             return [];
+        //         }
 
-                const list: CrewListItem[] = [];
+        //         const list: CrewListItem[] = [];
 
-                data.forEach((user: User) => {
-                    list.push({
-                        label: user.name,
-                        value: {
-                            id: user.id,
-                            name: user.name,
-                            email: user.email,
-                            role: Role.Sailor,
-                        },
-                    });
-                });
+        //         data.forEach((user: User) => {
+        //             list.push({
+        //                 label: user.name,
+        //                 value: {
+        //                     id: user.id,
+        //                     // name: user.name,
+        //                     // email: user.email,
+        //                     // role: Role.Sailor,
+        //                 },
+        //             });
+        //         });
 
-                resolve(list);
-            });
-        });
+        //         resolve(list);
+        //     });
+        // });
     };
 
     return (
         <Stack spacing="4" className="sb-user-search">
             <InputGroup variant="brand" alignItems="center">
-                <InputLeftAddon pl="0" position="absolute">
+                <InputLeftAddon pl="0" position="absolute" top='6px'>
                     <SbSearchIcon />
                 </InputLeftAddon>
-                <AsyncSelect
+                <CustomSelect options={crew} isLoading={loading} />
+
+                {/* <AsyncSelect
                     classNamePrefix="sb-select"
                     loadOptions={getCrew}
                     blurInputOnSelect
@@ -157,7 +161,7 @@ export const UserSearch: FunctionComponent<Props> = ({ onChange }) => {
                     isLoading={loading}
                     onChange={onCrewSelect}
                     noOptionsMessage={({ inputValue }) => (!inputValue ? null : 'No results found')}
-                />
+                /> */}
             </InputGroup>
         </Stack>
     );

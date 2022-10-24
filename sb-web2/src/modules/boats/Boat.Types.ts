@@ -51,7 +51,7 @@ export interface Photo {
     height: number;
 }
 
-export interface Crew extends Pick<User, 'id' | 'email' | 'name'> {
+export interface CrewMember extends Pick<User, 'id' | 'email' | 'name'> {
     role: Role;
     info?: string;
 }
@@ -96,7 +96,7 @@ export interface Boat {
     name: string;
     description?: string;
     banner: BannerState;
-    crew: Crew[];
+    crew: CrewMember[];
     modules: ModuleExtended<any>;
 }
 

@@ -4,8 +4,8 @@ import { Box, Text, Button, Stack } from '@chakra-ui/react';
 
 import { useAuthStore } from 'modules/auth/Auth.Store';
 import { useBoat } from 'modules/boats/Boat.Store';
-import { BannerState, BannerType, CreateBoat, Crew, EditBoat, Role } from 'modules/boats/Boat.Types';
-import { BoatBanner, UserList, UserSearch } from 'modules/boats/common';
+import { BannerState, BannerType, CreateBoat, EditBoat, Role } from 'modules/boats/Boat.Types';
+import { BoatBanner } from 'modules/boats/common';
 import { useSystem } from 'modules/system/System.Store';
 import { CreateNavMode } from 'modules/system/System.Types';
 import { Input, TextArea } from 'shared/input/Input';
@@ -56,21 +56,6 @@ export const BoatCreate: FunctionComponent = () => {
             });
         }
     }, [activeBoat, createNavMode, user, createNavOpen]); // eslint-disable-line
-
-    const onAddCrewMember = (crew: Crew) => {
-        setBoatForm({
-            ...boatForm,
-            crew: [...boatForm.crew, { ...crew }],
-        });
-    };
-
-    const onRemoveCrewMember = (email: string) => {
-        const updatedCrewList = boatForm.crew.filter((crew: Crew) => crew.email !== email);
-        setBoatForm({
-            ...boatForm,
-            crew: [...updatedCrewList],
-        });
-    };
 
     const onFormDetailsChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setBoatForm({
@@ -148,17 +133,6 @@ export const BoatCreate: FunctionComponent = () => {
                     <Text fontWeight="normal" textAlign="right" fontSize="xs">
                         {boatForm.description?.length}/300
                     </Text>
-                </Box>
-                <Box className="create-boat-gather-crew">
-                    <Text fontSize="sm" fontWeight="semibold" color="brand.secondary" pb="1">
-                        Invite Crew
-                    </Text>
-
-                    <UserSearch onChange={onAddCrewMember} />
-
-                    <Box mt="4">
-                        <UserList actions crew={boatForm.crew} onDelete={onRemoveCrewMember} />
-                    </Box>
                 </Box>
             </Stack>
         </Drawer>

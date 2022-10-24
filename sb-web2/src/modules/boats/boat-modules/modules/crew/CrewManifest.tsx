@@ -4,7 +4,7 @@ import { Button, Flex } from '@chakra-ui/react';
 
 import { BoatManifest } from 'modules/boats/common/boat-manifest/BoatManifest';
 import { SbInfoIcon, SbPlusIcon } from 'shared/icons/Icons';
-import { Boat, Crew } from 'modules/boats/Boat.Types';
+import { CrewMember } from 'modules/boats/Boat.Types';
 import { CrewGroup } from 'shared/crew/crew-group/CrewGroup';
 import { getCrew } from 'modules/boats/Boat.Service';
 
@@ -13,11 +13,12 @@ interface Props {
 }
 
 export const CrewManifest: FC<Props> = ({ boatId }) => {
-    const [data, setData] = useState<Crew[]>([]);
+    const [data, setData] = useState<CrewMember[]>([]);
 
     useEffect(() => {
         (async () => {
             const response = await getCrew(boatId);
+
             setData(response);
         })();
     }, [boatId]);
