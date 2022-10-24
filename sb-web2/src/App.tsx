@@ -8,7 +8,7 @@ import { BoatProvider } from 'modules/boats/Boat.Store';
 import { SystemProvider } from 'modules/system/System.Store';
 import { PrivateRouter, PublicRouter, WhitelistedRouter } from 'router/Router';
 import { WhitelistedRoutes } from 'router/Router.Types';
-import { HttpInterceptor } from 'shared/http/HttpInterceptor';
+import { HttpInterceptor } from 'util/http/HttpInterceptor';
 
 import './App.scss';
 

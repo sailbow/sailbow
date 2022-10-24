@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios';
 
 import { Boat, CreateBoat, CrewMember, Photo } from 'modules/boats/Boat.Types';
-import { Http } from 'shared/http/Http';
-import { EndpointFunction } from 'shared/http/Endpoints';
+import { Http } from 'util/http/Http';
+import { EndpointFunction } from 'util/http/Endpoints';
 
 type BoatEndpointLabels = 'Create' | 'GetAll' | 'Get' | 'GetCrew';
 export const BoatEndpoints: Record<BoatEndpointLabels, EndpointFunction> = {

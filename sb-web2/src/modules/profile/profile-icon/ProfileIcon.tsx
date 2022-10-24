@@ -5,7 +5,7 @@ import { Avatar, Box, Menu, MenuButton, MenuItem, MenuGroup, MenuDivider, MenuLi
 import { AuthEndpoints } from 'modules/auth/Auth.Service';
 import { useAuthStore } from 'modules/auth/Auth.Store';
 import { Routes } from 'router/Router.Types';
-import { Http, resetLocalStorage } from 'shared/http/Http';
+import { Http, resetLocalStorage } from 'util/http/Http';
 import {
     SbQuestionIcon,
     SbPrivacyIcon,

@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useReducer, useContext, Dispatch, FC, useEffect } from 'react';
 
-import { resetLocalStorage, setHeadersToLocalStorage } from 'shared/http/Http';
+import { resetLocalStorage, setHeadersToLocalStorage } from 'util/http/Http';
 import { PageSpinner } from 'shared/page-spinner/PageSpinner';
 import { showErrorToast } from 'shared/toast/Toast';
 import { User, getUser } from 'shared/user/User';

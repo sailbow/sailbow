@@ -29,7 +29,7 @@ export const Drawer: FC<Props> = ({ children, title, extraHeaderButtons, footer,
             <DrawerContent>
                 <DrawerHeader>
                     <Flex alignItems="center" justifyContent="space-between">
-                        <Heading fontSize="2xl">{title}</Heading>
+                        <Heading fontSize="xl">{title}</Heading>
                         <Flex>
                             {extraHeaderButtons}
                             <IconButton

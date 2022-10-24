@@ -1,6 +1,6 @@
 import { ModuleData, ModuleName } from 'modules/boats/Boat.Types';
 import { DateModule, DateModuleDataType } from 'modules/boats/boat-modules/modules/date/Date';
-import { LocationModule } from 'modules/boats/boat-modules/modules/location/Location';
+import { LocationModule, LocationModuleDataType } from 'modules/boats/boat-modules/modules/location/Location';
 
 export const ModulesMapper = {
     [ModuleName.Date]: {
@@ -21,7 +21,7 @@ export const ModulesMapper = {
     },
 };
 
-export type ModuleDataType = DateModuleDataType;
+export type ModuleDataType = DateModuleDataType | LocationModuleDataType;
 
 export const renderData = (
     data: ModuleData<any>[],

@@ -4,7 +4,7 @@ import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 import { AuthEndpoints, RedirectResponse } from 'modules/auth/Auth.Service';
 import { showErrorToast } from 'shared/toast/Toast';
-import { Http, HttpStatus, setHeadersToLocalStorage, resetLocalStorage } from 'shared/http/Http';
+import { Http, HttpStatus, setHeadersToLocalStorage, resetLocalStorage } from 'util/http/Http';
 import { Routes } from 'router/Router.Types';
 import { LocalStorageKeys, LS } from 'util/localstorage/LocalStorage';
 

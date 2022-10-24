@@ -41,7 +41,7 @@ export const Modal: FunctionComponent<Props> = ({
             <ModalOverlay />
             <ModalContent py="2" mx="2">
                 <ModalHeader display="flex" justifyContent="space-between" alignItems="center" px="6">
-                    <Heading fontSize="2xl">{title}</Heading>
+                    <Heading fontSize="xl">{title}</Heading>
                     <IconButton
                         mr="-3"
                         aria-label="modal-close"

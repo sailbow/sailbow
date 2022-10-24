@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 
-import { Http } from 'shared/http/Http';
-import { EndpointFunction } from 'shared/http/Endpoints';
+import { Http } from 'util/http/Http';
+import { EndpointFunction } from 'util/http/Endpoints';
 
 type UserEndpointLabels = 'Me' | 'Update' | 'UpdatePassword' | 'Search';
 

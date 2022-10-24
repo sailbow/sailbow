@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 
-import { EndpointFunction } from 'shared/http/Endpoints';
-import { Http } from 'shared/http/Http';
+import { EndpointFunction } from 'util/http/Endpoints';
+import { Http } from 'util/http/Http';
 
 export enum Provider {
     Google,
