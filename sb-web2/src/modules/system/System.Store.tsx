@@ -6,6 +6,7 @@ export enum SystemActionType {
     SetPickerNav,
     SetCreateNav,
     SetCrewNav,
+    SetCrewInviteModal,
 }
 
 interface PayloadSetPickerNav {
@@ -21,9 +22,13 @@ interface PayloadSetCrewNav {
     open: boolean;
 }
 
+interface PayloadSetCrewInviteModal {
+    open: boolean;
+}
+
 interface SystemAction {
     type: SystemActionType;
-    payload?: PayloadSetPickerNav | PayloadSetCreateNav | PayloadSetCrewNav;
+    payload?: PayloadSetPickerNav | PayloadSetCreateNav | PayloadSetCrewNav | PayloadSetCrewInviteModal;
 }
 
 interface SystemProviderProps {
@@ -35,6 +40,7 @@ export const initialSystemState: SystemState = {
     createNavMode: CreateNavMode.Create,
     createNavOpen: false,
     crewNavOpen: false,
+    crewInviteModalOpen: false,
 };
 
 const SystemStateContext = createContext<SystemState | undefined>(undefined);
@@ -63,6 +69,13 @@ const systemReducer = (state: SystemState, action: SystemAction): SystemState =>
             return {
                 ...state,
                 crewNavOpen: (action.payload as PayloadSetCrewNav).open,
+            };
+        }
+
+        case SystemActionType.SetCrewInviteModal: {
+            return {
+                ...state,
+                crewInviteModalOpen: (action.payload as PayloadSetCrewInviteModal).open,
             };
         }
 
@@ -111,6 +124,8 @@ interface SystemActionApis {
     closeEditNav: () => void;
     openCrewNav: () => void;
     closeCrewNav: () => void;
+    openCrewInviteModal: () => void;
+    closeCrewInviteModal: () => void;
 }
 
 export const useSystem = (): [SystemState, SystemActionApis] => {
@@ -162,6 +177,18 @@ export const useSystem = (): [SystemState, SystemActionApis] => {
         closeCrewNav: () => {
             dispatch({
                 type: SystemActionType.SetCrewNav,
+                payload: { open: false },
+            });
+        },
+        openCrewInviteModal: () => {
+            dispatch({
+                type: SystemActionType.SetCrewInviteModal,
+                payload: { open: true },
+            });
+        },
+        closeCrewInviteModal: () => {
+            dispatch({
+                type: SystemActionType.SetCrewInviteModal,
                 payload: { open: false },
             });
         },

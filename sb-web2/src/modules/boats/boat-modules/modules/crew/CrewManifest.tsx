@@ -13,13 +13,19 @@ interface Props {
 }
 
 export const CrewManifest: FC<Props> = ({ boat }) => {
-    const [, { openCrewNav }] = useSystem();
+    const [, { openCrewNav, openCrewInviteModal }] = useSystem();
 
     return (
         <BoatManifest icon={<SbInfoIcon />} label={`Crew (${boat.crew.length})`} finalized="Crew">
             <Flex w="100%" justifyContent="space-between" alignItems="center">
                 <CrewGroup crew={boat.crew} onClick={openCrewNav} />
-                <Button size="sm" rightIcon={<SbPlusIcon />} variant="secondary" colorScheme="gray">
+                <Button
+                    size="sm"
+                    rightIcon={<SbPlusIcon />}
+                    variant="secondary"
+                    colorScheme="gray"
+                    onClick={openCrewInviteModal}
+                >
                     Invite
                 </Button>
             </Flex>

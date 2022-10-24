@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import { BoatCreate } from './boat-create/BoatCreate';
 import { BoatModulesPicker } from './boat-modules/boat-modules-picker/BoatModulesPicker';
 import { BoatCrew } from './boat-crew/BoatCrew';
+import { BoatInviteModal } from './common/boat-invite-modal/BoatInvite';
 
 const BoatView = lazy(() =>
     import('modules/boats/boat-view/BoatView').then((module) => ({ default: module.BoatView })),
@@ -25,6 +26,7 @@ export const Boat: FunctionComponent = () => {
             <BoatCreate />
             <BoatCrew />
             <BoatModulesPicker />
+            <BoatInviteModal />
             <Routes>
                 <Route path={BoatRoutes.AllBoats} element={<BoatHome />} />
                 <Route path={BoatRoutes.View} element={<BoatView />} />

@@ -1,32 +1,43 @@
-import React, { FunctionComponent } from 'react';
+import { FC } from 'react';
 
-import { Flex, IconButton, Popover, PopoverTrigger, PopoverContent, PopoverBody, Text, Button } from '@chakra-ui/react';
+import { Flex, IconButton, Text, Button } from '@chakra-ui/react';
 
 import { SbCopyIcon, SbLinkIcon } from 'shared/icons/Icons';
+import { Popover } from 'shared/popover/Popover';
 
-export const BoatShare: FunctionComponent = () => {
+interface Props {
+    mode?: 'popover' | 'none';
+}
+
+export const BoatShare: FC<Props> = ({ mode }) => {
     const onCopy = () => {
         navigator.clipboard.writeText(window.location.href);
     };
-    return (
-        <Popover variant="brand">
-            <PopoverTrigger>
+
+    const Info: FC = () => {
+        return (
+            <Flex alignItems="center" className="sb-boat-share-info">
+                <Text fontWeight="normal" pr="4" noOfLines={1}>
+                    {window.location.href}
+                </Text>
+                <Button rightIcon={<SbCopyIcon />} size="sm" colorScheme="gray" onClick={onCopy} flexShrink={0}>
+                    Copy
+                </Button>
+            </Flex>
+        );
+    };
+
+    return mode === 'popover' ? (
+        <Popover
+            triggerNode={
                 <IconButton aria-label="link-icon" variant="icon" fontSize="2xl">
                     <SbLinkIcon />
                 </IconButton>
-            </PopoverTrigger>
-            <PopoverContent borderRadius="lg">
-                <PopoverBody p="2">
-                    <Flex p="2" alignItems="center" flexWrap="wrap">
-                        <Text fontWeight="normal" pr="4">
-                            {window.location.href}
-                        </Text>
-                        <Button rightIcon={<SbCopyIcon />} size="sm" colorScheme="gray" onClick={onCopy}>
-                            Copy
-                        </Button>
-                    </Flex>
-                </PopoverBody>
-            </PopoverContent>
+            }
+        >
+            <Info />
         </Popover>
+    ) : (
+        <Info />
     );
 };

@@ -7,14 +7,15 @@ import {
     Tooltip,
     InputProps as ChakraInputProps,
     TextareaProps as ChakraTextareaProps,
-    Text,
     Textarea,
     Spinner,
     Box,
     InputLeftAddon,
     IconButton,
 } from '@chakra-ui/react';
+
 import { SbErrorCircleIcon } from 'shared/icons/Icons';
+import { Label } from './Label';
 
 import './Input.scss';
 
@@ -61,12 +62,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     ) => {
         return (
             <Box className={`sb-input-wrapper ${customClass}`} w="100%" ref={ref}>
-                {label && (
-                    <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
-                        {label}
-                        {required && <span className="required">*</span>}
-                    </Text>
-                )}
+                {label && <Label label={label} required={required} />}
                 <InputGroup variant="brand" alignItems="center" className="sb-input">
                     <InputLeftAddon position="absolute" p="0" color="brand.secondary">
                         {leftIcon}
@@ -125,12 +121,7 @@ export const TextArea: FunctionComponent<TextareaProps> = ({
 }) => {
     return (
         <Box className={`sb-input-wrapper ${customClass}`}>
-            {label && (
-                <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
-                    {label}
-                    {required && <span className="required">*</span>}
-                </Text>
-            )}
+            {label && <Label label={label} required={required} />}
             <InputGroup variant="brand">
                 <Textarea
                     px="0"

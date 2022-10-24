@@ -8,4 +8,5 @@ export interface SystemState {
     createNavOpen: boolean;
     createNavMode: CreateNavMode;
     crewNavOpen: boolean;
+    crewInviteModalOpen: boolean;
 }
