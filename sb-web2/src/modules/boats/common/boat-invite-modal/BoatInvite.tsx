@@ -3,9 +3,10 @@ import { FC } from 'react';
 import { Box, Button } from '@chakra-ui/react';
 
 import { useSystem } from 'modules/system/System.Store';
-import { Modal } from 'shared/modal/Modal';
-import { BoatShare } from '../boat-share/BoatShare';
+import { BoatShare } from 'modules/boats/common/boat-share/BoatShare';
+import { SbCheckMarkIcon } from 'shared/icons/Icons';
 import { Label } from 'shared/input/Label';
+import { Modal } from 'shared/modal/Modal';
 
 export const BoatInviteModal: FC = () => {
     const [{ crewInviteModalOpen }, { closeCrewInviteModal }] = useSystem();
@@ -16,7 +17,11 @@ export const BoatInviteModal: FC = () => {
             onClose={closeCrewInviteModal}
             title="Invite Crew"
             size="xl"
-            positiveButton={<Button>Done</Button>}
+            positiveButton={
+                <Button rightIcon={SbCheckMarkIcon} onClick={closeCrewInviteModal}>
+                    Done
+                </Button>
+            }
         >
             <Box>
                 <Label label="Share Link" mb="2" />

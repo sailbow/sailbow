@@ -88,6 +88,10 @@ export const ButtonStyles: ComponentStyleConfig = {
             return {
                 ...props.theme.components.Button.variants.outline,
                 ...OUTLINE_STYLES,
+                borderTopWidth: '2px',
+                borderBottomWidth: '2px',
+                borderLeftWidth: '2px',
+                borderRightWidth: '2px',
             };
         },
         social: (props: any) => {

@@ -17,7 +17,7 @@ import Select, {
     ValueContainerProps,
 } from 'react-select';
 
-import { SbChevronDownIcon, SbCloseIcon, SbSearchIcon } from 'shared/icons/Icons';
+import { SbChevronDownIcon, SbCloseIcon } from 'shared/icons/Icons';
 import { BrandColors, Color } from 'theme/colors/Colors';
 
 export interface OptionType {

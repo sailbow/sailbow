@@ -36,7 +36,7 @@ export const customStyles: StylesConfig<any, true> = {
     menu: (provided: CSSObject): CSSObject => {
         return {
             ...provided,
-            border: 'none',
+            border: '2px solid black',
             boxShadow: '0 0 5px #efefef',
         };
     },
