@@ -1,32 +1,24 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 
 import { Button, Flex } from '@chakra-ui/react';
 
 import { BoatManifest } from 'modules/boats/common/boat-manifest/BoatManifest';
 import { SbInfoIcon, SbPlusIcon } from 'shared/icons/Icons';
-import { CrewMember } from 'modules/boats/Boat.Types';
+import { Boat } from 'modules/boats/Boat.Types';
 import { CrewGroup } from 'shared/crew/crew-group/CrewGroup';
-import { getCrew } from 'modules/boats/Boat.Service';
+import { useSystem } from 'modules/system/System.Store';
 
 interface Props {
-    boatId: string;
+    boat: Boat;
 }
 
-export const CrewManifest: FC<Props> = ({ boatId }) => {
-    const [data, setData] = useState<CrewMember[]>([]);
-
-    useEffect(() => {
-        (async () => {
-            const response = await getCrew(boatId);
-
-            setData(response);
-        })();
-    }, [boatId]);
+export const CrewManifest: FC<Props> = ({ boat }) => {
+    const [, { openCrewNav }] = useSystem();
 
     return (
-        <BoatManifest icon={<SbInfoIcon />} label={`Crew (${data.length})`} finalized="Crew">
+        <BoatManifest icon={<SbInfoIcon />} label={`Crew (${boat.crew.length})`} finalized="Crew">
             <Flex w="100%" justifyContent="space-between" alignItems="center">
-                <CrewGroup crew={data} />
+                <CrewGroup crew={boat.crew} onClick={openCrewNav} />
                 <Button size="sm" rightIcon={<SbPlusIcon />} variant="secondary" colorScheme="gray">
                     Invite
                 </Button>

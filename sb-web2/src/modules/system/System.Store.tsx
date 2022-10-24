@@ -5,6 +5,7 @@ import { CreateNavMode, SystemState } from './System.Types';
 export enum SystemActionType {
     SetPickerNav,
     SetCreateNav,
+    SetCrewNav,
 }
 
 interface PayloadSetPickerNav {
@@ -16,9 +17,13 @@ interface PayloadSetCreateNav {
     mode: CreateNavMode;
 }
 
+interface PayloadSetCrewNav {
+    open: boolean;
+}
+
 interface SystemAction {
     type: SystemActionType;
-    payload?: PayloadSetPickerNav | PayloadSetCreateNav;
+    payload?: PayloadSetPickerNav | PayloadSetCreateNav | PayloadSetCrewNav;
 }
 
 interface SystemProviderProps {
@@ -29,6 +34,7 @@ export const initialSystemState: SystemState = {
     pickerOpen: false,
     createNavMode: CreateNavMode.Create,
     createNavOpen: false,
+    crewNavOpen: false,
 };
 
 const SystemStateContext = createContext<SystemState | undefined>(undefined);
@@ -50,6 +56,13 @@ const systemReducer = (state: SystemState, action: SystemAction): SystemState =>
                 ...state,
                 createNavMode: mode,
                 createNavOpen: open,
+            };
+        }
+
+        case SystemActionType.SetCrewNav: {
+            return {
+                ...state,
+                crewNavOpen: (action.payload as PayloadSetCrewNav).open,
             };
         }
 
@@ -96,6 +109,8 @@ interface SystemActionApis {
     closeCreateNav: () => void;
     openEditNav: () => void;
     closeEditNav: () => void;
+    openCrewNav: () => void;
+    closeCrewNav: () => void;
 }
 
 export const useSystem = (): [SystemState, SystemActionApis] => {
@@ -136,6 +151,18 @@ export const useSystem = (): [SystemState, SystemActionApis] => {
             dispatch({
                 type: SystemActionType.SetCreateNav,
                 payload: { open: false, mode: CreateNavMode.Edit },
+            });
+        },
+        openCrewNav: () => {
+            dispatch({
+                type: SystemActionType.SetCrewNav,
+                payload: { open: true },
+            });
+        },
+        closeCrewNav: () => {
+            dispatch({
+                type: SystemActionType.SetCrewNav,
+                payload: { open: false },
             });
         },
     };

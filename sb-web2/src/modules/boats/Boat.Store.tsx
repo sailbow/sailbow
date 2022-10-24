@@ -1,6 +1,6 @@
 import { createContext, FunctionComponent, ReactNode, useReducer, useContext, Dispatch } from 'react';
 
-import { createBoat, getAllBoats, getBannerImages, getBoat } from 'modules/boats/Boat.Service';
+import { createBoat, getAllBoats, getBannerImages, getBoat, getCrew } from 'modules/boats/Boat.Service';
 import {
     Boat,
     BoatState,
@@ -252,12 +252,23 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
         getBoat: async (boatId: string) => {
             dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: true } });
             try {
-                const response = await getBoat(boatId);
+                const boatResponse = await getBoat(boatId);
+                const crew = await getCrew(boatId);
 
-                dispatch({ type: BoatActionType.SetActiveBoat, payload: { boat: response } });
+                const boat = {
+                    ...boatResponse,
+                    crew,
+                };
+
+                dispatch({
+                    type: BoatActionType.SetActiveBoat,
+                    payload: {
+                        boat,
+                    },
+                });
                 dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: false } });
 
-                return response;
+                return boat;
             } catch (error: any) {
                 dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: false } });
                 dispatch({ type: BoatActionType.SetError, payload: { error: error.response } });

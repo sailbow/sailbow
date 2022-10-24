@@ -4,6 +4,12 @@ import { CSSObject } from '@emotion/react';
 import { theme } from 'theme';
 
 export const customStyles: StylesConfig<any, true> = {
+    container: (provided: CSSObject) => {
+        return {
+            ...provided,
+            width: '100%',
+        };
+    },
     control: (provided: CSSObject, state: ControlProps<any, true>): CSSObject => {
         return {
             ...provided,
