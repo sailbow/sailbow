@@ -1,5 +1,6 @@
 import { ModuleData, ModuleName } from 'modules/boats/Boat.Types';
 import { DateModule, DateModuleDataType } from 'modules/boats/boat-modules/modules/date/Date';
+import { LocationModule } from 'modules/boats/boat-modules/modules/location/Location';
 
 export const ModulesMapper = {
     [ModuleName.Date]: {
@@ -11,19 +12,19 @@ export const ModulesMapper = {
         info: 'Pin a date or a date range to your trip',
     },
     [ModuleName.Location]: {
-        Widget: DateModule.Widget,
-        Manifest: DateModule.Manifest,
-        image: DateModule.Image,
-        icon: DateModule.Icon,
-        name: 'Date',
-        info: 'Pin a date or a date range to your trip',
+        Widget: LocationModule.Widget,
+        Manifest: LocationModule.Manifest,
+        image: LocationModule.Image,
+        icon: LocationModule.Icon,
+        name: 'Location',
+        info: "Vote on your group's destinations",
     },
 };
 
 export type ModuleDataType = DateModuleDataType;
 
 export const renderData = (
-    data: ModuleData<DateModuleDataType>[],
+    data: ModuleData<any>[],
     getText: (data: ModuleData<DateModuleDataType>) => string,
     finalizedOptionId?: string,
 ) => {

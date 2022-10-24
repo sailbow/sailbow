@@ -1,58 +1,33 @@
 import { ChangeEvent, FC, useState } from 'react';
 
 import { Flex } from '@chakra-ui/react';
-
+    
 import { useAuthStore } from 'modules/auth/Auth.Store';
 import { Module, ModuleData } from 'modules/boats/Boat.Types';
-import { DateSettings } from 'modules/boats/boat-modules/modules/date/DateSettings';
-import { DateModuleDataType, getText } from 'modules/boats/boat-modules/modules/date/Date';
+import { LocationSettings } from 'modules/boats/boat-modules/modules/location/LocationSettings';
+import { LocationModuleDataType, getText } from 'modules/boats/boat-modules/modules/location/Location';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
-import { DatePicker } from 'shared/date-picker/DatePicker';
-
-type DataType = ModuleData<DateModuleDataType>;
-
-export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
+    
+type DataType = ModuleData<LocationModuleDataType>;
+    
+export const LocationWidget: FC<Module<LocationModuleDataType>> = (props) => {
     const { id, settings, data } = props;
     const [widgetData, setWidgetData] = useState<DataType[]>(data);
-    const [startDateError, setStartDateError] = useState<string>('');
-    const [endDateError, setEndDateError] = useState<string>('');
     const [{ user }] = useAuthStore();
-
+    
     const onDataChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
         const updatedWidgetData = [...widgetData];
-        const idx = updatedWidgetData.findIndex((w) => w.id === id);
-
-        if (idx !== -1) {
-            updatedWidgetData[idx][e.target.name as keyof DateModuleDataType] = e.target.value;
-        }
-
+        // update here
         setWidgetData([...updatedWidgetData]);
     };
-
+    
     const onSave = () => {
         const updatedWidgetData = [...widgetData];
         let hasError = false;
 
-        setStartDateError('');
-        setEndDateError('');
-
         widgetData.forEach((d) => {
             const foundPollIdx = updatedWidgetData.findIndex((i) => i.id === d.id);
-            const { startDate, endDate } = updatedWidgetData[foundPollIdx];
-
-            if (!startDate) {
-                setStartDateError('Start date is required');
-                hasError = true;
-                return false;
-            }
-
-            if (endDate) {
-                if (new Date(startDate).getTime() > new Date(endDate).getTime()) {
-                    hasError = true;
-                    setEndDateError('End date has to be after start date');
-                    return false;
-                }
-            }
+            // validate here
 
             if (foundPollIdx !== -1) {
                 updatedWidgetData[foundPollIdx].isEditing = false;
@@ -70,38 +45,20 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
     const onRemoveOption: any = (updatedWidgetdata: DataType[]) => {
         setWidgetData([...updatedWidgetdata]);
     };
-
+    
     const getInputComponent: any = (optionId: string, data: DataType) => {
         return (
             <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }}>
-                <DatePicker
-                    label="Start Date"
-                    name="startDate"
-                    placeholder="mm/dd/yyyy"
-                    required
-                    onChange={onDataChange(optionId)}
-                    value={data.startDate}
-                    error={!!startDateError}
-                    errorLabel={startDateError}
-                />
-                <DatePicker
-                    label="End Date"
-                    name="endDate"
-                    placeholder="mm/dd/yyyy"
-                    onChange={onDataChange(optionId)}
-                    error={!!endDateError}
-                    errorLabel={endDateError}
-                    value={data.endDate}
-                />
+                    
             </Flex>
         );
     };
-
+    
     return (
         <BoatWidget<DataType>
             {...props}
             data={widgetData}
-            settingsNode={<DateSettings id={id} settings={settings} />}
+            settingsNode={<LocationSettings id={id} settings={settings} />}
             onSave={onSave}
             onAddOption={() => {
                 const newData: DataType = {
@@ -111,14 +68,12 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
                     selected: false,
                     votes: 0,
                     isEditing: true,
-                    startDate: '',
-                    endDate: '',
                 };
-
+    
                 setWidgetData([...widgetData, newData]);
             }}
             getInputComponent={getInputComponent}
-            onOptionEdit={(data) => {
+                onOptionEdit={(data) => {
                 setWidgetData(data as DataType[]);
             }}
             onRemoveOption={onRemoveOption}

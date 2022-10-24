@@ -4,13 +4,14 @@ import { Text } from '@chakra-ui/react';
 
 import { Module } from 'modules/boats/Boat.Types';
 import { BoatManifest } from 'modules/boats/common/boat-manifest/BoatManifest';
-import { DateModule, DateModuleDataType, getText } from 'modules/boats/boat-modules/modules/date/Date';
+import { LocationModule, LocationModuleDataType, getText } from 'modules/boats/boat-modules/modules/location/Location';
 import { renderData } from 'modules/boats/boat-modules/modules/Modules';
 
-export const DateManifest: FC<Module<DateModuleDataType>> = ({ data, loading, finalizedOptionId }) => {
+export const LocationManifest: FC<Module<LocationModuleDataType>> = ({ data, loading, finalizedOptionId }) => {
     return (
-        <BoatManifest icon={<DateModule.Icon />} label="Date" loading={loading} finalized={finalizedOptionId}>
+        <BoatManifest icon={<LocationModule.Icon />} label="Location" loading={loading} finalized={finalizedOptionId}>
             <Text>{renderData(data, getText, finalizedOptionId)}</Text>
         </BoatManifest>
     );
-};
+};    
+    
