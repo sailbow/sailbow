@@ -46,7 +46,7 @@ export const BoatModulesWidgetItem: FC<BoatModulesWidgetItemProps<ModuleDataType
 };
 
 export const BoatModulesWidget: FC<Props> = ({ boat }) => {
-    const [{}, { getModuleData }] = useBoat();
+    const [, { getModuleData }] = useBoat();
     const [, { openPicker }] = useSystem();
 
     return (

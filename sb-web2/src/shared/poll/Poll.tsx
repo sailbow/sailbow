@@ -19,7 +19,7 @@ export interface Props<T> {
     loading: boolean;
     onAddOption: () => void;
     getInputComponent: <T>(optionId: string, data: T) => JSX.Element;
-    onOptionEdit: (optionId: string) => void;
+    onOptionEdit: <T>(data: T[]) => void;
     onRemoveOption?: <T>(data: T) => void;
     selectOption: (moduleId: string, optionId: string) => void;
     onSave: () => boolean;
@@ -45,6 +45,17 @@ export const Poll = <T extends {}>({
         }
 
         if (onRemoveOption) onRemoveOption(updatedData);
+    };
+
+    const onEdit = (optionId: string) => {
+        const newOptions = [...data];
+        const optionIdx = newOptions.findIndex((p) => p.id === optionId);
+
+        if (optionIdx !== -1) {
+            newOptions[optionIdx].isEditing = true;
+        }
+
+        onOptionEdit(newOptions);
     };
 
     return !loading ? (
@@ -114,7 +125,7 @@ export const Poll = <T extends {}>({
                                     variant="ghost"
                                     size="sm"
                                     icon={<SbEditIcon />}
-                                    onClick={() => onOptionEdit(item.id)}
+                                    onClick={() => onEdit(item.id)}
                                 />
 
                                 <IconButton

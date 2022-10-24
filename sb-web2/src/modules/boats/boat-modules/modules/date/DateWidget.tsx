@@ -5,7 +5,7 @@ import { Flex } from '@chakra-ui/react';
 import { useAuthStore } from 'modules/auth/Auth.Store';
 import { Module, ModuleData } from 'modules/boats/Boat.Types';
 import { DateSettings } from 'modules/boats/boat-modules/modules/date/DateSettings';
-import { DateModuleDataType, getText } from 'modules/boats/boat-modules/modules/date/_DateModule';
+import { DateModuleDataType, getText } from 'modules/boats/boat-modules/modules/date/Date';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
 import { DatePicker } from 'shared/date-picker/DatePicker';
 
@@ -114,17 +114,12 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
                     startDate: '',
                     endDate: '',
                 };
+
                 setWidgetData([...widgetData, newData]);
             }}
             getInputComponent={getInputComponent}
-            onOptionEdit={(optionId: string) => {
-                const newOptions = [...widgetData];
-                const optionIdx = newOptions.findIndex((p) => p.id === optionId);
-
-                if (optionIdx !== -1) {
-                    newOptions[optionIdx].isEditing = true;
-                }
-                setWidgetData([...newOptions]);
+            onOptionEdit={(data) => {
+                setWidgetData(data as DataType[]);
             }}
             onRemoveOption={onRemoveOption}
         ></BoatWidget>
