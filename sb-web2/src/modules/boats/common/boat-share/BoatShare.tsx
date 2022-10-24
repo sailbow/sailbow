@@ -1,27 +1,56 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
-import { Flex, IconButton, Text, Button } from '@chakra-ui/react';
+import { Flex, IconButton, Button } from '@chakra-ui/react';
 
-import { SbCopyIcon, SbLinkIcon } from 'shared/icons/Icons';
+import { SbCheckIcon, SbCopyIcon, SbLinkIcon } from 'shared/icons/Icons';
 import { Popover } from 'shared/popover/Popover';
+import { Input } from 'shared/input/Input';
 
 interface Props {
     mode?: 'popover' | 'none';
 }
 
 export const BoatShare: FC<Props> = ({ mode }) => {
-    const onCopy = () => {
-        navigator.clipboard.writeText(window.location.href);
+    const [copy, setCopy] = useState<boolean>(false);
+    const [time, setTime] = useState<NodeJS.Timer | null>(null);
+
+    const onCopy = async () => {
+        await navigator.clipboard.writeText(window.location.href);
+        setCopy(true);
+
+        if (!time)
+            setTime(
+                setTimeout(() => {
+                    setCopy(false);
+                    setTime(null);
+                }, 2000),
+            );
     };
 
     const Info: FC = () => {
         return (
-            <Flex alignItems="center" className="sb-boat-share-info">
-                <Text fontWeight="normal" pr="4" noOfLines={1}>
-                    {window.location.href}
-                </Text>
-                <Button rightIcon={<SbCopyIcon />} size="sm" colorScheme="gray" onClick={onCopy} flexShrink={0}>
-                    Copy
+            <Flex pb="2" alignItems="center" className="sb-boat-share-info" gap="2">
+                <Input value={window.location.href} isReadOnly />
+                <IconButton
+                    aria-label="copy-link"
+                    colorScheme="gray"
+                    variant="ghost"
+                    flexShrink={0}
+                    onClick={onCopy}
+                    display={{ base: 'flex', md: 'none' }}
+                    mr="-2"
+                >
+                    {copy ? <SbCheckIcon color="green" /> : <SbCopyIcon />}
+                </IconButton>
+                <Button
+                    display={{ base: 'none', md: 'flex' }}
+                    rightIcon={copy ? <SbCheckIcon color="green" /> : <SbCopyIcon />}
+                    size="sm"
+                    colorScheme="gray"
+                    px="4"
+                    onClick={onCopy}
+                >
+                    {copy ? 'Copied' : 'Copy'}
                 </Button>
             </Flex>
         );
@@ -30,7 +59,7 @@ export const BoatShare: FC<Props> = ({ mode }) => {
     return mode === 'popover' ? (
         <Popover
             triggerNode={
-                <IconButton aria-label="link-icon" variant="icon" fontSize="2xl">
+                <IconButton aria-label="link-icon" variant="icon" fontSize="lg" size="sm">
                     <SbLinkIcon />
                 </IconButton>
             }

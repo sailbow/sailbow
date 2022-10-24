@@ -9,11 +9,12 @@ import {
     ModalFooter,
     ModalBody,
     IconButton,
+    ModalProps,
 } from '@chakra-ui/react';
 
 import { SbCloseIcon } from 'shared/icons/Icons';
 
-interface Props {
+interface Props extends ModalProps {
     isOpen: boolean;
     onClose: () => void;
     positiveButton: JSX.Element;
@@ -33,12 +34,13 @@ export const Modal: FunctionComponent<Props> = ({
     children,
     bodyClass,
     size,
+    ...props
 }) => {
     return (
-        <ChakraModal isOpen={isOpen} onClose={onClose} size={size} autoFocus={false}>
+        <ChakraModal isOpen={isOpen} onClose={onClose} size={size} autoFocus={false} {...props}>
             <ModalOverlay />
-            <ModalContent py="2">
-                <ModalHeader display="flex" justifyContent="space-between" alignItems="center">
+            <ModalContent py="2" mx="2">
+                <ModalHeader display="flex" justifyContent="space-between" alignItems="center" px="6">
                     <Heading fontSize="2xl">{title}</Heading>
                     <IconButton
                         mr="-3"
@@ -52,7 +54,9 @@ export const Modal: FunctionComponent<Props> = ({
                     </IconButton>
                 </ModalHeader>
 
-                <ModalBody className={bodyClass}>{children}</ModalBody>
+                <ModalBody className={bodyClass} px="6">
+                    {children}
+                </ModalBody>
 
                 <ModalFooter>
                     {positiveButton}

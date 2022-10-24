@@ -69,9 +69,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                     </InputLeftAddon>
                     {rightIconButton && (
                         <InputRightElement p="0" color="brand.secondary">
-                            <IconButton aria-label="input-right-element" variant="icon" fontSize="xl" size="sm">
-                                {rightIconButton}
-                            </IconButton>
+                            {rightIconButton}
                         </InputRightElement>
                     )}
 

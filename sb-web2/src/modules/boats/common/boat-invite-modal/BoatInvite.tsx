@@ -19,7 +19,7 @@ export const BoatInviteModal: FC = () => {
             positiveButton={<Button>Done</Button>}
         >
             <Box>
-                <Label label="Share Link" />
+                <Label label="Share Link" mb="2" />
                 <BoatShare mode="none" />
             </Box>
             <Box pt="4">

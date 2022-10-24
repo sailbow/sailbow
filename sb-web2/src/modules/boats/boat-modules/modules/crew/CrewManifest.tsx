@@ -19,15 +19,17 @@ export const CrewManifest: FC<Props> = ({ boat }) => {
         <BoatManifest icon={<SbInfoIcon />} label={`Crew (${boat.crew.length})`} finalized="Crew">
             <Flex w="100%" justifyContent="space-between" alignItems="center">
                 <CrewGroup crew={boat.crew} onClick={openCrewNav} />
-                <Button
-                    size="sm"
-                    rightIcon={<SbPlusIcon />}
-                    variant="secondary"
-                    colorScheme="gray"
-                    onClick={openCrewInviteModal}
-                >
-                    Invite
-                </Button>
+                <Flex gap="2">
+                    <Button
+                        size="sm"
+                        rightIcon={<SbPlusIcon />}
+                        variant="secondary"
+                        colorScheme="gray"
+                        onClick={openCrewInviteModal}
+                    >
+                        Invite
+                    </Button>
+                </Flex>
             </Flex>
         </BoatManifest>
     );

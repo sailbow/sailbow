@@ -1,15 +1,15 @@
 import { FC } from 'react';
 
-import { Text } from '@chakra-ui/react';
+import { Text, TextProps } from '@chakra-ui/react';
 
-interface Props {
+interface Props extends TextProps {
     label: string;
     required?: boolean;
 }
 
-export const Label: FC<Props> = ({ label, required }) => {
+export const Label: FC<Props> = ({ label, required, ...props }) => {
     return (
-        <Text fontSize="sm" fontWeight="semibold" className="sb-input-label">
+        <Text fontSize="sm" fontWeight="semibold" className="sb-input-label" {...props}>
             {label}
             {required && <span className="required">*</span>}
         </Text>
