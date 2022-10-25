@@ -67,8 +67,15 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet("{boatId}")]
-        public Task<Boat> GetBoatById(string boatId)
-            => _boatService.GetBoatById(boatId);
+        public async Task<BoatWithUserRole> GetBoatById(string boatId)
+        {
+            BoatWithUserRole boat = (BoatWithUserRole)(await _boatService.GetBoatById(boatId));
+            boat.Role = boat.Crew
+                .First(cm => cm.UserId == HttpContext.GetClaim(CustomClaimTypes.Id))
+                .Role;
+
+            return boat;
+        }
 
         [HttpPut("{boatId}/code")]
         public async Task<ActionResult<Code>> GenerateCodeInvite(string boatId, [FromQuery] int? expiresUnix)
