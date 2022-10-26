@@ -61,20 +61,32 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<Boat>> GetBoats([FromQuery] GetBoatsRequest request)
+        public Task<IEnumerable<Boat>> GetBoats(
+            [FromQuery]int? page,
+            [FromQuery]int? perPage,
+            [FromQuery] string search = "")
         {
-            return _boatService.GetBoats(HttpContext.GetClaim(CustomClaimTypes.Id), request);
+            return _boatService.GetBoats(
+                HttpContext.GetUserId(), page, perPage, search);
         }
 
         [HttpGet("{boatId}")]
         public async Task<BoatWithUserRole> GetBoatById(string boatId)
         {
-            BoatWithUserRole boat = (BoatWithUserRole)(await _boatService.GetBoatById(boatId));
-            boat.Role = boat.Crew
-                .First(cm => cm.UserId == HttpContext.GetClaim(CustomClaimTypes.Id))
-                .Role;
-
-            return boat;
+            Boat boat = await _boatService.GetBoatById(boatId);
+            return new BoatWithUserRole
+            {
+                Id = boat.Id,
+                Name = boat.Name,
+                Description = boat.Description,
+                Banner = boat.Banner,
+                Code = boat.Code,
+                Crew = boat.Crew,
+                Show = boat.Show,
+                Role = boat.Crew
+                    .First(cm => cm.UserId == HttpContext.GetClaim(CustomClaimTypes.Id))
+                    .Role
+            };
         }
 
         [HttpPut("{boatId}/code")]

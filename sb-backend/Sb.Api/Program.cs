@@ -47,6 +47,7 @@ services
             }
         });
     })
+    .AddSwaggerGenNewtonsoftSupport()
     .AddEndpointsApiExplorer()
     .Configure<JwtConfig>(configuration.GetSection("Jwt"))
     .Configure<EmailConfig>(configuration.GetSection("Email"))
@@ -59,6 +60,7 @@ services
     .AddTransient<ITokenService, TokenService>()
     .AddTransient<ValidateAccessTokenMiddleware>()
     .AddTransient<IUserService, UserService>()
+    .AddTransient<IModuleService, ModuleService>()
     .AddAuthorization(opts =>
     {
         opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>
