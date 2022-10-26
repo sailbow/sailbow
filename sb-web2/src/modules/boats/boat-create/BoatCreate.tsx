@@ -69,11 +69,15 @@ export const BoatCreate: FunctionComponent = () => {
     };
 
     const onSubmit = async () => {
-        const boatResponse = await createBoat(boatForm);
+        if (createNavMode === CreateNavMode.Create) {
+            const boatResponse = await createBoat(boatForm);
 
-        if (boatResponse) {
-            closeCreateNav();
-            window.location.href = `${Routes.Private.Boats}/${boatResponse.id}`;
+            if (boatResponse) {
+                closeCreateNav();
+                window.location.href = `${Routes.Private.Boats}/${boatResponse.id}`;
+            }
+        } else {
+            // edit boat goast here
         }
     };
 
@@ -96,7 +100,7 @@ export const BoatCreate: FunctionComponent = () => {
                         onClick={onSubmit}
                         rightIcon={SbCheckMarkIcon}
                     >
-                        <Text>{createNavMode === CreateNavMode.Create ? 'Start Boat' : 'Edit Boat'}</Text>
+                        <Text>{createNavMode === CreateNavMode.Create ? 'Start Boat' : 'Save'}</Text>
                     </Button>
                 </Box>
             }

@@ -76,7 +76,7 @@ export interface Module<T> {
     name: ModuleName;
     order: number;
     description: string;
-    totalVotes: number; // will need this to show percentage voted in the option
+    totalVotes: number;
     data: ModuleData<T>[];
     settings: ModuleSettings;
     mode: ModuleMode;

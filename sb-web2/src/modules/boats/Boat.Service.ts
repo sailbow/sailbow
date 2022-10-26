@@ -42,8 +42,9 @@ export const ImageEndpoints: Record<ImageEndpointLabels, EndpointFunction> = {
 // }),
 
 export const getBannerImages = async (value: string, newPage: number): Promise<Photo[]> => {
+    console.log('here');
     const { data }: AxiosResponse = await Http({
-        ...ImageEndpoints.Search,
+        ...ImageEndpoints.Search(),
         params: {
             query: value,
             page: newPage,

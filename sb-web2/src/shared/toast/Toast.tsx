@@ -19,6 +19,7 @@ export const showErrorToast = (message: string) => {
         description: message,
         status: 'error',
         position: 'top-right',
+        isClosable: true,
     });
 };
 
