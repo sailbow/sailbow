@@ -5,4 +5,4 @@ export interface Endpoint {
     url: string;
 }
 
-export type EndpointFunction = <T>(args?: T) => Endpoint;
+export type EndpointFunction = (args?: any) => Endpoint;
