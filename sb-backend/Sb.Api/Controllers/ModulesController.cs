@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Ardalis.GuardClauses;
+
+using Microsoft.AspNetCore.Mvc;
+
+using Newtonsoft.Json;
 
 using Sb.Api.Services;
 using Sb.Data.Models;
+using Sb.Data.Serialization;
 
 namespace Sb.Api.Controllers;
 
@@ -14,9 +19,21 @@ public class ModulesController : ApiControllerBase
         _moduleService = moduleService;
     }
 
-    [HttpPut]
-    public async Task<Module> AddModule([FromBody] Module module)
+    [HttpGet]
+    public async Task<IEnumerable<Module>> GetModules([FromRoute] string boatId)
     {
+        return await _moduleService.GetModulesByBoatIdAsync(boatId);
+    }
+
+    [HttpPut]
+    public async Task<Module> UpsertModule([FromRoute]string boatId, [FromBody] Module module)
+    {
+        Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+        module.BoatId = boatId;
+        foreach (ModuleData d in module.Data)
+        {
+            d.Author = HttpContext.GetUserId();
+        }
         return await _moduleService.UpsertModule(module);
     }
 
