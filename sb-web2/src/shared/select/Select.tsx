@@ -1,11 +1,10 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Box, Button, Flex, Icon, Spinner, Text } from '@chakra-ui/react';
+import { Box, Flex, Icon, Spinner, Text } from '@chakra-ui/react';
 import { CSSObject } from '@emotion/react';
 import Select, {
     components,
     StylesConfig,
-    ControlProps,
     GroupBase,
     MenuProps,
     OptionProps,
@@ -14,7 +13,6 @@ import Select, {
     LoadingIndicatorProps,
     SingleValue,
     MultiValue,
-    ValueContainerProps,
 } from 'react-select';
 
 import { SbChevronDownIcon, SbCloseIcon } from 'shared/icons/Icons';

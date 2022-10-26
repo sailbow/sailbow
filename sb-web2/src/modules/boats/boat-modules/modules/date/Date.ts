@@ -7,6 +7,8 @@ import { SbCalendarIcon, ModuleDateImage } from 'shared/icons/Icons';
 export type DateModuleDataType = {
     startDate: string;
     endDate?: string;
+    startTime?: string;
+    endTime?: string;
 };
 
 export const formatDate = (inputDate: string) => {
@@ -19,10 +21,19 @@ export const formatDate = (inputDate: string) => {
 };
 
 export const getText = (data: ModuleData<DateModuleDataType>) => {
-    const startDate = formatDate(data.startDate);
-    const endDate = data.endDate ? formatDate(data.endDate) : null;
+    let startDate = formatDate(data.startDate);
+    let endDate = data.endDate ? formatDate(data.endDate) : null;
+    let time = '';
 
-    return `${startDate}${endDate ? ` - ${endDate}` : ''}`;
+    if (data.startTime && data.endTime) {
+        time = ` from ${data.startTime} - ${data.endTime}`;
+    } else if (data.startTime && !data.endTime) {
+        time = ` from ${data.startTime} `;
+    } else if (!data.startTime && data.endTime) {
+        time = ` ending at ${data.endTime}`;
+    }
+
+    return `${startDate}${endDate ? ` - ${endDate}` : ''} ${time}`;
 };
 
 export const DateModule = {

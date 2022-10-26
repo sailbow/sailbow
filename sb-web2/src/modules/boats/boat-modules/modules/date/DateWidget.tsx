@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useState } from 'react';
 
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 
 import { useAuthStore } from 'modules/auth/Auth.Store';
 import { Module, ModuleData } from 'modules/boats/Boat.Types';
@@ -8,6 +8,7 @@ import { DateSettings } from 'modules/boats/boat-modules/modules/date/DateSettin
 import { DateModuleDataType, getText } from 'modules/boats/boat-modules/modules/date/Date';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
 import { DatePicker } from 'shared/date-picker/DatePicker';
+import { TimePicker } from 'shared/time-picker/TimePicker';
 
 type DataType = ModuleData<DateModuleDataType>;
 
@@ -38,7 +39,7 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
 
         widgetData.forEach((d) => {
             const foundPollIdx = updatedWidgetData.findIndex((i) => i.id === d.id);
-            const { startDate, endDate } = updatedWidgetData[foundPollIdx];
+            const { startDate, endDate, startTime, endTime } = updatedWidgetData[foundPollIdx];
 
             if (!startDate) {
                 setStartDateError('Start date is required');
@@ -73,27 +74,45 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
 
     const getInputComponent: any = (optionId: string, data: DataType) => {
         return (
-            <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }}>
-                <DatePicker
-                    label="Start Date"
-                    name="startDate"
-                    placeholder="mm/dd/yyyy"
-                    required
-                    onChange={onDataChange(optionId)}
-                    value={data.startDate}
-                    error={!!startDateError}
-                    errorLabel={startDateError}
-                />
-                <DatePicker
-                    label="End Date"
-                    name="endDate"
-                    placeholder="mm/dd/yyyy"
-                    onChange={onDataChange(optionId)}
-                    error={!!endDateError}
-                    errorLabel={endDateError}
-                    value={data.endDate}
-                />
-            </Flex>
+            <Box>
+                <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }}>
+                    <DatePicker
+                        label="Start Date"
+                        name="startDate"
+                        placeholder="mm/dd/yyyy"
+                        required
+                        onChange={onDataChange(optionId)}
+                        value={data.startDate}
+                        error={!!startDateError}
+                        errorLabel={startDateError}
+                    />
+                    <DatePicker
+                        label="End Date"
+                        name="endDate"
+                        placeholder="mm/dd/yyyy"
+                        onChange={onDataChange(optionId)}
+                        error={!!endDateError}
+                        errorLabel={endDateError}
+                        value={data.endDate}
+                    />
+                </Flex>
+                <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }} mt="4">
+                    <TimePicker
+                        label="Start Time"
+                        name="startTime"
+                        placeholder="hh:mm AM"
+                        onChange={onDataChange(optionId)}
+                        value={data.startTime}
+                    />
+                    <TimePicker
+                        label="End Time"
+                        name="endTime"
+                        placeholder="hh:mm AM"
+                        onChange={onDataChange(optionId)}
+                        value={data.endTime}
+                    />
+                </Flex>
+            </Box>
         );
     };
 
@@ -113,6 +132,8 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
                     isEditing: true,
                     startDate: '',
                     endDate: '',
+                    startTime: '',
+                    endTime: '',
                 };
 
                 setWidgetData([...widgetData, newData]);

@@ -84,6 +84,22 @@ export const ButtonStyles: ComponentStyleConfig = {
                 color: BrandColors.dark,
             };
         },
+        accent: (props: any) => {
+            return {
+                ...props.theme.components.Button.variants.outline,
+                color: 'brand.900',
+                bg: 'brand.50',
+                borderTopWidth: '2px',
+                borderBottomWidth: '2px',
+                borderLeftWidth: '2px',
+                borderRightWidth: '2px',
+                borderColor: 'brand.400',
+                borderStyle: 'solid',
+                _hover: {
+                    borderColor: 'brand.200',
+                },
+            };
+        },
         outline: (props: any) => {
             return {
                 ...props.theme.components.Button.variants.outline,

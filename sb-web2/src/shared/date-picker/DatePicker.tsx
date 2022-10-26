@@ -203,7 +203,7 @@ export const Calendar: FC<CalendarProps> = ({ date, onDateChange }) => {
                 <Stack maxH="260px" overflowY="auto" w="100%" p="2">
                     {Months.map((m) => (
                         <Button
-                            variant={m === Months[month - 1] ? 'solid' : 'ghost'}
+                            variant={m === Months[month - 1] ? 'accent' : 'ghost'}
                             colorScheme={m === Months[month - 1] ? 'brand' : 'gray'}
                             key={`month-${m}`}
                             onClick={() => setMonth(Months.indexOf(m) + 1)}
@@ -215,7 +215,7 @@ export const Calendar: FC<CalendarProps> = ({ date, onDateChange }) => {
                 <Stack maxH="260px" overflowY="auto" w="100%" p="2">
                     {YearRange.map((y) => (
                         <Button
-                            variant={y === year ? 'solid' : 'ghost'}
+                            variant={y === year ? 'accent' : 'ghost'}
                             colorScheme={y === year ? 'brand' : 'gray'}
                             key={`year-${y}`}
                             onClick={() => {
@@ -254,7 +254,7 @@ export const Calendar: FC<CalendarProps> = ({ date, onDateChange }) => {
                                                 onClick={() => {
                                                     onSelect(day.id);
                                                 }}
-                                                variant={day.id === selectedDate ? 'solid' : 'ghost'}
+                                                variant={day.id === selectedDate ? 'accent' : 'ghost'}
                                                 colorScheme={day.id === selectedDate ? 'brand' : 'gray'}
                                             >
                                                 {day.label}
