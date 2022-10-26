@@ -1,5 +1,8 @@
 ﻿using Ardalis.GuardClauses;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 using Sb.Data;
 using Sb.Data.Models;
 
@@ -19,13 +22,12 @@ namespace Sb.Api.Services
             var module = await _repo.GetByIdAsync<Module>(id);
             Guard.Against.EntityMissing(module, nameof(id));
 
-            List<ModuleData> data = new();
-            foreach (var d in module.Data)
-            {
-                data.Add(ConvertModuleData(module.Type, d));
-            }
-            module.Data = data;
             return module;
+        }
+
+        public async Task<IEnumerable<Module>> GetModulesByBoatIdAsync(string boatId)
+        {
+            return await _repo.GetAsync<Module>(m => m.BoatId == boatId);
         }
 
         public async Task<Module> UpsertModule(Module module)
@@ -39,16 +41,10 @@ namespace Sb.Api.Services
             return await _repo.InsertAsync(module);
         }
 
-        private ModuleData ConvertModuleData(ModuleType type, object data)
+        private Dictionary<ModuleType, Type> _moduleTypes = new()
         {
-            ModuleData d = type switch
-            {
-                ModuleType.Date => (DateModuleData)data,
-                _ => throw new ArgumentException($"Module type '{type}' is not yet supported")
-            };
-            d.Id = d.Id ?? Guid.NewGuid().ToString();
-            return d;
-        }
+            { ModuleType.Date, typeof(DateModuleData) }
+        };
 
 
         private readonly IRepository _repo;

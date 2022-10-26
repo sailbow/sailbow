@@ -11,6 +11,7 @@ using Sb.Api.Authorization;
 using Sb.Api.Configuration;
 using Sb.Api.Middleware;
 using Sb.Api.Services;
+using Sb.Data.Serialization;
 using Sb.Email;
 using Sb.OAuth2;
 
@@ -124,6 +125,7 @@ services.AddControllers()
     {
         opts.UseCamelCasing(true);
         opts.SerializerSettings.Converters.Add(new StringEnumConverter());
+        opts.SerializerSettings.Converters.Add(new ModuleDataConverter());
     });
 
 var app = builder.Build();
