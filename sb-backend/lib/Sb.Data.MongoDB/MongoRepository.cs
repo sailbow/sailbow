@@ -1,6 +1,7 @@
 ﻿
 using System.Linq.Expressions;
 
+using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;

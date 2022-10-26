@@ -26,7 +26,6 @@ namespace Sb.Api.Middleware
                 _logger.LogError(error, error.Message);
                 HttpResponse response = context.Response;
                 response.ContentType = "application/json";
-                string result;
 
                 switch (error)
                 {
@@ -42,7 +41,7 @@ namespace Sb.Api.Middleware
                     case ValidationException:
                     case ArgumentException:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        await response.WriteAsJsonAsync(new { message = error?.Message });
+                        await response.WriteAsJsonAsync(new { message = error?.ToString()});
                         break;
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;

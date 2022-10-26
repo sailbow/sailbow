@@ -45,22 +45,22 @@ namespace Sb.Api.Services
             return boat;
         }
 
-        public async Task<IEnumerable<Boat>> GetBoats(string userId, GetBoatsRequest request = null)
+        public async Task<IEnumerable<Boat>> GetAllBoats(string userId)
+        {
+            return await _repo.GetAsync<Boat>(b => b.Crew.Any(cm => cm.UserId == userId));
+        }
+
+        public async Task<IEnumerable<Boat>> GetBoats(string userId, int? page, int? perPage, string search = "")
         {
             User user = await _repo.GetByIdAsync<User>(userId);
             Guard.Against.EntityMissing(user, nameof(user));
 
-            if (request != null)
-            {
-                return await _repo.GetPaginatedAsync<Boat>(
-                    skip: request.Page,
-                    take: request.PerPage,
-                    predicate: b =>
-                        b.Crew.Any(cm => cm.UserId == userId) &&
-                        (string.IsNullOrWhiteSpace(request.Search) || b.Name.ToLower().Contains(request.Search.ToLower())));
-            }
-
-            return await _repo.GetAsync<Boat>(b => b.Crew.Any(cm => cm.UserId == userId));
+            return await _repo.GetPaginatedAsync<Boat>(
+                skip: page.GetValueOrDefault(0),
+                take: perPage.GetValueOrDefault(10),
+                predicate: b =>
+                    b.Crew.Any(cm => cm.UserId == userId) &&
+                    (search == string.Empty || b.Name.Contains(search)));
         }
 
         public async Task<Code> GenerateCodeInvite(string boatId, int? expiresUnix)

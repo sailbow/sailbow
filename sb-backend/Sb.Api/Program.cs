@@ -11,6 +11,7 @@ using Sb.Api.Authorization;
 using Sb.Api.Configuration;
 using Sb.Api.Middleware;
 using Sb.Api.Services;
+using Sb.Data.Serialization;
 using Sb.Email;
 using Sb.OAuth2;
 
@@ -47,6 +48,7 @@ services
             }
         });
     })
+    .AddSwaggerGenNewtonsoftSupport()
     .AddEndpointsApiExplorer()
     .Configure<JwtConfig>(configuration.GetSection("Jwt"))
     .Configure<EmailConfig>(configuration.GetSection("Email"))
@@ -59,6 +61,7 @@ services
     .AddTransient<ITokenService, TokenService>()
     .AddTransient<ValidateAccessTokenMiddleware>()
     .AddTransient<IUserService, UserService>()
+    .AddTransient<IModuleService, ModuleService>()
     .AddAuthorization(opts =>
     {
         opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>
@@ -122,6 +125,7 @@ services.AddControllers()
     {
         opts.UseCamelCasing(true);
         opts.SerializerSettings.Converters.Add(new StringEnumConverter());
+        opts.SerializerSettings.Converters.Add(new ModuleDataConverter());
     });
 
 var app = builder.Build();
