@@ -4,7 +4,6 @@ import {
     Box,
     Flex,
     Button,
-    IconButton,
     Stack,
     Popover,
     PopoverTrigger,
@@ -23,13 +22,8 @@ interface ClockProps {
     onDateChange: (time: string) => void;
 }
 
-interface Clock {
-    label: string;
-    id: string;
-}
-
 export const Clock: FC<ClockProps> = ({ time, onDateChange }) => {
-    const [selectedTime, setSelectedTime] = useState(time || new Date().toLocaleTimeString());
+    const [selectedTime] = useState(time || new Date().toLocaleTimeString());
     const [hour, setHour] = useState<string>(selectedTime.split(':')[0]);
     const [min, setMin] = useState<string>('');
     const [ampm, setAmpm] = useState<string>(selectedTime.split(' ')[1]);
@@ -42,11 +36,11 @@ export const Clock: FC<ClockProps> = ({ time, onDateChange }) => {
         } else {
             setMin(val.toString());
         }
-    }, []);
+    }, [selectedTime]);
 
     useEffect(() => {
         onDateChange(`${hour}:${min} ${ampm}`);
-    }, [hour, min, ampm]);
+    }, [hour, min, ampm, onDateChange]);
 
     return (
         <Box>
