@@ -41,7 +41,7 @@ namespace Sb.Api.Middleware
                     case ValidationException:
                     case ArgumentException:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        await response.WriteAsJsonAsync(new { message = error?.ToString()});
+                        await response.WriteAsJsonAsync(new { message = error?.Message });
                         break;
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;

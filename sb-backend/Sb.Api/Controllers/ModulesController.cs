@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 using Sb.Api.Services;
+using Sb.Api.Validation;
 using Sb.Data.Models;
 using Sb.Data.Serialization;
 
@@ -14,15 +15,23 @@ namespace Sb.Api.Controllers;
 public class ModulesController : ApiControllerBase
 {
     public ModulesController(
-        IModuleService moduleService)
+        IModuleService moduleService,
+        BoatService boatService)
     {
         _moduleService = moduleService;
+        _boatService = boatService;
     }
 
-    [HttpGet]
-    public async Task<IEnumerable<Module>> GetModules([FromRoute] string boatId)
+    [HttpGet("{moduleId}")]
+    public async Task<Module> GetModuleById([FromRoute] string boatId, [FromRoute] string moduleId)
     {
-        return await _moduleService.GetModulesByBoatIdAsync(boatId);
+        await _boatService.GetBoatById(boatId);
+        Module m = await _moduleService.GetModuleByIdAsync(moduleId);
+        if (m.BoatId != boatId)
+        {
+            throw new MissingEntityException($"Module '{moduleId}' not found for boat '{boatId}'");
+        }
+        return m;
     }
 
     [HttpPut]
@@ -38,4 +47,5 @@ public class ModulesController : ApiControllerBase
     }
 
     private readonly IModuleService _moduleService;
+    private readonly BoatService _boatService;
 }

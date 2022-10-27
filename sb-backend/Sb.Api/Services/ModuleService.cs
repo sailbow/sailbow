@@ -11,9 +11,11 @@ namespace Sb.Api.Services
     public class ModuleService : IModuleService
     {
         public ModuleService(
-            IRepository repo)
+            IRepository repo,
+            IIdGenerator idGenerator)
         {
             _repo = repo;
+            _idGenerator = idGenerator;
         }
 
         public async Task<Module> GetModuleByIdAsync(string id)
@@ -25,11 +27,6 @@ namespace Sb.Api.Services
             return module;
         }
 
-        public async Task<IEnumerable<Module>> GetModulesByBoatIdAsync(string boatId)
-        {
-            return await _repo.GetAsync<Module>(m => m.BoatId == boatId);
-        }
-
         public async Task<Module> UpsertModule(Module module)
         {
             if (!string.IsNullOrWhiteSpace(module.Id))
@@ -37,7 +34,13 @@ namespace Sb.Api.Services
                 await _repo.UpdateAsync(module);
                 return module;
             }
-
+            foreach (ModuleData d in module.Data)
+            {
+                if (string.IsNullOrWhiteSpace(d.Id))
+                {
+                    d.Id = _idGenerator.GenerateId();
+                }
+            }
             return await _repo.InsertAsync(module);
         }
 
@@ -48,5 +51,6 @@ namespace Sb.Api.Services
 
 
         private readonly IRepository _repo;
+        private readonly IIdGenerator _idGenerator;
     }
 }
