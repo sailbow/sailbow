@@ -128,7 +128,7 @@ export const BoatCreate: FunctionComponent = () => {
                         onChange={onFormDetailsChange}
                         name="description"
                         id="description"
-                        rows={3}
+                        rows={5}
                         variant="brand"
                         placeholder="What is your boat about?"
                         maxLength={300}

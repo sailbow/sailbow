@@ -68,10 +68,6 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
         return true;
     };
 
-    const onRemoveOption: any = (updatedWidgetdata: DataType[]) => {
-        setWidgetData([...updatedWidgetdata]);
-    };
-
     const getInputComponent: any = (optionId: string, data: DataType) => {
         return (
             <Box>
@@ -142,7 +138,9 @@ export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
             onOptionEdit={(data) => {
                 setWidgetData(data as DataType[]);
             }}
-            onRemoveOption={onRemoveOption}
+            onRemoveOption={(options) => {
+                setWidgetData(options as DataType[]);
+            }}
         ></BoatWidget>
     );
 };

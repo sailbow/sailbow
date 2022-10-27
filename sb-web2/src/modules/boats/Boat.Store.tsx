@@ -414,17 +414,20 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             });
         },
         saveWidgetSettings: (moduleId: string, settings: ModuleSettings) => {
-            // const modules = state.activeBoat!.modules;
-            // const module = modules.find((m) => m.id === moduleId);
-            // if (module) {
-            //     module.widget.settings = settings;
-            // }
-            // dispatch({
-            //     type: BoatActionType.SetModules,
-            //     payload: {
-            //         modules,
-            //     },
-            // });
+            const modules = state.activeBoat!.modules;
+            const module = modules[moduleId];
+
+            if (module) {
+                module.settings = settings;
+            }
+
+            dispatch({
+                type: BoatActionType.SetModule,
+                payload: {
+                    moduleId,
+                    module,
+                },
+            });
         },
     };
 

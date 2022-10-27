@@ -112,9 +112,8 @@ export const BoatWidget = <T extends {}>({
                             onOptionEdit={onOptionEdit}
                             onRemoveOption={onRemoveOption}
                             onSave={() => {
-                                if (onSave()) saveModuleData(id, data);
-
-                                return true;
+                                onSave();
+                                saveModuleData(id, data);
                             }}
                         />
                         {children}

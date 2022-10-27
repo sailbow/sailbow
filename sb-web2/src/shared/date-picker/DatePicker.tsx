@@ -98,7 +98,7 @@ export const Calendar: FC<CalendarProps> = ({ date, onDateChange }) => {
 
     useEffect(() => {
         onDateChange(selectedDate);
-    }, []);
+    }, []); // eslint-disable-line
 
     useEffect(() => {
         generateCalendar(year, month);

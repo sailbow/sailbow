@@ -21,16 +21,11 @@ export const ButtonStyles: ComponentStyleConfig = {
     defaultProps: {
         colorScheme: 'brand',
     },
-    baseStyle: (props: any) => {
+    baseStyle: () => {
         return {
             fontWeight: ChakraTheme.fontWeights.semibold,
             borderColor: 'transparent',
             borderWidth: '1px',
-            // _focus: {
-            //     boxShadow: '0px 0px 2px 1px red',
-            //     borderColor: 'red',
-            //     borderWidth: '1px',
-            // },
         };
     },
     sizes: {
@@ -87,15 +82,12 @@ export const ButtonStyles: ComponentStyleConfig = {
         accent: (props: any) => {
             return {
                 ...props.theme.components.Button.variants.outline,
-                color: 'brand.900',
+                color: 'brand.dark',
                 bg: 'brand.100',
                 borderTopWidth: '2px',
                 borderBottomWidth: '2px',
                 borderLeftWidth: '2px',
                 borderRightWidth: '2px',
-                _hover: {
-                    bg: 'brand.50',
-                },
             };
         },
         outline: (props: any) => {

@@ -1,11 +1,9 @@
 import { FunctionComponent } from 'react';
 
-import { Flex, IconButton, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
+import { Flex, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { Boat } from 'modules/boats/Boat.Types';
-import { BoatShare } from 'modules/boats/common/boat-share/BoatShare';
-import { SbSettingsIcon } from 'shared/icons/Icons';
 import { Routes } from 'router/Router.Types';
 
 interface Props {
@@ -30,18 +28,6 @@ export const BoatViewToolbar: FunctionComponent<Props> = ({ boat }) => {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
             </Breadcrumb>
-
-            {/* <Flex justifyContent="flex-end">
-                <BoatShare />
-
-                <IconButton
-                    fontSize="2xl"
-                    aria-label="settings"
-                    colorScheme="gray"
-                    variant="ghost"
-                    icon={<SbSettingsIcon />}
-                />
-            </Flex> */}
         </Flex>
     );
 };

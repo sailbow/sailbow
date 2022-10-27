@@ -59,6 +59,7 @@ export interface CrewMember extends Pick<User, 'id' | 'email' | 'name'> {
 export interface ModuleSettings {
     allowMultiple: boolean;
     anonymousVoting: boolean;
+    deadline?: string;
     [key: string]: any;
 }
 

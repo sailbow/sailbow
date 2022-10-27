@@ -22,7 +22,7 @@ export interface Props<T> {
     onOptionEdit: <T>(data: T[]) => void;
     onRemoveOption?: <T>(data: T) => void;
     selectOption: (moduleId: string, optionId: string) => void;
-    onSave: () => boolean;
+    onSave: () => void;
 }
 
 export const Poll = <T extends {}>({
@@ -36,6 +36,8 @@ export const Poll = <T extends {}>({
     selectOption,
     onSave,
 }: PropsWithChildren<Props<T>>) => {
+    console.log({ data });
+
     const onRemove = (optionId: string) => {
         const updatedData = [...data];
         const optionIdx = updatedData.findIndex((w) => w.id === optionId);
@@ -135,7 +137,11 @@ export const Poll = <T extends {}>({
                                     variant="ghost"
                                     size="sm"
                                     icon={<SbMinusCircleIcon />}
-                                    onClick={() => onRemove(item.id)}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        onRemove(item.id);
+                                    }}
                                 />
                             </Flex>
                         )}
