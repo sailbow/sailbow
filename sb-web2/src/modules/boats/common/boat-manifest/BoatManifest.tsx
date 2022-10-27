@@ -1,9 +1,9 @@
 import { FC, ReactNode } from 'react';
 
 import { Badge, Box, BoxProps, Flex, Text } from '@chakra-ui/react';
+import { withSkeleton } from 'util/guards/Loading';
 
 import './BoatManifest.scss';
-import { withLoading, withSkeleton } from 'util/guards/Loading';
 
 interface Props extends BoxProps {
     icon: ReactNode;
