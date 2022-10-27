@@ -14,8 +14,10 @@ import {
     ModuleExtended,
     Role,
     ModuleType,
+    Modules,
 } from 'modules/boats/Boat.Types';
 import { useAuthStore } from 'modules/auth/Auth.Store';
+import { upsertModule } from './boat-modules/modules/Modules.Service';
 
 export enum BoatActionType {
     SetError,
@@ -52,11 +54,11 @@ interface PayloadSetModuleMode {
 
 interface PayloadSetModule {
     moduleId: string;
-    module: Module<any>;
+    module: ModuleExtended<any>;
 }
 
 interface PayloadSetAllModules {
-    modules: ModuleExtended<any>;
+    modules: Modules<any>;
 }
 
 interface BoatAction {
@@ -361,38 +363,68 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             //     "id": "string"
             //   }
 
-            const module: Module<T> = {
-                id: '',
-                name: '',
-                moduleType: moduleType,
+            const module: Pick<Module<T>, 'name' | 'description' | 'settings' | 'order' | 'data'> = {
+                name: moduleType,
                 order: Object.keys(newBoat!.modules).length + 1,
                 description: '',
-                totalVotes: [],
-                dataLoaded: false,
                 data: [],
                 settings: {
                     allowMultiple: true,
                     anonymousVoting: true,
-                },
-                mode: ModuleMode.Edit,
-                loading: true,
-                creator: {
-                    id: user!.id,
-                    name: user!.name,
-                    email: user!.email,
+                    deadline: '',
                 },
             };
+
+            // dispatch({
+            //     type: BoatActionType.SetModule,
+            //     payload: {
+            //         moduleId: '',
+            //         module: {
+            //             ...module,
+            //             id: '',
+            //             type: ModuleType.Date,
+            //             totalVotes: 0,
+
+            //             loading: true,
+            //             dataLoaded: false,
+            //             mode: ModuleMode.Edit,
+            //         },
+            //     },
+            // });
+
+            const response = await upsertModule(newBoat.id, {
+                name: 'date',
+                description: 'test',
+                order: 1,
+                settings: {
+                    allowMultiple: true,
+                    anonymousVoting: false,
+                },
+                data: [
+                    {
+                        type: 'date',
+                        startDate: '2022-10-26T20:17:04Z',
+                        endDate: '2022-10-28T20:17:04Z',
+                    },
+                ],
+            });
+            console.log(response);
 
             dispatch({
                 type: BoatActionType.SetModule,
                 payload: {
-                    moduleId: tempId,
-                    module,
+                    moduleId: response.id,
+                    module: {
+                        ...response,
+                        loading: false,
+                        dataLoaded: false,
+                        mode: ModuleMode.Edit,
+                    },
                 },
             });
         },
         saveModuleData: <T,>(moduleId: string, data: ModuleData<T>[]) => {
-            const module: Module<T> = state.activeBoat!.modules[moduleId];
+            const module: ModuleExtended<T> = state.activeBoat!.modules[moduleId];
 
             module.data = data;
             module.mode = ModuleMode.View;

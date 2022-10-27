@@ -1,26 +1,26 @@
 import { ChangeEvent, FC, useState } from 'react';
 
 import { Flex } from '@chakra-ui/react';
-    
+
 import { useAuthStore } from 'modules/auth/Auth.Store';
-import { Module, ModuleData } from 'modules/boats/Boat.Types';
+import { Module, ModuleData, ModuleExtended } from 'modules/boats/Boat.Types';
 import { LocationSettings } from 'modules/boats/boat-modules/modules/location/LocationSettings';
 import { LocationModuleDataType, getText } from 'modules/boats/boat-modules/modules/location/Location';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
-    
+
 type DataType = ModuleData<LocationModuleDataType>;
-    
-export const LocationWidget: FC<Module<LocationModuleDataType>> = (props) => {
+
+export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props) => {
     const { id, settings, data } = props;
     const [widgetData, setWidgetData] = useState<DataType[]>(data);
     const [{ user }] = useAuthStore();
-    
+
     const onDataChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
         const updatedWidgetData = [...widgetData];
         // update here
         setWidgetData([...updatedWidgetData]);
     };
-    
+
     const onSave = () => {
         const updatedWidgetData = [...widgetData];
         let hasError = false;
@@ -45,15 +45,11 @@ export const LocationWidget: FC<Module<LocationModuleDataType>> = (props) => {
     const onRemoveOption: any = (updatedWidgetdata: DataType[]) => {
         setWidgetData([...updatedWidgetdata]);
     };
-    
+
     const getInputComponent: any = (optionId: string, data: DataType) => {
-        return (
-            <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }}>
-                    
-            </Flex>
-        );
+        return <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }}></Flex>;
     };
-    
+
     return (
         <BoatWidget<DataType>
             {...props}
@@ -69,11 +65,11 @@ export const LocationWidget: FC<Module<LocationModuleDataType>> = (props) => {
                     votes: 0,
                     isEditing: true,
                 };
-    
+
                 setWidgetData([...widgetData, newData]);
             }}
             getInputComponent={getInputComponent}
-                onOptionEdit={(data) => {
+            onOptionEdit={(data) => {
                 setWidgetData(data as DataType[]);
             }}
             onRemoveOption={onRemoveOption}

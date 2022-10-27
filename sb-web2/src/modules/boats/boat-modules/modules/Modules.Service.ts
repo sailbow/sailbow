@@ -18,7 +18,7 @@ export const ModuleEndpoints: Record<ModuleEndpointLabels, EndpointFunction> = {
         method: 'PUT',
         url: `api/boats/${boatId}/modules`,
         data: {
-            module,
+            ...module,
         },
     }),
 };
@@ -29,8 +29,11 @@ export const addModule = async (boatId: string, module: Module<ModuleDataType>):
     return data;
 };
 
-export const upsertModule = async (boatId: string, module: Module<ModuleDataType>): Promise<Module<ModuleDataType>> => {
-    const { data }: AxiosResponse<Module<ModuleDataType>> = await Http(ModuleEndpoints.Upsert({ boatId, module }));
+export const upsertModule = async (
+    boatId: string,
+    module: Pick<Module<any>, 'name' | 'description' | 'settings' | 'order' | 'data'>,
+): Promise<Module<any>> => {
+    const { data }: AxiosResponse<Module<any>> = await Http(ModuleEndpoints.Upsert({ boatId, module }));
 
     return data;
 };

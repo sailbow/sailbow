@@ -23,7 +23,7 @@ export const BoatModuleManifest: FC<Props> = ({ boat }) => {
             <InfoManifest data={boat} />
             <CrewManifest boat={boat} />
             {Object.values(boat.modules).map((module) => {
-                const Module = ModulesMapper[module.moduleType];
+                const Module = ModulesMapper[module.type];
 
                 return <Module.Manifest key={module.id} {...module} />;
             })}

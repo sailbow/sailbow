@@ -3,7 +3,7 @@ import { ChangeEvent, FC, useState } from 'react';
 import { Box, Flex } from '@chakra-ui/react';
 
 import { useAuthStore } from 'modules/auth/Auth.Store';
-import { Module, ModuleData } from 'modules/boats/Boat.Types';
+import { ModuleData, ModuleExtended } from 'modules/boats/Boat.Types';
 import { DateSettings } from 'modules/boats/boat-modules/modules/date/DateSettings';
 import { DateModuleDataType, getText } from 'modules/boats/boat-modules/modules/date/Date';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
@@ -12,7 +12,7 @@ import { TimePicker } from 'shared/time-picker/TimePicker';
 
 type DataType = ModuleData<DateModuleDataType>;
 
-export const DateWidget: FC<Module<DateModuleDataType>> = (props) => {
+export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
     const { id, settings, data } = props;
     const [widgetData, setWidgetData] = useState<DataType[]>(data);
     const [startDateError, setStartDateError] = useState<string>('');

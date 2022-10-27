@@ -54,6 +54,7 @@ export const BoatCreate: FunctionComponent = () => {
             setBoatForm({
                 ...boatForm,
                 crew: [{ name: user.name, email: user.email, role: Role.Captain, info: '', id: user.id }],
+                captain: { name: user.name, email: user.email, role: Role.Captain, info: '', id: user.id },
             });
         }
     }, [activeBoat, createNavMode, user, createNavOpen]); // eslint-disable-line

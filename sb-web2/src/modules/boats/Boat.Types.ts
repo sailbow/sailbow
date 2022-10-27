@@ -75,32 +75,36 @@ export type ModuleData<T> = {
 export interface Module<T> {
     id: string;
     name: string;
-    moduleType: ModuleType;
+    type: ModuleType;
     order: number;
     description: string;
     totalVotes: CrewMember[];
     data: ModuleData<T>[];
     settings: ModuleSettings;
-    mode: ModuleMode;
-    loading: boolean;
     actionRequired?: boolean;
-    dataLoaded?: boolean;
-    error?: any;
     finalizedOptionId?: string;
     creator: Pick<User, 'id' | 'email' | 'name'>;
 }
 
-export interface ModuleExtended<T> {
-    [key: string]: Module<T>;
+export interface ModuleExtended<T> extends Module<T> {
+    dataLoaded?: boolean;
+    error?: any;
+    loading: boolean;
+    mode: ModuleMode;
+}
+
+export interface Modules<T> {
+    [key: string]: ModuleExtended<T>;
 }
 
 export interface Boat {
     id: string;
     name: string;
+    captain?: CrewMember;
     description?: string;
     banner: BannerState;
     crew: CrewMember[];
-    modules: ModuleExtended<any>;
+    modules: Modules<any>;
     role: Role;
 }
 

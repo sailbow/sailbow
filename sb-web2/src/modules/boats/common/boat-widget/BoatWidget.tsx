@@ -30,7 +30,7 @@ export const BoatWidget = <T extends {}>({
     id,
     children,
     name,
-    moduleType,
+    type,
     mode,
     data,
     loading,
@@ -43,7 +43,7 @@ export const BoatWidget = <T extends {}>({
     onRemoveOption,
     onSave,
 }: PropsWithChildren<Props<T>>) => {
-    const module = useMemo(() => ModulesMapper[moduleType], [moduleType]);
+    const module = useMemo(() => ModulesMapper[type], [type]);
     const [{ activeBoat }, { setModuleMode, removeModule, selectOption, saveModuleData }] = useBoat();
 
     const WidgetDescriptionPopover: FC = () => {
