@@ -49,9 +49,8 @@ namespace Sb.Api.Services
             boat.Show = captainAuthResult.Succeeded;
 
             BoatDto b = _mapper.Map<Boat, BoatDto>(boat);
-            b.Modules = (await _repo
-                .GetAsync<Module>(m => m.BoatId == boatId))
-                .Select(m => m.Id);
+            var modules = await _repo.GetAsync<Module>(m => m.BoatId == boatId);
+            b.Modules = _mapper.Map<IEnumerable<Module>, IEnumerable<LightWeightModule>>(modules);
             b.Role = b.Crew
                 .First(cm => cm.UserId == _context.GetUserId())
                 .Role;
