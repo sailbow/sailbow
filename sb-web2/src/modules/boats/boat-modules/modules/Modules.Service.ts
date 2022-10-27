@@ -5,7 +5,7 @@ import { Http } from 'util/http/Http';
 import { EndpointFunction } from 'util/http/Endpoints';
 import { ModuleDataType } from './Modules';
 
-type ModuleEndpointLabels = 'Add' | 'UpdateAll';
+type ModuleEndpointLabels = 'Add' | 'Upsert';
 export const ModuleEndpoints: Record<ModuleEndpointLabels, EndpointFunction> = {
     Add: ({ boatId, module }) => ({
         method: 'POST',
@@ -14,11 +14,11 @@ export const ModuleEndpoints: Record<ModuleEndpointLabels, EndpointFunction> = {
             ...module,
         },
     }),
-    UpdateAll: ({ boatId, modules }) => ({
+    Upsert: ({ boatId, module }) => ({
         method: 'PUT',
         url: `api/boats/${boatId}/modules`,
         data: {
-            modules,
+            module,
         },
     }),
 };
@@ -29,11 +29,8 @@ export const addModule = async (boatId: string, module: Module<ModuleDataType>):
     return data;
 };
 
-export const updateAllModules = async (
-    boatId: string,
-    modules: Module<ModuleDataType>[],
-): Promise<Module<ModuleDataType>> => {
-    const { data }: AxiosResponse<Module<ModuleDataType>> = await Http(ModuleEndpoints.UpdateAll({ boatId, modules }));
+export const upsertModule = async (boatId: string, module: Module<ModuleDataType>): Promise<Module<ModuleDataType>> => {
+    const { data }: AxiosResponse<Module<ModuleDataType>> = await Http(ModuleEndpoints.Upsert({ boatId, module }));
 
     return data;
 };

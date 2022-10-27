@@ -333,33 +333,49 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 }
             });
         },
-        addModule: <T,>(moduleType: ModuleType) => {
+        addModule: async <T,>(moduleType: ModuleType) => {
             // make api call to add module here
             const newBoat = { ...state.activeBoat! };
             const tempId = (Object.keys(newBoat!.modules).length + 1).toString();
+            // {
+            //     "boatId": "string",
+            //     "type": "Date",
+            //     "name": "string",
+            //     "description": "string",
+            //     "order": 0,
+            //     "finalizedOptionId": 0,
+            //     "settings": {
+            //       "allowMultiple": true,
+            //       "anonymousVoting": true,
+            //       "deadline": "2022-10-27T18:28:06.909Z"
+            //     },
+            //     "data": [
+            //       {
+            //         "votes": [
+            //           "string"
+            //         ],
+            //         "author": "string",
+            //         "id": "string"
+            //       }
+            //     ],
+            //     "id": "string"
+            //   }
 
             const module: Module<T> = {
-                id: tempId,
+                id: '',
                 name: '',
-                moduleType: ModuleType.Date,
+                moduleType: moduleType,
                 order: Object.keys(newBoat!.modules).length + 1,
                 description: '',
-                totalVotes: [
-                    {
-                        id: '1',
-                        name: 'Poppy Dope',
-                        email: 'poppy@dope.com',
-                        role: Role.Sailor,
-                    },
-                ],
+                totalVotes: [],
                 dataLoaded: false,
                 data: [],
                 settings: {
                     allowMultiple: true,
                     anonymousVoting: true,
                 },
-                loading: true,
                 mode: ModuleMode.Edit,
+                loading: true,
                 creator: {
                     id: user!.id,
                     name: user!.name,
