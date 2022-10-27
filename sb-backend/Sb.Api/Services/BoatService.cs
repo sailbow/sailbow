@@ -1,5 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 
+using AutoMapper;
+
 using Microsoft.AspNetCore.Authorization;
 
 using Sb.Api.Authorization;
@@ -16,15 +18,18 @@ namespace Sb.Api.Services
         private readonly IRepository _repo;
         private readonly HttpContext _context;
         private readonly IAuthorizationService _authService;
+        private readonly IMapper _mapper;
 
         public BoatService(
             IRepository repo,
             IHttpContextAccessor contextAccessor,
-            IAuthorizationService authService)
+            IAuthorizationService authService,
+            IMapper mapper)
         {
             _repo = repo;
             _context = contextAccessor.HttpContext;
             _authService = authService;
+            _mapper = mapper;
         }
 
         public async Task<Boat> CreateBoat(Boat boat)
@@ -34,7 +39,7 @@ namespace Sb.Api.Services
             return inserted;
         }
 
-        public async Task<Boat> GetBoatById(string boatId)
+        public async Task<BoatDto> GetBoatById(string boatId)
         {
             Boat boat = await GetBoat(boatId);
             var readAuthResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.ReadBoatPolicy);
@@ -42,7 +47,16 @@ namespace Sb.Api.Services
 
             var captainAuthResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.CaptainPolicy);
             boat.Show = captainAuthResult.Succeeded;
-            return boat;
+
+            BoatDto b = _mapper.Map<Boat, BoatDto>(boat);
+            b.Modules = (await _repo
+                .GetAsync<Module>(m => m.BoatId == boatId))
+                .Select(m => m.Id);
+            b.Role = b.Crew
+                .First(cm => cm.UserId == _context.GetUserId())
+                .Role;
+
+            return b;
         }
 
         public async Task<IEnumerable<Boat>> GetAllBoats(string userId)

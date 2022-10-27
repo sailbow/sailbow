@@ -42,6 +42,10 @@ namespace Sb.Data.MongoDB
                     md.SetIsRootClass(true);
                 });
             }
+            if (!BsonClassMap.IsClassMapRegistered(typeof(DateModuleData)))
+            {
+                BsonClassMap.RegisterClassMap<DateModuleData>();
+            }
         }
 
         public async Task<IEnumerable<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)

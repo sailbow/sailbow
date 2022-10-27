@@ -2,8 +2,9 @@
 
 namespace Sb.Api.Models
 {
-    public class BoatWithUserRole : Boat
+    public class BoatDto : Boat
     {
         public Role Role { get; set; }
+        public IEnumerable<string> Modules { get; set; }
     }
 }

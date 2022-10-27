@@ -62,6 +62,7 @@ services
     .AddTransient<ValidateAccessTokenMiddleware>()
     .AddTransient<IUserService, UserService>()
     .AddTransient<IModuleService, ModuleService>()
+    .AddAutoMapper(typeof(Program).Assembly)
     .AddAuthorization(opts =>
     {
         opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>
