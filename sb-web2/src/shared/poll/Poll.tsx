@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import { Box, Button, Flex, IconButton, Skeleton, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, Stack, Text } from '@chakra-ui/react';
 
 import { ModuleData, ModuleMode } from 'modules/boats/Boat.Types';
 import {

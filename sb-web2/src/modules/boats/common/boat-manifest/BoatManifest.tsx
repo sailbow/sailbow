@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 
-import { Badge, Box, BoxProps, Flex, Skeleton, Text } from '@chakra-ui/react';
+import { Badge, Box, BoxProps, Flex, Text } from '@chakra-ui/react';
 
 import './BoatManifest.scss';
 import { withLoading, withSkeleton } from 'util/guards/Loading';
