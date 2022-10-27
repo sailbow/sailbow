@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 import { Box, Button, Center, Flex, Stack } from '@chakra-ui/react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Boat, Module, ModuleName } from 'modules/boats/Boat.Types';
+import { Boat, Module, ModuleType } from 'modules/boats/Boat.Types';
 import { useSystem } from 'modules/system/System.Store';
 import { SbBulbIcon, SbPlusIcon } from 'shared/icons/Icons';
 import { ModuleDataType, ModulesMapper } from './modules/Modules';
@@ -20,10 +20,10 @@ interface BoatModulesWidgetItemProps<T> {
 }
 
 const getWidget = (module: Module<any>) => {
-    const Module = ModulesMapper[module.name as ModuleName];
+    const Module = ModulesMapper[module.moduleType];
 
     if (!Module) {
-        throw Error(`Invalid moduleName: ${module.name}`);
+        throw Error(`Invalid moduleType: ${module.moduleType}`);
     }
 
     return <Module.Widget {...module} />;

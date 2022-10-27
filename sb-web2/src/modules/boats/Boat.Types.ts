@@ -32,8 +32,8 @@ export enum ModuleName {
 }
 
 export enum ModuleType {
-    Manifest = 'manifest',
-    Widget = 'widget',
+    Date = 'Date',
+    Location = 'Location',
 }
 
 export enum ModuleMode {
@@ -74,7 +74,8 @@ export type ModuleData<T> = {
 
 export interface Module<T> {
     id: string;
-    name: ModuleName;
+    name: string;
+    moduleType: ModuleType;
     order: number;
     description: string;
     totalVotes: CrewMember[];

@@ -18,9 +18,7 @@ export const BoatModulesPicker: FC = () => {
     return (
         <Drawer isOpen={pickerOpen} onClose={closePicker} title="Pick a Widget" size="md">
             <Stack w="100%" spacing="4">
-                {moduleList.map((module) => {
-                    const m = ModulesMapper[module];
-
+                {Object.values(ModulesMapper).map((module) => {
                     return (
                         <Box
                             key={`picker-option-${module}`}
@@ -32,11 +30,11 @@ export const BoatModulesPicker: FC = () => {
                             _hover={{ borderColor: 'brand.primary', cursor: 'pointer' }}
                             _active={{ bg: '#fafafa' }}
                             onClick={() => {
-                                addModule(module, []);
+                                addModule(module.type);
                                 closePicker();
                             }}
                         >
-                            <BoatWidgetDetails name={m.name} image={<m.image />} info={m.info} />
+                            <BoatWidgetDetails name={module.name} image={<module.image />} info={module.info} />
                         </Box>
                     );
                 })}

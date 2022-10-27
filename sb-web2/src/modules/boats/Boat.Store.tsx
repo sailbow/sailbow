@@ -13,6 +13,7 @@ import {
     ModuleData,
     ModuleExtended,
     Role,
+    ModuleType,
 } from 'modules/boats/Boat.Types';
 import { useAuthStore } from 'modules/auth/Auth.Store';
 
@@ -222,7 +223,7 @@ interface BoatActionApis {
     getBoats: () => Promise<Boat[] | null>;
     removeActiveBoat: () => void;
     getModuleData: (boatId: string, moduleId: string) => Promise<void>;
-    addModule: (moduleName: ModuleName, moduleForm: any) => void;
+    addModule: (moduleType: ModuleType) => void;
     removeModule: (moduleId: string) => void;
     setModuleMode: (moduleId: string, mode: ModuleMode) => void;
     saveModuleData: <T>(moduleId: string, data: ModuleData<T>[]) => void;
@@ -332,14 +333,15 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 }
             });
         },
-        addModule: <T,>(moduleName: ModuleName) => {
+        addModule: <T,>(moduleType: ModuleType) => {
             // make api call to add module here
             const newBoat = { ...state.activeBoat! };
             const tempId = (Object.keys(newBoat!.modules).length + 1).toString();
 
             const module: Module<T> = {
                 id: tempId,
-                name: moduleName,
+                name: '',
+                moduleType: ModuleType.Date,
                 order: Object.keys(newBoat!.modules).length + 1,
                 description: '',
                 totalVotes: [
