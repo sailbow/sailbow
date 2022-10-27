@@ -1,5 +1,10 @@
-﻿using Sb.Data;
+﻿using MongoDB.Bson.Serialization;
+
+using Sb.Data;
+using Sb.Data.Models;
 using Sb.Data.MongoDB;
+
+using IIdGenerator = Sb.Data.IIdGenerator;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -11,6 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
             configureAction(config);
             services.AddSingleton(config);
             services.AddTransient<IRepository, MongoRepository>();
+            services.AddTransient<IIdGenerator, ObjectIdGenerator>();
             return services;
         }
     }

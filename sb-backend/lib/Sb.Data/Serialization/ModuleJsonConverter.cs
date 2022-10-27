@@ -8,11 +8,11 @@ using Newtonsoft.Json.Linq;
 
 using Sb.Data.Models;
 
-public class ModuleDataConverter : JsonConverter
+public class ModuleJsonConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
     {
-        return typeof(ModuleData).IsAssignableFrom(objectType);
+        return typeof(Module).IsAssignableFrom(objectType);
     }
 
     public override bool CanWrite
@@ -30,12 +30,13 @@ public class ModuleDataConverter : JsonConverter
     {
         var jObj = JObject.Load(reader);
         ModuleType moduleType = Enum.Parse<ModuleType>(jObj.Value<string>("type"), true);
-        var data = moduleType switch
+        Module module = new();
+        module.Data = moduleType switch
         {
-            ModuleType.Date => new DateModuleData(),
+            ModuleType.Date => new List<DateModuleData>(),
             _ => throw new JsonSerializationException($"Module type '{moduleType}' is not supported")
         };
-        serializer.Populate(jObj.CreateReader(), data);
-        return data;
+        serializer.Populate(jObj.CreateReader(), module);
+        return module;
     }
 }

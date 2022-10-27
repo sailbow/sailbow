@@ -1,5 +1,6 @@
 ﻿
 using System.Linq.Expressions;
+using System.Reflection;
 
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
@@ -31,7 +32,16 @@ namespace Sb.Data.MongoDB
             ConventionRegistry.Register(
                 name: "stringObjectIds",
                 conventions: new ConventionPack { new StringObjectIdConvention() },
-                filter: testc => true);
+                filter: t => true);
+
+            if (!BsonClassMap.IsClassMapRegistered(typeof(ModuleData)))
+            {
+                BsonClassMap.RegisterClassMap<ModuleData>(md =>
+                {
+                    md.AutoMap();
+                    md.SetIsRootClass(true);
+                });
+            }
         }
 
         public async Task<IEnumerable<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)

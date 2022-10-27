@@ -125,7 +125,7 @@ services.AddControllers()
     {
         opts.UseCamelCasing(true);
         opts.SerializerSettings.Converters.Add(new StringEnumConverter());
-        opts.SerializerSettings.Converters.Add(new ModuleDataConverter());
+        opts.SerializerSettings.Converters.Add(new ModuleJsonConverter());
     });
 
 var app = builder.Build();
