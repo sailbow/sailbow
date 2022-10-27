@@ -71,22 +71,9 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet("{boatId}")]
-        public async Task<BoatWithUserRole> GetBoatById(string boatId)
+        public async Task<BoatDto> GetBoatById(string boatId)
         {
-            Boat boat = await _boatService.GetBoatById(boatId);
-            return new BoatWithUserRole
-            {
-                Id = boat.Id,
-                Name = boat.Name,
-                Description = boat.Description,
-                Banner = boat.Banner,
-                Code = boat.Code,
-                Crew = boat.Crew,
-                Show = boat.Show,
-                Role = boat.Crew
-                    .First(cm => cm.UserId == HttpContext.GetClaim(CustomClaimTypes.Id))
-                    .Role
-            };
+            return await _boatService.GetBoatById(boatId);
         }
 
         [HttpPut("{boatId}/code")]
@@ -111,12 +98,11 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet("{boatId}/invites")]
-        public async Task<ActionResult<IEnumerable<Invite>>> GetInvites(string boatId)
+        public async Task<IEnumerable<Invite>> GetInvites(string boatId)
         {
             // Perform read validation but don't need the result
             await _boatService.GetBoatById(boatId);
-            var invites = await _repo.GetAsync<Invite>(i => i.BoatId == boatId);
-            return Ok(invites);
+            return await _repo.GetAsync<Invite>(i => i.BoatId == boatId);
         }
 
         [HttpGet("{boatId}/invites/{inviteId}")]
@@ -135,11 +121,10 @@ namespace Sb.Api.Controllers
         }
 
         [HttpPost("{boatId}/invites/{inviteId}/accept")]
-        public async Task<ActionResult<Boat>> AcceptInvite(string boatId, string inviteId)
+        public async Task<BoatDto> AcceptInvite(string boatId, string inviteId)
         {
             await _boatService.AcceptBoatInvite(boatId, inviteId, HttpContext.GetClaim(ClaimTypes.Email));
-            Boat boat = await _boatService.GetBoatById(boatId);
-            return Ok(boat);
+            return await _boatService.GetBoatById(boatId);
 
         }
 

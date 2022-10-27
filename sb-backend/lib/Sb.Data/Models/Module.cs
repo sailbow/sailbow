@@ -12,6 +12,7 @@ namespace Sb.Data.Models
     public class Module : EntityBase
     {
         public string BoatId { get; set; }
+        public ModuleType Type { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int Order { get; set; }

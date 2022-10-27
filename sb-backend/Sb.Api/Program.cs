@@ -62,6 +62,7 @@ services
     .AddTransient<ValidateAccessTokenMiddleware>()
     .AddTransient<IUserService, UserService>()
     .AddTransient<IModuleService, ModuleService>()
+    .AddAutoMapper(typeof(Program).Assembly)
     .AddAuthorization(opts =>
     {
         opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>
@@ -125,7 +126,7 @@ services.AddControllers()
     {
         opts.UseCamelCasing(true);
         opts.SerializerSettings.Converters.Add(new StringEnumConverter());
-        opts.SerializerSettings.Converters.Add(new ModuleDataConverter());
+        opts.SerializerSettings.Converters.Add(new ModuleJsonConverter());
     });
 
 var app = builder.Build();
