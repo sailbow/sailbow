@@ -25,6 +25,7 @@ const initialForm = {
         position: 50,
     },
     crew: [],
+    role: Role.Captain,
 };
 
 export const BoatCreate: FunctionComponent = () => {

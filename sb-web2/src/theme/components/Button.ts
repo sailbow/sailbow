@@ -42,11 +42,12 @@ export const ButtonStyles: ComponentStyleConfig = {
                 return {
                     ...props.theme.components.Button.variants.solid,
                     color: 'brand.dark',
+                    bg: 'brand.primary',
                     _hover: {
                         bg: 'brand.300',
                     },
                     _active: {
-                        bg: 'brand.600',
+                        bg: 'brand.500',
                     },
                 };
             }
@@ -68,7 +69,7 @@ export const ButtonStyles: ComponentStyleConfig = {
             return {
                 color: 'brand.dark',
                 _hover: {
-                    color: 'brand.800',
+                    color: 'brand.700',
                 },
             };
         },
@@ -88,6 +89,12 @@ export const ButtonStyles: ComponentStyleConfig = {
                 borderBottomWidth: '2px',
                 borderLeftWidth: '2px',
                 borderRightWidth: '2px',
+                _hover: {
+                    bg: 'brand.200',
+                },
+                _active: {
+                    bg: 'brand.300',
+                },
             };
         },
         outline: (props: any) => {

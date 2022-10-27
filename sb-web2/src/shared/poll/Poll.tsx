@@ -22,7 +22,7 @@ export interface Props<T> {
     onOptionEdit: <T>(data: T[]) => void;
     onRemoveOption?: <T>(data: T) => void;
     selectOption: (moduleId: string, optionId: string) => void;
-    onSave: () => void;
+    onSave: () => boolean;
 }
 
 export const Poll = <T extends {}>({
@@ -36,8 +36,6 @@ export const Poll = <T extends {}>({
     selectOption,
     onSave,
 }: PropsWithChildren<Props<T>>) => {
-    console.log({ data });
-
     const onRemove = (optionId: string) => {
         const updatedData = [...data];
         const optionIdx = updatedData.findIndex((w) => w.id === optionId);
@@ -107,7 +105,7 @@ export const Poll = <T extends {}>({
 
                         {!item.isEditing && (mode === ModuleMode.View || mode === ModuleMode.Edit) ? (
                             <Flex alignItems="center" flexWrap="wrap">
-                                <Box color={item.selected ? 'brand.700' : 'inherit'} fontWeight="bold" fontSize="lg">
+                                <Box color={item.selected ? 'brand.500' : 'inherit'} fontWeight="bold" fontSize="lg">
                                     {item.selected ? <SbRadioButtonOn /> : <SbRadioButtonOff />}
                                 </Box>
                                 <Box pl="2">

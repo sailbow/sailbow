@@ -14,9 +14,9 @@ export interface BannerState {
 
 // move to role
 export enum Role {
-    Captain = 'captain',
-    Assistant = 'assistant',
-    Sailor = 'sailor',
+    Captain = 'Captain',
+    Assistant = 'Assistant',
+    Sailor = 'Sailor',
 }
 
 // move to role
@@ -86,6 +86,7 @@ export interface Module<T> {
     dataLoaded?: boolean;
     error?: any;
     finalizedOptionId?: string;
+    creator: Pick<User, 'id' | 'email' | 'name'>;
 }
 
 export interface ModuleExtended<T> {
@@ -99,6 +100,7 @@ export interface Boat {
     banner: BannerState;
     crew: CrewMember[];
     modules: ModuleExtended<any>;
+    role: Role;
 }
 
 export interface BoatState {
