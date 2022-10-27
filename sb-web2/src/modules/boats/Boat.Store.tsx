@@ -12,6 +12,7 @@ import {
     Module,
     ModuleData,
     ModuleExtended,
+    Role,
 } from 'modules/boats/Boat.Types';
 import { useAuthStore } from 'modules/auth/Auth.Store';
 
@@ -341,7 +342,14 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 name: moduleName,
                 order: Object.keys(newBoat!.modules).length + 1,
                 description: '',
-                totalVotes: 5,
+                totalVotes: [
+                    {
+                        id: '1',
+                        name: 'Poppy Dope',
+                        email: 'poppy@dope.com',
+                        role: Role.Sailor,
+                    },
+                ],
                 dataLoaded: false,
                 data: [],
                 settings: {

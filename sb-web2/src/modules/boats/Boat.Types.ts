@@ -77,7 +77,7 @@ export interface Module<T> {
     name: ModuleName;
     order: number;
     description: string;
-    totalVotes: number;
+    totalVotes: CrewMember[];
     data: ModuleData<T>[];
     settings: ModuleSettings;
     mode: ModuleMode;

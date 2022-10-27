@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactNode, useMemo } from 'react';
+import { FC, PropsWithChildren, ReactNode, useMemo, useState } from 'react';
 
 import {
     Box,
@@ -10,16 +10,16 @@ import {
     PopoverContent,
     PopoverBody,
     Button,
-    Badge,
 } from '@chakra-ui/react';
 
-import { SbSettingsIcon, SbEditIcon, SbDeleteIcon, SbCheckCircleIcon, SbCheckMarkIcon } from 'shared/icons/Icons';
+import { SbSettingsIcon, SbEditIcon, SbDeleteIcon, SbCheckMarkIcon, SbCloseIcon } from 'shared/icons/Icons';
 import { Module, ModuleMode, Role } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
 import { ModulesMapper } from 'modules/boats/boat-modules/modules/Modules';
 import { Poll, Props as PollProps } from 'shared/poll/Poll';
 
 import { BoatWidgetDetails } from './BoatWidgetDetails';
+import { CrewGroup } from 'shared/crew/crew-group/CrewGroup';
 
 interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption'> {
     settingsNode: ReactNode;
@@ -35,6 +35,7 @@ export const BoatWidget = <T extends {}>({
     loading,
     settingsNode,
     actionRequired,
+    totalVotes,
     getInputComponent,
     onAddOption,
     onOptionEdit,
@@ -96,6 +97,17 @@ export const BoatWidget = <T extends {}>({
                     <Flex alignItems="center" gap="1">
                         <IconButton
                             fontSize="2xl"
+                            aria-label="cancel-settings"
+                            colorScheme="gray"
+                            variant="ghost"
+                            icon={<SbCloseIcon />}
+                            onClick={() => {
+                                setModuleMode(id, ModuleMode.View);
+                            }}
+                            display={mode === ModuleMode.Settings ? 'flex' : 'none'}
+                        />
+                        <IconButton
+                            fontSize="2xl"
                             aria-label="edit"
                             colorScheme="gray"
                             variant={mode === ModuleMode.Edit ? 'solid' : 'ghost'}
@@ -103,7 +115,7 @@ export const BoatWidget = <T extends {}>({
                             onClick={() => {
                                 setModuleMode(id, ModuleMode.Edit);
                             }}
-                            display="flex"
+                            display={mode === ModuleMode.Settings ? 'none' : 'flex'}
                         />
                         <IconButton
                             fontSize="2xl"
@@ -112,6 +124,7 @@ export const BoatWidget = <T extends {}>({
                             variant={mode === ModuleMode.Settings ? 'solid' : 'ghost'}
                             icon={<SbSettingsIcon />}
                             onClick={() => setModuleMode(id, ModuleMode.Settings)}
+                            display={mode === ModuleMode.Settings ? 'none' : 'flex'}
                         />
                         <IconButton
                             fontSize="2xl"
@@ -120,11 +133,11 @@ export const BoatWidget = <T extends {}>({
                             variant="ghost"
                             icon={<SbDeleteIcon />}
                             onClick={() => removeModule(id)}
-                            display="flex"
+                            display={mode === ModuleMode.Settings ? 'none' : 'flex'}
                         />
                     </Flex>
                 </Flex>
-                <Box pt="2" pb="6" className="widget-body" px="4">
+                <Box pt="2" pb="4" className="widget-body" px="4">
                     {mode === ModuleMode.View || mode === ModuleMode.Edit ? (
                         <>
                             <Poll<T>
@@ -150,17 +163,26 @@ export const BoatWidget = <T extends {}>({
                 </Box>
 
                 {mode === ModuleMode.View && activeBoat!.role === Role.Captain && (
-                    <Flex className="widget-footer">
-                        <Button
-                            rightIcon={SbCheckMarkIcon}
-                            w="100%"
-                            variant="accent"
-                            borderTopLeftRadius="0"
-                            borderTopRightRadius="0"
-                        >
-                            Finalize
-                        </Button>
-                    </Flex>
+                    <Box className="widget-footer">
+                        <Flex justifyContent="flex-end" alignItems="center" px="4">
+                            <Text pr="1" fontSize="xs">
+                                Voted by
+                            </Text>
+                            <CrewGroup size="xs" crew={totalVotes} />
+                        </Flex>
+                        <Flex mt="2">
+                            <Button
+                                rightIcon={SbCheckMarkIcon}
+                                w="100%"
+                                variant="accent"
+                                borderTopLeftRadius="0"
+                                borderTopRightRadius="0"
+                                borderRadius="xl"
+                            >
+                                Finalize
+                            </Button>
+                        </Flex>
+                    </Box>
                 )}
             </Box>
         </Box>
