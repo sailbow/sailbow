@@ -25,6 +25,7 @@ export const InfoManifest: FC<Props> = ({ data }) => {
                 </Link>
             }
             finalized="Info"
+            className="sb-info-manifest"
         >
             <Box w="100%" py="1">
                 <Box h="200px">

@@ -12,6 +12,7 @@ import {
     SbRadioButtonOff,
     SbRadioButtonOn,
 } from 'shared/icons/Icons';
+import { withSkeleton } from 'util/guards/Loading';
 
 export interface Props<T> {
     mode: ModuleMode;
@@ -24,6 +25,8 @@ export interface Props<T> {
     selectOption: (moduleId: string, optionId: string) => void;
     onSave: () => boolean;
 }
+
+const SkeletonWrapper = withSkeleton(Box);
 
 export const Poll = <T extends {}>({
     mode = ModuleMode.View,
@@ -58,105 +61,109 @@ export const Poll = <T extends {}>({
         onOptionEdit(newOptions);
     };
 
-    return !loading ? (
-        <Box className="sb-poll">
-            <Stack spacing="4" w="100%">
-                {data.map((item) => (
-                    <Flex
-                        key={item.id}
-                        w="100%"
-                        alignItems="center"
-                        borderRadius="lg"
-                        borderStyle="solid"
-                        borderWidth="2px"
-                        justifyContent="space-between"
-                        borderColor={item.isEditing || item.selected ? 'brand.primary' : 'brand.border-light'}
-                        transition="transform 0.05s ease-in-out, border 0.15s ease-in-out"
-                        _hover={{ borderColor: 'brand.primary', cursor: 'pointer' }}
-                        _active={{ transform: !item.isEditing && mode !== ModuleMode.Edit ? 'scale(0.997)' : '' }}
-                        p="4"
-                        onClick={() => {
-                            if (!item.isEditing || mode !== ModuleMode.Edit) {
-                                selectOption('1', item.id);
-                            }
-                        }}
-                    >
-                        {item.isEditing && mode !== ModuleMode.View && (
-                            <Stack w="100%" spacing="4">
-                                <>
-                                    {getInputComponent(
-                                        item.id,
-                                        data.find((d) => d.id === item.id),
-                                    )}
-                                </>
-                                <Flex justifyContent={{ base: 'space-between', md: 'flex-end' }} gap="4">
+    return (
+        <SkeletonWrapper loading={loading} skeletonHeight="120px">
+            <Box className="sb-poll">
+                <Stack spacing="4" w="100%">
+                    {data.map((item) => (
+                        <Flex
+                            key={item.id}
+                            w="100%"
+                            alignItems="center"
+                            borderRadius="lg"
+                            borderStyle="solid"
+                            borderWidth="2px"
+                            justifyContent="space-between"
+                            borderColor={item.isEditing || item.selected ? 'brand.primary' : 'brand.border-light'}
+                            transition="transform 0.05s ease-in-out, border 0.15s ease-in-out"
+                            _hover={{ borderColor: 'brand.primary', cursor: 'pointer' }}
+                            _active={{ transform: !item.isEditing && mode !== ModuleMode.Edit ? 'scale(0.997)' : '' }}
+                            p="4"
+                            onClick={() => {
+                                if (!item.isEditing || mode !== ModuleMode.Edit) {
+                                    selectOption('1', item.id);
+                                }
+                            }}
+                        >
+                            {item.isEditing && mode !== ModuleMode.View && (
+                                <Stack w="100%" spacing="4">
+                                    <>
+                                        {getInputComponent(
+                                            item.id,
+                                            data.find((d) => d.id === item.id),
+                                        )}
+                                    </>
+                                    <Flex justifyContent={{ base: 'space-between', md: 'flex-end' }} gap="4">
+                                        <IconButton
+                                            fontSize="xl"
+                                            aria-label="delete-option"
+                                            colorScheme="red"
+                                            variant="ghost"
+                                            size="sm"
+                                            icon={<SbDeleteIcon />}
+                                            onClick={() => onRemove(item.id)}
+                                        />
+                                    </Flex>
+                                </Stack>
+                            )}
+
+                            {!item.isEditing && (mode === ModuleMode.View || mode === ModuleMode.Edit) ? (
+                                <Flex alignItems="center" flexWrap="wrap">
+                                    <Box
+                                        color={item.selected ? 'brand.500' : 'inherit'}
+                                        fontWeight="bold"
+                                        fontSize="lg"
+                                    >
+                                        {item.selected ? <SbRadioButtonOn /> : <SbRadioButtonOff />}
+                                    </Box>
+                                    <Box pl="2">
+                                        <Text fontWeight="semibold">{item.text}</Text>
+                                        {/* <Text>{item.description}</Text> */}
+                                    </Box>
+                                </Flex>
+                            ) : (
+                                <></>
+                            )}
+                            {!item.isEditing && mode === ModuleMode.Edit && (
+                                <Flex alignItems="center">
                                     <IconButton
                                         fontSize="xl"
-                                        aria-label="delete-option"
-                                        colorScheme="red"
+                                        aria-label="settings"
+                                        colorScheme="gray"
                                         variant="ghost"
                                         size="sm"
-                                        icon={<SbDeleteIcon />}
-                                        onClick={() => onRemove(item.id)}
+                                        icon={<SbEditIcon />}
+                                        onClick={() => onEdit(item.id)}
+                                    />
+
+                                    <IconButton
+                                        fontSize="xl"
+                                        aria-label="settings"
+                                        colorScheme="gray"
+                                        variant="ghost"
+                                        size="sm"
+                                        icon={<SbMinusCircleIcon />}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            onRemove(item.id);
+                                        }}
                                     />
                                 </Flex>
-                            </Stack>
-                        )}
+                            )}
+                        </Flex>
+                    ))}
+                </Stack>
 
-                        {!item.isEditing && (mode === ModuleMode.View || mode === ModuleMode.Edit) ? (
-                            <Flex alignItems="center" flexWrap="wrap">
-                                <Box color={item.selected ? 'brand.500' : 'inherit'} fontWeight="bold" fontSize="lg">
-                                    {item.selected ? <SbRadioButtonOn /> : <SbRadioButtonOff />}
-                                </Box>
-                                <Box pl="2">
-                                    <Text fontWeight="semibold">{item.text}</Text>
-                                    {/* <Text>{item.description}</Text> */}
-                                </Box>
-                            </Flex>
-                        ) : (
-                            <></>
-                        )}
-                        {!item.isEditing && mode === ModuleMode.Edit && (
-                            <Flex alignItems="center">
-                                <IconButton
-                                    fontSize="xl"
-                                    aria-label="settings"
-                                    colorScheme="gray"
-                                    variant="ghost"
-                                    size="sm"
-                                    icon={<SbEditIcon />}
-                                    onClick={() => onEdit(item.id)}
-                                />
-
-                                <IconButton
-                                    fontSize="xl"
-                                    aria-label="settings"
-                                    colorScheme="gray"
-                                    variant="ghost"
-                                    size="sm"
-                                    icon={<SbMinusCircleIcon />}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        onRemove(item.id);
-                                    }}
-                                />
-                            </Flex>
-                        )}
-                    </Flex>
-                ))}
-            </Stack>
-
-            <Flex mt="4" display={mode === ModuleMode.Edit ? 'flex' : 'none'} justifyContent="flex-end" gap={4}>
-                <Button variant="secondary" leftIcon={<SbPlusIcon />} colorScheme="gray" onClick={onAddOption}>
-                    Add Option
-                </Button>
-                <Button rightIcon={SbCheckMarkIcon} onClick={() => onSave()} disabled={!data.length}>
-                    Save
-                </Button>
-            </Flex>
-        </Box>
-    ) : (
-        <Skeleton h="106px" startColor="gray.100" endColor="gray.300" />
+                <Flex mt="4" display={mode === ModuleMode.Edit ? 'flex' : 'none'} justifyContent="flex-end" gap={4}>
+                    <Button variant="secondary" leftIcon={<SbPlusIcon />} colorScheme="gray" onClick={onAddOption}>
+                        Add Option
+                    </Button>
+                    <Button rightIcon={SbCheckMarkIcon} onClick={() => onSave()} disabled={!data.length}>
+                        Save
+                    </Button>
+                </Flex>
+            </Box>
+        </SkeletonWrapper>
     );
 };
