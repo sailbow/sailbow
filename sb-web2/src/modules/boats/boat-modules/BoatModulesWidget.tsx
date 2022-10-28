@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 import { Box, Button, Center, Flex, Stack } from '@chakra-ui/react';
 
 import { useBoat } from 'modules/boats/Boat.Store';
-import { Boat, Module, ModuleExtended } from 'modules/boats/Boat.Types';
+import { Boat, ModuleExtended, ModuleType } from 'modules/boats/Boat.Types';
 import { useSystem } from 'modules/system/System.Store';
 import { SbBulbIcon, SbPlusIcon } from 'shared/icons/Icons';
 import { ModuleDataType, ModulesMapper } from './modules/Modules';
@@ -20,7 +20,7 @@ interface BoatModulesWidgetItemProps<T> {
 }
 
 const getWidget = (module: ModuleExtended<any>) => {
-    const Module = ModulesMapper[module.type];
+    const Module = ModulesMapper[module.name as ModuleType]; // TODO: CHANGE NAME TO TYPE
 
     if (!Module) {
         throw Error(`Invalid moduleType: ${module.type}`);
@@ -36,11 +36,11 @@ export const BoatModulesWidgetItem: FC<BoatModulesWidgetItemProps<ModuleDataType
 }) => {
     useEffect(() => {
         (async () => {
-            if (!module.dataLoaded) {
+            if (!module.dataLoaded && !module.loading) {
                 await getModuleData(boatId, module.id);
             }
         })();
-    }, [boatId, getModuleData, module.dataLoaded, module.id]);
+    }, [boatId, getModuleData, module.dataLoaded, module.id, module.loading]);
 
     return <>{getWidget(module)}</>;
 };
@@ -52,7 +52,7 @@ export const BoatModulesWidget: FC<Props> = ({ boat }) => {
     return (
         <Box h={{ base: '100%', md: 'calc(100vh - 140px)' }} overflowY="auto" px="4">
             <Stack w="100%" spacing="4" h="100%">
-                {Object.values(boat.modules).map((module) => (
+                {boat.modules.map((module) => (
                     <BoatModulesWidgetItem
                         key={`widget-${module.id}-${module.order}`}
                         boatId={boat.id}

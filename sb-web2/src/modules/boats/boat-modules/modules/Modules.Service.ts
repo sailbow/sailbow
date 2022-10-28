@@ -1,11 +1,11 @@
 import { AxiosResponse } from 'axios';
 
-import { Module } from 'modules/boats/Boat.Types';
+import { Module, ModuleExtended, ModuleData } from 'modules/boats/Boat.Types';
 import { Http } from 'util/http/Http';
 import { EndpointFunction } from 'util/http/Endpoints';
 import { ModuleDataType } from './Modules';
 
-type ModuleEndpointLabels = 'Add' | 'Upsert';
+type ModuleEndpointLabels = 'Add' | 'Upsert' | 'Get';
 export const ModuleEndpoints: Record<ModuleEndpointLabels, EndpointFunction> = {
     Add: ({ boatId, module }) => ({
         method: 'POST',
@@ -21,6 +21,10 @@ export const ModuleEndpoints: Record<ModuleEndpointLabels, EndpointFunction> = {
             ...module,
         },
     }),
+    Get: ({ boatId, moduleId }) => ({
+        method: 'GET',
+        url: `api/boats/${boatId}/modules/${moduleId}`,
+    }),
 };
 
 export const addModule = async (boatId: string, module: Module<ModuleDataType>): Promise<Module<ModuleDataType>> => {
@@ -31,9 +35,18 @@ export const addModule = async (boatId: string, module: Module<ModuleDataType>):
 
 export const upsertModule = async (
     boatId: string,
-    module: Pick<Module<any>, 'name' | 'description' | 'settings' | 'order' | 'data'>,
+    module: Pick<Module<any>, 'name' | 'description' | 'settings' | 'order'> & {
+        id?: string;
+        data?: ModuleData<any>[];
+    },
 ): Promise<Module<any>> => {
     const { data }: AxiosResponse<Module<any>> = await Http(ModuleEndpoints.Upsert({ boatId, module }));
+
+    return data;
+};
+
+export const getModule = async (boatId: string, moduleId: string) => {
+    const { data }: AxiosResponse<ModuleExtended<any>> = await Http(ModuleEndpoints.Get({ boatId, moduleId }));
 
     return data;
 };

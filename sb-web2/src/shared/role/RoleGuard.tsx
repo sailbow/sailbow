@@ -8,8 +8,8 @@ interface Props {
 }
 
 export const withRoleGuard = <T,>(Component: FC<T>) => {
-    return (props: Props & T) => {
-        if (props.acceptedRoles.includes(props.role)) return <Component {...props} />;
+    return ({ acceptedRoles, ...props }: Props & T) => {
+        if (acceptedRoles.includes(props.role)) return <Component {...(props as any)} />;
 
         return <></>;
     };

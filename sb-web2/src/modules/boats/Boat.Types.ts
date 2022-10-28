@@ -65,7 +65,7 @@ export interface ModuleSettings {
 
 export type ModuleData<T> = {
     id: string;
-    votes: number;
+    votes: string[];
     isEditing?: boolean;
     text: string; // text to be shown in widget option and manifest
     author: Pick<User, 'id' | 'email' | 'name'>;
@@ -79,11 +79,10 @@ export interface Module<T> {
     order: number;
     description: string;
     totalVotes: CrewMember[];
-    data: ModuleData<T>[];
     settings: ModuleSettings;
     actionRequired?: boolean;
     finalizedOptionId?: string;
-    creator: Pick<User, 'id' | 'email' | 'name'>;
+    data: ModuleData<T>[];
 }
 
 export interface ModuleExtended<T> extends Module<T> {
@@ -104,7 +103,7 @@ export interface Boat {
     description?: string;
     banner: BannerState;
     crew: CrewMember[];
-    modules: Modules<any>;
+    modules: ModuleExtended<any>[];
     role: Role;
 }
 

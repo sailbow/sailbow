@@ -118,13 +118,14 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
             data={widgetData}
             settingsNode={<DateSettings id={id} settings={settings} />}
             onSave={onSave}
+            getText={getText}
             onAddOption={() => {
                 const newData: DataType = {
-                    id: new Date().getTime().toString(),
+                    id: `new-option-${new Date().getTime().toString()}`,
                     author: { id: user?.id!, name: user!.name, email: user!.email },
                     text: '',
                     selected: false,
-                    votes: 0,
+                    votes: [],
                     isEditing: true,
                     startDate: '',
                     endDate: '',

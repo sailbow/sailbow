@@ -13,6 +13,7 @@ import {
     SbRadioButtonOn,
 } from 'shared/icons/Icons';
 import { withSkeleton } from 'util/guards/Loading';
+import { ModuleDataType } from 'modules/boats/boat-modules/modules/Modules';
 
 export interface Props<T> {
     mode: ModuleMode;
@@ -24,6 +25,7 @@ export interface Props<T> {
     onRemoveOption?: <T>(data: T) => void;
     selectOption: (moduleId: string, optionId: string) => void;
     onSave: () => boolean;
+    getText: (data: ModuleData<any>) => string;
 }
 
 const SkeletonWrapper = withSkeleton(Box);
@@ -38,6 +40,7 @@ export const Poll = <T extends {}>({
     onRemoveOption,
     selectOption,
     onSave,
+    getText,
 }: PropsWithChildren<Props<T>>) => {
     const onRemove = (optionId: string) => {
         const updatedData = [...data];
@@ -65,9 +68,9 @@ export const Poll = <T extends {}>({
         <SkeletonWrapper loading={loading} skeletonHeight="120px">
             <Box className="sb-poll">
                 <Stack spacing="4" w="100%">
-                    {data.map((item) => (
+                    {data.map((item, idx) => (
                         <Flex
-                            key={item.id}
+                            key={idx}
                             w="100%"
                             alignItems="center"
                             borderRadius="lg"
@@ -117,7 +120,7 @@ export const Poll = <T extends {}>({
                                         {item.selected ? <SbRadioButtonOn /> : <SbRadioButtonOff />}
                                     </Box>
                                     <Box pl="2">
-                                        <Text fontWeight="semibold">{item.text}</Text>
+                                        <Text fontWeight="semibold">{getText(item)}</Text>
                                         {/* <Text>{item.description}</Text> */}
                                     </Box>
                                 </Flex>

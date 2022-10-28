@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Box } from '@chakra-ui/react';
 
-import { Boat } from 'modules/boats/Boat.Types';
+import { Boat, ModuleType } from 'modules/boats/Boat.Types';
 import { InfoManifest } from 'modules/boats/boat-modules/modules/info/InfoManifest';
 import { CrewManifest } from 'modules/boats/boat-modules/modules/crew/CrewManifest';
 import { ModulesMapper } from 'modules/boats/boat-modules/modules/Modules';
@@ -22,8 +22,8 @@ export const BoatModuleManifest: FC<Props> = ({ boat }) => {
         >
             <InfoManifest data={boat} />
             <CrewManifest boat={boat} />
-            {Object.values(boat.modules).map((module) => {
-                const Module = ModulesMapper[module.type];
+            {boat.modules.map((module) => {
+                const Module = ModulesMapper[module.name as ModuleType]; // TODO: CHANGE NAME TO TYPE
 
                 return <Module.Manifest key={module.id} {...module} />;
             })}

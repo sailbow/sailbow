@@ -40,10 +40,10 @@ export const BoatView: FunctionComponent = () => {
                     </Box>
                 </Flex>
 
-                <BoatViewTabs
+                {/* <BoatViewTabs
                     manifest={<BoatModuleManifest boat={data} />}
                     widgets={<BoatModulesWidget boat={data} />}
-                />
+                /> */}
             </Box>
         </Box>
     );

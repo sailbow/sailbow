@@ -17,7 +17,7 @@ import {
     Modules,
 } from 'modules/boats/Boat.Types';
 import { useAuthStore } from 'modules/auth/Auth.Store';
-import { upsertModule } from './boat-modules/modules/Modules.Service';
+import { getModule, upsertModule } from './boat-modules/modules/Modules.Service';
 
 export enum BoatActionType {
     SetError,
@@ -58,7 +58,7 @@ interface PayloadSetModule {
 }
 
 interface PayloadSetAllModules {
-    modules: Modules<any>;
+    modules: ModuleExtended<any>[];
 }
 
 interface BoatAction {
@@ -90,83 +90,73 @@ export const initialBoatState: BoatState = {
 const BoatStateContext = createContext<BoatState | undefined>(undefined);
 const BoatDispatchContext = createContext<Dispatch<BoatAction> | undefined>(undefined);
 
-const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
+const boatReducer = (state: BoatState, action: BoatAction): BoatState => {
     switch (action.type) {
         case BoatActionType.SetActiveBoat: {
             const { boat } = action.payload as PayloadSetActiveBoat;
 
             return {
-                ...boatState,
+                ...state,
                 activeBoat: boat
                     ? {
                           ...boat,
-                          modules: {},
                       }
                     : undefined,
             };
         }
         case BoatActionType.SetCreateLoading: {
             const { loading } = action.payload as PayloadLoading;
-            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, create: loading } };
+            const nextState: BoatState = { ...state, loading: { ...state.loading, create: loading } };
 
             return nextState;
         }
         case BoatActionType.SetError: {
             const payload = action.payload as PayloadError;
-            const nextState: BoatState = { ...boatState, error: { ...payload.error } };
+            const nextState: BoatState = { ...state, error: { ...payload.error } };
 
             return nextState;
         }
         case BoatActionType.SetGetAllLoading: {
             const { loading } = action.payload as PayloadLoading;
-            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, getAll: loading } };
+            const nextState: BoatState = { ...state, loading: { ...state.loading, getAll: loading } };
 
             return nextState;
         }
         case BoatActionType.SetGetLoading: {
             const { loading } = action.payload as PayloadLoading;
-            const nextState: BoatState = { ...boatState, loading: { ...boatState.loading, get: loading } };
+            const nextState: BoatState = { ...state, loading: { ...state.loading, get: loading } };
 
             return nextState;
         }
 
         case BoatActionType.SetAllBoats: {
             const payload = action.payload as PayloadSetAllBoats;
-            const nextState: BoatState = { ...boatState, boats: payload.boats };
+            const nextState: BoatState = { ...state, boats: payload.boats };
 
             return nextState;
         }
 
         case BoatActionType.SetModule: {
             const { module, moduleId } = action.payload as PayloadSetModule;
+            const modules = state.activeBoat!.modules;
+
+            const mIdx = modules.findIndex((m) => m.id === moduleId);
+            modules[mIdx] = {
+                ...module,
+            };
 
             return {
-                ...boatState,
-                activeBoat: {
-                    ...boatState.activeBoat!,
-                    modules: {
-                        ...boatState.activeBoat!.modules,
-                        [moduleId]: module,
-                    },
-                },
+                ...state,
             };
         }
 
         case BoatActionType.SetModuleMode: {
             const { mode, moduleId } = action.payload as PayloadSetModuleMode;
+            const module = state.activeBoat!.modules.find((m) => m.id === moduleId);
+            module!.mode = mode;
 
             return {
-                ...boatState,
-                activeBoat: {
-                    ...boatState.activeBoat!,
-                    modules: {
-                        ...boatState.activeBoat!.modules,
-                        [moduleId]: {
-                            ...boatState.activeBoat!.modules[moduleId],
-                            mode,
-                        },
-                    },
-                },
+                ...state,
             };
         }
 
@@ -174,9 +164,9 @@ const boatReducer = (boatState: BoatState, action: BoatAction): BoatState => {
             const { modules } = action.payload as PayloadSetAllModules;
 
             return {
-                ...boatState,
+                ...state,
                 activeBoat: {
-                    ...boatState.activeBoat!,
+                    ...state.activeBoat!,
                     modules,
                 },
             };
@@ -236,7 +226,6 @@ interface BoatActionApis {
 export const useBoat = (): [BoatState, BoatActionApis] => {
     const dispatch = useBoatDispatch();
     const state = useBoatState();
-    const [{ user }] = useAuthStore();
 
     const actionApis: BoatActionApis = {
         createBoat: async (boat: CreateBoat) => {
@@ -256,14 +245,27 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             dispatch({ type: BoatActionType.SetActiveBoat, payload: { boat: undefined } });
         },
         getBoat: async (boatId: string) => {
-            dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: true } });
+            // dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: true } });
             try {
                 const boatResponse = await getBoat(boatId);
                 const crew = await getCrew(boatId);
 
+                const modules: ModuleExtended<any>[] = [];
+
+                boatResponse.modules.forEach((module) => {
+                    modules.push({
+                        ...module,
+                        loading: false,
+                        dataLoaded: false,
+                        mode: ModuleMode.View,
+                        data: [],
+                    });
+                });
+
                 const boat = {
                     ...boatResponse,
                     crew,
+                    modules,
                 };
 
                 dispatch({
@@ -272,7 +274,8 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                         boat,
                     },
                 });
-                dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: false } });
+
+                // dispatch({ type: BoatActionType.SetGetLoading, payload: { loading: false } });
 
                 return boat;
             } catch (error: any) {
@@ -300,142 +303,101 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             }
         },
         getModuleData: async (boatId: string, moduleId: string) => {
-            return new Promise<any | null>((res, rej) => {
-                switch (moduleId) {
-                    case '1':
-                        return setTimeout(() => {
-                            dispatch({
-                                type: BoatActionType.SetModule,
-                                payload: {
-                                    moduleId,
-                                    module: {
-                                        ...state.activeBoat!.modules[moduleId],
-                                        data: [],
-                                        dataLoaded: true,
-                                        loading: false,
-                                    },
-                                },
-                            });
-                        }, 500);
-                    case '2':
-                        return setTimeout(() => {
-                            dispatch({
-                                type: BoatActionType.SetModule,
-                                payload: {
-                                    moduleId,
-                                    module: {
-                                        ...state.activeBoat!.modules[moduleId],
-                                        data: [],
-                                        dataLoaded: true,
-                                        loading: false,
-                                    },
-                                },
-                            });
-                        }, 2000);
-                }
+            const currentModule = state.activeBoat!.modules.find((m) => m.id === moduleId);
+
+            dispatch({
+                type: BoatActionType.SetModule,
+                payload: {
+                    module: {
+                        ...currentModule!,
+                        loading: true,
+                    },
+                    moduleId,
+                },
+            });
+
+            const module = await getModule(boatId, moduleId);
+
+            const moduleExt: ModuleExtended<any> = {
+                ...currentModule!,
+                ...module,
+                dataLoaded: true,
+                loading: false,
+                mode: module.data.length ? ModuleMode.View : ModuleMode.Edit,
+            };
+
+            dispatch({
+                type: BoatActionType.SetModule,
+                payload: {
+                    module: moduleExt,
+                    moduleId,
+                },
             });
         },
         addModule: async <T,>(moduleType: ModuleType) => {
-            // make api call to add module here
             const newBoat = { ...state.activeBoat! };
-            const tempId = (Object.keys(newBoat!.modules).length + 1).toString();
-            // {
-            //     "boatId": "string",
-            //     "type": "Date",
-            //     "name": "string",
-            //     "description": "string",
-            //     "order": 0,
-            //     "finalizedOptionId": 0,
-            //     "settings": {
-            //       "allowMultiple": true,
-            //       "anonymousVoting": true,
-            //       "deadline": "2022-10-27T18:28:06.909Z"
-            //     },
-            //     "data": [
-            //       {
-            //         "votes": [
-            //           "string"
-            //         ],
-            //         "author": "string",
-            //         "id": "string"
-            //       }
-            //     ],
-            //     "id": "string"
-            //   }
 
-            const module: Pick<Module<T>, 'name' | 'description' | 'settings' | 'order' | 'data'> = {
-                name: moduleType,
-                order: Object.keys(newBoat!.modules).length + 1,
-                description: '',
-                data: [],
-                settings: {
-                    allowMultiple: true,
-                    anonymousVoting: true,
-                    deadline: '',
-                },
-            };
+            // const module: Pick<Module<T>, 'name' | 'description' | 'settings' | 'order' | 'data'> = {
+            //     name: moduleType,
+            //     order: Object.keys(newBoat!.modules).length + 1,
+            //     description: '',
+            //     data: [],
+            //     settings: {
+            //         allowMultiple: true,
+            //         anonymousVoting: true,
+            //         deadline: '',
+            //     },
+            // };
+
+            // const response = await upsertModule(newBoat.id, module);
 
             // dispatch({
             //     type: BoatActionType.SetModule,
             //     payload: {
-            //         moduleId: '',
+            //         moduleId: response.id,
             //         module: {
-            //             ...module,
-            //             id: '',
-            //             type: ModuleType.Date,
-            //             totalVotes: 0,
-
-            //             loading: true,
+            //             ...response,
+            //             loading: false,
             //             dataLoaded: false,
             //             mode: ModuleMode.Edit,
             //         },
             //     },
             // });
+        },
+        saveModuleData: async <T,>(moduleId: string, data: ModuleData<T>[]) => {
+            const module = state.activeBoat!.modules.find((m) => m.id === moduleId);
+            const dataPayload: Partial<ModuleData<T>>[] = [];
 
-            const response = await upsertModule(newBoat.id, {
-                name: 'date',
-                description: 'test',
-                order: 1,
-                settings: {
-                    allowMultiple: true,
-                    anonymousVoting: false,
-                },
-                data: [
-                    {
-                        type: 'date',
-                        startDate: '2022-10-26T20:17:04Z',
-                        endDate: '2022-10-28T20:17:04Z',
-                    },
-                ],
+            data.forEach((dataItem: Partial<ModuleData<T>>) => {
+                let newOption = { ...dataItem, author: dataItem.author?.id, votes: [] };
+
+                if (dataItem.id && dataItem.id.startsWith('new-option')) {
+                    delete newOption.id;
+                }
+
+                dataPayload.push(newOption);
             });
+
+            const response = await upsertModule(state.activeBoat!.id, {
+                id: module!.id,
+                data: dataPayload,
+                name: module!.name,
+                order: module!.order,
+                description: module!.description,
+                settings: module!.settings,
+            });
+
             console.log(response);
 
-            dispatch({
-                type: BoatActionType.SetModule,
-                payload: {
-                    moduleId: response.id,
-                    module: {
-                        ...response,
-                        loading: false,
-                        dataLoaded: false,
-                        mode: ModuleMode.Edit,
-                    },
-                },
-            });
-        },
-        saveModuleData: <T,>(moduleId: string, data: ModuleData<T>[]) => {
-            const module: ModuleExtended<T> = state.activeBoat!.modules[moduleId];
-
-            module.data = data;
-            module.mode = ModuleMode.View;
-
-            dispatch({
-                type: BoatActionType.SetModule,
-                payload: {
-                    moduleId,
-                    module,
-                },
-            });
+            // module.data = data;
+            // module.mode = ModuleMode.View;
+            // dispatch({
+            //     type: BoatActionType.SetModule,
+            //     payload: {
+            //         moduleId,
+            //         module,
+            //     },
+            // });
         },
         setModuleMode: (moduleId: string, mode: ModuleMode) => {
             dispatch({
@@ -447,52 +409,43 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             });
         },
         removeModule: (moduleId: string) => {
-            const modules = { ...state.activeBoat!.modules };
-            delete modules[moduleId];
-
-            dispatch({
-                type: BoatActionType.SetAllModules,
-                payload: {
-                    moduleId,
-                    modules,
-                },
-            });
+            // const modules = { ...state.modules };
+            // delete modules[moduleId];
+            // dispatch({
+            //     type: BoatActionType.SetAllModules,
+            //     payload: {
+            //         moduleId,
+            //         modules,
+            //     },
+            // });
         },
         selectOption: (moduleId: string, optionId: string) => {
             // api call here
-
-            const modules = { ...state.activeBoat!.modules };
-            const module = { ...modules[moduleId] };
-
-            const optionIdx = module.data.findIndex((d) => d.id === optionId);
-
-            if (optionIdx !== -1) {
-                module.data[optionIdx].selected = true;
-            }
-
-            dispatch({
-                type: BoatActionType.SetModule,
-                payload: {
-                    moduleId,
-                    module,
-                },
-            });
+            // const module = { ...state.modules[moduleId] };
+            // const optionIdx = module.data.findIndex((d) => d.id === optionId);
+            // if (optionIdx !== -1) {
+            //     module.data[optionIdx].selected = true;
+            // }
+            // dispatch({
+            //     type: BoatActionType.SetModule,
+            //     payload: {
+            //         moduleId,
+            //         module,
+            //     },
+            // });
         },
         saveWidgetSettings: (moduleId: string, settings: ModuleSettings) => {
-            const modules = state.activeBoat!.modules;
-            const module = modules[moduleId];
-
-            if (module) {
-                module.settings = settings;
-            }
-
-            dispatch({
-                type: BoatActionType.SetModule,
-                payload: {
-                    moduleId,
-                    module,
-                },
-            });
+            // const module = state.modules[moduleId];
+            // if (module) {
+            //     module.settings = settings;
+            // }
+            // dispatch({
+            //     type: BoatActionType.SetModule,
+            //     payload: {
+            //         moduleId,
+            //         module,
+            //     },
+            // });
         },
     };
 

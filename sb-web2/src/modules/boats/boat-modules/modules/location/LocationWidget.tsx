@@ -53,6 +53,7 @@ export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props
     return (
         <BoatWidget<DataType>
             {...props}
+            getText={() => ''}
             data={widgetData}
             settingsNode={<LocationSettings id={id} settings={settings} />}
             onSave={onSave}
@@ -62,7 +63,7 @@ export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props
                     author: { id: user?.id!, name: user!.name, email: user!.email },
                     text: '',
                     selected: false,
-                    votes: 0,
+                    votes: [],
                     isEditing: true,
                 };
 

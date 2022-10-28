@@ -13,13 +13,12 @@ import {
 } from '@chakra-ui/react';
 
 import { SbSettingsIcon, SbEditIcon, SbDeleteIcon, SbCheckMarkIcon, SbCloseIcon } from 'shared/icons/Icons';
-import { Module, ModuleMode, Role } from 'modules/boats/Boat.Types';
+import { Module, ModuleMode, ModuleType, Role } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
 import { ModulesMapper } from 'modules/boats/boat-modules/modules/Modules';
 import { Poll, Props as PollProps } from 'shared/poll/Poll';
 
 import { BoatWidgetDetails } from './BoatWidgetDetails';
-import { CrewGroup } from 'shared/crew/crew-group/CrewGroup';
 
 interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption'> {
     settingsNode: ReactNode;
@@ -37,18 +36,19 @@ export const BoatWidget = <T extends {}>({
     settingsNode,
     actionRequired,
     totalVotes,
+    getText,
     getInputComponent,
     onAddOption,
     onOptionEdit,
     onRemoveOption,
     onSave,
 }: PropsWithChildren<Props<T>>) => {
-    const module = useMemo(() => ModulesMapper[type], [type]);
+    const module = useMemo(() => ModulesMapper[name as ModuleType], [name]); // TODO: CHANGE NAME TO TYPE
     const [{ activeBoat }, { setModuleMode, removeModule, selectOption, saveModuleData }] = useBoat();
 
     const WidgetDescriptionPopover: FC = () => {
         return (
-            <Popover isLazy trigger="hover" matchWidth>
+            <Popover isLazy lazyBehavior="unmount" trigger="hover" matchWidth>
                 <PopoverTrigger>
                     <IconButton
                         fontSize="lg"
@@ -142,6 +142,7 @@ export const BoatWidget = <T extends {}>({
                     {mode === ModuleMode.View || mode === ModuleMode.Edit ? (
                         <>
                             <Poll<T>
+                                getText={getText}
                                 loading={loading}
                                 mode={mode}
                                 data={data}
@@ -165,12 +166,12 @@ export const BoatWidget = <T extends {}>({
 
                 {mode === ModuleMode.View && activeBoat!.role === Role.Captain && (
                     <Box className="widget-footer">
-                        <Flex justifyContent="flex-end" alignItems="center" px="4">
+                        {/* <Flex justifyContent="flex-end" alignItems="center" px="4">
                             <Text pr="1" fontSize="xs">
                                 Voted by
                             </Text>
                             <CrewGroup size="xs" crew={totalVotes} />
-                        </Flex>
+                        </Flex> */}
                         <Flex mt="2">
                             <Button
                                 rightIcon={SbCheckMarkIcon}

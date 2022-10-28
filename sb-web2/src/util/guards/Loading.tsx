@@ -8,8 +8,8 @@ interface LoadingGuardProps {
 }
 
 export const withLoading = <T,>(Component: FC<T>) => {
-    return (props: LoadingGuardProps & T) =>
-        !props.loading ? <Component {...props} /> : <Spinner color="brand.primary" size={props.size || 'sm'} />;
+    return ({ loading, size, ...props }: LoadingGuardProps & T) =>
+        !loading ? <Component {...(props as any)} /> : <Spinner color="brand.primary" size={size || 'sm'} />;
 };
 
 interface SkeletonGuardProps {
@@ -18,10 +18,10 @@ interface SkeletonGuardProps {
 }
 
 export const withSkeleton = <T,>(Component: FC<T>) => {
-    return (props: SkeletonGuardProps & T) =>
-        !props.loading ? (
-            <Component {...props} />
+    return ({ skeletonHeight, loading, ...props }: SkeletonGuardProps & T) =>
+        !loading ? (
+            <Component {...(props as any)} />
         ) : (
-            <Skeleton startColor="gray.100" endColor="gray.300" h={props.skeletonHeight} />
+            <Skeleton startColor="gray.100" endColor="gray.300" h={skeletonHeight} />
         );
 };
