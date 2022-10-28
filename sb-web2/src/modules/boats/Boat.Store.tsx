@@ -226,6 +226,7 @@ interface BoatActionApis {
 export const useBoat = (): [BoatState, BoatActionApis] => {
     const dispatch = useBoatDispatch();
     const state = useBoatState();
+    const [{ user }] = useAuthStore();
 
     const actionApis: BoatActionApis = {
         createBoat: async (boat: CreateBoat) => {
@@ -323,6 +324,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 ...module,
                 dataLoaded: true,
                 loading: false,
+                actionRequired: true,
                 mode: module.data.length ? ModuleMode.View : ModuleMode.Edit,
             };
 
@@ -337,43 +339,50 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
         addModule: async <T,>(moduleType: ModuleType) => {
             const newBoat = { ...state.activeBoat! };
 
-            // const module: Pick<Module<T>, 'name' | 'description' | 'settings' | 'order' | 'data'> = {
-            //     name: moduleType,
-            //     order: Object.keys(newBoat!.modules).length + 1,
-            //     description: '',
-            //     data: [],
-            //     settings: {
-            //         allowMultiple: true,
-            //         anonymousVoting: true,
-            //         deadline: '',
-            //     },
-            // };
+            const module: Pick<Module<T>, 'name' | 'description' | 'settings' | 'order' | 'data'> & { type: string } = {
+                name: moduleType,
+                type: moduleType,
+                order: 0,
+                description: '',
+                data: [],
+                settings: {
+                    allowMultiple: true,
+                    anonymousVoting: true,
+                    deadline: '',
+                },
+            };
 
-            // const response = await upsertModule(newBoat.id, module);
+            const response = await upsertModule(newBoat.id, module);
 
-            // dispatch({
-            //     type: BoatActionType.SetModule,
-            //     payload: {
-            //         moduleId: response.id,
-            //         module: {
-            //             ...response,
-            //             loading: false,
-            //             dataLoaded: false,
-            //             mode: ModuleMode.Edit,
-            //         },
-            //     },
-            // });
+            newBoat.modules.push({
+                ...response,
+                loading: false,
+                dataLoaded: false,
+                mode: ModuleMode.Edit,
+            });
+
+            dispatch({
+                type: BoatActionType.SetAllModules,
+                payload: {
+                    moduleId: response.id,
+                    modules: newBoat.modules,
+                },
+            });
         },
         saveModuleData: async <T,>(moduleId: string, data: ModuleData<T>[]) => {
             const module = state.activeBoat!.modules.find((m) => m.id === moduleId);
             const dataPayload: Partial<ModuleData<T>>[] = [];
 
+            module!.loading = true;
+
             data.forEach((dataItem: Partial<ModuleData<T>>) => {
-                let newOption = { ...dataItem, author: dataItem.author?.id, votes: [] };
+                let newOption: ModuleData<any> = { ...dataItem, author: dataItem.author?.id, votes: [] };
 
                 if (dataItem.id && dataItem.id.startsWith('new-option')) {
                     delete newOption.id;
                 }
+
+                delete newOption.isEditing;
 
                 dataPayload.push(newOption);
             });
@@ -386,8 +395,6 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 description: module!.description,
                 settings: module!.settings,
             });
-
-            console.log(response);
 
             // module.data = data;
             // module.mode = ModuleMode.View;

@@ -67,7 +67,6 @@ export type ModuleData<T> = {
     id: string;
     votes: string[];
     isEditing?: boolean;
-    text: string; // text to be shown in widget option and manifest
     author: Pick<User, 'id' | 'email' | 'name'>;
     selected: boolean; // if this option is selected by the current user. will have to save it differently in DB
 } & T;

@@ -57,7 +57,6 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
 
             if (foundPollIdx !== -1) {
                 updatedWidgetData[foundPollIdx].isEditing = false;
-                updatedWidgetData[foundPollIdx].text = getText(d);
             }
         });
 
@@ -123,7 +122,6 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
                 const newData: DataType = {
                     id: `new-option-${new Date().getTime().toString()}`,
                     author: { id: user?.id!, name: user!.name, email: user!.email },
-                    text: '',
                     selected: false,
                     votes: [],
                     isEditing: true,

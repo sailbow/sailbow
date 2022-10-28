@@ -31,7 +31,6 @@ export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props
 
             if (foundPollIdx !== -1) {
                 updatedWidgetData[foundPollIdx].isEditing = false;
-                updatedWidgetData[foundPollIdx].text = getText(d);
             }
         });
 
@@ -53,7 +52,7 @@ export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props
     return (
         <BoatWidget<DataType>
             {...props}
-            getText={() => ''}
+            getText={getText}
             data={widgetData}
             settingsNode={<LocationSettings id={id} settings={settings} />}
             onSave={onSave}
@@ -61,7 +60,6 @@ export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props
                 const newData: DataType = {
                     id: new Date().getTime().toString(),
                     author: { id: user?.id!, name: user!.name, email: user!.email },
-                    text: '',
                     selected: false,
                     votes: [],
                     isEditing: true,

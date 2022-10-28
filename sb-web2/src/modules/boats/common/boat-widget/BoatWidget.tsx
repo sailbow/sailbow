@@ -19,11 +19,15 @@ import { ModulesMapper } from 'modules/boats/boat-modules/modules/Modules';
 import { Poll, Props as PollProps } from 'shared/poll/Poll';
 
 import { BoatWidgetDetails } from './BoatWidgetDetails';
+import { withRoleGuard } from 'shared/role/RoleGuard';
+import { FinalizeModuleOptionRoleAccess } from 'shared/actions/Actions';
 
 interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption'> {
     settingsNode: ReactNode;
     children?: ReactNode;
 }
+
+const FinalizeButton = withRoleGuard(Button);
 
 export const BoatWidget = <T extends {}>({
     id,
@@ -72,16 +76,16 @@ export const BoatWidget = <T extends {}>({
     return (
         <Box w="100%" borderRadius="xl" border="2px solid #ececec" className="sb-boat-widget">
             <Flex
-                bg={!actionRequired ? 'red.400' : 'white'}
+                bg={actionRequired && actionRequired === true ? 'red.400' : 'white'}
                 justifyContent="center"
                 fontSize="sm"
-                py={!actionRequired ? '1' : '0.5'}
+                py={actionRequired && actionRequired === true ? '1' : '0.5'}
                 color="white"
                 borderTopRightRadius="xl"
                 borderTopLeftRadius="xl"
                 fontWeight="semibold"
             >
-                {!actionRequired && 'Your vote is required'}
+                {actionRequired && actionRequired === true && 'Your vote is required'}
             </Flex>
             <Box className="widget-wrapper">
                 <Flex alignItems="center" justifyContent="space-between" className="widget-header" px="4" py="2">
@@ -103,7 +107,11 @@ export const BoatWidget = <T extends {}>({
                             variant="ghost"
                             icon={<SbCloseIcon />}
                             onClick={() => {
-                                setModuleMode(id, ModuleMode.View);
+                                if (data.length) {
+                                    setModuleMode(id, ModuleMode.View);
+                                } else {
+                                    setModuleMode(id, ModuleMode.Edit);
+                                }
                             }}
                             display={mode === ModuleMode.Settings ? 'flex' : 'none'}
                         />
@@ -173,7 +181,9 @@ export const BoatWidget = <T extends {}>({
                             <CrewGroup size="xs" crew={totalVotes} />
                         </Flex> */}
                         <Flex mt="2">
-                            <Button
+                            <FinalizeButton
+                                role={activeBoat!.role}
+                                acceptedRoles={FinalizeModuleOptionRoleAccess}
                                 rightIcon={SbCheckMarkIcon}
                                 w="100%"
                                 variant="accent"
@@ -182,7 +192,7 @@ export const BoatWidget = <T extends {}>({
                                 borderRadius="xl"
                             >
                                 Finalize
-                            </Button>
+                            </FinalizeButton>
                         </Flex>
                     </Box>
                 )}
