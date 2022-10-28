@@ -29,7 +29,7 @@ public class ModuleJsonConverter : JsonConverter
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
         var jObj = JObject.Load(reader);
-        ModuleType moduleType = Enum.Parse<ModuleType>(jObj.Value<string>("name"), true);
+        ModuleType moduleType = Enum.Parse<ModuleType>(jObj.Value<string>("type"), true);
         Module module = new();
         module.Data = moduleType switch
         {
