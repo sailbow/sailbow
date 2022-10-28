@@ -13,6 +13,7 @@ namespace Sb.Data.Models
     {
         public string BoatId { get; set; }
         public ModuleType Name { get; set; }
+        public string Author { get; set; }
         public string Description { get; set; }
         public int Order { get; set; }
         public int? FinalizedOptionId { get; set; }

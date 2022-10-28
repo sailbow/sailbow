@@ -39,9 +39,10 @@ public class ModulesController : ApiControllerBase
     {
         Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
         module.BoatId = boatId;
+        module.Author = module.Author ?? HttpContext.GetUserId();
         foreach (ModuleData d in module.Data)
         {
-            d.Author = HttpContext.GetUserId();
+            d.Author = d.Author ?? HttpContext.GetUserId();
         }
         return await _moduleService.UpsertModule(module);
     }
