@@ -116,7 +116,6 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
             {...props}
             data={widgetData}
             settingsNode={<DateSettings id={id} settings={settings} />}
-            onSave={onSave}
             onOptionSave={onSave}
             getText={getText}
             onAddOption={() => {

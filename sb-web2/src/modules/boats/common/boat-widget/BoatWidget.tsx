@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactNode, useMemo, useState } from 'react';
+import { FC, PropsWithChildren, ReactNode, useMemo } from 'react';
 
 import {
     Box,
@@ -22,7 +22,7 @@ import { BoatWidgetDetails } from './BoatWidgetDetails';
 import { withRoleGuard } from 'shared/role/RoleGuard';
 import { FinalizeModuleOptionRoleAccess } from 'shared/actions/Actions';
 
-interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption'> {
+interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption' | 'onSave'> {
     settingsNode: ReactNode;
     children?: ReactNode;
 }
@@ -45,7 +45,6 @@ export const BoatWidget = <T extends {}>({
     onAddOption,
     onOptionEdit,
     onRemoveOption,
-    onSave,
     onOptionSave,
 }: PropsWithChildren<Props<T>>) => {
     const module = useMemo(() => ModulesMapper[name as ModuleType], [name]); // TODO: CHANGE NAME TO TYPE

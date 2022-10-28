@@ -13,7 +13,6 @@ import {
     SbRadioButtonOn,
 } from 'shared/icons/Icons';
 import { withSkeleton } from 'util/guards/Loading';
-import { ModuleDataType } from 'modules/boats/boat-modules/modules/Modules';
 
 export interface Props<T> {
     mode: ModuleMode;
