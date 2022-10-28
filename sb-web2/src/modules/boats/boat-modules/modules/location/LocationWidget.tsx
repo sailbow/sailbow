@@ -56,6 +56,7 @@ export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props
             data={widgetData}
             settingsNode={<LocationSettings id={id} settings={settings} />}
             onSave={onSave}
+            onOptionSave={onSave}
             onAddOption={() => {
                 const newData: DataType = {
                     id: new Date().getTime().toString(),

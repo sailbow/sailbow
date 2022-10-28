@@ -46,6 +46,7 @@ export const BoatWidget = <T extends {}>({
     onOptionEdit,
     onRemoveOption,
     onSave,
+    onOptionSave,
 }: PropsWithChildren<Props<T>>) => {
     const module = useMemo(() => ModulesMapper[name as ModuleType], [name]); // TODO: CHANGE NAME TO TYPE
     const [{ activeBoat }, { setModuleMode, removeModule, selectOption, saveModuleData }] = useBoat();
@@ -159,10 +160,9 @@ export const BoatWidget = <T extends {}>({
                                 onAddOption={onAddOption}
                                 onOptionEdit={onOptionEdit}
                                 onRemoveOption={onRemoveOption}
+                                onOptionSave={onOptionSave}
                                 onSave={() => {
-                                    if (onSave()) saveModuleData(id, data);
-
-                                    return true;
+                                    saveModuleData(id, data);
                                 }}
                             />
                             {children}

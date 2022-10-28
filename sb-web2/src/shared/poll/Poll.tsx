@@ -24,7 +24,8 @@ export interface Props<T> {
     onOptionEdit: <T>(data: T[]) => void;
     onRemoveOption?: <T>(data: T) => void;
     selectOption: (moduleId: string, optionId: string) => void;
-    onSave: () => boolean;
+    onSave: () => void;
+    onOptionSave: () => boolean;
     getText: (data: ModuleData<any>) => string;
 }
 
@@ -40,6 +41,7 @@ export const Poll = <T extends {}>({
     onRemoveOption,
     selectOption,
     onSave,
+    onOptionSave,
     getText,
 }: PropsWithChildren<Props<T>>) => {
     const onRemove = (optionId: string) => {
@@ -96,15 +98,22 @@ export const Poll = <T extends {}>({
                                             data.find((d) => d.id === item.id),
                                         )}
                                     </>
-                                    <Flex justifyContent={{ base: 'space-between', md: 'flex-end' }} gap="4">
+                                    <Flex justifyContent={{ base: 'space-between', md: 'flex-end' }} gap="2">
                                         <IconButton
                                             fontSize="xl"
                                             aria-label="delete-option"
                                             colorScheme="red"
                                             variant="ghost"
-                                            size="sm"
                                             icon={<SbDeleteIcon />}
                                             onClick={() => onRemove(item.id)}
+                                        />
+                                        <IconButton
+                                            fontSize="xl"
+                                            aria-label="save-option"
+                                            colorScheme="green"
+                                            variant="ghost"
+                                            icon={SbCheckMarkIcon}
+                                            onClick={onOptionSave}
                                         />
                                     </Flex>
                                 </Stack>
@@ -162,7 +171,13 @@ export const Poll = <T extends {}>({
                     <Button variant="secondary" leftIcon={<SbPlusIcon />} colorScheme="gray" onClick={onAddOption}>
                         Add Option
                     </Button>
-                    <Button rightIcon={SbCheckMarkIcon} onClick={() => onSave()} disabled={!data.length}>
+                    <Button
+                        rightIcon={SbCheckMarkIcon}
+                        onClick={() => {
+                            if (onOptionSave()) onSave();
+                        }}
+                        disabled={!data.length}
+                    >
                         Save
                     </Button>
                 </Flex>
