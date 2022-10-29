@@ -9,7 +9,7 @@ interface Props extends PopoverProps {
 
 export const Popover: FC<Props> = ({ triggerNode, children, ...props }) => {
     return (
-        <ChakraPopover variant="brand" isLazy lazyBehavior="unmount">
+        <ChakraPopover variant="brand" isLazy lazyBehavior="unmount" {...props}>
             <PopoverTrigger>{triggerNode}</PopoverTrigger>
             <PopoverContent borderRadius="lg" w="100%">
                 <PopoverBody p="2">{children}</PopoverBody>

@@ -1,16 +1,6 @@
 import { FC, PropsWithChildren, ReactNode, useMemo } from 'react';
 
-import {
-    Box,
-    Flex,
-    IconButton,
-    Text,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverBody,
-    Button,
-} from '@chakra-ui/react';
+import { Box, Flex, IconButton, Text, PopoverTrigger, PopoverContent, PopoverBody, Button } from '@chakra-ui/react';
 
 import { SbSettingsIcon, SbEditIcon, SbDeleteIcon, SbCheckMarkIcon, SbCloseIcon } from 'shared/icons/Icons';
 import { Module, ModuleMode, ModuleType, Role } from 'modules/boats/Boat.Types';
@@ -21,6 +11,7 @@ import { Poll, Props as PollProps } from 'shared/poll/Poll';
 import { BoatWidgetDetails } from './BoatWidgetDetails';
 import { withRoleGuard } from 'shared/role/RoleGuard';
 import { FinalizeModuleOptionRoleAccess } from 'shared/actions/Actions';
+import { Popover } from 'shared/popover/Popover';
 
 interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption' | 'onSave'> {
     settingsNode: ReactNode;
@@ -30,30 +21,15 @@ interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption' | 'onSav
 const FinalizeButton = withRoleGuard(Button);
 
 export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: PropsWithChildren<Props<T>>) => {
-    const {
-        id,
-        name,
-        type,
-        mode,
-        data,
-        loading,
-        actionRequired,
-        totalVotes,
-        getText,
-        getInputComponent,
-        onAddOption,
-        onOptionEdit,
-        onRemoveOption,
-        onOptionSave,
-        onValidate,
-    } = props;
+    const { id, name, mode, data, actionRequired } = props;
     const module = useMemo(() => ModulesMapper[name as ModuleType], [name]); // TODO: CHANGE NAME TO TYPE
     const [{ activeBoat }, { setModuleMode, removeModule, selectOption, saveModuleData }] = useBoat();
 
     const WidgetDescriptionPopover: FC = () => {
         return (
-            <Popover isLazy lazyBehavior="unmount" trigger="hover" matchWidth>
-                <PopoverTrigger>
+            <Popover
+                trigger="hover"
+                triggerNode={
                     <IconButton
                         fontSize="lg"
                         aria-label="settings"
@@ -63,12 +39,9 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                         as={Box}
                         icon={<>{<module.icon />}</>}
                     />
-                </PopoverTrigger>
-                <PopoverContent borderRadius="xl">
-                    <PopoverBody w="100%">
-                        <BoatWidgetDetails name={module.name} image={<module.image />} info={module.info} />
-                    </PopoverBody>
-                </PopoverContent>
+                }
+            >
+                <BoatWidgetDetails name={module.name} image={<module.image />} info={module.info} />
             </Popover>
         );
     };
