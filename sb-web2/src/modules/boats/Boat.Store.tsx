@@ -5,16 +5,13 @@ import {
     Boat,
     BoatState,
     CreateBoat,
-    ModuleName,
     Photo,
     ModuleMode,
     ModuleSettings,
     Module,
     ModuleData,
     ModuleExtended,
-    Role,
     ModuleType,
-    Modules,
 } from 'modules/boats/Boat.Types';
 import { useAuthStore } from 'modules/auth/Auth.Store';
 import { getModule, upsertModule } from './boat-modules/modules/Modules.Service';

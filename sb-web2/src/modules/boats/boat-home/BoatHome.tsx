@@ -21,7 +21,7 @@ export const BoatHome: FunctionComponent = () => {
     }, []); // eslint-disable-line
 
     return (
-        <Box px={{ base: 0, md: 4 }} className="sb-home" w="100%">
+        <Box px={{ base: 0, md: 4 }} className="sb-home" w="100%" pb="8">
             {!loading.getAll && boats ? (
                 <>
                     {boats.length ? (

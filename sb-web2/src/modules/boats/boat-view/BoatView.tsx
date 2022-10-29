@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect } from 'react';
 
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, useBreakpointValue } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 import { useBoat } from 'modules/boats/Boat.Store';
@@ -14,6 +14,7 @@ import { PageSpinner } from 'shared/page-spinner/PageSpinner';
 export const BoatView: FunctionComponent = () => {
     const [{ activeBoat: boat, loading, error }, { getBoat, removeActiveBoat }] = useBoat();
     const { boatId } = useParams<{ boatId: string }>();
+    const isMobile = useBreakpointValue({ base: true, md: false });
 
     useEffect(() => {
         (async () => {
@@ -29,22 +30,28 @@ export const BoatView: FunctionComponent = () => {
 
     const BoatRenderer: FunctionComponent<{ data: Boat }> = ({ data }) => (
         <Box px={{ base: 0, md: 2 }} className="sb-boat-view">
-            <BoatViewToolbar boat={data} />
-            <Box className="details-widget-box">
-                <Flex pt="4" display={{ base: 'none', md: 'flex' }}>
-                    <Box width="480px" borderRight="1px solid #ececec">
-                        <BoatModuleManifest boat={data} />
+            {isMobile ? (
+                <>mobile</>
+            ) : (
+                <>
+                    <BoatViewToolbar boat={data} />
+                    <Box className="details-widget-box">
+                        <Flex pt="4" display={{ base: 'none', md: 'flex' }}>
+                            <Box width="480px" borderRight="1px solid #ececec">
+                                <BoatModuleManifest boat={data} />
+                            </Box>
+                            <Box w="100%">
+                                <BoatModulesWidget boat={data} />
+                            </Box>
+                        </Flex>
                     </Box>
-                    <Box w="100%">
-                        <BoatModulesWidget boat={data} />
-                    </Box>
-                </Flex>
+                </>
+            )}
 
-                {/* <BoatViewTabs
+            {/* <BoatViewTabs
                     manifest={<BoatModuleManifest boat={data} />}
                     widgets={<BoatModulesWidget boat={data} />}
                 /> */}
-            </Box>
         </Box>
     );
 

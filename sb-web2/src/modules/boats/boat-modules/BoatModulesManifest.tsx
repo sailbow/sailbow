@@ -19,6 +19,7 @@ export const BoatModuleManifest: FC<Props> = ({ boat }) => {
             overflowY="auto"
             pr="4"
             className="sb-boat-module-manifest"
+            pb="16"
         >
             <InfoManifest data={boat} />
             <CrewManifest boat={boat} />

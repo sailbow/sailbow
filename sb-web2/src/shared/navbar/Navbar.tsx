@@ -1,115 +1,28 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent } from 'react';
 
-import { Box, Button, Flex, IconButton, HStack } from '@chakra-ui/react';
+import { useBreakpointValue } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
-import { ReactComponent as Logo } from 'assets/sailboat-logo.svg';
-import { ProfileIcon } from 'modules/profile/profile-icon/ProfileIcon';
-import { useSystem } from 'modules/system/System.Store';
-import { Notifications } from 'shared/notifications/Notifications';
-import { Menu } from 'shared/menu/Menu';
-import { Routes } from 'router/Router.Types';
-import { SbPlusIcon } from 'shared/icons/Icons';
+import { NavbarMobileTop } from 'shared/navbar/navbar-mobile/NavbarMobileTop';
+import { NavbarDesktop } from 'shared/navbar/navbar-desktop/NavbarDesktop';
+import { NavbarMobileBottom } from './navbar-mobile/NavbarMobileBottom';
 
-import './Navbar.scss';
-
-// enum LinkLabels {
-//     Boats = '/boats',
-//     Feed = '/feeds',
-//     Memories = '/memories',
-// }
+import 'shared/navbar/Navbar.scss';
 
 export const Navbar: FunctionComponent = () => {
-    const [navbarBg, setNavbarBg] = useState<boolean>(false);
-    const [, { openCreateNav }] = useSystem();
-
-    useEffect(() => {
-        document.addEventListener('scroll', () => {
-            if (window.scrollY < 10) {
-                setNavbarBg(false);
-            } else {
-                setNavbarBg(true);
-            }
-        });
-    }, []);
+    const navigate = useNavigate();
+    const isMobile = useBreakpointValue({ base: true, md: false });
 
     const onRoute = (path: string) => {
-        if (window.location.pathname !== path) window.location.href = path;
+        if (window.location.pathname !== path) navigate(path);
     };
 
-    // const getActiveState = (link: LinkLabels): 'solid' | 'ghost' => {
-    //     const check = (currentLink: string) => {
-    //         if (!!matchPath(window.location.pathname, currentLink)) {
-    //             return 'solid';
-    //         }
-    //         return 'ghost';
-    //     };
-
-    //     switch (link) {
-    //         case LinkLabels.Boats:
-    //             return check(Routes.Private.Boats);
-    //         case LinkLabels.Feed:
-    //             return check(Routes.Private.Boats);
-    //         case LinkLabels.Memories:
-    //             return check(Routes.Private.Boats);
-    //         default:
-    //             return 'ghost';
-    //     }
-    // };
-
-    return (
-        <Flex
-            className="sb-navbar"
-            justifyContent="space-between"
-            alignItems="center"
-            px="4"
-            py="2"
-            bg={navbarBg ? 'white' : 'transparent'}
-            transition="all 0.25s ease-in-out"
-            boxShadow={navbarBg ? 'sm' : 'none'}
-            id="sb-navbar"
-        >
-            <HStack alignItems="center" spacing="4" pl="2">
-                <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
-                <Box display="flex" gap="2">
-                    {/* <Link variant="navbar">Your Boats</Link> */}
-
-                    {/* <Button
-                        variant={getActiveState(LinkLabels.Boats)}
-                        colorScheme="gray"
-                        leftIcon={<SbBoatIcon />}
-                        onClick={() => onRoute(Routes.Private.Boats)}
-                    >
-                        Boats
-                    </Button>
-                    <Button variant="ghost" colorScheme="gray" leftIcon={<SbFeedIcon />}>
-                        Feed
-                    </Button>
-                    <Button variant="ghost" colorScheme="gray" leftIcon={<SbClockIcon />}>
-                        Memories
-                    </Button> */}
-                </Box>
-            </HStack>
-            <Flex alignItems="center" justifyContent="space-between" gap="4">
-                <Button rightIcon={<SbPlusIcon />} onClick={openCreateNav} display={{ base: 'none', md: 'flex' }}>
-                    Start Boat
-                </Button>
-                <Notifications display={{ base: 'none', md: 'block' }} />
-                <ProfileIcon display={{ base: 'none', md: 'block' }} />
-
-                {/* MOBILE NAV ITEMS START */}
-
-                <IconButton
-                    aria-label="add"
-                    icon={<SbPlusIcon />}
-                    display={{ base: 'flex', md: 'none' }}
-                    onClick={openCreateNav}
-                />
-                <Box mr="-3">
-                    <Menu display={{ base: 'block', md: 'none' }} />
-                </Box>
-
-                {/* MOBILE NAV ITEMS END */}
-            </Flex>
-        </Flex>
+    return isMobile ? (
+        <>
+            <NavbarMobileTop onRoute={onRoute} />
+            {/* <NavbarMobileBottom onRoute={onRoute} /> */}
+        </>
+    ) : (
+        <NavbarDesktop onRoute={onRoute} />
     );
 };

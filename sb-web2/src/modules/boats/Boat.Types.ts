@@ -94,10 +94,6 @@ export interface ModuleExtended<T> extends Module<T> {
     mode: ModuleMode;
 }
 
-export interface Modules<T> {
-    [key: string]: ModuleExtended<T>;
-}
-
 export interface Boat {
     id: string;
     name: string;
