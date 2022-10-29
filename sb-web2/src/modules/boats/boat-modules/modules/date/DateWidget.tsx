@@ -38,16 +38,18 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
             const foundPollIdx = updatedWidgetData.findIndex((i) => i.id === d.id);
             const { startDate, endDate, startTime, endTime } = updatedWidgetData[foundPollIdx];
 
+            updatedWidgetData[foundPollIdx].errors = {};
+
             if (!startDate) {
                 hasError = true;
-                updatedWidgetData[foundPollIdx].errors['startDate'] = 'Start date is required';
+                updatedWidgetData[foundPollIdx].errors!['startDate'] = 'Start date is required';
                 return false;
             }
 
             if (endDate) {
                 if (new Date(startDate).getTime() > new Date(endDate).getTime()) {
                     hasError = true;
-                    updatedWidgetData[foundPollIdx].errors['startDate'] = 'End date has to be after start date';
+                    updatedWidgetData[foundPollIdx].errors!['startDate'] = 'End date has to be after start date';
 
                     return false;
                 }
@@ -76,16 +78,16 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
                         required
                         onChange={onDataChange(optionId)}
                         value={data.startDate}
-                        error={!!data.errors.startDate}
-                        errorLabel={data.errors.startDate}
+                        error={!!data.errors!.startDate}
+                        errorLabel={data.errors!.startDate}
                     />
                     <DatePicker
                         label="End Date"
                         name="endDate"
                         placeholder="mm/dd/yyyy"
                         onChange={onDataChange(optionId)}
-                        error={!!data.errors.endDate}
-                        errorLabel={data.errors.endDate}
+                        error={!!data.errors!.endDate}
+                        errorLabel={data.errors!.endDate}
                         value={data.endDate}
                     />
                 </Flex>

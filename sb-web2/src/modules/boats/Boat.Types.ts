@@ -69,7 +69,7 @@ export type ModuleData<T> = {
     isEditing?: boolean;
     author: Pick<User, 'id' | 'email' | 'name'>;
     selected: boolean;
-    errors: {
+    errors?: {
         [key: string]: string;
     };
 } & T;
