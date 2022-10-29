@@ -29,31 +29,26 @@ export const BoatView: FunctionComponent = () => {
     }, []); // eslint-disable-line
 
     const BoatRenderer: FunctionComponent<{ data: Boat }> = ({ data }) => (
-        <Box px={{ base: 0, md: 2 }} className="sb-boat-view">
-            {isMobile ? (
-                <>mobile</>
-            ) : (
-                <>
-                    <BoatViewToolbar boat={data} />
-                    <Box className="details-widget-box">
-                        <Flex pt="4" display={{ base: 'none', md: 'flex' }}>
-                            <Box width="480px" borderRight="1px solid #ececec">
-                                <BoatModuleManifest boat={data} />
-                            </Box>
-                            <Box w="100%">
-                                <BoatModulesWidget boat={data} />
-                            </Box>
-                        </Flex>
+        <Box px={{ base: 0, md: 2 }} className="sb-boat-view-desktop">
+            <BoatViewToolbar boat={data} />
+            <Box className="details-widget-box">
+                <Flex pt="4" display={{ base: 'none', md: 'flex' }}>
+                    <Box width="480px" borderRight="1px solid #ececec">
+                        <BoatModuleManifest boat={data} />
                     </Box>
-                </>
-            )}
-
-            {/* <BoatViewTabs
-                    manifest={<BoatModuleManifest boat={data} />}
-                    widgets={<BoatModulesWidget boat={data} />}
-                /> */}
+                    <Box w="100%">
+                        <BoatModulesWidget boat={data} />
+                    </Box>
+                </Flex>
+            </Box>
         </Box>
     );
 
-    return boat && !loading.get && !error ? <BoatRenderer data={boat} /> : <PageSpinner loading={loading.get} />;
+    return isMobile ? (
+        <BoatViewTabs boat={boat} loading={loading.get} />
+    ) : boat && !loading.get && !error ? (
+        <BoatRenderer data={boat} />
+    ) : (
+        <PageSpinner loading={loading.get} />
+    );
 };
