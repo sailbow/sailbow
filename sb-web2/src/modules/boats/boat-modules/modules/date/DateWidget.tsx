@@ -61,9 +61,9 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
                         placeholder="mm/dd/yyyy"
                         required
                         onChange={onDataChange(optionId)}
-                        value={data.startDate}
                         error={!!data.errors?.startDate}
                         errorLabel={data.errors?.startDate}
+                        value={data.startDate}
                     />
                     <DatePicker
                         label="End Date"

@@ -5,7 +5,7 @@ import { Button, Flex } from '@chakra-ui/react';
 import { BoatManifest } from 'modules/boats/common/boat-manifest/BoatManifest';
 import { Boat, Role } from 'modules/boats/Boat.Types';
 import { useSystem } from 'modules/system/System.Store';
-import { InviteCrewRoleAccess } from 'shared/actions/Actions';
+import { Actions } from 'shared/actions/Actions';
 import { SbPlusIcon, SbUserGroup } from 'shared/icons/Icons';
 import { CrewGroup } from 'shared/crew/crew-group/CrewGroup';
 import { withRoleGuard } from 'shared/role/RoleGuard';
@@ -31,7 +31,7 @@ export const CrewManifest: FC<Props> = ({ boat }) => {
                         colorScheme="gray"
                         onClick={openCrewInviteModal}
                         role={boat.role}
-                        acceptedRoles={InviteCrewRoleAccess}
+                        acceptedRoles={Actions.InviteCrewRoleAccess}
                     >
                         Invite
                     </GuardedInviteButton>

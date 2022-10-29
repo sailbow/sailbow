@@ -1,17 +1,17 @@
 import { FC, PropsWithChildren, ReactNode, useMemo } from 'react';
 
-import { Box, Flex, IconButton, Text, PopoverTrigger, PopoverContent, PopoverBody, Button } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Text, Button } from '@chakra-ui/react';
 
-import { SbSettingsIcon, SbEditIcon, SbDeleteIcon, SbCheckMarkIcon, SbCloseIcon } from 'shared/icons/Icons';
 import { Module, ModuleMode, ModuleType, Role } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
 import { ModulesMapper } from 'modules/boats/boat-modules/modules/Modules';
+import { SbSettingsIcon, SbEditIcon, SbDeleteIcon, SbCheckMarkIcon, SbCloseIcon } from 'shared/icons/Icons';
 import { Poll, Props as PollProps } from 'shared/poll/Poll';
+import { withRoleGuard } from 'shared/role/RoleGuard';
+import { Actions } from 'shared/actions/Actions';
+import { Popover } from 'shared/popover/Popover';
 
 import { BoatWidgetDetails } from './BoatWidgetDetails';
-import { withRoleGuard } from 'shared/role/RoleGuard';
-import { FinalizeModuleOptionRoleAccess } from 'shared/actions/Actions';
-import { Popover } from 'shared/popover/Popover';
 
 interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption' | 'onSave'> {
     settingsNode: ReactNode;
@@ -19,6 +19,7 @@ interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption' | 'onSav
 }
 
 const FinalizeButton = withRoleGuard(Button);
+const GuardedIconButton = withRoleGuard(IconButton);
 
 export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: PropsWithChildren<Props<T>>) => {
     const { id, name, mode, data, actionRequired } = props;
@@ -73,22 +74,22 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                         </Text>
                     </Flex>
                     <Flex alignItems="center" gap="1">
-                        <IconButton
-                            fontSize="2xl"
+                        <GuardedIconButton
+                            role={activeBoat!.role}
+                            acceptedRoles={Actions.BoatSettingsRoleAccess}
                             aria-label="cancel-settings"
                             colorScheme="gray"
                             variant="ghost"
                             icon={<SbCloseIcon />}
                             onClick={() => {
-                                if (data.length) {
-                                    setModuleMode(id, ModuleMode.View);
-                                } else {
-                                    setModuleMode(id, ModuleMode.Edit);
-                                }
+                                if (data.length) setModuleMode(id, ModuleMode.View);
+                                else setModuleMode(id, ModuleMode.Edit);
                             }}
                             display={mode === ModuleMode.Settings ? 'flex' : 'none'}
                         />
-                        <IconButton
+                        <GuardedIconButton
+                            role={activeBoat!.role}
+                            acceptedRoles={Actions.EditBoatDetailsRoleAccess}
                             fontSize="2xl"
                             aria-label="edit"
                             colorScheme="gray"
@@ -99,7 +100,9 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                             }}
                             display={mode === ModuleMode.Settings ? 'none' : 'flex'}
                         />
-                        <IconButton
+                        <GuardedIconButton
+                            role={activeBoat!.role}
+                            acceptedRoles={Actions.BoatSettingsRoleAccess}
                             fontSize="2xl"
                             aria-label="settings"
                             colorScheme="gray"
@@ -108,7 +111,9 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                             onClick={() => setModuleMode(id, ModuleMode.Settings)}
                             display={mode === ModuleMode.Settings ? 'none' : 'flex'}
                         />
-                        <IconButton
+                        <GuardedIconButton
+                            role={activeBoat!.role}
+                            acceptedRoles={Actions.DeleteBoatRoleAccess}
                             fontSize="2xl"
                             aria-label="delete"
                             colorScheme="gray"
@@ -147,7 +152,7 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                         <Flex mt="2">
                             <FinalizeButton
                                 role={activeBoat!.role}
-                                acceptedRoles={FinalizeModuleOptionRoleAccess}
+                                acceptedRoles={Actions.FinalizeModuleOptionRoleAccess}
                                 rightIcon={SbCheckMarkIcon}
                                 w="100%"
                                 variant="accent"
