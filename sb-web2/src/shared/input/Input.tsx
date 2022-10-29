@@ -11,7 +11,6 @@ import {
     Spinner,
     Box,
     InputLeftAddon,
-    IconButton,
 } from '@chakra-ui/react';
 
 import { SbErrorCircleIcon } from 'shared/icons/Icons';
@@ -79,6 +78,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                         {...field}
                         {...props}
                         borderColor={error ? 'brand.error' : 'inherit'}
+                        _hover={{ borderColor: error ? 'brand.error' : 'inherit' }}
                     />
                     {loading && (
                         <InputRightElement color="brand.error">

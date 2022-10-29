@@ -15,8 +15,8 @@ type DataType = ModuleData<DateModuleDataType>;
 export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
     const { id, settings, data } = props;
     const [widgetData, setWidgetData] = useState<DataType[]>(data);
-    const [startDateError, setStartDateError] = useState<string>('');
-    const [endDateError, setEndDateError] = useState<string>('');
+    const [startDateError] = useState<string>('');
+    const [endDateError] = useState<string>('');
     const [{ user }] = useAuthStore();
 
     const onDataChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,23 +34,21 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
         const updatedWidgetData = [...widgetData];
         let hasError = false;
 
-        setStartDateError('');
-        setEndDateError('');
-
         widgetData.forEach((d) => {
             const foundPollIdx = updatedWidgetData.findIndex((i) => i.id === d.id);
             const { startDate, endDate, startTime, endTime } = updatedWidgetData[foundPollIdx];
 
             if (!startDate) {
-                setStartDateError('Start date is required');
                 hasError = true;
+                updatedWidgetData[foundPollIdx].errors['startDate'] = 'Start date is required';
                 return false;
             }
 
             if (endDate) {
                 if (new Date(startDate).getTime() > new Date(endDate).getTime()) {
                     hasError = true;
-                    setEndDateError('End date has to be after start date');
+                    updatedWidgetData[foundPollIdx].errors['startDate'] = 'End date has to be after start date';
+
                     return false;
                 }
             }
@@ -60,16 +58,16 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
             }
         });
 
-        if (hasError) return false;
-
         setWidgetData([...updatedWidgetData]);
+
+        if (hasError) return false;
 
         return true;
     };
 
     const getInputComponent: any = (optionId: string, data: DataType) => {
         return (
-            <Box>
+            <Box className="date-widget-input-component">
                 <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }}>
                     <DatePicker
                         label="Start Date"
@@ -78,16 +76,16 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
                         required
                         onChange={onDataChange(optionId)}
                         value={data.startDate}
-                        error={!!startDateError}
-                        errorLabel={startDateError}
+                        error={!!data.errors.startDate}
+                        errorLabel={data.errors.startDate}
                     />
                     <DatePicker
                         label="End Date"
                         name="endDate"
                         placeholder="mm/dd/yyyy"
                         onChange={onDataChange(optionId)}
-                        error={!!endDateError}
-                        errorLabel={endDateError}
+                        error={!!data.errors.endDate}
+                        errorLabel={data.errors.endDate}
                         value={data.endDate}
                     />
                 </Flex>
@@ -129,6 +127,7 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
                     endDate: '',
                     startTime: '',
                     endTime: '',
+                    errors: {},
                 };
 
                 setWidgetData([...widgetData, newData]);

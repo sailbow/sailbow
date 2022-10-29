@@ -68,7 +68,10 @@ export type ModuleData<T> = {
     votes: string[];
     isEditing?: boolean;
     author: Pick<User, 'id' | 'email' | 'name'>;
-    selected: boolean; // if this option is selected by the current user. will have to save it differently in DB
+    selected: boolean;
+    errors: {
+        [key: string]: string;
+    };
 } & T;
 
 export interface Module<T> {

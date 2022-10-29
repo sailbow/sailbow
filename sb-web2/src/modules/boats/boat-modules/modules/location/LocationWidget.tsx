@@ -63,6 +63,7 @@ export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props
                     selected: false,
                     votes: [],
                     isEditing: true,
+                    errors: {},
                 };
 
                 setWidgetData([...widgetData, newData]);
