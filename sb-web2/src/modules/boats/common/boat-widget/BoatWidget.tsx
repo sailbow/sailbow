@@ -1,14 +1,14 @@
 import { FC, PropsWithChildren, ReactNode, useMemo } from 'react';
 
-import { Box, Flex, IconButton, Text, Button } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Text, Button, Badge } from '@chakra-ui/react';
 
 import { Module, ModuleMode, ModuleType, Role } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
 import { ModulesMapper } from 'modules/boats/boat-modules/modules/Modules';
+import { Actions } from 'shared/actions/Actions';
 import { SbSettingsIcon, SbEditIcon, SbDeleteIcon, SbCheckMarkIcon, SbCloseIcon } from 'shared/icons/Icons';
 import { Poll, Props as PollProps } from 'shared/poll/Poll';
 import { withRoleGuard } from 'shared/role/RoleGuard';
-import { Actions } from 'shared/actions/Actions';
 import { Popover } from 'shared/popover/Popover';
 
 import { BoatWidgetDetails } from './BoatWidgetDetails';
@@ -48,20 +48,15 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
     };
 
     return (
-        <Box w="100%" borderRadius="xl" border="2px solid #ececec" className="sb-boat-widget">
-            <Flex
-                bg={actionRequired && actionRequired === true ? 'red.400' : 'white'}
-                justifyContent="center"
-                fontSize="sm"
-                py={actionRequired && actionRequired === true ? '1' : '0.5'}
-                color="white"
-                borderTopRightRadius="xl"
-                borderTopLeftRadius="xl"
-                fontWeight="semibold"
-            >
-                {actionRequired && actionRequired === true && 'Your vote is required'}
-            </Flex>
-            <Box className="widget-wrapper">
+        <Box
+            w="100%"
+            borderRadius="xl"
+            borderStyle="solid"
+            borderWidth="2px"
+            borderColor={mode === ModuleMode.Edit ? 'brand.primary' : 'brand.border-light'}
+            className="sb-boat-widget"
+        >
+            <Box className="widget-wrapper" pt="1">
                 <Flex alignItems="center" justifyContent="space-between" className="widget-header" px="4" py="2">
                     <Flex alignItems="center">
                         <Box flexShrink="0" className="panel-icon">
@@ -74,12 +69,18 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                         </Text>
                     </Flex>
                     <Flex alignItems="center" gap="1">
+                        {actionRequired && (
+                            <Badge colorScheme="orange" variant="outline" mr="2">
+                                Vote Required
+                            </Badge>
+                        )}
                         <GuardedIconButton
                             role={activeBoat!.role}
                             acceptedRoles={Actions.BoatSettingsRoleAccess}
                             aria-label="cancel-settings"
                             colorScheme="gray"
                             variant="ghost"
+                            fontSize="2xl"
                             icon={<SbCloseIcon />}
                             onClick={() => {
                                 if (data.length) setModuleMode(id, ModuleMode.View);

@@ -21,7 +21,7 @@ export const BoatModulesPicker: FC = () => {
                 {Object.values(ModulesMapper).map((module) => {
                     return (
                         <Box
-                            key={`picker-option-${module}`}
+                            key={`picker-option-${module.type}`}
                             borderRadius="xl"
                             borderStyle="solid"
                             borderWidth="2px"

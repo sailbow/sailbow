@@ -63,7 +63,7 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
                         onChange={onDataChange(optionId)}
                         error={!!data.errors?.startDate}
                         errorLabel={data.errors?.startDate}
-                        value={data.startDate}
+                        value={data.startDate ? new Date(data.startDate).toLocaleDateString() : ''}
                     />
                     <DatePicker
                         label="End Date"
@@ -72,7 +72,7 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
                         onChange={onDataChange(optionId)}
                         error={!!data.errors?.endDate}
                         errorLabel={data.errors?.endDate}
-                        value={data.endDate}
+                        value={data.endDate ? new Date(data.endDate).toLocaleDateString() : ''}
                     />
                 </Flex>
                 <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }} mt="4">

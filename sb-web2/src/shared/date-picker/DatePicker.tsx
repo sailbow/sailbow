@@ -95,6 +95,7 @@ export const Calendar: FC<CalendarProps> = ({ date, onDateChange }) => {
     const [month, setMonth] = useState<number>(getMonth(selectedDate));
     const [calendar, setCalendar] = useState<Calander[][]>([]);
     const [mode, setMode] = useState<DatePickerMode>(DatePickerMode.Calendar);
+    const monthRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         onDateChange(selectedDate);
@@ -130,6 +131,15 @@ export const Calendar: FC<CalendarProps> = ({ date, onDateChange }) => {
 
         setCalendar(calendar);
     };
+
+    useEffect(() => {
+        if (mode === DatePickerMode.MonthYear) {
+            console.log('ere');
+            setTimeout(() => {
+                monthRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+        }
+    }, [mode]);
 
     const onSelect = (date: string) => {
         setSelectedDate(date);
@@ -200,7 +210,7 @@ export const Calendar: FC<CalendarProps> = ({ date, onDateChange }) => {
             </Flex>
 
             <Flex w="100%" display={mode === DatePickerMode.Calendar ? 'none' : 'flex'} justifyContent="space-between">
-                <Stack maxH="260px" overflowY="auto" w="100%" p="2">
+                <Stack maxH="260px" overflowY="auto" w="100%" p="2" ref={monthRef}>
                     {Months.map((m) => (
                         <Button
                             variant={m === Months[month - 1] ? 'accent' : 'ghost'}

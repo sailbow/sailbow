@@ -13,6 +13,7 @@ import {
     SbRadioButtonOn,
 } from 'shared/icons/Icons';
 import { withSkeleton } from 'util/guards/Loading';
+import { HelperText } from 'shared/helper-text/HelperText';
 
 export interface Props<T> {
     mode: ModuleMode;
@@ -82,9 +83,14 @@ export const Poll = <T extends {}>({
     };
 
     return (
-        <SkeletonWrapper loading={loading} skeletonHeight="120px">
-            <Box className="sb-poll">
+        <SkeletonWrapper loading={false} skeletonHeight="200px">
+            <Box className="sb-poll" transition="all 1s ease-in-out">
                 <Stack spacing="4" w="100%">
+                    {!data.length && (
+                        <HelperText m="2" p="4">
+                            Get started by adding options!
+                        </HelperText>
+                    )}
                     {data.map((item, idx) => (
                         <Flex
                             key={idx}
@@ -141,7 +147,13 @@ export const Poll = <T extends {}>({
                             )}
 
                             {!item.isEditing && (mode === ModuleMode.View || mode === ModuleMode.Edit) ? (
-                                <Flex alignItems="center" flexWrap="wrap">
+                                <Flex
+                                    alignItems="center"
+                                    flexWrap="wrap"
+                                    color={
+                                        loading && item.id && item.id.startsWith('new-option') ? 'gray.300' : 'inherit'
+                                    }
+                                >
                                     <Box
                                         color={item.selected ? 'brand.500' : 'inherit'}
                                         fontWeight="bold"
@@ -151,20 +163,25 @@ export const Poll = <T extends {}>({
                                     </Box>
                                     <Box pl="2">
                                         <Text fontWeight="semibold">{getText(item)}</Text>
-                                        {/* <Text>{item.description}</Text> */}
                                     </Box>
                                 </Flex>
                             ) : (
                                 <></>
                             )}
                             {!item.isEditing && mode === ModuleMode.Edit && (
-                                <Flex alignItems="center">
+                                <Flex
+                                    alignItems="center"
+                                    color={
+                                        loading && item.id && item.id.startsWith('new-option') ? 'gray.300' : 'inherit'
+                                    }
+                                >
                                     <IconButton
                                         fontSize="xl"
                                         aria-label="settings"
                                         colorScheme="gray"
                                         variant="ghost"
                                         size="sm"
+                                        disabled={loading}
                                         icon={<SbEditIcon />}
                                         onClick={() => onEdit(item.id)}
                                     />
@@ -175,6 +192,7 @@ export const Poll = <T extends {}>({
                                         colorScheme="gray"
                                         variant="ghost"
                                         size="sm"
+                                        disabled={loading}
                                         icon={<SbMinusCircleIcon />}
                                         onClick={(e) => {
                                             e.preventDefault();
@@ -189,10 +207,17 @@ export const Poll = <T extends {}>({
                 </Stack>
 
                 <Flex mt="4" display={mode === ModuleMode.Edit ? 'flex' : 'none'} justifyContent="flex-end" gap={4}>
-                    <Button variant="secondary" leftIcon={<SbPlusIcon />} colorScheme="gray" onClick={onAddOption}>
+                    <Button
+                        variant="secondary"
+                        leftIcon={<SbPlusIcon />}
+                        colorScheme="gray"
+                        onClick={onAddOption}
+                        disabled={loading}
+                    >
                         Add Option
                     </Button>
                     <Button
+                        isLoading={loading}
                         rightIcon={SbCheckMarkIcon}
                         onClick={() => {
                             let err = false;

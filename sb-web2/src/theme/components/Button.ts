@@ -84,16 +84,16 @@ export const ButtonStyles: ComponentStyleConfig = {
             return {
                 ...props.theme.components.Button.variants.outline,
                 color: 'brand.dark',
-                bg: 'brand.100',
+                bg: `${props.colorScheme}.100`,
                 borderTopWidth: '2px',
                 borderBottomWidth: '2px',
                 borderLeftWidth: '2px',
                 borderRightWidth: '2px',
                 _hover: {
-                    bg: 'brand.200',
+                    bg: `${props.colorScheme}.200`,
                 },
                 _active: {
-                    bg: 'brand.300',
+                    bg: `${props.colorScheme}.300`,
                 },
             };
         },

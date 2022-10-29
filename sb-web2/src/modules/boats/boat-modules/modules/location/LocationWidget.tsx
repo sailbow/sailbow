@@ -11,7 +11,7 @@ import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
 type DataType = ModuleData<LocationModuleDataType>;
 
 export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props) => {
-    const { id, settings, data } = props;
+    const { id, settings, data, dataLoaded } = props;
     const [widgetData, setWidgetData] = useState<DataType[]>(data);
     const [{ user }] = useAuthStore();
 

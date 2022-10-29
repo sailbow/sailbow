@@ -38,11 +38,16 @@ export const upsertModule = async (
     module: Pick<Module<any>, 'name' | 'description' | 'settings' | 'order'> & {
         id?: string;
         data?: ModuleData<any>[];
+        type: string;
     },
 ): Promise<Module<any>> => {
     const { data }: AxiosResponse<Module<any>> = await Http(ModuleEndpoints.Upsert({ boatId, module }));
 
-    return data;
+    return new Promise((res) => {
+        setTimeout(() => {
+            res(data);
+        }, 3000);
+    });
 };
 
 export const getModule = async (boatId: string, moduleId: string) => {

@@ -338,7 +338,9 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
         },
         addModule: async <T,>(moduleType: ModuleType) => {
             const newBoat = { ...state.activeBoat! };
+            const newId = `new-module-${new Date().getTime()}`;
 
+            // TODO: UPDATE MODULE OBJECT INTERFACE
             const module: Pick<Module<T>, 'name' | 'description' | 'settings' | 'order' | 'data'> & { type: string } = {
                 name: moduleType,
                 type: moduleType,
@@ -352,14 +354,38 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 },
             };
 
+            newBoat.modules.push({
+                ...module,
+                id: newId,
+                type: moduleType,
+                loading: true,
+                dataLoaded: true,
+                mode: ModuleMode.Edit,
+                totalVotes: [],
+            });
+
+            dispatch({
+                type: BoatActionType.SetAllModules,
+                payload: {
+                    moduleId: newId,
+                    modules: newBoat.modules,
+                },
+            });
+
             const response = await upsertModule(newBoat.id, module);
 
-            newBoat.modules.push({
-                ...response,
-                loading: false,
-                dataLoaded: false,
-                mode: ModuleMode.Edit,
-            });
+            const newModuleIdx = newBoat.modules.findIndex((m) => m.id === newId);
+
+            // TODO: Remove actionRequired. Should come from backend
+            if (newModuleIdx !== -1) {
+                newBoat.modules[newModuleIdx] = {
+                    ...response,
+                    loading: false,
+                    dataLoaded: true,
+                    mode: ModuleMode.Edit,
+                    actionRequired: true,
+                };
+            }
 
             dispatch({
                 type: BoatActionType.SetAllModules,
@@ -371,38 +397,52 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
         },
         saveModuleData: async <T,>(moduleId: string, data: ModuleData<T>[]) => {
             const module = state.activeBoat!.modules.find((m) => m.id === moduleId);
-            // const dataPayload: Partial<ModuleData<T>>[] = [];
+            const dataPayload: Partial<ModuleData<T>>[] = [];
 
-            // module!.loading = true;
-
-            // data.forEach((dataItem: Partial<ModuleData<T>>) => {
-            //     let newOption: ModuleData<any> = { ...dataItem, author: dataItem.author?.id, votes: [] };
-
-            //     if (dataItem.id && dataItem.id.startsWith('new-option')) {
-            //         delete newOption.id;
-            //     }
-
-            //     delete newOption.isEditing;
-
-            //     dataPayload.push(newOption);
-            // });
-
-            // const response = await upsertModule(state.activeBoat!.id, {
-            //     id: module!.id,
-            //     data: dataPayload,
-            //     name: module!.name,
-            //     order: module!.order,
-            //     description: module!.description,
-            //     settings: module!.settings,
-            // });
-
+            module!.loading = true;
             module!.data = data;
-            module!.mode = ModuleMode.View;
+
             dispatch({
                 type: BoatActionType.SetModule,
                 payload: {
                     moduleId,
                     module: module!,
+                },
+            });
+
+            data.forEach((dataItem: Partial<ModuleData<T>>) => {
+                let newOption: ModuleData<any> = { ...dataItem, author: dataItem.author?.id, votes: [] };
+
+                if (dataItem.id && dataItem.id.startsWith('new-option')) {
+                    delete newOption.id;
+                }
+
+                delete newOption.isEditing;
+
+                dataPayload.push(newOption);
+            });
+
+            const response = await upsertModule(state.activeBoat!.id, {
+                id: module!.id,
+                data: dataPayload,
+                name: module!.name,
+                type: module!.name,
+                order: module!.order,
+                description: module!.description,
+                settings: module!.settings,
+            });
+
+            const updatedModule: ModuleExtended<T> = {
+                ...response,
+                loading: false,
+                mode: ModuleMode.View,
+                actionRequired: true,
+            };
+            dispatch({
+                type: BoatActionType.SetModule,
+                payload: {
+                    moduleId,
+                    module: updatedModule,
                 },
             });
         },
