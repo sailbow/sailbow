@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, ReactNode, useMemo } from 'react';
 
-import { Box, Flex, IconButton, Text, Button, Badge } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Text, Button, Badge, Icon } from '@chakra-ui/react';
 
 import { Module, ModuleMode, ModuleType, Role } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
@@ -9,9 +9,6 @@ import { Actions } from 'shared/actions/Actions';
 import { SbSettingsIcon, SbEditIcon, SbDeleteIcon, SbCheckMarkIcon, SbCloseIcon } from 'shared/icons/Icons';
 import { Poll, Props as PollProps } from 'shared/poll/Poll';
 import { withRoleGuard } from 'shared/role/RoleGuard';
-import { Popover } from 'shared/popover/Popover';
-
-import { BoatWidgetDetails } from './BoatWidgetDetails';
 
 interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption' | 'onSave'> {
     settingsNode: ReactNode;
@@ -26,27 +23,6 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
     const module = useMemo(() => ModulesMapper[name as ModuleType], [name]); // TODO: CHANGE NAME TO TYPE
     const [{ activeBoat }, { setModuleMode, removeModule, selectOption, saveModuleData }] = useBoat();
 
-    const WidgetDescriptionPopover: FC = () => {
-        return (
-            <Popover
-                trigger="hover"
-                triggerNode={
-                    <IconButton
-                        fontSize="lg"
-                        aria-label="settings"
-                        colorScheme="gray"
-                        variant="ghost"
-                        size="sm"
-                        as={Box}
-                        icon={<>{<module.icon />}</>}
-                    />
-                }
-            >
-                <BoatWidgetDetails name={module.name} image={<module.image />} info={module.info} />
-            </Popover>
-        );
-    };
-
     return (
         <Box
             w="100%"
@@ -60,7 +36,9 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                 <Flex alignItems="center" justifyContent="space-between" className="widget-header" px="4" py="2">
                     <Flex alignItems="center">
                         <Box flexShrink="0" className="panel-icon">
-                            <WidgetDescriptionPopover />
+                            <Icon fontSize="xl">
+                                <module.icon />
+                            </Icon>
                         </Box>
                         <Text fontWeight="bold" pl="1">
                             {mode === ModuleMode.View && <>{module.name}</>}

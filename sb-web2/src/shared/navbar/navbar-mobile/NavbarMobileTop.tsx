@@ -4,7 +4,7 @@ import { Flex, IconButton, Text } from '@chakra-ui/react';
 import { useLocation, matchRoutes } from 'react-router-dom';
 
 import { Routes } from 'router/Router.Types';
-import { Logo, SbChevronLeft, SbMoreIcon } from 'shared/icons/Icons';
+import { Logo, SbChevronLeft, SbMoreIcon, SbPlusIcon } from 'shared/icons/Icons';
 import { NavbarProps } from 'shared/navbar/Navbar.Types';
 import { Notifications } from 'shared/notifications/Notifications';
 import { useBoat } from 'modules/boats/Boat.Store';
@@ -68,6 +68,7 @@ export const NavbarMobileTop: FC<NavbarProps> = ({ onRoute }) => {
                 <>
                     <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
                     <Flex alignItems="center" gap="2">
+                        <IconButton aria-label="start-boat" icon={<SbPlusIcon />} fontSize="xl" />
                         <Notifications />
                         <ProfileIcon />
                     </Flex>
