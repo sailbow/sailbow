@@ -15,8 +15,6 @@ type DataType = ModuleData<DateModuleDataType>;
 export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
     const { id, settings, data } = props;
     const [widgetData, setWidgetData] = useState<DataType[]>(data);
-    const [startDateError] = useState<string>('');
-    const [endDateError] = useState<string>('');
     const [{ user }] = useAuthStore();
 
     const onDataChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,41 +28,27 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
         setWidgetData([...updatedWidgetData]);
     };
 
-    const onSave = () => {
-        const updatedWidgetData = [...widgetData];
+    const onValidate = (data: DataType) => {
+        const { startDate, endDate, startTime, endTime } = data;
         let hasError = false;
+        data.errors = {};
 
-        widgetData.forEach((d) => {
-            const foundPollIdx = updatedWidgetData.findIndex((i) => i.id === d.id);
-            const { startDate, endDate, startTime, endTime } = updatedWidgetData[foundPollIdx];
+        if (!startDate) {
+            data.errors!['startDate'] = 'Start date is required';
+            hasError = true;
+        }
 
-            updatedWidgetData[foundPollIdx].errors = {};
-
-            if (!startDate) {
+        if (endDate) {
+            if (new Date(startDate).getTime() > new Date(endDate).getTime()) {
+                data.errors!['endDate'] = 'End date has to be after start date';
                 hasError = true;
-                updatedWidgetData[foundPollIdx].errors!['startDate'] = 'Start date is required';
-                return false;
             }
+        }
 
-            if (endDate) {
-                if (new Date(startDate).getTime() > new Date(endDate).getTime()) {
-                    hasError = true;
-                    updatedWidgetData[foundPollIdx].errors!['startDate'] = 'End date has to be after start date';
-
-                    return false;
-                }
-            }
-
-            if (foundPollIdx !== -1) {
-                updatedWidgetData[foundPollIdx].isEditing = false;
-            }
-        });
-
-        setWidgetData([...updatedWidgetData]);
-
-        if (hasError) return false;
-
-        return true;
+        return {
+            hasError,
+            data,
+        };
     };
 
     const getInputComponent: any = (optionId: string, data: DataType) => {
@@ -78,16 +62,16 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
                         required
                         onChange={onDataChange(optionId)}
                         value={data.startDate}
-                        error={!!data.errors!.startDate}
-                        errorLabel={data.errors!.startDate}
+                        error={!!data.errors?.startDate}
+                        errorLabel={data.errors?.startDate}
                     />
                     <DatePicker
                         label="End Date"
                         name="endDate"
                         placeholder="mm/dd/yyyy"
                         onChange={onDataChange(optionId)}
-                        error={!!data.errors!.endDate}
-                        errorLabel={data.errors!.endDate}
+                        error={!!data.errors?.endDate}
+                        errorLabel={data.errors?.endDate}
                         value={data.endDate}
                     />
                 </Flex>
@@ -116,7 +100,8 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
             {...props}
             data={widgetData}
             settingsNode={<DateSettings id={id} settings={settings} />}
-            onOptionSave={onSave}
+            onOptionSave={setWidgetData}
+            onValidate={onValidate}
             getText={getText}
             onAddOption={() => {
                 const newData: DataType = {
@@ -129,7 +114,6 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
                     endDate: '',
                     startTime: '',
                     endTime: '',
-                    errors: {},
                 };
 
                 setWidgetData([...widgetData, newData]);

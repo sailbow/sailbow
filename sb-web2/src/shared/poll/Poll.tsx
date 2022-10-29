@@ -24,8 +24,9 @@ export interface Props<T> {
     onRemoveOption?: <T>(data: T) => void;
     selectOption: (moduleId: string, optionId: string) => void;
     onSave: () => void;
-    onOptionSave: () => boolean;
+    onOptionSave: (data: ModuleData<T>[]) => void;
     getText: (data: ModuleData<any>) => string;
+    onValidate?: (data: ModuleData<T>) => { hasError: boolean; data: ModuleData<T> };
 }
 
 const SkeletonWrapper = withSkeleton(Box);
@@ -42,6 +43,7 @@ export const Poll = <T extends {}>({
     onSave,
     onOptionSave,
     getText,
+    onValidate,
 }: PropsWithChildren<Props<T>>) => {
     const onRemove = (optionId: string) => {
         const updatedData = [...data];
@@ -63,6 +65,20 @@ export const Poll = <T extends {}>({
         }
 
         onOptionEdit(newOptions);
+    };
+
+    const onOptionSaveClick = (inputData: ModuleData<T>) => {
+        if (onValidate) {
+            const { hasError, data: validatedData } = onValidate(inputData);
+
+            if (!hasError) {
+                validatedData.isEditing = false;
+            }
+
+            return { hasError, data: validatedData };
+        }
+
+        return { hasError: false, data: inputData };
     };
 
     return (
@@ -112,7 +128,13 @@ export const Poll = <T extends {}>({
                                             colorScheme="green"
                                             variant="ghost"
                                             icon={SbCheckMarkIcon}
-                                            onClick={onOptionSave}
+                                            onClick={() => {
+                                                const { data: validatedData } = onOptionSaveClick(item);
+                                                const fIdx = data.findIndex((i) => i.id === validatedData.id);
+
+                                                data[fIdx] = validatedData;
+                                                onOptionSave([...data]);
+                                            }}
                                         />
                                     </Flex>
                                 </Stack>
@@ -173,7 +195,20 @@ export const Poll = <T extends {}>({
                     <Button
                         rightIcon={SbCheckMarkIcon}
                         onClick={() => {
-                            if (onOptionSave()) onSave();
+                            let err = false;
+                            const validatedDataArr: ModuleData<T>[] = [];
+
+                            data.forEach((dataItem) => {
+                                const { hasError, data: validatedData } = onOptionSaveClick(dataItem);
+                                validatedDataArr.push({ ...validatedData });
+
+                                if (hasError) {
+                                    err = true;
+                                }
+                            });
+
+                            onOptionSave([...validatedDataArr]);
+                            if (!err) onSave();
                         }}
                         disabled={!data.length}
                     >

@@ -123,19 +123,18 @@ export const ${capName}Widget: FC<Module<${capName}ModuleDataType>> = (props) =>
 
         widgetData.forEach((d) => {
             const foundPollIdx = updatedWidgetData.findIndex((i) => i.id === d.id);
+            updatedWidgetData[foundPollIdx].errors = {};
+
             // validate here
 
             if (foundPollIdx !== -1) {
                 updatedWidgetData[foundPollIdx].isEditing = false;
-                updatedWidgetData[foundPollIdx].text = getText(d);
             }
         });
 
-        if (hasError) return false;
-
         setWidgetData([...updatedWidgetData]);
 
-        return true;
+        return hasError;
     };
 
     const onRemoveOption: any = (updatedWidgetdata: DataType[]) => {
@@ -155,7 +154,8 @@ export const ${capName}Widget: FC<Module<${capName}ModuleDataType>> = (props) =>
             {...props}
             data={widgetData}
             settingsNode={<${capName}Settings id={id} settings={settings} />}
-            onSave={onSave}
+            onOptionSave={onSave}
+            getText={getText}
             onAddOption={() => {
                 const newData: DataType = {
                     id: new Date().getTime().toString(),

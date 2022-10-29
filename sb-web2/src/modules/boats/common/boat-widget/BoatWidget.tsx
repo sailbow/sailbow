@@ -29,24 +29,24 @@ interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption' | 'onSav
 
 const FinalizeButton = withRoleGuard(Button);
 
-export const BoatWidget = <T extends {}>({
-    id,
-    children,
-    name,
-    type,
-    mode,
-    data,
-    loading,
-    settingsNode,
-    actionRequired,
-    totalVotes,
-    getText,
-    getInputComponent,
-    onAddOption,
-    onOptionEdit,
-    onRemoveOption,
-    onOptionSave,
-}: PropsWithChildren<Props<T>>) => {
+export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: PropsWithChildren<Props<T>>) => {
+    const {
+        id,
+        name,
+        type,
+        mode,
+        data,
+        loading,
+        actionRequired,
+        totalVotes,
+        getText,
+        getInputComponent,
+        onAddOption,
+        onOptionEdit,
+        onRemoveOption,
+        onOptionSave,
+        onValidate,
+    } = props;
     const module = useMemo(() => ModulesMapper[name as ModuleType], [name]); // TODO: CHANGE NAME TO TYPE
     const [{ activeBoat }, { setModuleMode, removeModule, selectOption, saveModuleData }] = useBoat();
 
@@ -150,16 +150,8 @@ export const BoatWidget = <T extends {}>({
                     {mode === ModuleMode.View || mode === ModuleMode.Edit ? (
                         <>
                             <Poll<T>
-                                getText={getText}
-                                loading={loading}
-                                mode={mode}
-                                data={data}
+                                {...props}
                                 selectOption={selectOption}
-                                getInputComponent={getInputComponent}
-                                onAddOption={onAddOption}
-                                onOptionEdit={onOptionEdit}
-                                onRemoveOption={onRemoveOption}
-                                onOptionSave={onOptionSave}
                                 onSave={() => {
                                     saveModuleData(id, data);
                                 }}

@@ -371,40 +371,40 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
         },
         saveModuleData: async <T,>(moduleId: string, data: ModuleData<T>[]) => {
             const module = state.activeBoat!.modules.find((m) => m.id === moduleId);
-            const dataPayload: Partial<ModuleData<T>>[] = [];
+            // const dataPayload: Partial<ModuleData<T>>[] = [];
 
-            module!.loading = true;
+            // module!.loading = true;
 
-            data.forEach((dataItem: Partial<ModuleData<T>>) => {
-                let newOption: ModuleData<any> = { ...dataItem, author: dataItem.author?.id, votes: [] };
+            // data.forEach((dataItem: Partial<ModuleData<T>>) => {
+            //     let newOption: ModuleData<any> = { ...dataItem, author: dataItem.author?.id, votes: [] };
 
-                if (dataItem.id && dataItem.id.startsWith('new-option')) {
-                    delete newOption.id;
-                }
+            //     if (dataItem.id && dataItem.id.startsWith('new-option')) {
+            //         delete newOption.id;
+            //     }
 
-                delete newOption.isEditing;
+            //     delete newOption.isEditing;
 
-                dataPayload.push(newOption);
-            });
-
-            const response = await upsertModule(state.activeBoat!.id, {
-                id: module!.id,
-                data: dataPayload,
-                name: module!.name,
-                order: module!.order,
-                description: module!.description,
-                settings: module!.settings,
-            });
-
-            // module.data = data;
-            // module.mode = ModuleMode.View;
-            // dispatch({
-            //     type: BoatActionType.SetModule,
-            //     payload: {
-            //         moduleId,
-            //         module,
-            //     },
+            //     dataPayload.push(newOption);
             // });
+
+            // const response = await upsertModule(state.activeBoat!.id, {
+            //     id: module!.id,
+            //     data: dataPayload,
+            //     name: module!.name,
+            //     order: module!.order,
+            //     description: module!.description,
+            //     settings: module!.settings,
+            // });
+
+            module!.data = data;
+            module!.mode = ModuleMode.View;
+            dispatch({
+                type: BoatActionType.SetModule,
+                payload: {
+                    moduleId,
+                    module: module!,
+                },
+            });
         },
         setModuleMode: (moduleId: string, mode: ModuleMode) => {
             dispatch({
