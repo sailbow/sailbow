@@ -5,7 +5,7 @@ import { Box, Button, Center, Flex, Stack } from '@chakra-ui/react';
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Boat, ModuleExtended, ModuleType } from 'modules/boats/Boat.Types';
 import { useSystem } from 'modules/system/System.Store';
-import { SbBulbIcon, SbPlusIcon } from 'shared/icons/Icons';
+import { SbPlusIcon } from 'shared/icons/Icons';
 import { ModuleDataType, ModulesMapper } from './modules/Modules';
 import { HelperText } from 'shared/helper-text/HelperText';
 

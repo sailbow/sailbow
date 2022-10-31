@@ -65,14 +65,6 @@ export const ButtonStyles: ComponentStyleConfig = {
                 },
             };
         },
-        'menu-link': (props: any) => {
-            return {
-                color: 'brand.dark',
-                _hover: {
-                    color: 'brand.700',
-                },
-            };
-        },
         link: (props: any) => {
             return {
                 ...props.theme.components.Button.variants.link,

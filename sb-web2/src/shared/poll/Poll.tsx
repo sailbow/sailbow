@@ -16,6 +16,7 @@ import { HelperText } from 'shared/helper-text/HelperText';
 import { withSkeleton } from 'util/guards/Loading';
 
 export interface Props<T> {
+    moduleId: string;
     mode: ModuleMode;
     data: ModuleData<T>[];
     loading: boolean;
@@ -33,6 +34,7 @@ export interface Props<T> {
 const SkeletonWrapper = withSkeleton(Box);
 
 export const Poll = <T extends {}>({
+    moduleId,
     mode = ModuleMode.View,
     data,
     loading,
@@ -65,8 +67,6 @@ export const Poll = <T extends {}>({
             newOptions[optionIdx].isEditing = true;
         }
 
-        console.log(optionId);
-
         onOptionEdit(newOptions);
     };
 
@@ -95,7 +95,7 @@ export const Poll = <T extends {}>({
                     )}
                     {data.map((item, idx) => (
                         <Flex
-                            key={idx}
+                            key={idx} // TODO: Change this from dix to item.id
                             w="100%"
                             alignItems="center"
                             borderRadius="lg"
@@ -111,7 +111,7 @@ export const Poll = <T extends {}>({
                             p="4"
                             onClick={() => {
                                 if (!item.isEditing || mode !== ModuleMode.Edit) {
-                                    selectOption('1', item.id);
+                                    selectOption(moduleId, idx.toString()); // change to item.id
                                 }
                             }}
                         >
@@ -152,10 +152,10 @@ export const Poll = <T extends {}>({
                             )}
 
                             {/* Option not being edited but in view or edit mode show the text rendered  */}
-                            {!item.isEditing && (mode === ModuleMode.View || mode === ModuleMode.Edit) ? (
+                            {!item.isEditing && (mode === ModuleMode.View || mode === ModuleMode.Edit) && (
                                 <Flex
                                     alignItems="center"
-                                    flexWrap="wrap"
+                                    w="100%"
                                     color={
                                         loading && item.id && item.id.startsWith('new-option') ? 'gray.300' : 'inherit'
                                     }
@@ -168,11 +168,9 @@ export const Poll = <T extends {}>({
                                         {item.selected ? <SbRadioButtonOn /> : <SbRadioButtonOff />}
                                     </Box>
                                     <Box pl="2">
-                                        <Text fontWeight="semibold">{getText(item)}</Text>
+                                        <Text fontWeight="semibold">{getText(item)}lkasjf</Text>
                                     </Box>
                                 </Flex>
-                            ) : (
-                                <></>
                             )}
 
                             {/* When module is in edit more but option is not being edited show buttons  */}
@@ -192,6 +190,7 @@ export const Poll = <T extends {}>({
                                         disabled={loading}
                                         icon={<SbEditIcon />}
                                         onClick={() => onEdit(item.id)}
+                                        display={{ base: 'none', md: 'flex' }}
                                     />
 
                                     <IconButton
@@ -202,6 +201,7 @@ export const Poll = <T extends {}>({
                                         size="sm"
                                         disabled={loading}
                                         icon={<SbMinusCircleIcon />}
+                                        display={{ base: 'none', md: 'flex' }}
                                         onClick={(e) => {
                                             e.preventDefault();
                                             e.stopPropagation();

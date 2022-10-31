@@ -23,14 +23,44 @@ export const BoatViewTabs: FC<Props> = ({ boat, loading }) => {
                 </Tab>
             </TabList>
 
-            <TabPanels h="100%">
-                <TabPanel w="100%" h="100%" p="0" pt="4">
-                    {boat && !loading ? <BoatModuleManifest boat={boat} /> : <PageSpinner loading={loading} />}
-                </TabPanel>
-                <TabPanel w="100%" h="100%" p="0" pt="4">
+            {boat && !loading ? (
+                <TabPanels h="100%">
+                    <TabPanel w="100%" h="100%" p="0" pt="4">
+                        <BoatModuleManifest boat={boat} />
+                    </TabPanel>
+                    <TabPanel w="100%" h="100%" p="0" pt="4">
+                        <BoatModulesWidget boat={boat} />
+                    </TabPanel>
+                </TabPanels>
+            ) : (
+                <PageSpinner loading={loading} />
+            )}
+
+            {/* <TabPanels h="100%">
+                {boat && !loading ? (
+                    <TabPanel w="100%" h="100%" p="0" pt="4">
+                        <BoatModuleManifest boat={boat} />
+                    </TabPanel>
+                ) : (
+                    <TabPanel>
+                        <PageSpinner loading={loading} />
+                    </TabPanel>
+                )}
+
+                {boat && !loading ? (
+                    <TabPanel w="100%" h="100%" p="0" pt="4">
+                        <BoatModulesWidget boat={boat} />
+                    </TabPanel>
+                ) : (
+                    <TabPanel>
+                        <PageSpinner loading={loading} />
+                    </TabPanel>
+                )} */}
+
+            {/* <TabPanel w="100%" h="100%" p="0" pt="4">
                     {boat && !loading ? <BoatModulesWidget boat={boat} /> : <PageSpinner loading={loading} />}
-                </TabPanel>
-            </TabPanels>
+                </TabPanel> */}
+            {/* </TabPanels> */}
         </Tabs>
     );
 };

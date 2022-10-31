@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 
 import { Box, Flex } from '@chakra-ui/react';
 
@@ -16,6 +16,10 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
     const { id, settings, data } = props;
     const [widgetData, setWidgetData] = useState<DataType[]>(data);
     const [{ user }] = useAuthStore();
+
+    useEffect(() => {
+        setWidgetData(data);
+    }, [data]);
 
     const onDataChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
         const updatedWidgetData = [...widgetData];
@@ -98,6 +102,7 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
     return (
         <BoatWidget<DataType>
             {...props}
+            moduleId={id}
             data={widgetData}
             settingsNode={<DateSettings id={id} settings={settings} />}
             onOptionSave={setWidgetData}

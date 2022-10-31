@@ -23,8 +23,6 @@ export const NavbarDesktop: FC<NavbarProps> = ({ onRoute }) => {
             px={{ base: 2, md: 4 }}
             py="2"
             bg="white"
-            transition="all 0.25s ease-in-out"
-            id="sb-navbar"
         >
             <HStack alignItems="center" spacing="4" pl="2">
                 <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />

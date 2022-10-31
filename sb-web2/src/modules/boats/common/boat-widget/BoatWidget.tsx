@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactNode, useMemo } from 'react';
+import { PropsWithChildren, ReactNode, useMemo } from 'react';
 
 import { Box, Flex, IconButton, Text, Button, Badge, Icon } from '@chakra-ui/react';
 
@@ -9,6 +9,7 @@ import { Actions } from 'shared/actions/Actions';
 import { SbSettingsIcon, SbEditIcon, SbDeleteIcon, SbCheckMarkIcon, SbCloseIcon } from 'shared/icons/Icons';
 import { Poll, Props as PollProps } from 'shared/poll/Poll';
 import { withRoleGuard } from 'shared/role/RoleGuard';
+import { MoreMenu, MoreMenuOption } from 'shared/more-menu/MoreMenu';
 
 interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption' | 'onSave'> {
     settingsNode: ReactNode;
@@ -23,6 +24,54 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
     const module = useMemo(() => ModulesMapper[name as ModuleType], [name]); // TODO: CHANGE NAME TO TYPE
     const [{ activeBoat }, { setModuleMode, removeModule, selectOption, saveModuleData }] = useBoat();
 
+    const WidgetMenuOptions: MoreMenuOption[] = useMemo(
+        () => [
+            {
+                id: 'boat-widget-menu-edit',
+                label: 'Edit',
+                icon: <SbEditIcon />,
+                action: () => {
+                    setModuleMode(id, ModuleMode.Edit);
+                },
+                role: activeBoat!.role,
+                acceptedRoles: Actions.EditBoatDetailsRoleAccess,
+                props: {
+                    variant: mode === ModuleMode.Edit ? 'solid' : 'ghost',
+                    display: mode === ModuleMode.Settings ? 'none' : 'flex',
+                },
+            },
+            {
+                id: 'boat-widget-menu-settings',
+                label: 'Settings',
+                icon: <SbSettingsIcon />,
+                action: () => {
+                    setModuleMode(id, ModuleMode.Settings);
+                },
+                role: activeBoat!.role,
+                acceptedRoles: Actions.BoatModuleSettingsRoleAccess,
+                props: {
+                    variant: mode === ModuleMode.Settings ? 'solid' : 'ghost',
+                    display: mode === ModuleMode.Settings ? 'none' : 'flex',
+                },
+            },
+            {
+                id: 'boat-widget-menu-delete',
+                label: 'Delete',
+                icon: <SbDeleteIcon />,
+                action: () => {
+                    setModuleMode(id, ModuleMode.Settings);
+                },
+                role: activeBoat!.role,
+                acceptedRoles: Actions.BoatModuleSettingsRoleAccess,
+                props: {
+                    variant: 'ghost',
+                    display: mode === ModuleMode.Settings ? 'none' : 'flex',
+                },
+            },
+        ],
+        [activeBoat, id, setModuleMode, mode],
+    );
+
     return (
         <Box
             w="100%"
@@ -33,7 +82,13 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
             className="sb-boat-widget"
         >
             <Box className="widget-wrapper" pt="1">
-                <Flex alignItems="center" justifyContent="space-between" className="widget-header" px="4" py="2">
+                <Flex
+                    alignItems="center"
+                    justifyContent="space-between"
+                    className="widget-header"
+                    px={{ base: 3, md: 4 }}
+                    py="2"
+                >
                     <Flex alignItems="center">
                         <Box flexShrink="0" className="panel-icon">
                             <Icon fontSize="xl">
@@ -52,6 +107,22 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                                 Vote Required
                             </Badge>
                         )}
+                        <MoreMenu options={WidgetMenuOptions}>
+                            {WidgetMenuOptions.map((option) => (
+                                <GuardedIconButton
+                                    key={option.id}
+                                    role={option.role}
+                                    acceptedRoles={option.acceptedRoles}
+                                    fontSize="2xl"
+                                    aria-label={option.label}
+                                    icon={<>{option.icon}</>}
+                                    onClick={option.action}
+                                    colorScheme="gray"
+                                    {...option.props}
+                                />
+                            ))}
+                        </MoreMenu>
+
                         <GuardedIconButton
                             role={activeBoat!.role}
                             acceptedRoles={Actions.BoatSettingsRoleAccess}
@@ -66,44 +137,9 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                             }}
                             display={mode === ModuleMode.Settings ? 'flex' : 'none'}
                         />
-                        <GuardedIconButton
-                            role={activeBoat!.role}
-                            acceptedRoles={Actions.EditBoatDetailsRoleAccess}
-                            fontSize="2xl"
-                            aria-label="edit"
-                            colorScheme="gray"
-                            variant={mode === ModuleMode.Edit ? 'solid' : 'ghost'}
-                            icon={<SbEditIcon />}
-                            onClick={() => {
-                                setModuleMode(id, ModuleMode.Edit);
-                            }}
-                            display={mode === ModuleMode.Settings ? 'none' : 'flex'}
-                        />
-                        <GuardedIconButton
-                            role={activeBoat!.role}
-                            acceptedRoles={Actions.BoatSettingsRoleAccess}
-                            fontSize="2xl"
-                            aria-label="settings"
-                            colorScheme="gray"
-                            variant={mode === ModuleMode.Settings ? 'solid' : 'ghost'}
-                            icon={<SbSettingsIcon />}
-                            onClick={() => setModuleMode(id, ModuleMode.Settings)}
-                            display={mode === ModuleMode.Settings ? 'none' : 'flex'}
-                        />
-                        <GuardedIconButton
-                            role={activeBoat!.role}
-                            acceptedRoles={Actions.DeleteBoatRoleAccess}
-                            fontSize="2xl"
-                            aria-label="delete"
-                            colorScheme="gray"
-                            variant="ghost"
-                            icon={<SbDeleteIcon />}
-                            onClick={() => removeModule(id)}
-                            display={mode === ModuleMode.Settings ? 'none' : 'flex'}
-                        />
                     </Flex>
                 </Flex>
-                <Box pt="2" pb="4" className="widget-body" px="4">
+                <Box pt="2" pb="4" className="widget-body" px={{ base: 2, md: 4 }}>
                     {mode === ModuleMode.View || mode === ModuleMode.Edit ? (
                         <>
                             <Poll<T>

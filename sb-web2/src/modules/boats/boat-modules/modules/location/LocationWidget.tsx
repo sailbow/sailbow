@@ -52,6 +52,7 @@ export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props
     return (
         <BoatWidget<DataType>
             {...props}
+            moduleId={id}
             getText={getText}
             data={widgetData}
             settingsNode={<LocationSettings id={id} settings={settings} />}

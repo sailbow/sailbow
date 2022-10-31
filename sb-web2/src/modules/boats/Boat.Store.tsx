@@ -325,6 +325,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 mode: module.data.length ? ModuleMode.View : ModuleMode.Edit,
             };
 
+
             dispatch({
                 type: BoatActionType.SetModule,
                 payload: {

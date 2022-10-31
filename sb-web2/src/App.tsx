@@ -11,6 +11,7 @@ import { WhitelistedRoutes } from 'router/Router.Types';
 import { HttpInterceptor } from 'util/http/HttpInterceptor';
 
 import './App.scss';
+import { MoreMenuMobileDrawer } from 'shared/more-menu/MoreMenuMobileDrawer';
 
 export const App: FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -36,6 +37,7 @@ export const App: FC = () => {
                             <>
                                 {isLoggedIn ? (
                                     <SystemProvider>
+                                        <MoreMenuMobileDrawer />
                                         <BoatProvider>
                                             <PrivateRouter />
                                         </BoatProvider>

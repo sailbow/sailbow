@@ -15,11 +15,6 @@ export const Navbar: FunctionComponent = () => {
     const onRoute = (path: string) => {
         if (window.location.pathname !== path) navigate(path);
     };
-
-    return (
-        <>
-            <NavbarDesktop onRoute={onRoute} />
-            {isMobile && <NavbarMobileTop onRoute={onRoute} />}
-        </>
-    );
+    
+    return isMobile ? <NavbarMobileTop onRoute={onRoute} /> : <NavbarDesktop onRoute={onRoute} />;
 };

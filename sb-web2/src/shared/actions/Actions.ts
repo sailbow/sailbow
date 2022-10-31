@@ -6,4 +6,5 @@ export const Actions = {
     DeleteBoatRoleAccess: [Role.Captain],
     FinalizeModuleOptionRoleAccess: [Role.Captain],
     BoatSettingsRoleAccess: [Role.Captain],
+    BoatModuleSettingsRoleAccess: [Role.Captain, Role.Assistant],
 };
