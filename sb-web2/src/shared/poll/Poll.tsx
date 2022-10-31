@@ -12,8 +12,8 @@ import {
     SbRadioButtonOff,
     SbRadioButtonOn,
 } from 'shared/icons/Icons';
-import { withSkeleton } from 'util/guards/Loading';
 import { HelperText } from 'shared/helper-text/HelperText';
+import { withSkeleton } from 'util/guards/Loading';
 
 export interface Props<T> {
     mode: ModuleMode;
@@ -65,6 +65,8 @@ export const Poll = <T extends {}>({
             newOptions[optionIdx].isEditing = true;
         }
 
+        console.log(optionId);
+
         onOptionEdit(newOptions);
     };
 
@@ -100,9 +102,11 @@ export const Poll = <T extends {}>({
                             borderStyle="solid"
                             borderWidth="2px"
                             justifyContent="space-between"
-                            borderColor={item.isEditing || item.selected ? 'brand.primary' : 'brand.border-light'}
+                            borderColor={
+                                !loading && (item.isEditing || item.selected) ? 'brand.primary' : 'brand.border-light'
+                            }
                             transition="transform 0.05s ease-in-out, border 0.15s ease-in-out"
-                            _hover={{ borderColor: 'brand.primary', cursor: 'pointer' }}
+                            _hover={{ borderColor: !loading ? 'brand.primary' : 'inherit', cursor: 'pointer' }}
                             _active={{ transform: !item.isEditing && mode !== ModuleMode.Edit ? 'scale(0.997)' : '' }}
                             p="4"
                             onClick={() => {
@@ -111,6 +115,7 @@ export const Poll = <T extends {}>({
                                 }
                             }}
                         >
+                            {/* Option being edited, show input component */}
                             {item.isEditing && mode !== ModuleMode.View && (
                                 <Stack w="100%" spacing="4">
                                     <>
@@ -146,6 +151,7 @@ export const Poll = <T extends {}>({
                                 </Stack>
                             )}
 
+                            {/* Option not being edited but in view or edit mode show the text rendered  */}
                             {!item.isEditing && (mode === ModuleMode.View || mode === ModuleMode.Edit) ? (
                                 <Flex
                                     alignItems="center"
@@ -168,6 +174,8 @@ export const Poll = <T extends {}>({
                             ) : (
                                 <></>
                             )}
+
+                            {/* When module is in edit more but option is not being edited show buttons  */}
                             {!item.isEditing && mode === ModuleMode.Edit && (
                                 <Flex
                                     alignItems="center"

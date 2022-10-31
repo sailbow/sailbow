@@ -31,9 +31,11 @@ export const InfoManifest: FC<Props> = ({ data }) => {
                 <Box h="200px">
                     <BoatBanner id="details" banner={data.banner} showControls={false} />
                 </Box>
-                <Box pt="2">
+                <Box pt="3">
                     <Text fontWeight="semibold">{data.name}</Text>
-                    <Text fontSize="sm">{data.description}</Text>
+                    <Text fontSize="sm" pt="1">
+                        {data.description}
+                    </Text>
                 </Box>
             </Box>
         </BoatManifest>

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { NavbarMobileTop } from 'shared/navbar/navbar-mobile/NavbarMobileTop';
 import { NavbarDesktop } from 'shared/navbar/navbar-desktop/NavbarDesktop';
-import { NavbarMobileBottom } from './navbar-mobile/NavbarMobileBottom';
 
 import 'shared/navbar/Navbar.scss';
 
@@ -17,12 +16,10 @@ export const Navbar: FunctionComponent = () => {
         if (window.location.pathname !== path) navigate(path);
     };
 
-    return isMobile ? (
+    return (
         <>
-            <NavbarMobileTop onRoute={onRoute} />
-            {/* <NavbarMobileBottom onRoute={onRoute} /> */}
+            <NavbarDesktop onRoute={onRoute} />
+            {isMobile && <NavbarMobileTop onRoute={onRoute} />}
         </>
-    ) : (
-        <NavbarDesktop onRoute={onRoute} />
     );
 };

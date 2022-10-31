@@ -13,5 +13,10 @@ export const components = {
     Textarea: { ...TextareaStyles },
     // Menu: { ...MenuStyles },
     Tabs: { ...TabStyles },
+    Text: {
+        baseStyle: {
+            fontWeight: 'normal',
+        },
+    },
     // Textarea: { ...TextareaStyles }
 };

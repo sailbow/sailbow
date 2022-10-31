@@ -17,7 +17,7 @@ export const BoatModuleManifest: FC<Props> = ({ boat }) => {
             mt="-2"
             h={{ base: '100%', md: 'calc(100vh - 140px)' }}
             overflowY="auto"
-            pr="4"
+            pr={{ base: 0, md: 4 }}
             className="sb-boat-module-manifest"
             pb="16"
         >

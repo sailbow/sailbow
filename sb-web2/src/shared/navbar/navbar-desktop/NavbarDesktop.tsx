@@ -20,7 +20,7 @@ export const NavbarDesktop: FC<NavbarProps> = ({ onRoute }) => {
             className="sb-navbar desktop"
             justifyContent="space-between"
             alignItems="center"
-            px="4"
+            px={{ base: 2, md: 4 }}
             py="2"
             bg="white"
             transition="all 0.25s ease-in-out"
