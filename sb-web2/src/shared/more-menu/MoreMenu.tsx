@@ -4,9 +4,9 @@ import { Menu, MenuButton, MenuList, useBreakpointValue, IconButton, Box, Button
 
 import { useSystem } from 'modules/system/System.Store';
 import { SbMoreIcon } from 'shared/icons/Icons';
-import { RoleGuardProps, withRoleGuard } from 'shared/role/RoleGuard';
+import { ActionGuardProps, withActionsGuard } from 'shared/actions/Actions';
 
-export interface MoreMenuOption extends RoleGuardProps {
+export interface MoreMenuOption extends ActionGuardProps {
     id: string;
     label: string;
     icon: ReactNode;
@@ -20,8 +20,8 @@ interface Props {
     children?: ReactNode;
 }
 
-const GuardedMenuItem = withRoleGuard(MenuItem);
-const GuardedOptionButton = withRoleGuard(Button);
+const GuardedMenuItem = withActionsGuard(MenuItem);
+const GuardedOptionButton = withActionsGuard(Button);
 
 export const MoreMenu: FC<Props> = ({ children, customButton, options }) => {
     const isMobile = useBreakpointValue({ base: true, md: false });
@@ -34,6 +34,7 @@ export const MoreMenu: FC<Props> = ({ children, customButton, options }) => {
                     <GuardedOptionButton
                         role={option.role}
                         acceptedRoles={option.acceptedRoles}
+                        ownerId={option.ownerId}
                         key={option.id}
                         variant="icon"
                         justifyContent="flex-start"
@@ -41,7 +42,9 @@ export const MoreMenu: FC<Props> = ({ children, customButton, options }) => {
                         borderRadius="0"
                         colorScheme="gray"
                         leftIcon={<>{option.icon}</>}
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             closeMoreMenuDrawer();
                             if (option.action) {
                                 option.action();
@@ -99,9 +102,12 @@ export const MoreMenu: FC<Props> = ({ children, customButton, options }) => {
                         <GuardedMenuItem
                             role={option.role}
                             acceptedRoles={option.acceptedRoles}
+                            ownerId={option.ownerId}
                             key={option.id}
                             icon={<>{option.icon}</>}
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
                                 if (option.action) option.action();
                             }}
                             {...option.props}

@@ -17,6 +17,7 @@ export enum Role {
     Captain = 'Captain',
     Assistant = 'Assistant',
     Sailor = 'Sailor',
+    Owner = 'Owner',
 }
 
 // move to role
@@ -52,7 +53,7 @@ export interface Photo {
 }
 
 export interface CrewMember extends Pick<User, 'id' | 'email' | 'name'> {
-    role: Role;
+    role: Exclude<Role, 'Owner'>;
     info?: string;
 }
 

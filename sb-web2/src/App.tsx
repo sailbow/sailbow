@@ -8,10 +8,10 @@ import { BoatProvider } from 'modules/boats/Boat.Store';
 import { SystemProvider } from 'modules/system/System.Store';
 import { PrivateRouter, PublicRouter, WhitelistedRouter } from 'router/Router';
 import { WhitelistedRoutes } from 'router/Router.Types';
+import { MoreMenuMobileDrawer } from 'shared/more-menu/MoreMenuMobileDrawer';
 import { HttpInterceptor } from 'util/http/HttpInterceptor';
 
 import './App.scss';
-import { MoreMenuMobileDrawer } from 'shared/more-menu/MoreMenuMobileDrawer';
 
 export const App: FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);

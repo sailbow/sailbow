@@ -103,7 +103,7 @@ export const NavbarMobileTop: FC<NavbarProps> = ({ onRoute }) => {
                                 label: 'Settings',
                                 icon: <SbSettingsIcon />,
                                 role: Role.Captain,
-                                acceptedRoles: Actions.BoatSettingsRoleAccess,
+                                acceptedRoles: Actions.BoatSettings,
                             },
                         ]}
                     />

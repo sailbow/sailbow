@@ -3,7 +3,7 @@ import { ChangeEvent, FC, useState } from 'react';
 import { Flex } from '@chakra-ui/react';
 
 import { useAuthStore } from 'modules/auth/Auth.Store';
-import { Module, ModuleData, ModuleExtended } from 'modules/boats/Boat.Types';
+import { ModuleData, ModuleExtended } from 'modules/boats/Boat.Types';
 import { LocationSettings } from 'modules/boats/boat-modules/modules/location/LocationSettings';
 import { LocationModuleDataType, getText } from 'modules/boats/boat-modules/modules/location/Location';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';

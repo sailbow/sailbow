@@ -8,13 +8,13 @@ import { useSystem } from 'modules/system/System.Store';
 import { Actions } from 'shared/actions/Actions';
 import { SbPlusIcon, SbUserGroup } from 'shared/icons/Icons';
 import { CrewGroup } from 'shared/crew/crew-group/CrewGroup';
-import { withRoleGuard } from 'shared/role/RoleGuard';
+import { withActionsGuard } from 'shared/actions/Actions';
 
 interface Props {
     boat: Boat;
 }
 
-const GuardedInviteButton = withRoleGuard(Button);
+const GuardedInviteButton = withActionsGuard(Button);
 
 export const CrewManifest: FC<Props> = ({ boat }) => {
     const [, { openCrewNav, openCrewInviteModal }] = useSystem();
@@ -31,7 +31,7 @@ export const CrewManifest: FC<Props> = ({ boat }) => {
                         colorScheme="gray"
                         onClick={openCrewInviteModal}
                         role={boat.role}
-                        acceptedRoles={Actions.InviteCrewRoleAccess}
+                        acceptedRoles={Actions.InviteCrew}
                     >
                         Invite
                     </GuardedInviteButton>
