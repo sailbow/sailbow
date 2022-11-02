@@ -89,27 +89,6 @@ export const ButtonStyles: ComponentStyleConfig = {
                 },
             };
         },
-        outline: (props: any) => {
-            return {
-                ...props.theme.components.Button.variants.outline,
-                ...OUTLINE_STYLES,
-                borderTopWidth: '2px',
-                borderBottomWidth: '2px',
-                borderLeftWidth: '2px',
-                borderRightWidth: '2px',
-            };
-        },
-        social: (props: any) => {
-            return {
-                ...props.theme.components.Button.variants.outline,
-                ...OUTLINE_STYLES,
-                display: 'flex',
-                justifyContent: 'space-between',
-                _loading: {
-                    justifyContent: 'center',
-                },
-            };
-        },
         icon: (props: any) => {
             return {
                 ...props.theme.components.Button.variants.ghost,

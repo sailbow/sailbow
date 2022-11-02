@@ -48,7 +48,7 @@ export const SocialButtons: FC<Props> = ({ path, mode }) => {
             <Button
                 isLoading={loader[Provider.Google]}
                 w="100%"
-                variant="social"
+                variant="outline"
                 colorScheme="gray"
                 leftIcon={<SbGoogleIcon />}
                 onClick={() => onLogin(Provider.Google)}
@@ -59,7 +59,7 @@ export const SocialButtons: FC<Props> = ({ path, mode }) => {
             <Button
                 isLoading={loader[Provider.Facebook]}
                 w="100%"
-                variant="social"
+                variant="outline"
                 colorScheme="gray"
                 leftIcon={<SbFacebookIcon />}
                 onClick={() => onLogin(Provider.Facebook)}

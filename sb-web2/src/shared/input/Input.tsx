@@ -4,16 +4,14 @@ import {
     InputGroup,
     Input as ChakraInput,
     InputRightElement,
-    Tooltip,
     InputProps as ChakraInputProps,
     TextareaProps as ChakraTextareaProps,
     Textarea,
     Spinner,
     Box,
-    InputLeftAddon,
+    Text,
 } from '@chakra-ui/react';
 
-import { SbErrorCircleIcon } from 'shared/icons/Icons';
 import { Label } from './Label';
 
 import './Input.scss';
@@ -62,10 +60,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         return (
             <Box className={`sb-input-wrapper ${customClass}`} w="100%" ref={ref}>
                 {label && <Label label={label} required={required} />}
-                <InputGroup variant="brand" alignItems="center" className="sb-input">
-                    <InputLeftAddon position="absolute" p="0" color="brand.secondary">
-                        {leftIcon}
-                    </InputLeftAddon>
+                <InputGroup variant="brand" alignItems="center" className="sb-input" mt="1">
                     {rightIconButton && (
                         <InputRightElement p="0" color="brand.secondary">
                             {rightIconButton}
@@ -73,39 +68,28 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                     )}
 
                     <ChakraInput
-                        p="0"
-                        pl={leftIcon ? '24px' : '0'}
                         {...field}
                         {...props}
-                        borderColor={error ? 'brand.error' : 'inherit'}
-                        _hover={{ borderColor: error ? 'brand.error' : 'inherit' }}
+                        disabled={loading}
+                        isInvalid={error}
+                        borderRadius="lg"
+                        errorBorderColor="brand.error"
                     />
                     {loading && (
                         <InputRightElement color="brand.error">
                             <Spinner size="sm" color="brand.dark" />
                         </InputRightElement>
                     )}
-                    {error ? (
-                        <Tooltip label={errorLabel}>
-                            <InputRightElement color="brand.error">{errorIcon}</InputRightElement>
-                        </Tooltip>
-                    ) : null}
                 </InputGroup>
+                {error && (
+                    <Text fontSize="xs" pt="1" color="brand.error" fontWeight="medium">
+                        {errorLabel}
+                    </Text>
+                )}
             </Box>
         );
     },
 );
-
-Input.defaultProps = {
-    loading: undefined,
-    field: {},
-    error: false,
-    errorLabel: '',
-    errorIcon: <SbErrorCircleIcon />,
-    label: '',
-    required: false,
-    customClass: '',
-};
 
 export const TextArea: FunctionComponent<TextareaProps> = ({
     label,
@@ -120,33 +104,14 @@ export const TextArea: FunctionComponent<TextareaProps> = ({
     return (
         <Box className={`sb-input-wrapper ${customClass}`}>
             {label && <Label label={label} required={required} />}
-            <InputGroup variant="brand">
-                <Textarea
-                    px="0"
-                    {...field}
-                    {...props}
-                    className="sb-input"
-                    borderColor={error ? 'brand.error' : 'inherit'}
-                />
-                {error ? (
-                    <Tooltip label={errorLabel}>
-                        <InputRightElement color="brand.error" h="0">
-                            {errorIcon}
-                        </InputRightElement>
-                    </Tooltip>
-                ) : null}
+            <InputGroup mt="1">
+                <Textarea {...field} {...props} className="sb-input" isInvalid={error} errorBorderColor="brand.error" />
             </InputGroup>
+            {error && (
+                <Text fontSize="xs" pt="1" color="brand.error" fontWeight="medium">
+                    {errorLabel}
+                </Text>
+            )}
         </Box>
     );
-};
-
-TextArea.defaultProps = {
-    loading: undefined,
-    field: {},
-    error: false,
-    errorLabel: '',
-    errorIcon: <SbErrorCircleIcon />,
-    label: '',
-    required: false,
-    customClass: '',
 };
