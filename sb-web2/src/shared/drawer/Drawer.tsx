@@ -29,7 +29,7 @@ export const Drawer: FC<Props> = ({ children, title, extraHeaderButtons, footer,
             <DrawerOverlay />
             <DrawerContent>
                 {mode !== 'menu' && (
-                    <DrawerHeader px="4">
+                    <DrawerHeader px={{ base: '4', md: '6' }}>
                         <Flex alignItems="center" justifyContent="space-between">
                             <Heading fontSize="xl">{title}</Heading>
                             <Flex>

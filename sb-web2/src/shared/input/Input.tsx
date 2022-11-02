@@ -10,6 +10,8 @@ import {
     Spinner,
     Box,
     Text,
+    IconButton,
+    Flex,
 } from '@chakra-ui/react';
 
 import { Label } from './Label';
@@ -60,24 +62,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         return (
             <Box className={`sb-input-wrapper ${customClass}`} w="100%" ref={ref}>
                 {label && <Label label={label} required={required} />}
-                <InputGroup variant="brand" alignItems="center" className="sb-input" mt="1">
-                    {rightIconButton && (
-                        <InputRightElement p="0" color="brand.secondary">
-                            {rightIconButton}
-                        </InputRightElement>
-                    )}
-
+                <InputGroup variant="brand" className="sb-input" mt="1">
                     <ChakraInput
                         {...field}
                         {...props}
+                        noOfLines={1}
                         disabled={loading}
                         isInvalid={error}
                         borderRadius="lg"
                         errorBorderColor="brand.error"
                     />
-                    {loading && (
-                        <InputRightElement color="brand.error">
-                            <Spinner size="sm" color="brand.dark" />
+
+                    {rightIconButton && (
+                        <InputRightElement color="brand.secondary" h="full" mr="2">
+                            {loading ? <Spinner size="sm" color="brand.dark" /> : <>{rightIconButton}</>}
                         </InputRightElement>
                     )}
                 </InputGroup>

@@ -97,7 +97,7 @@ export const MoreMenu: FC<Props> = ({ children = <></>, customButton, options })
                         mr="-4"
                     />
                 )}
-                <MenuList>
+                <MenuList display={{ base: 'none', md: 'inherit' }}>
                     {options.map((option) => (
                         <GuardedMenuItem
                             role={option.role}

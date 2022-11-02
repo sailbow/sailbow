@@ -30,28 +30,19 @@ export const BoatShare: FC<Props> = ({ mode }) => {
     const Info: FC = () => {
         return (
             <Flex pb="2" alignItems="center" className="sb-boat-share-info" gap="2">
-                <Input value={window.location.href} isReadOnly />
-                <IconButton
-                    aria-label="copy-link"
-                    colorScheme="gray"
-                    variant="ghost"
-                    flexShrink={0}
-                    onClick={onCopy}
-                    display={{ base: 'flex', md: 'none' }}
-                    mr="-2"
-                >
-                    {copy ? <SbCheckIcon color="green" /> : <SbCopyIcon />}
-                </IconButton>
-                <Button
-                    display={{ base: 'none', md: 'flex' }}
-                    rightIcon={copy ? <SbCheckIcon color="green" /> : <SbCopyIcon />}
-                    size="sm"
-                    colorScheme="gray"
-                    px="4"
-                    onClick={onCopy}
-                >
-                    {copy ? 'Copied' : 'Copy'}
-                </Button>
+                <Input
+                    value={window.location.href}
+                    isReadOnly
+                    rightIconButton={
+                        <IconButton
+                            aria-label="copy-link"
+                            colorScheme="gray"
+                            variant="ghost"
+                            onClick={onCopy}
+                            icon={copy ? <SbCheckIcon color="green" /> : <SbCopyIcon />}
+                        />
+                    }
+                />
             </Flex>
         );
     };

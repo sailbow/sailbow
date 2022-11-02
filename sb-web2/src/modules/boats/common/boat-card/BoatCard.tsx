@@ -25,7 +25,7 @@ export const BoatCard: FC<Props> = ({ boat }) => {
             borderStyle="solid"
             borderColor={BrandColors['border-light']}
             _hover={{ borderColor: BrandColors.dark }}
-            borderRadius="xl"
+            borderRadius="3xl"
             cursor="pointer"
             onClick={onClick}
             maxW={{ base: '100%', lg: '360px' }}

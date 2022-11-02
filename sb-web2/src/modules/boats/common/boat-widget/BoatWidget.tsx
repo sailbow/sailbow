@@ -77,7 +77,7 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
     return (
         <Box
             w="100%"
-            borderRadius="xl"
+            borderRadius="3xl"
             borderStyle="solid"
             borderWidth="2px"
             borderColor={
@@ -181,7 +181,7 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                                 variant="accent"
                                 borderTopLeftRadius="0"
                                 borderTopRightRadius="0"
-                                borderRadius="xl"
+                                borderRadius="3xl"
                             >
                                 Finalize
                             </FinalizeButton>

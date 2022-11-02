@@ -11,8 +11,8 @@ export const InputStyles: ComponentStyleConfig = {
             return {
                 field: {
                     ...props.theme.components.Input.variants.outline(props).field,
-                    py: '2',
-                    px: '3',
+                    px: '4',
+                    py: '6',
                     borderWidth: '2px'
                 },
             };

@@ -119,7 +119,6 @@ export const BoatCreate: FunctionComponent = () => {
                     placeholder="Boat name..."
                     id="name"
                     name="name"
-                    py="4"
                     autoFocus
                     value={boatForm.name}
                 />
