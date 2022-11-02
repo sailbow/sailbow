@@ -5,7 +5,7 @@ export const InputStyles: ComponentStyleConfig = {
         brand: (props: any) => {
             return {
                 field: {
-                    ...props.theme.components.Input.variants.outline.field,
+                    ...props.theme.components.Input.variants.outline,
                     backgroundColor: 'transparent',
                     borderTopWidth: '0',
                     borderLeftWidth: '0',

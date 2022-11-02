@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useMemo } from 'react';
+import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
 import { Box, Button, Flex, IconButton, Stack, Text } from '@chakra-ui/react';
 
@@ -31,6 +31,7 @@ export interface Props<T> {
     onOptionSave: (data: ModuleData<T>[]) => void;
     getText: (data: ModuleData<any>) => string;
     onValidate?: (data: ModuleData<T>) => { hasError: boolean; data: ModuleData<T> };
+    onCancel: (optionId: string) => void;
 }
 
 const SkeletonWrapper = withSkeleton(Box);
@@ -50,7 +51,10 @@ export const Poll = <T extends {}>({
     onOptionSave,
     getText,
     onValidate,
+    onCancel,
 }: PropsWithChildren<Props<T>>) => {
+    const [prevData, setPrevData] = useState<ModuleData<T>[]>([]);
+
     const onRemove = (optionId: string) => {
         const updatedData = [...data];
         const optionIdx = updatedData.findIndex((w) => w.id === optionId);
@@ -72,6 +76,21 @@ export const Poll = <T extends {}>({
 
         onOptionEdit(newOptions);
     };
+
+    // const onCancel = (inputData: ModuleData<T>) => {
+    //     const prevDataOption = prevData.find((d) => d.id === inputData.id);
+
+    //     if (prevDataOption) {
+    //         prevDataOption.isEditing = false;
+    //         const newData = [...data];
+    //         const dataOptionIdx = newData.findIndex((d) => d.id === prevDataOption.id);
+
+    //         if (dataOptionIdx !== -1) {
+    //             newData[dataOptionIdx] = prevDataOption;
+    //             onOptionSave([...newData]);
+    //         }
+    //     }
+    // };
 
     const onOptionSaveClick = (inputData: ModuleData<T>) => {
         if (onValidate) {
@@ -114,7 +133,7 @@ export const Poll = <T extends {}>({
                     },
                 },
             ],
-            [],
+            [idx, item.id],
         );
         return (
             <Flex
@@ -147,31 +166,54 @@ export const Poll = <T extends {}>({
                                 data.find((d) => d.id === item.id),
                             )}
                         </>
-                        <Flex justifyContent={{ base: 'space-between', md: 'flex-end' }} gap="2">
+                        <Flex justifyContent="space-between" gap="2">
                             <Button
                                 aria-label="delete-option"
                                 colorScheme="red"
                                 variant="ghost"
                                 fontSize="sm"
-                                onClick={() => onRemove(item.id)}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    onRemove(item.id);
+                                }}
                             >
                                 Delete
                             </Button>
-                            <Button
-                                aria-label="save-option"
-                                colorScheme="green"
-                                variant="ghost"
-                                fontSize="sm"
-                                onClick={() => {
-                                    const { data: validatedData } = onOptionSaveClick(item);
-                                    const fIdx = data.findIndex((i) => i.id === validatedData.id);
 
-                                    data[fIdx] = validatedData;
-                                    onOptionSave([...data]);
-                                }}
-                            >
-                                Save Option
-                            </Button>
+                            <Flex gap="2">
+                                <Button
+                                    aria-label="delete-option"
+                                    colorScheme="gray"
+                                    variant="ghost"
+                                    fontSize="sm"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        onCancel(item.id);
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    aria-label="save-option"
+                                    colorScheme="green"
+                                    variant="ghost"
+                                    fontSize="sm"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+
+                                        const { data: validatedData } = onOptionSaveClick(item);
+                                        const fIdx = data.findIndex((i) => i.id === validatedData.id);
+
+                                        data[fIdx] = validatedData;
+                                        onOptionSave([...data]);
+                                    }}
+                                >
+                                    Save
+                                </Button>
+                            </Flex>
                         </Flex>
                     </Stack>
                 )}
@@ -232,7 +274,6 @@ export const Poll = <T extends {}>({
                         <PollOption key={idx} idx={idx} item={item} />
                     ))}
                 </Stack>
-
                 <Flex mt="4" display={mode === ModuleMode.Edit ? 'flex' : 'none'} justifyContent="flex-end" gap={4}>
                     <Button
                         variant="secondary"

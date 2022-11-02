@@ -218,6 +218,7 @@ interface BoatActionApis {
     saveModuleData: <T>(moduleId: string, data: ModuleData<T>[]) => void;
     selectOption: (moduleId: string, optionId: string) => void;
     saveWidgetSettings: (moduleId: string, settings: ModuleSettings) => void;
+    cancelOptionEdit: (moduleId: string, optionId: string) => void;
 }
 
 export const useBoat = (): [BoatState, BoatActionApis] => {
@@ -319,12 +320,12 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             const moduleExt: ModuleExtended<any> = {
                 ...currentModule!,
                 ...module,
+                data: module.data.map((d) => ({ ...d, isEditing: false })),
                 dataLoaded: true,
                 loading: false,
                 actionRequired: true,
                 mode: module.data.length ? ModuleMode.View : ModuleMode.Edit,
             };
-
 
             dispatch({
                 type: BoatActionType.SetModule,
@@ -491,6 +492,9 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             //         module,
             //     },
             // });
+        },
+        cancelOptionEdit: (moduleId: string, optionId: string) => {
+            console.log(state.activeBoat?.modules);
         },
     };
 

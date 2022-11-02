@@ -126,7 +126,6 @@ export const TextArea: FunctionComponent<TextareaProps> = ({
                     {...field}
                     {...props}
                     className="sb-input"
-                    borderRadius="0"
                     borderColor={error ? 'brand.error' : 'inherit'}
                 />
                 {error ? (

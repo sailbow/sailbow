@@ -23,7 +23,7 @@ interface Props {
 const GuardedMenuItem = withActionsGuard(MenuItem);
 const GuardedOptionButton = withActionsGuard(Button);
 
-export const MoreMenu: FC<Props> = ({ children, customButton, options }) => {
+export const MoreMenu: FC<Props> = ({ children = <></>, customButton, options }) => {
     const isMobile = useBreakpointValue({ base: true, md: false });
     const [, { openMoreMenuDrawer, closeMoreMenuDrawer }] = useSystem();
 
@@ -120,5 +120,5 @@ export const MoreMenu: FC<Props> = ({ children, customButton, options }) => {
         );
     };
 
-    return children ? <>{isMobile ? <MobileRenderer /> : <>{children}</>} </> : <MenuRenderer />;
+    return children ? <>{!isMobile ? <>{children}</> : <MobileRenderer />} </> : <MenuRenderer />;
 };

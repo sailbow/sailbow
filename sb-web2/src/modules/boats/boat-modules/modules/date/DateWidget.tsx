@@ -14,7 +14,7 @@ type DataType = ModuleData<DateModuleDataType>;
 
 export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
     const { id, settings, data } = props;
-    const [widgetData, setWidgetData] = useState<DataType[]>(data);
+    const [widgetData, setWidgetData] = useState<DataType[]>([]);
     const [{ user }] = useAuthStore();
 
     useEffect(() => {

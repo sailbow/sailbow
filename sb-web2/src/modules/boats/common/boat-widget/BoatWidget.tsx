@@ -11,7 +11,7 @@ import { Poll, Props as PollProps } from 'shared/poll/Poll';
 import { withActionsGuard } from 'shared/actions/Actions';
 import { MoreMenu, MoreMenuOption } from 'shared/more-menu/MoreMenu';
 
-interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption' | 'onSave' | 'role'> {
+interface Props<T> extends Module<T>, Omit<PollProps<T>, 'selectOption' | 'onSave' | 'role' | 'onCancel'> {
     settingsNode: ReactNode;
     children?: ReactNode;
 }
@@ -20,9 +20,9 @@ const FinalizeButton = withActionsGuard(Button);
 const GuardedIconButton = withActionsGuard(IconButton);
 
 export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: PropsWithChildren<Props<T>>) => {
-    const { id, name, mode, data, actionRequired } = props;
+    const { id, name, mode, data, actionRequired, onOptionSave } = props;
     const module = useMemo(() => ModulesMapper[name as ModuleType], [name]); // TODO: CHANGE NAME TO TYPE
-    const [{ activeBoat }, { setModuleMode, removeModule, selectOption, saveModuleData }] = useBoat();
+    const [{ activeBoat }, { setModuleMode, removeModule, selectOption, saveModuleData, cancelOptionEdit }] = useBoat();
 
     const WidgetMenuOptions: MoreMenuOption[] = useMemo(
         () => [
@@ -31,13 +31,15 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                 label: 'Edit',
                 icon: <SbEditIcon />,
                 action: () => {
-                    setModuleMode(id, ModuleMode.Edit);
+                    if (mode !== ModuleMode.Edit) {
+                        setModuleMode(id, ModuleMode.Edit);
+                    }
                 },
                 role: activeBoat!.role,
                 acceptedRoles: Actions.EditBoatDetails,
                 props: {
                     variant: mode === ModuleMode.Edit ? 'solid' : 'ghost',
-                    display: mode === ModuleMode.Settings ? 'none' : 'flex',
+                    display: mode === ModuleMode.Settings || mode === ModuleMode.Edit ? 'none' : 'flex',
                 },
             },
             {
@@ -51,7 +53,7 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                 acceptedRoles: Actions.BoatModuleSettings,
                 props: {
                     variant: mode === ModuleMode.Settings ? 'solid' : 'ghost',
-                    display: mode === ModuleMode.Settings ? 'none' : 'flex',
+                    display: mode === ModuleMode.Settings || mode === ModuleMode.Edit ? 'none' : 'flex',
                 },
             },
             {
@@ -65,7 +67,7 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                 acceptedRoles: Actions.BoatModuleSettings,
                 props: {
                     variant: 'ghost',
-                    display: mode === ModuleMode.Settings ? 'none' : 'flex',
+                    display: mode === ModuleMode.Settings || mode === ModuleMode.Edit ? 'none' : 'flex',
                 },
             },
         ],
@@ -137,7 +139,7 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                                 if (data.length) setModuleMode(id, ModuleMode.View);
                                 else setModuleMode(id, ModuleMode.Edit);
                             }}
-                            display={mode === ModuleMode.Settings ? 'flex' : 'none'}
+                            display={mode === ModuleMode.Settings || mode === ModuleMode.Edit ? 'flex' : 'none'}
                         />
                     </Flex>
                 </Flex>
@@ -148,6 +150,9 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                                 {...props}
                                 role={activeBoat!.role}
                                 selectOption={selectOption}
+                                onCancel={(oId) => {
+                                    cancelOptionEdit(id, oId);
+                                }}
                                 onSave={() => {
                                     saveModuleData(id, data);
                                 }}
