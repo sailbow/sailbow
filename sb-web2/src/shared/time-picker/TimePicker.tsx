@@ -143,7 +143,7 @@ export const TimePicker: FC<Props> = ({ value, onChange, name, ...props }) => {
     return (
         <Popover isLazy lazyBehavior="unmount" isOpen={pickerOpen}>
             <PopoverTrigger>
-                <Input {...props} value={value} isReadOnly cursor="pointer" onClick={() => setPickerOpen(true)} />
+                <Input {...props} value={value} cursor="pointer" onClick={() => setPickerOpen(true)} />
             </PopoverTrigger>
             <PopoverContent borderWidth="2px" borderRadius="xl" ref={ref}>
                 <PopoverBody>

@@ -1,7 +1,7 @@
 import { FunctionComponent, lazy, Suspense, useEffect } from 'react';
 
 import { Routes, Route, matchPath } from 'react-router-dom';
-import { Box, Container } from '@chakra-ui/react';
+import { Box, Container, useBreakpointValue } from '@chakra-ui/react';
 
 import { Footer } from 'shared/footer/Footer';
 import { PrivateRoutes, Routes as AppRoutes } from 'router/Router.Types';

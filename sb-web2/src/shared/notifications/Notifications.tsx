@@ -12,14 +12,10 @@ import {
 } from '@chakra-ui/react';
 import { SbBellIcon } from 'shared/icons/Icons';
 
-interface Props {
-    display: any;
-}
-
-export const Notifications: FunctionComponent<Props> = ({ display }) => {
+export const Notifications: FunctionComponent = () => {
     return (
-        <Box display={display}>
-            <Popover variant="brand">
+        <Box>
+            <Popover variant="brand" isLazy lazyBehavior="unmount">
                 <PopoverTrigger>
                     <IconButton aria-label="notification" variant="icon" fontSize="xl">
                         <SbBellIcon />

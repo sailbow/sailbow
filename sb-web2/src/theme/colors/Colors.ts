@@ -128,6 +128,9 @@ export const BrandColors: BrandColorType = {
     secondary: Color.Gray600,
     'border-light': Color.Gray100,
     'border-dark': Color.Gray600,
+
+    'input': Color.Gray50,
+    'input-hover': Color.Gray100
 };
 
 export enum Brand {

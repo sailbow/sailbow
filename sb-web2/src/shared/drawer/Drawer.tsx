@@ -17,37 +17,42 @@ import { SbCloseIcon } from 'shared/icons/Icons';
 
 interface Props extends DrawerProps {
     children: ReactNode;
-    title: string;
+    title?: string;
     extraHeaderButtons?: ReactNode;
     footer?: ReactNode;
+    mode?: 'menu';
 }
 
-export const Drawer: FC<Props> = ({ children, title, extraHeaderButtons, footer, ...drawerProps }) => {
+export const Drawer: FC<Props> = ({ children, title, extraHeaderButtons, footer, mode, ...drawerProps }) => {
     return (
-        <ChakraDrawer {...drawerProps}>
+        <ChakraDrawer {...drawerProps} closeOnOverlayClick>
             <DrawerOverlay />
             <DrawerContent>
-                <DrawerHeader>
-                    <Flex alignItems="center" justifyContent="space-between">
-                        <Heading fontSize="xl">{title}</Heading>
-                        <Flex>
-                            {extraHeaderButtons}
-                            <IconButton
-                                mr="-3"
-                                onClick={drawerProps.onClose}
-                                aria-label="close-icon"
-                                icon={<SbCloseIcon />}
-                                colorScheme="gray"
-                                fontSize="2xl"
-                                variant="ghost"
-                            />
+                {mode !== 'menu' && (
+                    <DrawerHeader px={{ base: '4', md: '6' }}>
+                        <Flex alignItems="center" justifyContent="space-between">
+                            <Heading fontSize="xl">{title}</Heading>
+                            <Flex>
+                                {extraHeaderButtons}
+                                <IconButton
+                                    mr="-3"
+                                    onClick={drawerProps.onClose}
+                                    aria-label="close-icon"
+                                    icon={<SbCloseIcon />}
+                                    colorScheme="gray"
+                                    fontSize="2xl"
+                                    variant="ghost"
+                                />
+                            </Flex>
                         </Flex>
-                    </Flex>
-                </DrawerHeader>
+                    </DrawerHeader>
+                )}
 
-                <DrawerBody pb="8">{children}</DrawerBody>
+                <DrawerBody pb={mode !== 'menu' ? '8' : '4'} px={mode !== 'menu' ? { base: 4, md: 6 } : 0}>
+                    {children}
+                </DrawerBody>
 
-                <DrawerFooter>{footer}</DrawerFooter>
+                {footer && <DrawerFooter>{footer}</DrawerFooter>}
             </DrawerContent>
         </ChakraDrawer>
     );

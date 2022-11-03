@@ -119,7 +119,6 @@ export const BoatCreate: FunctionComponent = () => {
                     placeholder="Boat name..."
                     id="name"
                     name="name"
-                    py="4"
                     autoFocus
                     value={boatForm.name}
                 />
@@ -131,7 +130,6 @@ export const BoatCreate: FunctionComponent = () => {
                         name="description"
                         id="description"
                         rows={5}
-                        variant="brand"
                         placeholder="What is your boat about?"
                         maxLength={300}
                         value={boatForm.description}

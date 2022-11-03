@@ -66,6 +66,11 @@ export const SignInForm: FC = () => {
                                     placeholder="Enter password"
                                     leftIcon={<SbPasswordIcon />}
                                 />
+                            </FormControl>
+                            <VStack w="100%" alignItems="flex-start">
+                                <Button w="100%" type="submit">
+                                    Log in
+                                </Button>
                                 <Link
                                     fontSize="xs"
                                     fontWeight="600"
@@ -73,10 +78,7 @@ export const SignInForm: FC = () => {
                                 >
                                     Forgot Password
                                 </Link>
-                            </FormControl>
-                            <Button w="100%" type="submit">
-                                Log in
-                            </Button>
+                            </VStack>
                         </VStack>
                     </Form>
                 )}

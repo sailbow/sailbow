@@ -1,5 +1,5 @@
 type PublicRoutesLabel = 'Login' | 'Redirect' | 'Authorize' | 'Auth' | 'Register' | 'ForgotPassword';
-type PrivateRoutesLabel = 'Error' | 'Boats' | 'Invite' | 'Boat';
+type PrivateRoutesLabel = 'Error' | 'Boats' | 'Invite';
 type WhitelistedRoutesLabel = 'AboutUs' | 'Contact' | 'FAQ' | 'HowItWorks' | 'Privacy' | 'Terms' | 'License';
 
 interface Route {
@@ -15,13 +15,12 @@ export const Routes: Route = {
         Authorize: '/authorize',
         Register: '/register',
         Auth: '/',
-        ForgotPassword: '/forgot-password'
+        ForgotPassword: '/forgot-password',
     },
     Private: {
         Error: '/error',
         Boats: '/boats',
         Invite: '/invite',
-        Boat: '/boat/:boatId',
     },
     Whitelisted: {
         AboutUs: '/about-us',

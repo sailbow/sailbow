@@ -25,12 +25,13 @@ export const BoatCard: FC<Props> = ({ boat }) => {
             borderStyle="solid"
             borderColor={BrandColors['border-light']}
             _hover={{ borderColor: BrandColors.dark }}
-            borderRadius="xl"
+            borderRadius="3xl"
             cursor="pointer"
             onClick={onClick}
-            maxW="360px"
+            w="100%"
+            // maxW={{ base: '100%', lg: '360px' }}
         >
-            <Box height="200px" borderRadius="xl">
+            <Box height="300px" borderRadius="xl">
                 <BoatBanner id="home" banner={boat.banner} showControls={false} />
             </Box>
             <Box>

@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export enum CreateNavMode {
     Create,
     Edit,
@@ -9,4 +11,6 @@ export interface SystemState {
     createNavMode: CreateNavMode;
     crewNavOpen: boolean;
     crewInviteModalOpen: boolean;
+    moreMenuDrawerOpen: boolean;
+    moreMenuOptions?: ReactNode;
 }

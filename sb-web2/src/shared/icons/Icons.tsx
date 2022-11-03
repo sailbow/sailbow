@@ -41,6 +41,7 @@ export {
     HiChevronUp as SbChevronUpIcon,
     HiOutlineLink as SbLinkIcon,
     HiOutlineLightBulb as SbBulbIcon,
+    HiOutlineHome as SbHomeIcon
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';
@@ -50,6 +51,7 @@ export {
     FiBell as SbBellIcon,
     FiCopy as SbCopyIcon,
     FiTrash2 as SbDeleteIcon,
+    FiMoreVertical as SbMoreIcon,
 } from 'react-icons/fi';
 export {
     BiErrorCircle as SbErrorCircleIcon,

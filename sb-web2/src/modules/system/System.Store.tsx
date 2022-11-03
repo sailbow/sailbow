@@ -7,6 +7,7 @@ export enum SystemActionType {
     SetCreateNav,
     SetCrewNav,
     SetCrewInviteModal,
+    SetMoreMenuDrawer,
 }
 
 interface PayloadSetPickerNav {
@@ -26,9 +27,19 @@ interface PayloadSetCrewInviteModal {
     open: boolean;
 }
 
+interface PayloadSetMoreMenuDrawer {
+    open: boolean;
+    options?: ReactNode;
+}
+
 interface SystemAction {
     type: SystemActionType;
-    payload?: PayloadSetPickerNav | PayloadSetCreateNav | PayloadSetCrewNav | PayloadSetCrewInviteModal;
+    payload?:
+        | PayloadSetPickerNav
+        | PayloadSetCreateNav
+        | PayloadSetCrewNav
+        | PayloadSetCrewInviteModal
+        | PayloadSetMoreMenuDrawer;
 }
 
 interface SystemProviderProps {
@@ -41,6 +52,7 @@ export const initialSystemState: SystemState = {
     createNavOpen: false,
     crewNavOpen: false,
     crewInviteModalOpen: false,
+    moreMenuDrawerOpen: false,
 };
 
 const SystemStateContext = createContext<SystemState | undefined>(undefined);
@@ -76,6 +88,15 @@ const systemReducer = (state: SystemState, action: SystemAction): SystemState =>
             return {
                 ...state,
                 crewInviteModalOpen: (action.payload as PayloadSetCrewInviteModal).open,
+            };
+        }
+
+        case SystemActionType.SetMoreMenuDrawer: {
+            const { open, options } = action.payload as PayloadSetMoreMenuDrawer;
+            return {
+                ...state,
+                moreMenuDrawerOpen: open,
+                moreMenuOptions: options,
             };
         }
 
@@ -126,6 +147,8 @@ interface SystemActionApis {
     closeCrewNav: () => void;
     openCrewInviteModal: () => void;
     closeCrewInviteModal: () => void;
+    openMoreMenuDrawer: (options?: ReactNode) => void;
+    closeMoreMenuDrawer: () => void;
 }
 
 export const useSystem = (): [SystemState, SystemActionApis] => {
@@ -190,6 +213,24 @@ export const useSystem = (): [SystemState, SystemActionApis] => {
             dispatch({
                 type: SystemActionType.SetCrewInviteModal,
                 payload: { open: false },
+            });
+        },
+        openMoreMenuDrawer: (options?: ReactNode) => {
+            dispatch({
+                type: SystemActionType.SetMoreMenuDrawer,
+                payload: {
+                    open: true,
+                    options,
+                },
+            });
+        },
+        closeMoreMenuDrawer: () => {
+            dispatch({
+                type: SystemActionType.SetMoreMenuDrawer,
+                payload: {
+                    open: false,
+                    options: undefined,
+                },
             });
         },
     };

@@ -29,10 +29,18 @@ export const ButtonStyles: ComponentStyleConfig = {
         };
     },
     sizes: {
+        sm: (props: any) => {
+            return {
+                ...props.theme.components.Button.sizes.sm,
+                px: '4',
+                py: '5',
+            };
+        },
         md: (props: any) => {
             return {
                 ...props.theme.components.Button.sizes.md,
-                py: '5',
+                px: '8',
+                py: '6',
             };
         },
     },
@@ -41,6 +49,7 @@ export const ButtonStyles: ComponentStyleConfig = {
             if (props.colorScheme === 'brand') {
                 return {
                     ...props.theme.components.Button.variants.solid,
+
                     color: 'brand.dark',
                     bg: 'brand.primary',
                     _hover: {
@@ -62,14 +71,6 @@ export const ButtonStyles: ComponentStyleConfig = {
                 },
                 _active: {
                     bg: 'gray.300',
-                },
-            };
-        },
-        'menu-link': (props: any) => {
-            return {
-                color: 'brand.dark',
-                _hover: {
-                    color: 'brand.700',
                 },
             };
         },
@@ -97,30 +98,11 @@ export const ButtonStyles: ComponentStyleConfig = {
                 },
             };
         },
-        outline: (props: any) => {
-            return {
-                ...props.theme.components.Button.variants.outline,
-                ...OUTLINE_STYLES,
-                borderTopWidth: '2px',
-                borderBottomWidth: '2px',
-                borderLeftWidth: '2px',
-                borderRightWidth: '2px',
-            };
-        },
-        social: (props: any) => {
-            return {
-                ...props.theme.components.Button.variants.outline,
-                ...OUTLINE_STYLES,
-                display: 'flex',
-                justifyContent: 'space-between',
-                _loading: {
-                    justifyContent: 'center',
-                },
-            };
-        },
         icon: (props: any) => {
             return {
                 ...props.theme.components.Button.variants.ghost,
+                px: '8',
+                py: '6',
                 color: 'brand.dark',
                 _hover: {
                     backgroundColor: 'gray.100',

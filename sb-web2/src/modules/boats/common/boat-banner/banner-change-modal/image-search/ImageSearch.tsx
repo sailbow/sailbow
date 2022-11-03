@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FunctionComponent, useState, useCallback } from 'react';
 
-import { Box, Input, InputGroup, Image, Flex, Spinner, Text, InputLeftAddon } from '@chakra-ui/react';
+import { Box, Input, InputGroup, Image, Flex, Spinner, Text, InputLeftAddon, InputLeftElement } from '@chakra-ui/react';
 import Gallery, { RenderImageProps } from 'react-photo-gallery';
 
 import { useBoat } from 'modules/boats/Boat.Store';
@@ -86,10 +86,10 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
     return (
         <Box className="sb-image-search">
             <InputGroup variant="brand">
-                <InputLeftAddon p="0" position="absolute">
+                <InputLeftElement color="gray.400">
                     <SbSearchIcon />
-                </InputLeftAddon>
-                <Input paddingLeft="24px" placeholder="Search images..." onChange={onSearch} fontWeight="normal" />
+                </InputLeftElement>
+                <Input paddingLeft="36px" placeholder="Search images..." onChange={onSearch} />
             </InputGroup>
             <Text fontSize="xx-small" textAlign="right" pt="1">
                 Powered by Unsplash

@@ -8,6 +8,7 @@ import { BoatProvider } from 'modules/boats/Boat.Store';
 import { SystemProvider } from 'modules/system/System.Store';
 import { PrivateRouter, PublicRouter, WhitelistedRouter } from 'router/Router';
 import { WhitelistedRoutes } from 'router/Router.Types';
+import { MoreMenuMobileDrawer } from 'shared/more-menu/MoreMenuMobileDrawer';
 import { HttpInterceptor } from 'util/http/HttpInterceptor';
 
 import './App.scss';
@@ -36,6 +37,7 @@ export const App: FC = () => {
                             <>
                                 {isLoggedIn ? (
                                     <SystemProvider>
+                                        <MoreMenuMobileDrawer />
                                         <BoatProvider>
                                             <PrivateRouter />
                                         </BoatProvider>

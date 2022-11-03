@@ -15,7 +15,7 @@ const BoatHome = lazy(() =>
     import('modules/boats/boat-home/BoatHome').then((module) => ({ default: module.BoatHome })),
 );
 
-enum BoatRoutes {
+export enum BoatRoutes {
     AllBoats = '/',
     View = '/:boatId',
 }

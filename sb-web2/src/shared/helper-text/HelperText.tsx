@@ -15,7 +15,7 @@ export const HelperText: FC<Props> = ({ children, m = 6, p = 6, color = 'orange'
     return (
         <Flex
             p={p}
-            bg={`${color}.100`}
+            color="brand.800"
             borderRadius="xl"
             m={m}
             className="sb-helper-text"

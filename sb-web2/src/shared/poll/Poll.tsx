@@ -1,21 +1,24 @@
-import { PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
 import { Box, Button, Flex, IconButton, Stack, Text } from '@chakra-ui/react';
 
-import { ModuleData, ModuleMode } from 'modules/boats/Boat.Types';
+import { ModuleData, ModuleMode, Role } from 'modules/boats/Boat.Types';
+import { Actions } from 'shared/actions/Actions';
+import { HelperText } from 'shared/helper-text/HelperText';
 import {
     SbCheckMarkIcon,
-    SbDeleteIcon,
     SbEditIcon,
     SbMinusCircleIcon,
     SbPlusIcon,
     SbRadioButtonOff,
     SbRadioButtonOn,
 } from 'shared/icons/Icons';
+import { MoreMenu, MoreMenuOption } from 'shared/more-menu/MoreMenu';
 import { withSkeleton } from 'util/guards/Loading';
-import { HelperText } from 'shared/helper-text/HelperText';
 
 export interface Props<T> {
+    role: Role;
+    moduleId: string;
     mode: ModuleMode;
     data: ModuleData<T>[];
     loading: boolean;
@@ -28,11 +31,14 @@ export interface Props<T> {
     onOptionSave: (data: ModuleData<T>[]) => void;
     getText: (data: ModuleData<any>) => string;
     onValidate?: (data: ModuleData<T>) => { hasError: boolean; data: ModuleData<T> };
+    onCancel: (optionId: string) => void;
 }
 
 const SkeletonWrapper = withSkeleton(Box);
 
 export const Poll = <T extends {}>({
+    moduleId,
+    role,
     mode = ModuleMode.View,
     data,
     loading,
@@ -45,7 +51,10 @@ export const Poll = <T extends {}>({
     onOptionSave,
     getText,
     onValidate,
+    onCancel,
 }: PropsWithChildren<Props<T>>) => {
+    const [prevData, setPrevData] = useState<ModuleData<T>[]>([]);
+
     const onRemove = (optionId: string) => {
         const updatedData = [...data];
         const optionIdx = updatedData.findIndex((w) => w.id === optionId);
@@ -68,6 +77,21 @@ export const Poll = <T extends {}>({
         onOptionEdit(newOptions);
     };
 
+    // const onCancel = (inputData: ModuleData<T>) => {
+    //     const prevDataOption = prevData.find((d) => d.id === inputData.id);
+
+    //     if (prevDataOption) {
+    //         prevDataOption.isEditing = false;
+    //         const newData = [...data];
+    //         const dataOptionIdx = newData.findIndex((d) => d.id === prevDataOption.id);
+
+    //         if (dataOptionIdx !== -1) {
+    //             newData[dataOptionIdx] = prevDataOption;
+    //             onOptionSave([...newData]);
+    //         }
+    //     }
+    // };
+
     const onOptionSaveClick = (inputData: ModuleData<T>) => {
         if (onValidate) {
             const { hasError, data: validatedData } = onValidate(inputData);
@@ -82,6 +106,161 @@ export const Poll = <T extends {}>({
         return { hasError: false, data: inputData };
     };
 
+    // change idx to id
+    const PollOption: FC<{ item: ModuleData<T>; idx: number }> = ({ idx, item }) => {
+        const PollOptionMenu: MoreMenuOption[] = useMemo(
+            () => [
+                {
+                    id: `poll-option-edit-${idx}`,
+                    label: 'Edit',
+                    icon: <SbEditIcon />,
+                    role,
+                    ownerId: 'pass-option-creator-id',
+                    acceptedRoles: Actions.PollOption,
+                    action: () => {
+                        onEdit(item.id);
+                    },
+                },
+                {
+                    id: `poll-option-delete-${idx}`,
+                    label: 'Delete',
+                    icon: <SbMinusCircleIcon />,
+                    ownerId: 'pass-option-creator-id',
+                    role,
+                    acceptedRoles: Actions.PollOption,
+                    action: () => {
+                        onRemove(item.id);
+                    },
+                },
+            ],
+            [idx, item.id],
+        );
+        return (
+            <Flex
+                w="100%"
+                my="2"
+                alignItems="center"
+                borderRadius="lg"
+                borderStyle="solid"
+                borderWidth="2px"
+                justifyContent="space-between"
+                borderColor={!loading && (item.isEditing || item.selected) ? 'brand.primary' : 'brand.border-light'}
+                transition="transform 0.05s ease-in-out, border 0.15s ease-in-out"
+                _hover={{ borderColor: !loading ? 'brand.primary' : 'inherit', cursor: 'pointer' }}
+                _active={{
+                    transform: !item.isEditing && mode !== ModuleMode.Edit ? 'scale(0.997)' : '',
+                }}
+                p="4"
+                onClick={() => {
+                    if (!item.isEditing || mode !== ModuleMode.Edit) {
+                        selectOption(moduleId, idx.toString()); // change to item.id
+                    }
+                }}
+            >
+                {/* Option being edited, show input component */}
+                {item.isEditing && mode !== ModuleMode.View && (
+                    <Stack w="100%" spacing="4">
+                        <>
+                            {getInputComponent(
+                                item.id,
+                                data.find((d) => d.id === item.id),
+                            )}
+                        </>
+                        <Flex justifyContent="space-between" gap="2">
+                            <Button
+                                aria-label="delete-option"
+                                colorScheme="red"
+                                variant="ghost"
+                                fontSize="sm"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    onRemove(item.id);
+                                }}
+                            >
+                                Delete
+                            </Button>
+
+                            <Flex gap="2">
+                                <Button
+                                    aria-label="delete-option"
+                                    colorScheme="gray"
+                                    variant="ghost"
+                                    fontSize="sm"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        onCancel(item.id);
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    aria-label="save-option"
+                                    colorScheme="green"
+                                    variant="ghost"
+                                    fontSize="sm"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+
+                                        const { data: validatedData } = onOptionSaveClick(item);
+                                        const fIdx = data.findIndex((i) => i.id === validatedData.id);
+
+                                        data[fIdx] = validatedData;
+                                        onOptionSave([...data]);
+                                    }}
+                                >
+                                    Save
+                                </Button>
+                            </Flex>
+                        </Flex>
+                    </Stack>
+                )}
+
+                {/* Option not being edited but in view or edit mode show the text rendered  */}
+                {!item.isEditing && (mode === ModuleMode.View || mode === ModuleMode.Edit) && (
+                    <Flex
+                        alignItems="center"
+                        w="100%"
+                        color={loading && item.id && item.id.startsWith('new-option') ? 'gray.300' : 'inherit'}
+                    >
+                        <Box color={item.selected ? 'brand.500' : 'inherit'} fontWeight="bold" fontSize="lg">
+                            {item.selected ? <SbRadioButtonOn /> : <SbRadioButtonOff />}
+                        </Box>
+                        <Box pl="2">
+                            <Text fontWeight="semibold">{getText(item)}</Text>
+                        </Box>
+                    </Flex>
+                )}
+
+                {/* When module is in edit more but option is not being edited show buttons  */}
+                {!item.isEditing && mode === ModuleMode.Edit && (
+                    <Flex
+                        alignItems="center"
+                        color={loading && item.id && item.id.startsWith('new-option') ? 'gray.300' : 'inherit'}
+                    >
+                        <MoreMenu options={PollOptionMenu}>
+                            {PollOptionMenu.map((opt) => (
+                                <IconButton
+                                    key={opt.id}
+                                    fontSize="xl"
+                                    aria-label={opt.id}
+                                    colorScheme="gray"
+                                    variant="ghost"
+                                    size="sm"
+                                    disabled={loading}
+                                    icon={<>{opt.icon}</>}
+                                    onClick={opt.action}
+                                />
+                            ))}
+                        </MoreMenu>
+                    </Flex>
+                )}
+            </Flex>
+        );
+    };
+
     return (
         <SkeletonWrapper loading={false} skeletonHeight="200px">
             <Box className="sb-poll" transition="all 1s ease-in-out">
@@ -92,120 +271,9 @@ export const Poll = <T extends {}>({
                         </HelperText>
                     )}
                     {data.map((item, idx) => (
-                        <Flex
-                            key={idx}
-                            w="100%"
-                            alignItems="center"
-                            borderRadius="lg"
-                            borderStyle="solid"
-                            borderWidth="2px"
-                            justifyContent="space-between"
-                            borderColor={item.isEditing || item.selected ? 'brand.primary' : 'brand.border-light'}
-                            transition="transform 0.05s ease-in-out, border 0.15s ease-in-out"
-                            _hover={{ borderColor: 'brand.primary', cursor: 'pointer' }}
-                            _active={{ transform: !item.isEditing && mode !== ModuleMode.Edit ? 'scale(0.997)' : '' }}
-                            p="4"
-                            onClick={() => {
-                                if (!item.isEditing || mode !== ModuleMode.Edit) {
-                                    selectOption('1', item.id);
-                                }
-                            }}
-                        >
-                            {item.isEditing && mode !== ModuleMode.View && (
-                                <Stack w="100%" spacing="4">
-                                    <>
-                                        {getInputComponent(
-                                            item.id,
-                                            data.find((d) => d.id === item.id),
-                                        )}
-                                    </>
-                                    <Flex justifyContent={{ base: 'space-between', md: 'flex-end' }} gap="2">
-                                        <IconButton
-                                            fontSize="xl"
-                                            aria-label="delete-option"
-                                            colorScheme="red"
-                                            variant="ghost"
-                                            icon={<SbDeleteIcon />}
-                                            onClick={() => onRemove(item.id)}
-                                        />
-                                        <IconButton
-                                            fontSize="xl"
-                                            aria-label="save-option"
-                                            colorScheme="green"
-                                            variant="ghost"
-                                            icon={SbCheckMarkIcon}
-                                            onClick={() => {
-                                                const { data: validatedData } = onOptionSaveClick(item);
-                                                const fIdx = data.findIndex((i) => i.id === validatedData.id);
-
-                                                data[fIdx] = validatedData;
-                                                onOptionSave([...data]);
-                                            }}
-                                        />
-                                    </Flex>
-                                </Stack>
-                            )}
-
-                            {!item.isEditing && (mode === ModuleMode.View || mode === ModuleMode.Edit) ? (
-                                <Flex
-                                    alignItems="center"
-                                    flexWrap="wrap"
-                                    color={
-                                        loading && item.id && item.id.startsWith('new-option') ? 'gray.300' : 'inherit'
-                                    }
-                                >
-                                    <Box
-                                        color={item.selected ? 'brand.500' : 'inherit'}
-                                        fontWeight="bold"
-                                        fontSize="lg"
-                                    >
-                                        {item.selected ? <SbRadioButtonOn /> : <SbRadioButtonOff />}
-                                    </Box>
-                                    <Box pl="2">
-                                        <Text fontWeight="semibold">{getText(item)}</Text>
-                                    </Box>
-                                </Flex>
-                            ) : (
-                                <></>
-                            )}
-                            {!item.isEditing && mode === ModuleMode.Edit && (
-                                <Flex
-                                    alignItems="center"
-                                    color={
-                                        loading && item.id && item.id.startsWith('new-option') ? 'gray.300' : 'inherit'
-                                    }
-                                >
-                                    <IconButton
-                                        fontSize="xl"
-                                        aria-label="settings"
-                                        colorScheme="gray"
-                                        variant="ghost"
-                                        size="sm"
-                                        disabled={loading}
-                                        icon={<SbEditIcon />}
-                                        onClick={() => onEdit(item.id)}
-                                    />
-
-                                    <IconButton
-                                        fontSize="xl"
-                                        aria-label="settings"
-                                        colorScheme="gray"
-                                        variant="ghost"
-                                        size="sm"
-                                        disabled={loading}
-                                        icon={<SbMinusCircleIcon />}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            onRemove(item.id);
-                                        }}
-                                    />
-                                </Flex>
-                            )}
-                        </Flex>
+                        <PollOption key={idx} idx={idx} item={item} />
                     ))}
                 </Stack>
-
                 <Flex mt="4" display={mode === ModuleMode.Edit ? 'flex' : 'none'} justifyContent="flex-end" gap={4}>
                     <Button
                         variant="secondary"

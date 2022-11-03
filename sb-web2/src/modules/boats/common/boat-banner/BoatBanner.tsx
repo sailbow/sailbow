@@ -32,7 +32,7 @@ export const BoatBanner: FunctionComponent<Props> = ({ banner, id, showControls,
                 onChange={onSubmit}
                 banner={banner}
             />
-            <Box className={`sb-cover sb-cover--${id}`} borderRadius="lg" zIndex={showControls ? 1 : -1}>
+            <Box className={`sb-cover sb-cover--${id}`} borderRadius="3xl" zIndex={showControls ? 1 : -1}>
                 <Button
                     display={showControls ? 'flex' : 'none'}
                     size="sm"

@@ -9,7 +9,7 @@ interface Props extends TextProps {
 
 export const Label: FC<Props> = ({ label, required, ...props }) => {
     return (
-        <Text fontSize="sm" fontWeight="semibold" className="sb-input-label" {...props}>
+        <Text fontSize="sm" fontWeight="medium" className="sb-input-label" {...props}>
             {label}
             {required && <span className="required">*</span>}
         </Text>
