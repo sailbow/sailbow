@@ -16,14 +16,8 @@ export const NavbarDesktop: FC<NavbarProps> = ({ onRoute }) => {
     const [, { openCreateNav }] = useSystem();
 
     return (
-        <Flex
-            className="sb-navbar desktop"
-            justifyContent="space-between"
-            alignItems="center"
-            py="2"
-            bg="white"
-        >
-            <HStack alignItems="center" spacing="4" pl="2">
+        <Flex className="sb-navbar desktop" justifyContent="space-between" alignItems="center" py="2" bg="white">
+            <HStack alignItems="center" spacing="4">
                 <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
             </HStack>
             <Flex alignItems="center" justifyContent="space-between" gap="4">

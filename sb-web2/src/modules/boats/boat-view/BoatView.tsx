@@ -1,11 +1,10 @@
 import { FunctionComponent, useEffect } from 'react';
 
-import { Box, Flex, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Flex, Skeleton, Stack, useBreakpointValue, VStack } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Boat } from 'modules/boats/Boat.Types';
-import { BoatModuleManifest } from 'modules/boats/boat-modules/BoatModulesManifest';
 import { BoatModulesWidget } from 'modules/boats/boat-modules/BoatModulesWidget';
 import { BoatViewToolbar } from 'modules/boats/boat-view/boat-view-toolbar/BoatViewToolbar';
 import { BoatViewTabs } from 'modules/boats/boat-view/boat-view-tabs/BoatViewTabs';
@@ -29,8 +28,7 @@ export const BoatView: FunctionComponent = () => {
     }, []); // eslint-disable-line
 
     const BoatRenderer: FunctionComponent<{ data: Boat }> = ({ data }) => (
-        <Box px={{ base: 0, md: 2 }} className="sb-boat-view-desktop">
-            <BoatViewToolbar boat={data} />
+        <Box className="sb-boat-view-desktop">
             <Box className="details-widget-box">
                 <BoatModulesWidget boat={data} />
             </Box>
@@ -39,9 +37,13 @@ export const BoatView: FunctionComponent = () => {
 
     return isMobile ? (
         <BoatViewTabs boat={boat} loading={loading.get} />
-    ) : boat && !loading.get && !error ? (
+    ) : boat && !loading.get ? (
         <BoatRenderer data={boat} />
     ) : (
-        <PageSpinner loading={loading.get} />
+        <Stack w="100%" spacing="8">
+            <Skeleton h={200} />
+            <Skeleton h={200} />
+            <Skeleton h={200} />
+        </Stack>
     );
 };

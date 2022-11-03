@@ -13,7 +13,7 @@ interface Props {
 
 export const BoatModuleManifest: FC<Props> = ({ boat }) => {
     return (
-        <Box pr={{ base: 0, md: 4 }} className="sb-boat-module-manifest" pb="16">
+        <Box className="sb-boat-module-manifest" pb="16" mt="-3" px={{ base: 0, md: 4 }}>
             <InfoManifest data={boat} />
             <CrewManifest boat={boat} />
             {boat.modules.map((module) => {

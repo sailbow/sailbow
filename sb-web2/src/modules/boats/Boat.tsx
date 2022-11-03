@@ -31,9 +31,6 @@ export const Boat: FunctionComponent = () => {
         const rl = location.pathname.split('/').length - 1;
 
         switch (rl) {
-            case 1:
-                setViewMode(BoatViewMode.Home);
-                break;
             case 2:
                 setViewMode(BoatViewMode.Boat);
                 break;
@@ -45,7 +42,7 @@ export const Boat: FunctionComponent = () => {
 
     return (
         <SystemLayout>
-            <Box px="4" h="100%" id="sb-main" w="100%">
+            <Box h="100%" id="sb-boats" w="100%" px="4">
                 <BoatCreate />
                 <BoatCrew />
                 <BoatModulesPicker />

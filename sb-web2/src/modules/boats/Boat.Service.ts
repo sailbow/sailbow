@@ -77,7 +77,9 @@ export const getBoat = async (boatId: string): Promise<Omit<Boat, 'modules'> & {
         BoatEndpoints.Get(boatId),
     );
 
-    return data;
+    return new Promise((res) => {
+        setTimeout(() => res(data), 2000)
+    })
 };
 
 export const getAllBoats = async (): Promise<Boat[]> => {
