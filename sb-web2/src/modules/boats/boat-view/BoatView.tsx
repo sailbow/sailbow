@@ -32,14 +32,7 @@ export const BoatView: FunctionComponent = () => {
         <Box px={{ base: 0, md: 2 }} className="sb-boat-view-desktop">
             <BoatViewToolbar boat={data} />
             <Box className="details-widget-box">
-                <Flex pt="4" display={{ base: 'none', md: 'flex' }}>
-                    <Box width="480px" borderRight="1px solid #ececec">
-                        <BoatModuleManifest boat={data} />
-                    </Box>
-                    <Box w="100%">
-                        <BoatModulesWidget boat={data} />
-                    </Box>
-                </Flex>
+                <BoatModulesWidget boat={data} />
             </Box>
         </Box>
     );

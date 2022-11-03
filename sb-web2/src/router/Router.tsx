@@ -1,14 +1,12 @@
 import { FunctionComponent, lazy, Suspense, useEffect } from 'react';
 
 import { Routes, Route, matchPath } from 'react-router-dom';
-import { Box, Container, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Container } from '@chakra-ui/react';
 
 import { Footer } from 'shared/footer/Footer';
 import { PrivateRoutes, Routes as AppRoutes } from 'router/Router.Types';
 
 import { Navbar } from 'shared/navbar/Navbar';
-import Layout from 'shared/layout/Layout';
-import { TopNav } from 'shared/layout/top-nav/TopNav';
 
 /** Public Content */
 const Login = lazy(() => import('modules/auth/login/Login').then((module) => ({ default: module.Login })));
@@ -98,17 +96,14 @@ export const PublicRouter: FunctionComponent = () => {
 export const PrivateRouter: FunctionComponent = () => {
     return (
         <>
-            {/* <Navbar /> */}
-            <Layout>
-                <TopNav title="hello" />
-                <Box className="sb-private-router">
-                    <Suspense fallback={null}>
-                        <Routes>
-                            <Route path={`${AppRoutes.Private.Boats}/*`} element={<Boat />} />
-                        </Routes>
-                    </Suspense>
-                </Box>
-            </Layout>
+            <Navbar />
+            <Box className="sb-private-router" pt="66px">
+                <Suspense fallback={null}>
+                    <Routes>
+                        <Route path={`${AppRoutes.Private.Boats}/*`} element={<Boat />} />
+                    </Routes>
+                </Suspense>
+            </Box>
 
             {/* <Suspense fallback={null}>
                     <Switch>

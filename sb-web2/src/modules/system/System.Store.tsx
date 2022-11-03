@@ -93,6 +93,7 @@ const systemReducer = (state: SystemState, action: SystemAction): SystemState =>
 
         case SystemActionType.SetMoreMenuDrawer: {
             const { open, options } = action.payload as PayloadSetMoreMenuDrawer;
+
             return {
                 ...state,
                 moreMenuDrawerOpen: open,

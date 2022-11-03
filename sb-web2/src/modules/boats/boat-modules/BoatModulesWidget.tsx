@@ -51,12 +51,7 @@ export const BoatModulesWidget: FC<Props> = ({ boat }) => {
     const [, { openPicker }] = useSystem();
 
     return (
-        <Box
-            h={{ base: '100%', md: 'calc(100vh - 140px)' }}
-            overflowY="auto"
-            px={{ base: 0, md: 4 }}
-            className="sb-boat-modules-widgets"
-        >
+        <Box px={{ base: 0, md: 4 }} className="sb-boat-modules-widgets">
             <Stack w="100%" spacing="4" h="100%">
                 {boat.modules.map((module) => (
                     <BoatModulesWidgetItem

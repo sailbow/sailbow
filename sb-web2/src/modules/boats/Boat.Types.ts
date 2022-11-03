@@ -43,8 +43,13 @@ export enum ModuleMode {
     Edit,
 }
 
-export interface CreateBoat extends Omit<Boat, 'id' | 'modules'> {}
-export interface EditBoat extends Omit<Boat, 'modules'> {}
+export enum BoatViewMode {
+    Home,
+    Boat
+}
+
+export interface CreateBoat extends Omit<Boat, 'id' | 'modules'> { }
+export interface EditBoat extends Omit<Boat, 'modules'> { }
 
 export interface Photo {
     src: string;
@@ -110,6 +115,7 @@ export interface BoatState {
     boats?: Boat[];
     activeBoat?: Boat;
     error?: any;
+    viewMode: BoatViewMode;
     loading: {
         create: boolean;
         get: boolean;

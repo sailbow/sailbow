@@ -12,6 +12,7 @@ import {
     ModuleData,
     ModuleExtended,
     ModuleType,
+    BoatViewMode,
 } from 'modules/boats/Boat.Types';
 import { useAuthStore } from 'modules/auth/Auth.Store';
 import { getModule, upsertModule } from './boat-modules/modules/Modules.Service';
@@ -26,6 +27,7 @@ export enum BoatActionType {
     SetModule,
     SetAllModules,
     SetModuleMode,
+    SetViewMode,
 }
 
 interface PayloadSetActiveBoat {
@@ -58,6 +60,10 @@ interface PayloadSetAllModules {
     modules: ModuleExtended<any>[];
 }
 
+interface PayloadSetViewMode {
+    mode: BoatViewMode;
+}
+
 interface BoatAction {
     type: BoatActionType;
     payload:
@@ -67,7 +73,8 @@ interface BoatAction {
         | PayloadSetAllBoats
         | PayloadSetModule
         | PayloadSetModuleMode
-        | PayloadSetAllModules;
+        | PayloadSetAllModules
+        | PayloadSetViewMode;
 }
 
 interface BoatProviderProps {
@@ -81,6 +88,7 @@ export const initialBoatState: BoatState = {
         get: false,
         getAll: false,
     },
+    viewMode: BoatViewMode.Home,
     boats: [],
 };
 
@@ -169,6 +177,13 @@ const boatReducer = (state: BoatState, action: BoatAction): BoatState => {
             };
         }
 
+        case BoatActionType.SetViewMode: {
+            return {
+                ...state,
+                viewMode: (action.payload as PayloadSetViewMode).mode,
+            };
+        }
+
         default: {
             throw new Error(`Invalid action -- ${action.type}`);
         }
@@ -219,6 +234,7 @@ interface BoatActionApis {
     selectOption: (moduleId: string, optionId: string) => void;
     saveWidgetSettings: (moduleId: string, settings: ModuleSettings) => void;
     cancelOptionEdit: (moduleId: string, optionId: string) => void;
+    setViewMode: (mode: BoatViewMode) => void;
 }
 
 export const useBoat = (): [BoatState, BoatActionApis] => {
@@ -495,6 +511,14 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
         },
         cancelOptionEdit: (moduleId: string, optionId: string) => {
             console.log(state.activeBoat?.modules);
+        },
+        setViewMode: (mode: BoatViewMode) => {
+            dispatch({
+                type: BoatActionType.SetViewMode,
+                payload: {
+                    mode,
+                },
+            });
         },
     };
 

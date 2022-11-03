@@ -3,8 +3,7 @@ import { FC } from 'react';
 import { Button, Box, Flex, FlexProps, IconButton, useColorModeValue, Text } from '@chakra-ui/react';
 
 import { Logo, SbChevronLeftIcon, SbMenuIcon } from 'shared/icons/Icons';
-import { SidebarWidth } from '../Layout.Types';
-import { useLayoutStore } from '../Layout';
+import { SidebarWidth } from '../BoatLayout';
 
 interface Props extends FlexProps {
     title: string;
@@ -12,8 +11,6 @@ interface Props extends FlexProps {
 }
 
 export const TopNav: FC<Props> = ({ title, children, back, ...rest }) => {
-    const [, { openMobileNav }] = useLayoutStore();
-
     return (
         <Box zIndex={998} position="fixed" top="0" w="100%" left="50%" transform="translateX(-50%)">
             <Flex
@@ -25,7 +22,6 @@ export const TopNav: FC<Props> = ({ title, children, back, ...rest }) => {
             >
                 <Button
                     display={{ base: 'flex', md: 'none' }}
-                    onClick={openMobileNav}
                     variant="icon"
                     aria-label="open menu"
                     icon={<SbMenuIcon />}

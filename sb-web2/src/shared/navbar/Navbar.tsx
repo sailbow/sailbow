@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 
-import { useBreakpointValue } from '@chakra-ui/react';
+import { Box, Container, useBreakpointValue } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { NavbarMobileTop } from 'shared/navbar/navbar-mobile/NavbarMobileTop';
@@ -15,6 +15,12 @@ export const Navbar: FunctionComponent = () => {
     const onRoute = (path: string) => {
         if (window.location.pathname !== path) navigate(path);
     };
-    
-    return isMobile ? <NavbarMobileTop onRoute={onRoute} /> : <NavbarDesktop onRoute={onRoute} />;
+
+    return (
+        <Box position="fixed" top="0" w="100%" left="50%" transform="translateX(-50%)" bg="white" zIndex={100}>
+            <Container maxW="8xl">
+                {isMobile ? <NavbarMobileTop onRoute={onRoute} /> : <NavbarDesktop onRoute={onRoute} />}
+            </Container>
+        </Box>
+    );
 };
