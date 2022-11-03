@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect } from 'react';
 
-import { Box, Center, Flex, IconButton } from '@chakra-ui/react';
+import { Box, Center, Container, Flex, IconButton, VStack } from '@chakra-ui/react';
 
 import { Boat } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';
@@ -9,7 +9,7 @@ import { PageSpinner } from 'shared/page-spinner/PageSpinner';
 import { SbFilterIcon, SbSearchIcon } from 'shared/icons/Icons';
 import { Input } from 'shared/input/Input';
 
-import './BoatHome.scss';
+import 'modules/boats/boat-home/BoatHome.scss';
 
 export const BoatHome: FunctionComponent = () => {
     const [{ boats, loading }, { getBoats }] = useBoat();
@@ -41,6 +41,13 @@ export const BoatHome: FunctionComponent = () => {
                                     w="100%"
                                 />
                             </Flex>
+                            {/* <Container maxW="4xl">
+                                <VStack spacing="8" mt="6">
+                                    {boats.map((boat: Boat) => {
+                                        return <BoatCard boat={boat} key={boat.id} />;
+                                    })}
+                                </VStack>
+                            </Container> */}
                             <Box className="container" mt="8">
                                 {boats.map((boat: Boat) => {
                                     return <BoatCard boat={boat} key={boat.id} />;
