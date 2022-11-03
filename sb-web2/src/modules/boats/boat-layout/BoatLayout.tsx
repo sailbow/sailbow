@@ -7,7 +7,7 @@ import { BoatViewMode } from '../Boat.Types';
 import { BoatModuleManifest } from '../boat-modules/BoatModulesManifest';
 import { Input } from 'shared/input/Input';
 
-export const SidebarWidth = 80;
+export const SidebarWidth = '400px';
 
 export default function SystemLayout({ children }: { children: ReactNode }) {
     const [{ activeBoat, viewMode, loading }] = useBoat();
@@ -26,7 +26,7 @@ export default function SystemLayout({ children }: { children: ReactNode }) {
                 <Box overflow="auto" maxH="calc(100vh - 66px)">
                     {viewMode === BoatViewMode.Home && (
                         <VStack pl="4">
-                            <Input />
+                            <Input placeholder="Search..." />
                         </VStack>
                     )}
 

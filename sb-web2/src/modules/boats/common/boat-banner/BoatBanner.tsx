@@ -1,10 +1,10 @@
 import { FunctionComponent, useState } from 'react';
 
-import { Box, Image, Button } from '@chakra-ui/react';
+import { Box, Image, Button, Heading } from '@chakra-ui/react';
 
 import { BannerState, BannerType } from 'modules/boats/Boat.Types';
 import { BannerChangeModal } from 'modules/boats/common/boat-banner/banner-change-modal/BannerChangeModal';
-import { Color } from 'theme/colors/Colors';
+import { Color as BrandColor } from 'theme/colors/Colors';
 
 import './BoatBanner.scss';
 
@@ -18,11 +18,13 @@ interface Props {
 export const BoatBanner: FunctionComponent<Props> = ({ banner, id, showControls, onChange }) => {
     const [isBannerSelectOpen, setIsBannerSelectOpen] = useState<boolean>(false);
 
-    const onSubmit = (type: BannerType, value: string | Color): void => {
+    const onSubmit = (type: BannerType, value: string | BrandColor): void => {
         if (onChange) {
             onChange({ ...banner, type, value });
         }
     };
+
+    console.log(banner);
 
     return (
         <>
@@ -51,6 +53,10 @@ export const BoatBanner: FunctionComponent<Props> = ({ banner, id, showControls,
                 ) : (
                     <Image draggable="false" src={banner.value} className="sb-cover-image" />
                 )}
+
+                <Heading position="absolute" left="50%" top="50%" className="header">
+                    {id}
+                </Heading>
             </Box>
         </>
     );

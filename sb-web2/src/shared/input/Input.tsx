@@ -61,8 +61,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     ) => {
         return (
             <Box className={`sb-input-wrapper ${customClass}`} w="100%" ref={ref}>
-                {label && <Label label={label} required={required} />}
-                <InputGroup variant="brand" className="sb-input" mt="1">
+                {label && <Label label={label} required={required} mb="1" />}
+                <InputGroup variant="brand" className="sb-input">
                     <ChakraInput
                         {...field}
                         {...props}

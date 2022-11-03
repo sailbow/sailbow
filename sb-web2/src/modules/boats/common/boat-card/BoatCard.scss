@@ -1,0 +1,11 @@
+.sb-boat-card {
+    .sb-cover-image {
+        transition: transform 0.25s ease-in-out;
+    }
+
+    &:hover {
+        .sb-cover-image {
+            transform: scale(1.1);
+        }
+    }
+}

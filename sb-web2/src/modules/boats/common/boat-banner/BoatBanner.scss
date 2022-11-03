@@ -5,6 +5,13 @@
     overflow: hidden;
     width: 100%;
     height: 100%;
+    overflow: hidden;
+
+    .header {
+        mix-blend-mode: difference;
+        color: #ffff;
+        transform: translate(-50%, -50%);
+    }
 
     &-image {
         height: 100%;
