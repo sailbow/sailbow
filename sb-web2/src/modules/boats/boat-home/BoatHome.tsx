@@ -26,7 +26,7 @@ export const BoatHome: FunctionComponent = () => {
                 <>
                     {boats.length ? (
                         <>
-                            <Flex w="100%" justifyContent="space-between" alignItems="center" gap="4" pt="6">
+                            {/* <Flex w="100%" justifyContent="space-between" alignItems="center" gap="4" pt="6">
                                 <Input
                                     leftIcon={<SbSearchIcon />}
                                     rightIconButton={
@@ -40,19 +40,14 @@ export const BoatHome: FunctionComponent = () => {
                                     placeholder="Search boats..."
                                     w="100%"
                                 />
-                            </Flex>
-                            {/* <Container maxW="4xl">
-                                <VStack spacing="8" mt="6">
+                            </Flex> */}
+                            <Container maxW="4xl" mt="6">
+                                <VStack spacing="8" >
                                     {boats.map((boat: Boat) => {
                                         return <BoatCard boat={boat} key={boat.id} />;
                                     })}
                                 </VStack>
-                            </Container> */}
-                            <Box className="container" mt="8">
-                                {boats.map((boat: Boat) => {
-                                    return <BoatCard boat={boat} key={boat.id} />;
-                                })}
-                            </Box>
+                            </Container>
                         </>
                     ) : (
                         <Center>No Boats</Center>

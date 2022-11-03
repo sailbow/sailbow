@@ -22,7 +22,7 @@ export enum BoatRoutes {
 
 export const Boat: FunctionComponent = () => {
     return (
-        <Box px="4" h="100%" id="sb-main">
+        <Box px="4" h="100%" id="sb-main" w="100%">
             <BoatCreate />
             <BoatCrew />
             <BoatModulesPicker />

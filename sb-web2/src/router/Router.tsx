@@ -7,6 +7,8 @@ import { Footer } from 'shared/footer/Footer';
 import { PrivateRoutes, Routes as AppRoutes } from 'router/Router.Types';
 
 import { Navbar } from 'shared/navbar/Navbar';
+import Layout from 'shared/layout/Layout';
+import { TopNav } from 'shared/layout/top-nav/TopNav';
 
 /** Public Content */
 const Login = lazy(() => import('modules/auth/login/Login').then((module) => ({ default: module.Login })));
@@ -96,15 +98,19 @@ export const PublicRouter: FunctionComponent = () => {
 export const PrivateRouter: FunctionComponent = () => {
     return (
         <>
-            <Navbar />
-            <Box className="sb-private-router">
-                <Suspense fallback={null}>
-                    <Routes>
-                        <Route path={`${AppRoutes.Private.Boats}/*`} element={<Boat />} />
-                    </Routes>
-                </Suspense>
+            {/* <Navbar /> */}
+            <Layout>
+                <TopNav title="hello" />
+                <Box className="sb-private-router">
+                    <Suspense fallback={null}>
+                        <Routes>
+                            <Route path={`${AppRoutes.Private.Boats}/*`} element={<Boat />} />
+                        </Routes>
+                    </Suspense>
+                </Box>
+            </Layout>
 
-                {/* <Suspense fallback={null}>
+            {/* <Suspense fallback={null}>
                     <Switch>
                         <Route exact path="/">
                             <RouterRedirect to={AppRoutes.Private.Boats} />
@@ -122,8 +128,7 @@ export const PrivateRouter: FunctionComponent = () => {
                             <NotFound />
                         </Route>
                     </Switch> */}
-                {/* </Suspense> */}
-            </Box>
+            {/* </Suspense> */}
         </>
     );
 };

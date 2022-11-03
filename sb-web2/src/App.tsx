@@ -12,6 +12,7 @@ import { MoreMenuMobileDrawer } from 'shared/more-menu/MoreMenuMobileDrawer';
 import { HttpInterceptor } from 'util/http/HttpInterceptor';
 
 import './App.scss';
+import { LayoutStoreProvider } from 'shared/layout/Layout';
 
 export const App: FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -37,10 +38,12 @@ export const App: FC = () => {
                             <>
                                 {isLoggedIn ? (
                                     <SystemProvider>
-                                        <MoreMenuMobileDrawer />
-                                        <BoatProvider>
-                                            <PrivateRouter />
-                                        </BoatProvider>
+                                        <LayoutStoreProvider>
+                                            <MoreMenuMobileDrawer />
+                                            <BoatProvider>
+                                                <PrivateRouter />
+                                            </BoatProvider>
+                                        </LayoutStoreProvider>
                                     </SystemProvider>
                                 ) : (
                                     <PublicRouter />

@@ -29,7 +29,6 @@ export const BoatCard: FC<Props> = ({ boat }) => {
             cursor="pointer"
             onClick={onClick}
             w="100%"
-            // maxW={{ base: '100%', lg: '360px' }}
         >
             <Box height="300px" borderRadius="xl">
                 <BoatBanner id="home" banner={boat.banner} showControls={false} />
