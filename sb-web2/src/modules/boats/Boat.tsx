@@ -33,6 +33,7 @@ export const Boat: FunctionComponent = () => {
         switch (rl) {
             case 2:
                 setViewMode(BoatViewMode.Boat);
+                window.scrollTo(0, 0);
                 break;
             default:
                 setViewMode(BoatViewMode.Home);
@@ -42,7 +43,7 @@ export const Boat: FunctionComponent = () => {
 
     return (
         <SystemLayout>
-            <Box h="100%" id="sb-boats" w="100%" px="4">
+            <Box h="100%" id="sb-boats" w="100%" px="4" mt='4'>
                 <BoatCreate />
                 <BoatCrew />
                 <BoatModulesPicker />

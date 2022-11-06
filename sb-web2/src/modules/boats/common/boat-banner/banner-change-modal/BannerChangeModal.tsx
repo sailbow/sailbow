@@ -38,7 +38,7 @@ export const BannerChangeModal: FunctionComponent<Props> = ({ isOpen, onClose, o
                     <Text>Done</Text>
                 </Button>
             }
-            title="Change Banner"
+            title="Change Cover"
             bodyClass="sb-cover-select-modal"
         >
             <Tabs colorScheme="teal">

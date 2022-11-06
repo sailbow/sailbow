@@ -4,7 +4,7 @@ export const TextareaStyles: ComponentStyleConfig = {
     defaultProps: {
     },
     baseStyle: {
-        py: '2',
+        py: '3',
         px: '8'
     },
 };

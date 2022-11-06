@@ -41,11 +41,16 @@ export const BoatHome: FunctionComponent = () => {
                                     w="100%"
                                 />
                             </Flex> */}
-                            <VStack spacing="8" >
+                            <Box className="container" mt="8">
                                 {boats.map((boat: Boat) => {
                                     return <BoatCard boat={boat} key={boat.id} />;
                                 })}
-                            </VStack>
+                            </Box>
+                            {/* <VStack spacing="8" >
+                                {boats.map((boat: Boat) => {
+                                    return <BoatCard boat={boat} key={boat.id} />;
+                                })}
+                            </VStack> */}
                         </>
                     ) : (
                         <Center>No Boats</Center>

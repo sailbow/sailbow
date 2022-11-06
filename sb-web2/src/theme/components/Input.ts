@@ -3,7 +3,8 @@ import { ComponentStyleConfig } from '@chakra-ui/react';
 export const InputStyles: ComponentStyleConfig = {
     baseStyle: {
         _focus: {
-            boxShadow: 'none'
+            boxShadow: 'none',
+            borderColor: 'red.500'
         }
     },
     variants: {
@@ -13,7 +14,11 @@ export const InputStyles: ComponentStyleConfig = {
                     ...props.theme.components.Input.variants.outline(props).field,
                     px: '4',
                     py: '6',
-                    borderWidth: '2px'
+                    borderWidth: '2px',
+                    _focus: {
+                        boxShadow: 'none',
+                        borderColor: 'brand.100'
+                    }
                 },
             };
         },

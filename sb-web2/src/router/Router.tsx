@@ -97,7 +97,7 @@ export const PrivateRouter: FunctionComponent = () => {
     return (
         <>
             <Navbar />
-            <Box className="sb-private-router" pt="80px">
+            <Box className="sb-private-router" pt="66px">
                 <Suspense fallback={null}>
                     <Routes>
                         <Route path={`${AppRoutes.Private.Boats}/*`} element={<Boat />} />

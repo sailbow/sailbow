@@ -28,7 +28,7 @@ export const InfoManifest: FC<Props> = ({ data }) => {
             className="sb-info-manifest"
         >
             <Box w="100%" py="1">
-                <Box h="200px">
+                <Box h="250px">
                     <BoatBanner id="details" banner={data.banner} showControls={false} />
                 </Box>
                 <Box pt="3">

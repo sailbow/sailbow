@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Flex, IconButton, Text } from '@chakra-ui/react';
+import { Button, Flex, IconButton, Text } from '@chakra-ui/react';
 import { useLocation, matchRoutes } from 'react-router-dom';
 
 import { useBoat } from 'modules/boats/Boat.Store';
@@ -58,17 +58,14 @@ export const NavbarMobileTop: FC<NavbarProps> = ({ onRoute }) => {
     }, [location]);
 
     return (
-        <Flex className="sb-navbar desktop" justifyContent="space-between" alignItems="center" px="2" py="2" bg="white">
+        <Flex className="sb-navbar desktop" justifyContent="space-between" alignItems="center" py="2" bg="white">
             {viewMode === ViewMode.Home && (
                 <>
                     <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
-                    <Flex alignItems="center" gap="2">
-                        <IconButton
-                            aria-label="start-boat"
-                            icon={<SbPlusIcon />}
-                            fontSize="xl"
-                            onClick={openCreateNav}
-                        />
+                    <Flex alignItems="center" gap="4">
+                        <Button aria-label="start-boat" size='sm' rightIcon={<SbPlusIcon />} onClick={openCreateNav}>
+                            Start Boat
+                        </Button>
                         {/* <Notifications /> */}
                         <ProfileIcon />
                     </Flex>

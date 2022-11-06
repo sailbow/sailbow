@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from 'react';
 
-import { Box, Image, Button, Heading } from '@chakra-ui/react';
+import { Box, Image, Button } from '@chakra-ui/react';
 
 import { BannerState, BannerType } from 'modules/boats/Boat.Types';
 import { BannerChangeModal } from 'modules/boats/common/boat-banner/banner-change-modal/BannerChangeModal';
@@ -24,8 +24,6 @@ export const BoatBanner: FunctionComponent<Props> = ({ banner, id, showControls,
         }
     };
 
-    console.log(banner);
-
     return (
         <>
             <BannerChangeModal
@@ -34,7 +32,7 @@ export const BoatBanner: FunctionComponent<Props> = ({ banner, id, showControls,
                 onChange={onSubmit}
                 banner={banner}
             />
-            <Box className={`sb-cover sb-cover--${id}`} borderRadius="3xl" zIndex={showControls ? 1 : -1}>
+            <Box className={`sb-cover sb-cover--${id}`} borderRadius="3xl" zIndex={showControls ? 3 : -1}>
                 <Button
                     display={showControls ? 'flex' : 'none'}
                     size="sm"
@@ -46,17 +44,16 @@ export const BoatBanner: FunctionComponent<Props> = ({ banner, id, showControls,
                     onClick={() => setIsBannerSelectOpen(!isBannerSelectOpen)}
                     zIndex="1"
                 >
-                    Change Image
+                    Change Cover
                 </Button>
                 {banner.type === BannerType.Color ? (
                     <Box bg={banner.value} className="sb-cover-image" />
                 ) : (
-                    <Image draggable="false" src={banner.value} className="sb-cover-image" />
+                    <>
+                        <Box className={!showControls ? `bg-overlay` : ''} />
+                        <Image draggable="false" src={banner.value} className="sb-cover-image" />
+                    </>
                 )}
-
-                <Heading position="absolute" left="50%" top="50%" className="header">
-                    {id}
-                </Heading>
             </Box>
         </>
     );
