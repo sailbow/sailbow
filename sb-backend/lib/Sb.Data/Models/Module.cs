@@ -19,6 +19,10 @@ namespace Sb.Data.Models
         public int Order { get; set; }
         public int? FinalizedOptionId { get; set; }
         public ModuleSettings Settings { get; set; }
+    }
+
+    public class ModuleWithData : Module
+    {
         public IEnumerable<ModuleData> Data { get; set; } = Enumerable.Empty<ModuleData>();
     }
 
@@ -30,8 +34,9 @@ namespace Sb.Data.Models
     }
 
     [PersistenceModel("ModuleData")]
-    public class ModuleData : EntityBase
+    public abstract class ModuleData : EntityBase
     {
+        public string ModuleId { get; set; }
         public List<string> Votes { get; set; } = new List<string>();
         public string Author { get; set; }
     }

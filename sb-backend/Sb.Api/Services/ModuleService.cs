@@ -18,11 +18,12 @@ namespace Sb.Api.Services
             _idGenerator = idGenerator;
         }
 
-        public async Task<Module> GetModuleByIdAsync(string id)
+        public async Task<ModuleWithData> GetModuleByIdAsync(string id)
         {
             Guard.Against.NullOrWhiteSpace(id, nameof(id));
-            var module = await _repo.GetByIdAsync<Module>(id);
+            var module = await _repo.GetByIdAsync<ModuleWithData>(id);
             Guard.Against.EntityMissing(module, nameof(id));
+            module.Data = await _repo.GetAsync<ModuleData>(md => md.ModuleId == id);
 
             return module;
         }
@@ -34,20 +35,25 @@ namespace Sb.Api.Services
                 await _repo.UpdateAsync(module);
                 return module;
             }
-            foreach (ModuleData d in module.Data)
-            {
-                if (string.IsNullOrWhiteSpace(d.Id))
-                {
-                    d.Id = _idGenerator.GenerateId();
-                }
-            }
             return await _repo.InsertAsync(module);
         }
 
-        private Dictionary<ModuleType, Type> _moduleTypes = new()
+        public async Task<IEnumerable<ModuleData>> UpsertModuleData(string moduleId, IEnumerable<ModuleData> data)
         {
-            { ModuleType.Date, typeof(DateModuleData) }
-        };
+            Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+            foreach (var item in data) { item.ModuleId = moduleId;  }
+
+            var newData = data.Where(d => string.IsNullOrWhiteSpace(d.Id));
+            var updatedData = data.Where(d => !string.IsNullOrWhiteSpace(d.Id));
+
+            if (newData.Any()) await _repo.InsertManyAsync(newData);
+            if (updatedData.Any())
+            {
+                await Task.WhenAll(updatedData
+                    .Select(d => _repo.UpdateAsync(d)));
+            }
+            return newData.Union(updatedData);
+        }
 
 
         private readonly IRepository _repo;

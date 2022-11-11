@@ -23,29 +23,6 @@ namespace Sb.Data.MongoDB
             }
 
             _config = config;
-
-            ConventionRegistry.Register(
-                name: "camelCase",
-                conventions: new ConventionPack { new CamelCaseElementNameConvention() },
-                filter: t => true);
-
-            ConventionRegistry.Register(
-                name: "stringObjectIds",
-                conventions: new ConventionPack { new StringObjectIdConvention() },
-                filter: t => true);
-
-            if (!BsonClassMap.IsClassMapRegistered(typeof(ModuleData)))
-            {
-                BsonClassMap.RegisterClassMap<ModuleData>(md =>
-                {
-                    md.AutoMap();
-                    md.SetIsRootClass(true);
-                });
-            }
-            if (!BsonClassMap.IsClassMapRegistered(typeof(DateModuleData)))
-            {
-                BsonClassMap.RegisterClassMap<DateModuleData>();
-            }
         }
 
         public async Task<IEnumerable<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
@@ -91,7 +68,7 @@ namespace Sb.Data.MongoDB
         public async Task InsertManyAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
             where TEntity : EntityBase
         {
-            await Connect<TEntity>().InsertManyAsync(entities, cancellationToken: cancellation);
+            await Connect<TEntity>().InsertManyAsync(entities, null, cancellationToken: cancellation);
         }
 
         public Task UpdateAsync<TEntity>(TEntity element, CancellationToken cancellation = default)

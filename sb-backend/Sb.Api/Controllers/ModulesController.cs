@@ -35,7 +35,7 @@ public class ModulesController : ApiControllerBase
     }
 
     [HttpPut]
-    public async Task<Module> UpsertModule([FromRoute]string boatId, [FromBody] Module module)
+    public async Task<Module> UpsertModule([FromRoute]string boatId, [FromBody] ModuleWithData module)
     {
         Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
         module.BoatId = boatId;
@@ -44,7 +44,9 @@ public class ModulesController : ApiControllerBase
         {
             d.Author = d.Author ?? HttpContext.GetUserId();
         }
-        return await _moduleService.UpsertModule(module);
+        module = (await _moduleService.UpsertModule(module)) as ModuleWithData;
+        module.Data = await _moduleService.UpsertModuleData(module.Id, module.Data);
+        return module;
     }
 
     private readonly IModuleService _moduleService;

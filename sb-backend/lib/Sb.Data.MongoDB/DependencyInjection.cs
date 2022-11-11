@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Conventions;
 
 using Sb.Data;
 using Sb.Data.Models;
@@ -15,6 +16,24 @@ namespace Microsoft.Extensions.DependencyInjection
             MongoConfiguration config = new();
             configureAction(config);
             services.AddSingleton(config);
+
+            ConventionRegistry.Register(
+               name: "camelCase",
+               conventions: new ConventionPack { new CamelCaseElementNameConvention() },
+               filter: t => true);
+
+            ConventionRegistry.Register(
+                name: "stringObjectIds",
+                conventions: new ConventionPack { new StringObjectIdConvention() },
+                filter: t => true);
+
+            BsonClassMap.RegisterClassMap<ModuleData>(md =>
+            {
+                md.AutoMap();
+                md.SetIsRootClass(true);
+            });
+            BsonClassMap.RegisterClassMap<DateModuleData>();
+
             services.AddTransient<IRepository, MongoRepository>();
             services.AddTransient<IIdGenerator, ObjectIdGenerator>();
             return services;

@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 using Sb.Data.Models;
 
-public class ModuleJsonConverter : JsonConverter
+public class ModuleWithDataJsonConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
     {
@@ -30,7 +30,7 @@ public class ModuleJsonConverter : JsonConverter
     {
         var jObj = JObject.Load(reader);
         ModuleType moduleType = Enum.Parse<ModuleType>(jObj.Value<string>("type"), true);
-        Module module = new();
+        ModuleWithData module = new();
         module.Data = moduleType switch
         {
             ModuleType.Date => new List<DateModuleData>(),
