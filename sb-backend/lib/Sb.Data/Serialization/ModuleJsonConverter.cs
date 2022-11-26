@@ -37,6 +37,13 @@ public class ModuleWithDataJsonConverter : JsonConverter
             _ => throw new JsonSerializationException($"Module type '{moduleType}' is not supported")
         };
         serializer.Populate(jObj.CreateReader(), module);
+        if (module.Settings.AnonymousVoting)
+        {
+            foreach (ModuleData md in module.Data)
+            {
+                md.Votes = new HashSet<string>();
+            }
+        }
         return module;
     }
 }

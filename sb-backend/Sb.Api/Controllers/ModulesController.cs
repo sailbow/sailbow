@@ -2,12 +2,9 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using Newtonsoft.Json;
-
 using Sb.Api.Services;
 using Sb.Api.Validation;
 using Sb.Data.Models;
-using Sb.Data.Serialization;
 
 namespace Sb.Api.Controllers;
 
@@ -35,7 +32,7 @@ public class ModulesController : ApiControllerBase
     }
 
     [HttpPut]
-    public async Task<Module> UpsertModule([FromRoute]string boatId, [FromBody] ModuleWithData module)
+    public async Task<Module> UpsertModule([FromRoute] string boatId, [FromBody] ModuleWithData module)
     {
         Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
         module.BoatId = boatId;
@@ -48,6 +45,31 @@ public class ModulesController : ApiControllerBase
         module.Data = await _moduleService.UpsertModuleData(module.Id, module.Data);
         return module;
     }
+
+    [HttpPost("{moduleId}/{optionId}/vote")]
+    public async Task<ActionResult> Vote(
+        [FromRoute] string boatId,
+        [FromRoute] string moduleId,
+        [FromRoute] string optionId)
+    {
+        Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+        await _boatService.GetBoatById(boatId);
+        await _moduleService.Vote(HttpContext.GetUserId(), moduleId, optionId);
+        return Ok();
+    }
+
+    [HttpDelete("{moduleId}/{optionId}/vote")]
+    public async Task<ActionResult> UnVote(
+        [FromRoute] string boatId,
+        [FromRoute] string moduleId,
+        [FromRoute] string optionId)
+    {
+        Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+        await _boatService.GetBoatById(boatId);
+        await _moduleService.UnVote(HttpContext.GetUserId(), moduleId, optionId);
+        return Ok();
+    }
+
 
     private readonly IModuleService _moduleService;
     private readonly BoatService _boatService;

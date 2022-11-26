@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Newtonsoft.Json.Linq;
 
 namespace Sb.Data.Models
 {
@@ -17,12 +13,13 @@ namespace Sb.Data.Models
         public string Author { get; set; }
         public string Description { get; set; }
         public int Order { get; set; }
-        public int? FinalizedOptionId { get; set; }
+        public string FinalizedOptionId { get; set; }
         public ModuleSettings Settings { get; set; }
     }
 
     public class ModuleWithData : Module
     {
+        public int NumVotes { get; set; }
         public IEnumerable<ModuleData> Data { get; set; } = Enumerable.Empty<ModuleData>();
     }
 
@@ -37,7 +34,7 @@ namespace Sb.Data.Models
     public abstract class ModuleData : EntityBase
     {
         public string ModuleId { get; set; }
-        public List<string> Votes { get; set; } = new List<string>();
+        public HashSet<string> Votes { get; set; } = new HashSet<string>();
         public string Author { get; set; }
     }
 
