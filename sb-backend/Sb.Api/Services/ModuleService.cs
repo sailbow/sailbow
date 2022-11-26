@@ -55,6 +55,10 @@ namespace Sb.Api.Services
         {
             Guard.Against.NullOrWhiteSpace(userId, nameof(userId));
             Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+
+            await Task.WhenAll(
+                _repo.DeleteAsync<ModuleData>(md => md.ModuleId == moduleId),
+                _repo.DeleteByIdAsync<Module>(moduleId));
         }
 
         public async Task Vote(string userId, string moduleId, string optionId)

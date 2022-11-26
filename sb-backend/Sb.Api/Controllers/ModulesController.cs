@@ -46,6 +46,16 @@ public class ModulesController : ApiControllerBase
         return module;
     }
 
+    [HttpDelete]
+    public async Task<ActionResult> DeleteModule(
+        [FromRoute] string boatId,
+        [FromRoute] string moduleId)
+    {
+        Guard.Against.NullOrWhiteSpace(boatId);
+        await _moduleService.DeleteModule(HttpContext.GetUserId(), moduleId);
+        return Ok();
+    }
+
     [HttpPost("{moduleId}/{optionId}/vote")]
     public async Task<ActionResult> Vote(
         [FromRoute] string boatId,
