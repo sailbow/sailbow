@@ -230,7 +230,7 @@ namespace Sb.Api.Services
             });
 
             await _repo.UpdateAsync(boat);
-            await _repo.DeleteAsync(invite);
+            await _repo.DeleteByIdAsync<Invite>(invite.Id);
         }
 
         public async Task<IEnumerable<Invite>> GetPendingInvites(string boatId)

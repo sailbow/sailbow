@@ -51,6 +51,12 @@ namespace Sb.Api.Services
             return newData.Union(updatedData);
         }
 
+        public async Task DeleteModule(string userId, string moduleId)
+        {
+            Guard.Against.NullOrWhiteSpace(userId, nameof(userId));
+            Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+        }
+
         public async Task Vote(string userId, string moduleId, string optionId)
         {
             Guard.Against.NullOrWhiteSpace(userId, nameof(userId));

@@ -18,6 +18,7 @@ namespace Sb.Data
         Task<TEntity> InsertAsync<TEntity>(TEntity element, CancellationToken cancellation = default) where TEntity : EntityBase;
         Task InsertManyAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellation = default) where TEntity : EntityBase;
         Task UpdateAsync<TEntity>(TEntity element, CancellationToken cancellation = default) where TEntity : EntityBase;
-        Task DeleteAsync<TEntity>(TEntity element, CancellationToken cancellation = default) where TEntity : EntityBase;
+        Task DeleteByIdAsync<TEntity>(string id, CancellationToken cancellation = default) where TEntity : EntityBase;
+        Task DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default) where TEntity : EntityBase;
     }
 }
