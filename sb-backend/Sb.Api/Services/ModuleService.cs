@@ -1,5 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 
+using AutoMapper;
+
 using Sb.Api.Validation;
 using Sb.Data;
 using Sb.Data.Models;
@@ -9,19 +11,23 @@ namespace Sb.Api.Services
     public class ModuleService : IModuleService
     {
         public ModuleService(
-            IRepository repo)
+            IRepository repo,
+            IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         public async Task<ModuleWithData> GetModuleByIdAsync(string moduleId)
         {
             Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
-            var module = await _repo.GetByIdAsync<ModuleWithData>(moduleId);
+            var module = await _repo.GetByIdAsync<Module>(moduleId);
             Guard.Against.EntityMissing(module, nameof(moduleId));
-            module.Data = await _repo.GetAsync<ModuleData>(md => md.ModuleId == moduleId);
 
-            return module;
+            var moduleWithData = _mapper.Map<Module, ModuleWithData>(module);
+            moduleWithData.Data = await _repo.GetAsync<ModuleData>(md => md.ModuleId == moduleId);
+
+            return moduleWithData;
         }
 
         public async Task<Module> UpsertModule(Module module)
@@ -39,16 +45,22 @@ namespace Sb.Api.Services
             Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
             foreach (var item in data) { item.ModuleId = moduleId; }
 
+            var existingModuleData = await _repo.GetAsync<ModuleData>(md => md.ModuleId == moduleId);
+
             var newData = data.Where(d => string.IsNullOrWhiteSpace(d.Id));
             var updatedData = data.Where(d => !string.IsNullOrWhiteSpace(d.Id));
+            var removedData = existingModuleData.Where(d => !data.Any(d2 => d.Id == d2.Id));
 
-            if (newData.Any()) await _repo.InsertManyAsync(newData);
-            if (updatedData.Any())
+            if (newData.Any())
             {
-                await Task.WhenAll(updatedData
-                    .Select(d => _repo.UpdateAsync(d)));
+                newData = await _repo.InsertManyAsync(newData);
             }
-            return newData.Union(updatedData);
+            await Task.WhenAll(updatedData
+                .Select(d => _repo.UpdateAsync(d))
+                .Concat(removedData
+                    .Select(rd => _repo.DeleteByIdAsync<ModuleData>(rd.Id))));
+
+            return newData.Concat(updatedData);
         }
 
         public async Task DeleteModule(string userId, string moduleId)
@@ -131,10 +143,12 @@ namespace Sb.Api.Services
 
             if (!string.IsNullOrWhiteSpace(module.FinalizedOptionId))
             {
-                await _repo.UpdateAsync(module);
+                Module updateModule = _mapper.Map<ModuleWithData, Module>(module);
+                await _repo.UpdateAsync(updateModule);
             }
         }
 
         private readonly IRepository _repo;
+        private readonly IMapper _mapper;
     }
 }

@@ -48,6 +48,5 @@ namespace Sb.Api.Controllers
 
         private readonly IRepository _repo;
         private readonly BoatService _boatService;
-        private readonly IUserService _userService;
     }
 }

@@ -12,7 +12,7 @@ public class ModuleWithDataJsonConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
     {
-        return typeof(Module).IsAssignableFrom(objectType);
+        return typeof(ModuleWithData).IsAssignableFrom(objectType);
     }
 
     public override bool CanWrite
@@ -29,7 +29,7 @@ public class ModuleWithDataJsonConverter : JsonConverter
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
         var jObj = JObject.Load(reader);
-        ModuleType moduleType = Enum.Parse<ModuleType>(jObj.Value<string>("type"), true);
+        Enum.TryParse(jObj.Value<string>("type"), true, out ModuleType moduleType);
         ModuleWithData module = new();
         module.Data = moduleType switch
         {

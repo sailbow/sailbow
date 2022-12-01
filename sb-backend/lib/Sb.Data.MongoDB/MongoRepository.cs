@@ -62,10 +62,11 @@ namespace Sb.Data.MongoDB
             return element;
         }
 
-        public async Task InsertManyAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
+        public async Task<IEnumerable<TEntity>> InsertManyAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
             where TEntity : EntityBase
         {
             await Connect<TEntity>().InsertManyAsync(entities, null, cancellationToken: cancellation);
+            return entities;
         }
 
         public Task UpdateAsync<TEntity>(TEntity element, CancellationToken cancellation = default)

@@ -1,5 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 
+using AutoMapper;
+
 using Microsoft.AspNetCore.Mvc;
 
 using Sb.Api.Services;
@@ -13,17 +15,19 @@ public class ModulesController : ApiControllerBase
 {
     public ModulesController(
         IModuleService moduleService,
+        IMapper mapper,
         BoatService boatService)
     {
         _moduleService = moduleService;
         _boatService = boatService;
+        _mapper = mapper;
     }
 
     [HttpGet("{moduleId}")]
-    public async Task<Module> GetModuleById([FromRoute] string boatId, [FromRoute] string moduleId)
+    public async Task<ModuleWithData> GetModuleById([FromRoute] string boatId, [FromRoute] string moduleId)
     {
         await _boatService.GetBoatById(boatId);
-        Module m = await _moduleService.GetModuleByIdAsync(moduleId);
+        ModuleWithData m = await _moduleService.GetModuleByIdAsync(moduleId);
         if (m.BoatId != boatId)
         {
             throw new MissingEntityException($"Module '{moduleId}' not found for boat '{boatId}'");
@@ -32,7 +36,7 @@ public class ModulesController : ApiControllerBase
     }
 
     [HttpPut]
-    public async Task<Module> UpsertModule([FromRoute] string boatId, [FromBody] ModuleWithData module)
+    public async Task<ModuleWithData> UpsertModule([FromRoute] string boatId, [FromBody] ModuleWithData module)
     {
         Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
         module.BoatId = boatId;
@@ -41,8 +45,9 @@ public class ModulesController : ApiControllerBase
         {
             d.Author = d.Author ?? HttpContext.GetUserId();
         }
-        module = (await _moduleService.UpsertModule(module)) as ModuleWithData;
-        module.Data = await _moduleService.UpsertModuleData(module.Id, module.Data);
+        Module m = _mapper.Map<ModuleWithData, Module>(module);
+        await _moduleService.UpsertModule(m);
+        module.Data = await _moduleService.UpsertModuleData(m.Id, module.Data);
         return module;
     }
 
@@ -83,4 +88,5 @@ public class ModulesController : ApiControllerBase
 
     private readonly IModuleService _moduleService;
     private readonly BoatService _boatService;
+    private readonly IMapper _mapper;
 }

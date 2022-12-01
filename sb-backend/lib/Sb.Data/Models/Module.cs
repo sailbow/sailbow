@@ -17,12 +17,6 @@ namespace Sb.Data.Models
         public ModuleSettings Settings { get; set; }
     }
 
-    public class ModuleWithData : Module
-    {
-        public int NumVotes { get; set; }
-        public IEnumerable<ModuleData> Data { get; set; } = Enumerable.Empty<ModuleData>();
-    }
-
     public class ModuleSettings
     {
         public bool AllowMultiple { get; set; }
