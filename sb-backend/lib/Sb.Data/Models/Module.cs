@@ -28,6 +28,7 @@ namespace Sb.Data.Models
     public abstract class ModuleData : EntityBase
     {
         public string ModuleId { get; set; }
+        public int NumVotes { get; set; }
         public HashSet<string> Votes { get; set; } = new HashSet<string>();
         public string Author { get; set; }
     }
@@ -37,8 +38,15 @@ namespace Sb.Data.Models
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
     }
+
+    public class LocationModuleData : ModuleData
+    {
+
+    }
+
     public enum ModuleType
     {
-        Date
+        Date,
+        Location
     }
 }

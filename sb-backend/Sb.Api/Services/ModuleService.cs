@@ -26,7 +26,10 @@ namespace Sb.Api.Services
 
             var moduleWithData = _mapper.Map<Module, ModuleWithData>(module);
             moduleWithData.Data = await _repo.GetAsync<ModuleData>(md => md.ModuleId == moduleId);
-
+            foreach (ModuleData d in moduleWithData.Data)
+            {
+                d.NumVotes = d.Votes.Count;
+            }
             return moduleWithData;
         }
 

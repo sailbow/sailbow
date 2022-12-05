@@ -30,9 +30,11 @@ namespace Microsoft.Extensions.DependencyInjection
             BsonClassMap.RegisterClassMap<ModuleData>(md =>
             {
                 md.AutoMap();
+                md.UnmapField(md => md.NumVotes);
                 md.SetIsRootClass(true);
             });
             BsonClassMap.RegisterClassMap<DateModuleData>();
+            BsonClassMap.RegisterClassMap<LocationModuleData>();
 
             services.AddTransient<IRepository, MongoRepository>();
             services.AddTransient<IIdGenerator, ObjectIdGenerator>();

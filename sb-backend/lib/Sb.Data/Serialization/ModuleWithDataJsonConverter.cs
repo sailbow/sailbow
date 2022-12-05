@@ -34,6 +34,7 @@ public class ModuleWithDataJsonConverter : JsonConverter
         module.Data = moduleType switch
         {
             ModuleType.Date => new List<DateModuleData>(),
+            ModuleType.Location => new List<LocationModuleData>(),
             _ => throw new JsonSerializationException($"Module type '{moduleType}' is not supported")
         };
         serializer.Populate(jObj.CreateReader(), module);

@@ -14,6 +14,5 @@ public class ModuleWithData
     public int Order { get; set; }
     public string FinalizedOptionId { get; set; }
     public ModuleSettings Settings { get; set; }
-    public int NumVotes => Data.Count();
     public IEnumerable<ModuleData> Data { get; set; } = Enumerable.Empty<ModuleData>();
 }

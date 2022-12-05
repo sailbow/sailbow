@@ -32,6 +32,13 @@ public class ModulesController : ApiControllerBase
         {
             throw new MissingEntityException($"Module '{moduleId}' not found for boat '{boatId}'");
         }
+        if (m.Settings.AnonymousVoting)
+        {
+            foreach (ModuleData md in m.Data)
+            {
+                md.Votes = new HashSet<string>();
+            }
+        }
         return m;
     }
 
