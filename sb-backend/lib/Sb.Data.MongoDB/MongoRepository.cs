@@ -1,9 +1,6 @@
 ﻿
 using System.Linq.Expressions;
-using System.Reflection;
 
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -23,29 +20,6 @@ namespace Sb.Data.MongoDB
             }
 
             _config = config;
-
-            ConventionRegistry.Register(
-                name: "camelCase",
-                conventions: new ConventionPack { new CamelCaseElementNameConvention() },
-                filter: t => true);
-
-            ConventionRegistry.Register(
-                name: "stringObjectIds",
-                conventions: new ConventionPack { new StringObjectIdConvention() },
-                filter: t => true);
-
-            if (!BsonClassMap.IsClassMapRegistered(typeof(ModuleData)))
-            {
-                BsonClassMap.RegisterClassMap<ModuleData>(md =>
-                {
-                    md.AutoMap();
-                    md.SetIsRootClass(true);
-                });
-            }
-            if (!BsonClassMap.IsClassMapRegistered(typeof(DateModuleData)))
-            {
-                BsonClassMap.RegisterClassMap<DateModuleData>();
-            }
         }
 
         public async Task<IEnumerable<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
@@ -88,10 +62,11 @@ namespace Sb.Data.MongoDB
             return element;
         }
 
-        public async Task InsertManyAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
+        public async Task<IEnumerable<TEntity>> InsertManyAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellation = default)
             where TEntity : EntityBase
         {
-            await Connect<TEntity>().InsertManyAsync(entities, cancellationToken: cancellation);
+            await Connect<TEntity>().InsertManyAsync(entities, null, cancellationToken: cancellation);
+            return entities;
         }
 
         public Task UpdateAsync<TEntity>(TEntity element, CancellationToken cancellation = default)
@@ -101,10 +76,16 @@ namespace Sb.Data.MongoDB
                 .ReplaceOneAsync(e => e.Id == element.Id, element, cancellationToken: cancellation);
         }
 
-        public Task DeleteAsync<TEntity>(TEntity element, CancellationToken cancellation = default)
+        public Task DeleteByIdAsync<TEntity>(string id, CancellationToken cancellation = default)
             where TEntity : EntityBase
         {
-            return Connect<TEntity>().DeleteOneAsync(e => e.Id == element.Id, cancellation);
+            return Connect<TEntity>().DeleteOneAsync(e => e.Id == id, cancellation);
+        }
+
+        public Task DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default) where TEntity : EntityBase
+        {
+            return Connect<TEntity>()
+                .DeleteManyAsync(predicate, cancellationToken);
         }
 
         private IMongoCollection<TEntity> Connect<TEntity>()

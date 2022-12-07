@@ -1,8 +1,8 @@
 ﻿using Ardalis.GuardClauses;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using AutoMapper;
 
+using Sb.Api.Validation;
 using Sb.Data;
 using Sb.Data.Models;
 
@@ -12,19 +12,25 @@ namespace Sb.Api.Services
     {
         public ModuleService(
             IRepository repo,
-            IIdGenerator idGenerator)
+            IMapper mapper)
         {
             _repo = repo;
-            _idGenerator = idGenerator;
+            _mapper = mapper;
         }
 
-        public async Task<Module> GetModuleByIdAsync(string id)
+        public async Task<ModuleWithData> GetModuleByIdAsync(string moduleId)
         {
-            Guard.Against.NullOrWhiteSpace(id, nameof(id));
-            var module = await _repo.GetByIdAsync<Module>(id);
-            Guard.Against.EntityMissing(module, nameof(id));
+            Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+            var module = await _repo.GetByIdAsync<Module>(moduleId);
+            Guard.Against.EntityMissing(module, nameof(moduleId));
 
-            return module;
+            var moduleWithData = _mapper.Map<Module, ModuleWithData>(module);
+            moduleWithData.Data = await _repo.GetAsync<ModuleData>(md => md.ModuleId == moduleId);
+            foreach (ModuleData d in moduleWithData.Data)
+            {
+                d.NumVotes = d.Votes.Count;
+            }
+            return moduleWithData;
         }
 
         public async Task<Module> UpsertModule(Module module)
@@ -34,23 +40,118 @@ namespace Sb.Api.Services
                 await _repo.UpdateAsync(module);
                 return module;
             }
-            foreach (ModuleData d in module.Data)
-            {
-                if (string.IsNullOrWhiteSpace(d.Id))
-                {
-                    d.Id = _idGenerator.GenerateId();
-                }
-            }
             return await _repo.InsertAsync(module);
         }
 
-        private Dictionary<ModuleType, Type> _moduleTypes = new()
+        public async Task<IEnumerable<ModuleData>> UpsertModuleData(string moduleId, IEnumerable<ModuleData> data)
         {
-            { ModuleType.Date, typeof(DateModuleData) }
-        };
+            Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+            foreach (var item in data) { item.ModuleId = moduleId; }
 
+            var existingModuleData = await _repo.GetAsync<ModuleData>(md => md.ModuleId == moduleId);
+
+            var newData = data.Where(d => string.IsNullOrWhiteSpace(d.Id));
+            var updatedData = data.Where(d => !string.IsNullOrWhiteSpace(d.Id));
+            var removedData = existingModuleData.Where(d => !data.Any(d2 => d.Id == d2.Id));
+
+            if (newData.Any())
+            {
+                newData = await _repo.InsertManyAsync(newData);
+            }
+            await Task.WhenAll(updatedData
+                .Select(d => _repo.UpdateAsync(d))
+                .Concat(removedData
+                    .Select(rd => _repo.DeleteByIdAsync<ModuleData>(rd.Id))));
+
+            return newData.Concat(updatedData);
+        }
+
+        public async Task DeleteModule(string userId, string moduleId)
+        {
+            Guard.Against.NullOrWhiteSpace(userId, nameof(userId));
+            Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+
+            await Task.WhenAll(
+                _repo.DeleteAsync<ModuleData>(md => md.ModuleId == moduleId),
+                _repo.DeleteByIdAsync<Module>(moduleId));
+        }
+
+        public async Task Vote(string userId, string moduleId, string optionId)
+        {
+            Guard.Against.NullOrWhiteSpace(userId, nameof(userId));
+            Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+            Guard.Against.NullOrWhiteSpace(optionId, nameof(optionId));
+
+            ModuleWithData module = await GetModuleByIdAsync(moduleId);
+
+            if (!string.IsNullOrWhiteSpace(module.FinalizedOptionId))
+            {
+                throw new ValidationException("Cannot vote for a finalized module");
+            }
+
+            ModuleData option = module.Data.FirstOrDefault(options => options.Id == optionId);
+            Guard.Against.EntityMissing(option, $"Option with id '{optionId}' does not exist");
+
+            if (option.Votes.Add(userId))
+            {
+                if (!module.Settings.AllowMultiple)
+                {
+                    ModuleData previousVoteOption = module.Data
+                        .Where(o => o.Id != optionId)
+                        .FirstOrDefault(o => o.Votes.Contains(userId));
+                    if (previousVoteOption != null)
+                    {
+                        previousVoteOption.Votes.Remove(userId);
+                        await _repo.UpdateAsync(previousVoteOption);
+                    }
+                }
+                await _repo.UpdateAsync(option);
+            }
+        }
+
+        public async Task UnVote(string userId, string moduleId, string optionId)
+        {
+            Guard.Against.NullOrWhiteSpace(userId, nameof(userId));
+            Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+            Guard.Against.NullOrWhiteSpace(optionId, nameof(optionId));
+
+            ModuleWithData module = await GetModuleByIdAsync(moduleId);
+
+            if (!string.IsNullOrWhiteSpace(module.FinalizedOptionId))
+            {
+                throw new ValidationException("Cannot vote for a finalized module");
+            }
+
+            ModuleData votedOption = module.Data
+                .FirstOrDefault(o => o.Votes.Contains(userId));
+
+            if (votedOption != null)
+            {
+                votedOption.Votes.Remove(userId);
+                await _repo.UpdateAsync(votedOption);
+            }
+        }
+
+        public async Task FinalizeVotes(string userId, string moduleId)
+        {
+            Guard.Against.NullOrWhiteSpace(userId, nameof(userId));
+            Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+
+            ModuleWithData module = await GetModuleByIdAsync(moduleId);
+
+            module.FinalizedOptionId = module.Data
+                .OrderByDescending(o => o.Votes.Count())
+                .FirstOrDefault()?
+                .Id;
+
+            if (!string.IsNullOrWhiteSpace(module.FinalizedOptionId))
+            {
+                Module updateModule = _mapper.Map<ModuleWithData, Module>(module);
+                await _repo.UpdateAsync(updateModule);
+            }
+        }
 
         private readonly IRepository _repo;
-        private readonly IIdGenerator _idGenerator;
+        private readonly IMapper _mapper;
     }
 }

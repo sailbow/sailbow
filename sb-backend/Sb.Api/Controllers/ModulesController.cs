@@ -1,13 +1,12 @@
 ﻿using Ardalis.GuardClauses;
 
-using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 using Sb.Api.Services;
 using Sb.Api.Validation;
 using Sb.Data.Models;
-using Sb.Data.Serialization;
 
 namespace Sb.Api.Controllers;
 
@@ -16,26 +15,35 @@ public class ModulesController : ApiControllerBase
 {
     public ModulesController(
         IModuleService moduleService,
+        IMapper mapper,
         BoatService boatService)
     {
         _moduleService = moduleService;
         _boatService = boatService;
+        _mapper = mapper;
     }
 
     [HttpGet("{moduleId}")]
-    public async Task<Module> GetModuleById([FromRoute] string boatId, [FromRoute] string moduleId)
+    public async Task<ModuleWithData> GetModuleById([FromRoute] string boatId, [FromRoute] string moduleId)
     {
         await _boatService.GetBoatById(boatId);
-        Module m = await _moduleService.GetModuleByIdAsync(moduleId);
+        ModuleWithData m = await _moduleService.GetModuleByIdAsync(moduleId);
         if (m.BoatId != boatId)
         {
             throw new MissingEntityException($"Module '{moduleId}' not found for boat '{boatId}'");
+        }
+        if (m.Settings.AnonymousVoting)
+        {
+            foreach (ModuleData md in m.Data)
+            {
+                md.Votes = new HashSet<string>();
+            }
         }
         return m;
     }
 
     [HttpPut]
-    public async Task<Module> UpsertModule([FromRoute]string boatId, [FromBody] Module module)
+    public async Task<ModuleWithData> UpsertModule([FromRoute] string boatId, [FromBody] ModuleWithData module)
     {
         Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
         module.BoatId = boatId;
@@ -44,9 +52,48 @@ public class ModulesController : ApiControllerBase
         {
             d.Author = d.Author ?? HttpContext.GetUserId();
         }
-        return await _moduleService.UpsertModule(module);
+        Module m = _mapper.Map<ModuleWithData, Module>(module);
+        await _moduleService.UpsertModule(m);
+        module.Data = await _moduleService.UpsertModuleData(m.Id, module.Data);
+        return module;
     }
+
+    [HttpDelete]
+    public async Task<ActionResult> DeleteModule(
+        [FromRoute] string boatId,
+        [FromRoute] string moduleId)
+    {
+        Guard.Against.NullOrWhiteSpace(boatId);
+        await _moduleService.DeleteModule(HttpContext.GetUserId(), moduleId);
+        return Ok();
+    }
+
+    [HttpPost("{moduleId}/{optionId}/vote")]
+    public async Task<ActionResult> Vote(
+        [FromRoute] string boatId,
+        [FromRoute] string moduleId,
+        [FromRoute] string optionId)
+    {
+        Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+        await _boatService.GetBoatById(boatId);
+        await _moduleService.Vote(HttpContext.GetUserId(), moduleId, optionId);
+        return Ok();
+    }
+
+    [HttpDelete("{moduleId}/{optionId}/vote")]
+    public async Task<ActionResult> UnVote(
+        [FromRoute] string boatId,
+        [FromRoute] string moduleId,
+        [FromRoute] string optionId)
+    {
+        Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
+        await _boatService.GetBoatById(boatId);
+        await _moduleService.UnVote(HttpContext.GetUserId(), moduleId, optionId);
+        return Ok();
+    }
+
 
     private readonly IModuleService _moduleService;
     private readonly BoatService _boatService;
+    private readonly IMapper _mapper;
 }

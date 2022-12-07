@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Newtonsoft.Json.Linq;
 
 namespace Sb.Data.Models
 {
@@ -17,9 +13,8 @@ namespace Sb.Data.Models
         public string Author { get; set; }
         public string Description { get; set; }
         public int Order { get; set; }
-        public int? FinalizedOptionId { get; set; }
+        public string FinalizedOptionId { get; set; }
         public ModuleSettings Settings { get; set; }
-        public IEnumerable<ModuleData> Data { get; set; } = Enumerable.Empty<ModuleData>();
     }
 
     public class ModuleSettings
@@ -30,9 +25,11 @@ namespace Sb.Data.Models
     }
 
     [PersistenceModel("ModuleData")]
-    public class ModuleData : EntityBase
+    public abstract class ModuleData : EntityBase
     {
-        public List<string> Votes { get; set; } = new List<string>();
+        public string ModuleId { get; set; }
+        public int NumVotes { get; set; }
+        public HashSet<string> Votes { get; set; } = new HashSet<string>();
         public string Author { get; set; }
     }
 
@@ -41,8 +38,15 @@ namespace Sb.Data.Models
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
     }
+
+    public class LocationModuleData : ModuleData
+    {
+
+    }
+
     public enum ModuleType
     {
-        Date
+        Date,
+        Location
     }
 }

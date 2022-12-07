@@ -10,7 +10,7 @@ namespace Sb.Api
         public MappingProfile()
         {
             CreateMap<Boat, BoatDto>();
-            CreateMap<Module, LightWeightModule>();
+            CreateMap<Module, ModuleWithData>().ReverseMap();
         }
     }
 }

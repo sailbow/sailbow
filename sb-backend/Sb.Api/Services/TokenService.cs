@@ -59,20 +59,12 @@ namespace Sb.Api.Services
 
         public async Task RevokeToken(string userId, string token, TokenType tokenType)
         {
-            TokenBase result = await GetToken(userId, token, tokenType);
-            if (result != null)
-            {
-                await _repo.DeleteAsync(result);
-            }
+            await _repo.DeleteAsync<TokenBase>(t => t.UserId == userId && t.Value == token);
         }
 
         public async Task RevokeAllTokens(string userId)
         {
-            IEnumerable<TokenBase> tokens = await _repo.GetAsync<TokenBase>(t => t.UserId == userId);
-            foreach (var token in tokens)
-            {
-                await _repo.DeleteAsync(token);
-            }
+            await _repo.DeleteAsync<TokenBase>(t => t.UserId == userId);
         }
 
         private async Task<TokenBase> GetToken(string userId, string token, TokenType tokenType)

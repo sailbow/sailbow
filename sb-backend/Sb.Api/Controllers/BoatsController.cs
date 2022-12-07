@@ -62,8 +62,8 @@ namespace Sb.Api.Controllers
 
         [HttpGet]
         public Task<IEnumerable<Boat>> GetBoats(
-            [FromQuery]int? page,
-            [FromQuery]int? perPage,
+            [FromQuery] int? page,
+            [FromQuery] int? perPage,
             [FromQuery] string search = "")
         {
             return _boatService.GetBoats(
