@@ -53,9 +53,10 @@ public class ModulesController : ApiControllerBase
             d.Author = d.Author ?? HttpContext.GetUserId();
         }
         Module m = _mapper.Map<ModuleWithData, Module>(module);
-        await _moduleService.UpsertModule(m);
-        module.Data = await _moduleService.UpsertModuleData(m.Id, module.Data);
-        return module;
+        m = await _moduleService.UpsertModule(m);
+        ModuleWithData returnModule = _mapper.Map<Module, ModuleWithData>(m);
+        returnModule.Data = await _moduleService.UpsertModuleData(m.Id, module.Data);
+        return returnModule;
     }
 
     [HttpDelete]
