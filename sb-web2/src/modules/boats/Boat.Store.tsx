@@ -13,8 +13,7 @@ import {
     ModuleExtended,
     ModuleType,
 } from 'modules/boats/Boat.Types';
-import { useAuthStore } from 'modules/auth/Auth.Store';
-import { getModule, upsertModule } from './boat-modules/modules/Modules.Service';
+import { getModule, upsertModule } from 'modules/boats/boat-modules/modules/Modules.Service';
 
 export enum BoatActionType {
     SetError,
@@ -224,7 +223,6 @@ interface BoatActionApis {
 export const useBoat = (): [BoatState, BoatActionApis] => {
     const dispatch = useBoatDispatch();
     const state = useBoatState();
-    const [{ user }] = useAuthStore();
 
     const actionApis: BoatActionApis = {
         createBoat: async (boat: CreateBoat) => {

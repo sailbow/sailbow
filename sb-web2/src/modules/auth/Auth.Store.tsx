@@ -152,6 +152,7 @@ export const useAuthStore = (): [AuthStoreState, AuthStoreActionApis] => {
                 setHeadersToLocalStorage(atValue, rtValue);
                 return true;
             } catch (error: any) {
+                console.log(error);
                 showErrorToast(error.response.data.message);
                 return false;
             }

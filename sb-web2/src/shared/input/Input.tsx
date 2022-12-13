@@ -10,8 +10,6 @@ import {
     Spinner,
     Box,
     Text,
-    IconButton,
-    Flex,
 } from '@chakra-ui/react';
 
 import { Label } from './Label';

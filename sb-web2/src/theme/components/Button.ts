@@ -1,21 +1,6 @@
 import { ComponentStyleConfig, theme as ChakraTheme } from '@chakra-ui/react';
-import { BrandColors } from 'theme/colors/Colors';
 
-const OUTLINE_STYLES = {
-    color: 'brand.dark',
-    borderColor: 'brand.dark',
-    borderWidth: '2px',
-    _hover: {
-        color: 'white',
-        borderColor: 'brand.dark',
-        backgroundColor: 'brand.dark',
-    },
-    _active: {
-        color: 'white',
-        borderColor: 'brand.dark',
-        backgroundColor: 'gray.700',
-    },
-};
+import { BrandColors } from 'theme/colors/Colors';
 
 export const ButtonStyles: ComponentStyleConfig = {
     defaultProps: {

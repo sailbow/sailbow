@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect } from 'react';
 
-import { Box, Center, Container, Flex, IconButton, VStack } from '@chakra-ui/react';
+import { Box, Center, Flex, IconButton } from '@chakra-ui/react';
 
 import { Boat } from 'modules/boats/Boat.Types';
 import { useBoat } from 'modules/boats/Boat.Store';

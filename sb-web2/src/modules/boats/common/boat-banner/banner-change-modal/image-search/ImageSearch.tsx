@@ -1,11 +1,11 @@
-import React, { ChangeEvent, FunctionComponent, useState, useCallback } from 'react';
+import { ChangeEvent, FunctionComponent, useState, useCallback } from 'react';
 
 import { Box, Input, InputGroup, Image, Flex, Spinner, Text, InputLeftAddon, InputLeftElement } from '@chakra-ui/react';
 import Gallery, { RenderImageProps } from 'react-photo-gallery';
 
 import { useBoat } from 'modules/boats/Boat.Store';
 import { BannerType, Photo } from 'modules/boats/Boat.Types';
-import { SbCheckIcon, SbSearchIcon } from 'shared/icons/Icons';
+import { SbCheckIcon } from 'shared/icons/Icons';
 import { useDebounce } from 'util/hooks/Input';
 
 import './ImageSearch.scss';
@@ -86,10 +86,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
     return (
         <Box className="sb-image-search">
             <InputGroup variant="brand">
-                <InputLeftElement color="gray.400">
-                    <SbSearchIcon />
-                </InputLeftElement>
-                <Input paddingLeft="36px" placeholder="Search images..." onChange={onSearch} />
+                <Input placeholder="Search images..." onChange={onSearch} />
             </InputGroup>
             <Text fontSize="xx-small" textAlign="right" pt="1">
                 Powered by Unsplash

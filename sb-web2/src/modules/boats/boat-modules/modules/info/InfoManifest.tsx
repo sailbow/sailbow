@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const InfoManifest: FC<Props> = ({ data }) => {
-    const [{}, { openEditNav }] = useSystem();
+    const [, { openEditNav }] = useSystem();
 
     return (
         <BoatManifest

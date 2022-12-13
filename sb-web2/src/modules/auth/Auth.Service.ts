@@ -9,8 +9,8 @@ export enum Provider {
 }
 
 export const ProviderToUriMapper: Record<string, string> = {
-    [Provider.Google]: process.env.REACT_APP_GOOGLE_REDIRECT_URI!,
-    [Provider.Facebook]: process.env.REACT_APP_FACEBOOK_REDIRECT_URI!,
+    [Provider.Google]: `${process.env.REACT_APP_GOOGLE_REDIRECT_URI!}`,
+    [Provider.Facebook]: `${process.env.REACT_APP_GOOGLE_REDIRECT_URI!}`,
 };
 
 export interface RedirectResponse {
@@ -43,6 +43,7 @@ export const AuthEndpoints: Record<AuthEndpointsLabels, EndpointFunction> = {
 };
 
 export const providerLogin = async (provider: Provider, state: string): Promise<string> => {
+    console.log(encodeURI(ProviderToUriMapper[provider]));
     const { data }: AxiosResponse<string> = await Http({
         ...AuthEndpoints.ProviderLogin(),
         params: {
