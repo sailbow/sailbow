@@ -8,6 +8,7 @@ export enum SystemActionType {
     SetCrewNav,
     SetCrewInviteModal,
     SetMoreMenuDrawer,
+    SetCurrentRoute,
 }
 
 interface PayloadSetPickerNav {
@@ -32,6 +33,10 @@ interface PayloadSetMoreMenuDrawer {
     options?: ReactNode;
 }
 
+interface PayloadSetCurrentRoute {
+    route: string;
+}
+
 interface SystemAction {
     type: SystemActionType;
     payload?:
@@ -39,7 +44,8 @@ interface SystemAction {
         | PayloadSetCreateNav
         | PayloadSetCrewNav
         | PayloadSetCrewInviteModal
-        | PayloadSetMoreMenuDrawer;
+        | PayloadSetMoreMenuDrawer
+        | PayloadSetCurrentRoute;
 }
 
 interface SystemProviderProps {
@@ -53,6 +59,7 @@ export const initialSystemState: SystemState = {
     crewNavOpen: false,
     crewInviteModalOpen: false,
     moreMenuDrawerOpen: false,
+    currentRoute: '',
 };
 
 const SystemStateContext = createContext<SystemState | undefined>(undefined);
@@ -98,6 +105,13 @@ const systemReducer = (state: SystemState, action: SystemAction): SystemState =>
                 ...state,
                 moreMenuDrawerOpen: open,
                 moreMenuOptions: options,
+            };
+        }
+
+        case SystemActionType.SetCurrentRoute: {
+            return {
+                ...state,
+                currentRoute: (action.payload as PayloadSetCurrentRoute).route,
             };
         }
 
@@ -150,6 +164,7 @@ interface SystemActionApis {
     closeCrewInviteModal: () => void;
     openMoreMenuDrawer: (options?: ReactNode) => void;
     closeMoreMenuDrawer: () => void;
+    setCurrentRoute: (route: string) => void;
 }
 
 export const useSystem = (): [SystemState, SystemActionApis] => {
@@ -231,6 +246,14 @@ export const useSystem = (): [SystemState, SystemActionApis] => {
                 payload: {
                     open: false,
                     options: undefined,
+                },
+            });
+        },
+        setCurrentRoute: (route: string) => {
+            dispatch({
+                type: SystemActionType.SetCurrentRoute,
+                payload: {
+                    route,
                 },
             });
         },

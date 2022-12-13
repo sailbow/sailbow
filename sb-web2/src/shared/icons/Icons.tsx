@@ -22,13 +22,13 @@ export {
     IoMailOutline as SbMailIcon,
     IoBugOutline as SbBugIcon,
     IoInformationCircleOutline as SbInfoIcon,
+    IoFilter as SbFilterIcon,
 } from 'react-icons/io5';
 export {
     HiArrowRight as SbRightArrowIcon,
     HiArrowUp as SbArrowUpIcon,
     HiArrowDown as SbArrowDownIcon,
     HiArrowLeft as SbArrowLeftIcon,
-    HiOutlineFilter as SbFilterIcon,
     HiOutlineSearch as SbSearchIcon,
     HiPlus as SbPlusIcon,
     HiOutlineCalendar as SbCalendarIcon,
@@ -41,7 +41,7 @@ export {
     HiChevronUp as SbChevronUpIcon,
     HiOutlineLink as SbLinkIcon,
     HiOutlineLightBulb as SbBulbIcon,
-    HiOutlineHome as SbHomeIcon
+    HiOutlineHome as SbHomeIcon,
 } from 'react-icons/hi';
 export { CgMenuRight as SbMenuIcon } from 'react-icons/cg';
 export { FcGoogle as SbGoogleIcon } from 'react-icons/fc';

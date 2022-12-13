@@ -4,7 +4,6 @@ export const InputStyles: ComponentStyleConfig = {
     baseStyle: {
         _focus: {
             boxShadow: 'none',
-            borderColor: 'red.500'
         }
     },
     variants: {

@@ -18,7 +18,7 @@ export const NavbarDesktop: FC<NavbarProps> = ({ onRoute }) => {
     return (
         <Flex className="sb-navbar desktop" justifyContent="space-between" alignItems="center" py="2" bg="white">
             <HStack alignItems="center" spacing="4">
-                <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats)} />
+                <Logo className="logo" onClick={() => onRoute(Routes.Private.Boats.base)} />
             </HStack>
             <Flex alignItems="center" justifyContent="space-between" gap="4">
                 <Button rightIcon={<SbPlusIcon />} onClick={openCreateNav} display={{ base: 'none', md: 'flex' }}>

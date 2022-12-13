@@ -5,6 +5,10 @@ export const TextareaStyles: ComponentStyleConfig = {
     },
     baseStyle: {
         py: '3',
-        px: '8'
+        px: '8',
+        _focus: {
+            boxShadow: 'none',
+            borderColor: 'red.100',
+        }
     },
 };

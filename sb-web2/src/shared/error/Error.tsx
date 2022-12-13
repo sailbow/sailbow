@@ -88,7 +88,7 @@ export const Error: FunctionComponent = () => {
     }, []);
 
     const onHomeRoute = (): void => {
-        window.location.href = Routes.Private.Boats;
+        window.location.href = Routes.Private.Boats.base;
     };
 
     return (

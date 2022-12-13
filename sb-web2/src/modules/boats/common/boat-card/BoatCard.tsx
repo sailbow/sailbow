@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { BannerType, Boat } from 'modules/boats/Boat.Types';
 import { BoatBanner } from '../boat-banner/BoatBanner';
+import { getFontColor } from 'util/functions/FontColor';
 
 import './BoatCard.scss';
-import { getFontColor } from 'util/functions/FontColor';
 
 interface Props {
     boat: Boat;
@@ -21,7 +21,7 @@ export const BoatCard: FC<Props> = ({ boat }) => {
         (async () => {
             if (boat.banner.type === BannerType.Link) {
                 const color = await getFontColor(boat.banner.value);
-                console.log(boat.name, color);
+
                 setFontColor(color);
             }
         })();

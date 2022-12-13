@@ -8,7 +8,7 @@ import { BoatModuleManifest } from '../boat-modules/BoatModulesManifest';
 
 export const SidebarWidth = '400px';
 
-export default function SystemLayout({ children }: { children: ReactNode }) {
+export default function BoatLayout({ children }: { children: ReactNode }) {
     const [{ activeBoat, viewMode, loading }] = useBoat();
 
     return (

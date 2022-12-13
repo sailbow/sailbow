@@ -1,14 +1,12 @@
 import { FunctionComponent, useEffect } from 'react';
 
-import { Box, Flex, Skeleton, Stack, useBreakpointValue, VStack } from '@chakra-ui/react';
+import { Box, Skeleton, Stack, useBreakpointValue } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 import { useBoat } from 'modules/boats/Boat.Store';
 import { Boat } from 'modules/boats/Boat.Types';
 import { BoatModulesWidget } from 'modules/boats/boat-modules/BoatModulesWidget';
-import { BoatViewToolbar } from 'modules/boats/boat-view/boat-view-toolbar/BoatViewToolbar';
 import { BoatViewTabs } from 'modules/boats/boat-view/boat-view-tabs/BoatViewTabs';
-import { PageSpinner } from 'shared/page-spinner/PageSpinner';
 
 export const BoatView: FunctionComponent = () => {
     const [{ activeBoat: boat, loading, error }, { getBoat, removeActiveBoat }] = useBoat();
@@ -28,7 +26,7 @@ export const BoatView: FunctionComponent = () => {
     }, []); // eslint-disable-line
 
     const BoatRenderer: FunctionComponent<{ data: Boat }> = ({ data }) => (
-        <Box className="sb-boat-view-desktop">
+        <Box className="sb-boat-view-desktop" mt={{ base: 0, md: '68px' }}>
             <Box className="details-widget-box">
                 <BoatModulesWidget boat={data} />
             </Box>

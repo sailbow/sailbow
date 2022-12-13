@@ -97,33 +97,13 @@ export const PrivateRouter: FunctionComponent = () => {
     return (
         <>
             <Navbar />
-            <Box className="sb-private-router" pt="66px">
+            <Box className="sb-private-router" pt={{ base: '44px', md: '66px' }}>
                 <Suspense fallback={null}>
                     <Routes>
-                        <Route path={`${AppRoutes.Private.Boats}/*`} element={<Boat />} />
+                        <Route path={`${AppRoutes.Private.Boats.base}/*`} element={<Boat />} />
                     </Routes>
                 </Suspense>
             </Box>
-
-            {/* <Suspense fallback={null}>
-                    <Switch>
-                        <Route exact path="/">
-                            <RouterRedirect to={AppRoutes.Private.Boats} />
-                        </Route>
-                        <Route path={AppRoutes.Private.Boats}>
-                            <Boat />
-                        </Route>
-                        <Route path={AppRoutes.Private.Invite}>
-                            <Invite />
-                        </Route>
-                        <Route path={AppRoutes.Private.Error}>
-                            <Error />
-                        </Route>
-                        <Route path="*">
-                            <NotFound />
-                        </Route>
-                    </Switch> */}
-            {/* </Suspense> */}
         </>
     );
 };

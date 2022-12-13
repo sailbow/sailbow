@@ -32,7 +32,7 @@ export const Authorize: FunctionComponent = () => {
 
                         window.location.href = parsedState.path;
                     } else {
-                        window.location.href = Routes.Private.Boats;
+                        window.location.href = Routes.Private.Boats.base;
                     }
                 } else {
                     throw new Error('Could not login. Invalid redirect parameters.');

@@ -13,4 +13,5 @@ export interface SystemState {
     crewInviteModalOpen: boolean;
     moreMenuDrawerOpen: boolean;
     moreMenuOptions?: ReactNode;
+    currentRoute: string;
 }
