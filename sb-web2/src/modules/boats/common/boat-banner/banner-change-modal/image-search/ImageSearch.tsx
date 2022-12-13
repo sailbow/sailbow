@@ -1,6 +1,6 @@
 import { ChangeEvent, FunctionComponent, useState, useCallback } from 'react';
 
-import { Box, Input, InputGroup, Image, Flex, Spinner, Text, InputLeftAddon, InputLeftElement } from '@chakra-ui/react';
+import { Box, Input, InputGroup, Image, Flex, Spinner, Text } from '@chakra-ui/react';
 import Gallery, { RenderImageProps } from 'react-photo-gallery';
 
 import { useBoat } from 'modules/boats/Boat.Store';
