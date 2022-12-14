@@ -76,6 +76,12 @@ namespace Sb.Api.Controllers
             return await _boatService.GetBoatById(boatId);
         }
 
+        [HttpPatch("{boatId}/details")]
+        public async Task UpdateDetails(string boatId, [FromBody] UpdateBoatDetailsRequest request)
+        {
+            await _boatService.UpdateBoatDetails(boatId, request);
+        }
+
         [HttpPut("{boatId}/code")]
         public async Task<ActionResult<Code>> GenerateCodeInvite(string boatId, [FromQuery] int? expiresUnix)
         {

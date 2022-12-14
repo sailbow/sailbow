@@ -58,6 +58,15 @@ namespace Sb.Api.Services
             return b;
         }
 
+        public async Task UpdateBoatDetails(string boatId, UpdateBoatDetailsRequest edits)
+        {
+            Boat boat = await GetBoat(boatId);
+            boat.Description = edits.Description ?? boat.Description;
+            boat.Name = string.IsNullOrWhiteSpace(edits.Name) ? boat.Name : edits.Name;
+            boat.Banner = edits.Banner ?? boat.Banner;
+            await _repo.UpdateAsync(boat);
+        }
+
         public async Task<IEnumerable<Boat>> GetAllBoats(string userId)
         {
             return await _repo.GetAsync<Boat>(b => b.Crew.Any(cm => cm.UserId == userId));
