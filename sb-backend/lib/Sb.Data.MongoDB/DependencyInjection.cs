@@ -31,6 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 md.AutoMap();
                 md.UnmapField(md => md.NumVotes);
+                md.UnmapField(md => md.Type);
                 md.SetIsRootClass(true);
             });
             BsonClassMap.RegisterClassMap<DateModuleData>();

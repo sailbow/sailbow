@@ -43,6 +43,21 @@ namespace Sb.Api.Services
             return await _repo.InsertAsync(module);
         }
 
+        public async Task<ModuleData> AddModuleData(ModuleData data)
+        {
+            Guard.Against.NullOrWhiteSpace(data.ModuleId, nameof(data.ModuleId));
+            Module module = await _repo.GetByIdAsync<Module>(data.ModuleId);
+            Guard.Against.EntityMissing(module, $"Module with id {data.ModuleId} does not exist");
+
+            return await _repo.InsertAsync(data);
+        }
+
+        public async Task DeleteModuleData(string moduleDataId)
+        {
+            Guard.Against.NullOrWhiteSpace(moduleDataId, nameof(moduleDataId));
+            await _repo.DeleteByIdAsync<ModuleData>(moduleDataId);
+        }
+
         public async Task<IEnumerable<ModuleData>> UpsertModuleData(string moduleId, IEnumerable<ModuleData> data)
         {
             Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
@@ -96,14 +111,17 @@ namespace Sb.Api.Services
             {
                 if (!module.Settings.AllowMultiple)
                 {
-                    ModuleData previousVoteOption = module.Data
+                    var previousVotedOptions = module.Data
                         .Where(o => o.Id != optionId)
-                        .FirstOrDefault(o => o.Votes.Contains(userId));
-                    if (previousVoteOption != null)
+                        .Where(o => o.Votes.Contains(userId));
+
+                    foreach (var prevOption in previousVotedOptions)
                     {
-                        previousVoteOption.Votes.Remove(userId);
-                        await _repo.UpdateAsync(previousVoteOption);
+                        prevOption.Votes.Remove(userId);
                     }
+                    await Task.WhenAll(previousVotedOptions
+                        .Select(o => _repo.UpdateAsync(o)));
+
                 }
                 await _repo.UpdateAsync(option);
             }
@@ -132,6 +150,27 @@ namespace Sb.Api.Services
             }
         }
 
+        public async Task FinalizeOption(string userId, string moduleId, string optionId)
+        {
+            Guard.Against.NullOrWhiteSpace(userId, nameof(userId));
+            Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+            Guard.Against.NullOrWhiteSpace(optionId, nameof(optionId));
+
+            ModuleWithData module = await GetModuleByIdAsync(moduleId);
+            if (!string.IsNullOrWhiteSpace(module.FinalizedOptionId))
+            {
+                throw new ValidationException("Module option has already been finalized");
+            }
+
+            Guard.Against.EntityMissing(
+                module.Data.FirstOrDefault(md => md.Id == optionId),
+                $"Module option with id {optionId} doesn't exist");
+
+            Module update = _mapper.Map<ModuleWithData, Module>(module);
+            update.FinalizedOptionId = optionId;
+            await _repo.UpdateAsync(update);
+        }
+
         public async Task FinalizeVotes(string userId, string moduleId)
         {
             Guard.Against.NullOrWhiteSpace(userId, nameof(userId));
@@ -149,6 +188,16 @@ namespace Sb.Api.Services
                 Module updateModule = _mapper.Map<ModuleWithData, Module>(module);
                 await _repo.UpdateAsync(updateModule);
             }
+        }
+
+        public async Task UpdateModuleSettings(string moduleId, ModuleSettings settings)
+        {
+            Guard.Against.NullOrWhiteSpace(moduleId, nameof(moduleId));
+            Module m = await _repo.GetByIdAsync<Module>(moduleId);
+            Guard.Against.EntityMissing(m, $"Module with id {moduleId} doesn't exist");
+
+            m.Settings = settings;
+            await _repo.UpdateAsync(m);
         }
 
         private readonly IRepository _repo;

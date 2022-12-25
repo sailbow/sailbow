@@ -28,6 +28,7 @@ namespace Sb.Data.Models
     public abstract class ModuleData : EntityBase
     {
         public string ModuleId { get; set; }
+        public ModuleType Type { get; set; }
         public int NumVotes { get; set; }
         public HashSet<string> Votes { get; set; } = new HashSet<string>();
         public string Author { get; set; }

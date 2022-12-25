@@ -3,7 +3,7 @@
 using AutoMapper;
 
 using Microsoft.AspNetCore.Mvc;
-
+using Sb.Api.Models;
 using Sb.Api.Services;
 using Sb.Api.Validation;
 using Sb.Data.Models;
@@ -40,6 +40,12 @@ public class ModulesController : ApiControllerBase
             }
         }
         return m;
+    }
+
+    [HttpPatch("{moduleId}/settings")]
+    public async Task UpdateModuleSettings(string moduleId, [FromBody] ModuleSettings settings)
+    {
+        await _moduleService.UpdateModuleSettings(moduleId, settings);
     }
 
     [HttpPut]
@@ -91,6 +97,13 @@ public class ModulesController : ApiControllerBase
         await _boatService.GetBoatById(boatId);
         await _moduleService.UnVote(HttpContext.GetUserId(), moduleId, optionId);
         return Ok();
+    }
+
+    [HttpPost("{moduleId}/finalizeOption")]
+    public async Task FinalizeOption(string moduleId, [FromBody] FinalizeOptionRequest finalizeOptionRequest)
+    {
+        await _moduleService
+            .FinalizeOption(HttpContext.GetUserId(), moduleId, finalizeOptionRequest.OptionId);
     }
 
 
