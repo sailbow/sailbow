@@ -1,9 +1,8 @@
 ﻿using System;
 namespace Sb.Api.Models
 {
-	public class FinalizeOptionRequest
-	{
-		public string OptionId { get; set; }
-	}
+    public class FinalizeOptionRequest
+    {
+        public string OptionId { get; set; }
+    }
 }
-
