@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Sb.Data.Models
 {
     [PersistenceModel("Boats")]
+    [Table("Boats")]
     public class Boat : EntityBase
     {
         public string Name { get; set; }
