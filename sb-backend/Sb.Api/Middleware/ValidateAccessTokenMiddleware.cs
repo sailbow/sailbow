@@ -15,13 +15,13 @@ namespace Sb.Api.Middleware
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (!_publicEndpoints.Contains(context.Request.Path.ToString()))
+            if (!_publicEndpoints.Contains(context.Request.Path.ToString().ToLower()))
             {
                 string token = context.GetAccessToken();
-                string userId = context.GetUserId();
+                Guid? userId = context.GetUserId();
                 if (string.IsNullOrWhiteSpace(token)
-                    || string.IsNullOrWhiteSpace(userId)
-                    || !(await _tokenService.IsTokenValid(userId, token, TokenType.Access)))
+                    || !userId.HasValue
+                    || !_tokenService.IsTokenValid(userId.Value, token, TokenType.Access))
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     return;

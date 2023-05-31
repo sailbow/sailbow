@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json.Converters;
 
-using Sb.Api.Authorization;
 using Sb.Api.Configuration;
 using Sb.Api.Middleware;
 using Sb.Api.Services;
+using Sb.Data;
 using Sb.Data.Serialization;
 using Sb.Email;
 using Sb.OAuth2;
@@ -22,6 +23,10 @@ IConfiguration configuration = builder.Configuration;
 services
     .AddOptions()
     .AddHttpContextAccessor()
+    .AddDbContext<SbContext>(opts =>
+    {
+        opts.UseNpgsql(configuration.GetConnectionString("SbPostgres"));
+    })
     .AddSwaggerGen(opts =>
     {
         opts.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
@@ -61,20 +66,8 @@ services
     .AddTransient<ITokenService, TokenService>()
     .AddTransient<ValidateAccessTokenMiddleware>()
     .AddTransient<IUserService, UserService>()
-    .AddTransient<IModuleService, ModuleService>()
+    //.AddTransient<IModuleService, ModuleService>()
     .AddAutoMapper(typeof(Program).Assembly)
-    .AddAuthorization(opts =>
-    {
-        opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>
-            policy.Requirements.Add(new CrewMemberRequirement()));
-        opts.AddPolicy(AuthorizationPolicies.EditBoatPolicy, policy =>
-            policy.Requirements.Add(new CaptainOrAssistantRequirement()));
-        opts.AddPolicy(AuthorizationPolicies.CaptainPolicy, policy =>
-            policy.Requirements.Add(new CaptainRequirement()));
-    })
-    .AddSingleton<IAuthorizationHandler, CrewMemberAuthorizationHandler>()
-    .AddSingleton<IAuthorizationHandler, CaptainAuthorizationHandler>()
-    .AddSingleton<IAuthorizationHandler, CaptainOrAssistantAuthorizationHandler>()
     .AddCors(opts =>
     {
         opts.AddDefaultPolicy(p =>
@@ -127,7 +120,7 @@ services.AddControllers()
         opts.UseCamelCasing(true);
         opts.SerializerSettings.Converters.Add(new StringEnumConverter());
         opts.SerializerSettings.Converters.Add(new ModuleWithDataJsonConverter());
-        opts.SerializerSettings.Converters.Add(new ModuleDataJsonConverter());
+        opts.SerializerSettings.Converters.Add(new ModuleOptionDataJsonConverter());
     });
 
 var app = builder.Build();

@@ -1,8 +1,8 @@
 ﻿namespace Sb.Api.Models
 {
-    public enum IdentityProvider
+    public enum IdentityProviders
     {
-        Google,
-        Facebook
+        Google = 1,
+        Facebook = 2,
     }
 }

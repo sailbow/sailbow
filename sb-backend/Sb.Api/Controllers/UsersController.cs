@@ -18,7 +18,7 @@ namespace Sb.Api.Controllers
 
         [HttpGet("{userId}")]
         public async Task<ActionResult<User>> GetUserById(
-            string userId,
+            Guid userId,
             [FromServices] IUserService userService)
         {
             return Ok(await userService.GetUserById(userId));
@@ -27,9 +27,9 @@ namespace Sb.Api.Controllers
         [HttpGet("mates")]
         public async Task<ActionResult<IEnumerable<CrewMember>>> GetMates()
         {
-            string userId = HttpContext.GetUserId();
+            Guid userId = HttpContext.GetUserId().GetValueOrDefault();
             var boats = await _boatService.GetAllBoats(userId);
-            IEnumerable<string> mateUserIds = boats
+            IEnumerable<Guid> mateUserIds = boats
                 .SelectMany(boat => boat.Crew
                     .Where(cm => cm.UserId != userId))
                 .Select(cm => cm.UserId);

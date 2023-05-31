@@ -24,7 +24,7 @@ public class ModulesController : ApiControllerBase
     }
 
     [HttpGet("{moduleId}")]
-    public async Task<ModuleWithData> GetModuleById([FromRoute] string boatId, [FromRoute] string moduleId)
+    public async Task<ModuleWithData> GetModuleById([FromRoute] Guid boatId, [FromRoute] string moduleId)
     {
         await _boatService.GetBoatById(boatId);
         ModuleWithData m = await _moduleService.GetModuleByIdAsync(moduleId);
@@ -34,9 +34,9 @@ public class ModulesController : ApiControllerBase
         }
         if (m.Settings.AnonymousVoting)
         {
-            foreach (ModuleData md in m.Data)
+            foreach (ModuleOption md in m.Options)
             {
-                md.Votes = new HashSet<string>();
+                md.Votes = new List<ModuleVote>();
             }
         }
         return m;
@@ -49,25 +49,20 @@ public class ModulesController : ApiControllerBase
     }
 
     [HttpPut]
-    public async Task<ModuleWithData> UpsertModule([FromRoute] string boatId, [FromBody] ModuleWithData module)
+    public async Task<ModuleWithData> UpsertModule([FromRoute] Guid boatId, [FromBody] ModuleWithData module)
     {
-        Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
         module.BoatId = boatId;
-        module.Author = module.Author ?? HttpContext.GetUserId();
-        foreach (ModuleData d in module.Data)
-        {
-            d.Author = d.Author ?? HttpContext.GetUserId();
-        }
+        module.AuthorId = module.AuthorId ?? HttpContext.GetUserId();
         Module m = _mapper.Map<ModuleWithData, Module>(module);
         m = await _moduleService.UpsertModule(m);
         ModuleWithData returnModule = _mapper.Map<Module, ModuleWithData>(m);
-        returnModule.Data = await _moduleService.UpsertModuleData(m.Id, module.Data);
+        returnModule.Options = await _moduleService.UpsertModuleData(m.Id, module.Options);
         return returnModule;
     }
 
     [HttpDelete]
     public async Task<ActionResult> DeleteModule(
-        [FromRoute] string boatId,
+        [FromRoute] Guid boatId,
         [FromRoute] string moduleId)
     {
         Guard.Against.NullOrWhiteSpace(boatId);
@@ -77,7 +72,7 @@ public class ModulesController : ApiControllerBase
 
     [HttpPost("{moduleId}/{optionId}/vote")]
     public async Task<ActionResult> Vote(
-        [FromRoute] string boatId,
+        [FromRoute] Guid boatId,
         [FromRoute] string moduleId,
         [FromRoute] string optionId)
     {
@@ -89,7 +84,7 @@ public class ModulesController : ApiControllerBase
 
     [HttpDelete("{moduleId}/{optionId}/vote")]
     public async Task<ActionResult> UnVote(
-        [FromRoute] string boatId,
+        [FromRoute] Guid boatId,
         [FromRoute] string moduleId,
         [FromRoute] string optionId)
     {

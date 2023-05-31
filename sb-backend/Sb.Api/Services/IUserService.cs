@@ -5,7 +5,7 @@ namespace Sb.Api.Services
 {
     public interface IUserService
     {
-        Task<User> GetUserById(string userId);
+        Task<User> GetUserById(Guid userId);
         Task<JwtTokensResponse> AuthenticateAsync(string email, string password);
         Task<JwtTokensResponse> CreateUserAsync(CreateUser user);
     }

@@ -13,15 +13,12 @@ namespace Sb.Api.Services
 {
     public class TokenService : ITokenService
     {
-        public TokenService(
-            IOptions<JwtConfig> jwtOptions,
-            IRepository repo)
+        public TokenService(IOptions<JwtConfig> jwtOptions)
         {
             _jwtConfig = jwtOptions.Value;
-            _repo = repo;
         }
 
-        public async Task<TokenBase> GenerateToken(string userId, TokenType tokenType, IEnumerable<Claim> claims)
+        public TokenBase GenerateToken(Guid userId, TokenType tokenType, IEnumerable<Claim> claims)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -41,38 +38,40 @@ namespace Sb.Api.Services
                 SigningCredentials = creds
             };
             SecurityToken token = handler.CreateToken(tokenProperties);
-            return await _repo.InsertAsync(new TokenBase
+            return new TokenBase
             {
-                Value = handler.WriteToken(token),
-                Expires = tokenProperties.Expires.Value,
-                UserId = userId,
-                Type = tokenType
-            });
+                Id = Guid.NewGuid(),
+                Type = tokenType,
+                Expires = token.ValidTo,
+                Value = handler.WriteToken(token)
+            };
         }
 
 
-        public async Task<bool> IsTokenValid(string userId, string token, TokenType tokenType)
+        public bool IsTokenValid(Guid userId, string token, TokenType tokenType)
         {
-            TokenBase result = await GetToken(userId, token, tokenType);
-            return result != null && result.Expires > DateTime.UtcNow;
-        }
-
-        public async Task RevokeToken(string userId, string token, TokenType tokenType)
-        {
-            await _repo.DeleteAsync<TokenBase>(t => t.UserId == userId && t.Value == token);
-        }
-
-        public async Task RevokeAllTokens(string userId)
-        {
-            await _repo.DeleteAsync<TokenBase>(t => t.UserId == userId);
-        }
-
-        private async Task<TokenBase> GetToken(string userId, string token, TokenType tokenType)
-        {
-            return await _repo.FirstOrDefaultAsync<TokenBase>(t => t.UserId == userId && t.Value == token);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            byte[] key = Encoding.ASCII.GetBytes(_jwtConfig.Key);
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidIssuer = _jwtConfig.Issuer,
+                    ValidateLifetime = true,
+                    ValidAudience = _jwtConfig.Audience
+                }, out _);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private readonly JwtConfig _jwtConfig;
-        private readonly IRepository _repo;
     }
 }

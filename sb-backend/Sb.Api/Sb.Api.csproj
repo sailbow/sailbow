@@ -19,13 +19,21 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\lib\Sb.Data.MongoDB\Sb.Data.MongoDB.csproj" />
-    <ProjectReference Include="..\lib\Sb.Email\Sb.Email.csproj" />
-    <ProjectReference Include="..\lib\Sb.HttpClients\Sb.HttpClients.csproj" />
-    <ProjectReference Include="..\lib\Sb.OAuth2\Sb.OAuth2.csproj" />
+    <ProjectReference Include="..\lib\Sb.Data.MongoDB\Sb.Data.MongoDB.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\lib\Sb.Email\Sb.Email.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\lib\Sb.HttpClients\Sb.HttpClients.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\lib\Sb.OAuth2\Sb.OAuth2.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
-
 </Project>

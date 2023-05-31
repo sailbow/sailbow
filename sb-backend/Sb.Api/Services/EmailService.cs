@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
-using Sb.Api.Authorization;
 using Sb.Api.Configuration;
 using Sb.Data;
 using Sb.Data.Models;
@@ -43,16 +42,12 @@ namespace Sb.Api.Services
             _logger = logger;
         }
 
-        public async Task SendBoatInvitations(string boatId, IEnumerable<Invite> invites)
+        public async Task SendBoatInvitations(Guid boatId, IEnumerable<Invite> invites)
         {
-            Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
             Guard.Against.Null(invites, nameof(invites));
 
             Boat boat = await _repo.GetByIdAsync<Boat>(boatId);
             Guard.Against.EntityMissing(boat, nameof(boat));
-
-            var authResult = await _authorizationService.AuthorizeAsync(_httpContext.User, boat, AuthorizationPolicies.EditBoatPolicy);
-            Guard.Against.Forbidden(authResult);
 
             foreach (Invite invite in invites)
             {

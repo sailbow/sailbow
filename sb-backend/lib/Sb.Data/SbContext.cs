@@ -1,33 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Sb.Data.Models;
 
-public class SailbowContext : DbContext
+namespace Sb.Data;
+public class SbContext : DbContext
 {
+    public SbContext() : base() { }
+    public SbContext(DbContextOptions<SbContext> options) : base(options) { }
+
+    public DbSet<User> Users { get; set; }
+    public DbSet<CrewMember> CrewMembers { get; set; }
+    public DbSet<Boat> Boats { get; set; }
+    public DbSet<Module> Modules { get; set; }
+    public DbSet<ModuleOption> ModuleOptions { get; set; }
+    public DbSet<ModuleSettings> ModuleSettings { get; set; }
+    //public DbSet<DateModuleOption> DateModuleOptions { get; set; }
+    //public DbSet<LocationModuleOption> LocationModuleOptions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>()
-            .HasBaseType<EntityBase>()
-            .HasKey(u => u.Id);
-
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.UserCrewMembers)
-            .WithOne(cm => cm.User)
-            .HasForeignKey(cm => cm.UserId)
-            .IsRequired();
-
-        modelBuilder.Entity<Boat>()
-            .HasBaseType<EntityBase>()
-            .HasKey(b => b.Id);
-
-        modelBuilder.Entity<Boat>()
-            .HasMany(b => b.Crew)
-            .WithOne(cm => cm.Boat)
-            .HasForeignKey(cm => cm.BoatId)
-            .IsRequired();
-
-        modelBuilder.Entity<CrewMember>()
-            .Property(cm => cm.Role)
-            .IsRequired();
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
     }
 }

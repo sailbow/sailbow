@@ -49,7 +49,7 @@ namespace Sb.Data.MongoDB
             return results.FirstOrDefault();
         }
 
-        public Task<TEntity> GetByIdAsync<TEntity>(string id, CancellationToken cancellation = default)
+        public Task<TEntity> GetByIdAsync<TEntity>(Guid id, CancellationToken cancellation = default)
             where TEntity : EntityBase
         {
             return FirstOrDefaultAsync<TEntity>(e => e.Id == id, cancellation);
@@ -76,7 +76,7 @@ namespace Sb.Data.MongoDB
                 .ReplaceOneAsync(e => e.Id == element.Id, element, cancellationToken: cancellation);
         }
 
-        public Task DeleteByIdAsync<TEntity>(string id, CancellationToken cancellation = default)
+        public Task DeleteByIdAsync<TEntity>(Guid id, CancellationToken cancellation = default)
             where TEntity : EntityBase
         {
             return Connect<TEntity>().DeleteOneAsync(e => e.Id == id, cancellation);

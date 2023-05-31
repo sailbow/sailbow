@@ -12,12 +12,12 @@ namespace Sb.Api.Services
             _serviceProvider = serviceProvider;
         }
 
-        public OAuth2Client GetClient(IdentityProvider provider)
+        public OAuth2Client GetClient(IdentityProviders provider)
         {
             switch (provider)
             {
-                case IdentityProvider.Google: return _serviceProvider.GetRequiredService<GoogleOAuth2Client>();
-                case IdentityProvider.Facebook: return _serviceProvider.GetRequiredService<FacebookOAuth2Client>();
+                case IdentityProviders.Google: return _serviceProvider.GetRequiredService<GoogleOAuth2Client>();
+                case IdentityProviders.Facebook: return _serviceProvider.GetRequiredService<FacebookOAuth2Client>();
                 default: throw new ArgumentException("Unsupported OAuth2 provider");
             }
         }

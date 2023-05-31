@@ -8,17 +8,16 @@ namespace Sb.Api.Controllers
 {
     public class IdentityController : ApiControllerBase
     {
-        private readonly IRepository _repo;
-        public IdentityController(IRepository repo)
+        private readonly SbContext _db;
+        public IdentityController(SbContext db)
         {
-            _repo = repo;
+            _db = db;
         }
 
         [HttpGet("me")]
         public async Task<IActionResult> GetMe()
         {
-            string id = HttpContext.GetClaim(CustomClaimTypes.Id);
-            User user = await _repo.GetByIdAsync<User>(id);
+            User user = await _db.Users.FindAsync(HttpContext.GetUserId().GetValueOrDefault());
             if (user is null)
                 return NotFound();
             return Ok(user);

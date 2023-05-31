@@ -1,48 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Sb.Data.Models
 {
-    [PersistenceModel("Modules")]
     public class Module : EntityBase
     {
-        public string BoatId { get; set; }
+        public Guid BoatId { get; set; }
+        public Guid CreatedByCrewMemberId { get; set; }
         public string Name { get; set; }
         public ModuleType Type { get; set; }
-        public string Author { get; set; }
         public string Description { get; set; }
         public int Order { get; set; }
-        public string FinalizedOptionId { get; set; }
+        public Guid? FinalizedOptionId { get; set; }
         public ModuleSettings Settings { get; set; }
+        public Boat Boat { get; set; }
+        public ModuleOption FinalizedOption { get; set; }
+        public CrewMember CreatedByCrewMember { get; set; }
+        public ICollection<ModuleOption> ModuleOptions { get; set; } = new List<ModuleOption>();
     }
 
-    public class ModuleSettings
+    internal class ModuleEntityTypeConfiguration
+        : IEntityTypeConfiguration<Module>
     {
-        public bool AllowMultiple { get; set; }
-        public bool AnonymousVoting { get; set; }
-        public DateTime? Deadline { get; set; }
-    }
+        public void Configure(EntityTypeBuilder<Module> builder)
+        {
+            builder.ToTable("Modules")
+                .HasOne(m => m.CreatedByCrewMember)
+                .WithMany()
+                .HasForeignKey(m => m.CreatedByCrewMemberId)
+                .IsRequired();
 
-    [PersistenceModel("ModuleData")]
-    public abstract class ModuleData : EntityBase
-    {
-        public string ModuleId { get; set; }
-        public ModuleType Type { get; set; }
-        public int NumVotes { get; set; }
-        public HashSet<string> Votes { get; set; } = new HashSet<string>();
-        public string Author { get; set; }
-    }
+            builder.Property(m => m.Name)
+                .HasMaxLength(100)
+                .IsRequired();
 
-    public class DateModuleData : ModuleData
-    {
-        public DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-    }
+            builder.Property(m => m.Description)
+                .HasMaxLength(250)
+                .IsRequired(false);
 
-    public class LocationModuleData : ModuleData
-    {
+            builder
+                .OwnsMany(m => m.ModuleOptions, mo => mo
+                    .WithOwner(o => o.Module)
+                    .HasForeignKey(o => o.ModuleId));
 
+            builder.HasOne(m => m.FinalizedOption)
+                .WithOne()
+                .IsRequired(false);
+
+            builder.HasOne(m => m.Settings)
+                .WithOne(ms => ms.Module)
+                .HasForeignKey<ModuleSettings>(ms => ms.ModuleId)
+                .IsRequired();
+
+            builder.Property(m => m.Type)
+                .HasConversion<string>()
+                .IsRequired();
+        }
     }
 
     public enum ModuleType

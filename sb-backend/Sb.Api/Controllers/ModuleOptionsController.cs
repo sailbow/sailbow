@@ -18,13 +18,13 @@ namespace Sb.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ModuleData> AddModuleOption(
-        [FromRoute] string boatId,
-        [FromRoute] string moduleId,
-        [FromBody] ModuleData moduleData)
+        public async Task<ModuleOption> AddModuleOption(
+        [FromRoute] Guid boatId,
+        [FromRoute] Guid moduleId,
+        [FromBody] ModuleOption moduleData)
         {
             moduleData.ModuleId = moduleId;
-            moduleData.Author = HttpContext.GetUserId();
+            moduleData.AuthorId = HttpContext.GetUserId().Value;
             return await _moduleService.AddModuleData(moduleData);
         }
 
