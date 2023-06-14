@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
 
 namespace Sb.Data.Models
 {
@@ -12,14 +13,19 @@ namespace Sb.Data.Models
         public Guid BoatId { get; set; }
         public Guid CreatedByCrewMemberId { get; set; }
         public string Name { get; set; }
-        public ModuleType Type { get; set; }
         public string Description { get; set; }
         public int Order { get; set; }
         public Guid? FinalizedOptionId { get; set; }
         public ModuleSettings Settings { get; set; }
         public Boat Boat { get; set; }
+
+        [JsonIgnore]
         public ModuleOption FinalizedOption { get; set; }
+
+        [JsonIgnore]
         public CrewMember CreatedByCrewMember { get; set; }
+
+        [JsonIgnore]
         public ICollection<ModuleOption> ModuleOptions { get; set; } = new List<ModuleOption>();
     }
 
@@ -45,20 +51,15 @@ namespace Sb.Data.Models
             builder
                 .OwnsMany(m => m.ModuleOptions, mo => mo
                     .WithOwner(o => o.Module)
-                    .HasForeignKey(o => o.ModuleId));
+                    .HasForeignKey(o => o.ModuleId))
+
+                .OwnsOne(m => m.Settings)
+                    .WithOwner(ms => ms.Module)
+                    .HasForeignKey(ms => ms.ModuleId);
 
             builder.HasOne(m => m.FinalizedOption)
                 .WithOne()
                 .IsRequired(false);
-
-            builder.HasOne(m => m.Settings)
-                .WithOne(ms => ms.Module)
-                .HasForeignKey<ModuleSettings>(ms => ms.ModuleId)
-                .IsRequired();
-
-            builder.Property(m => m.Type)
-                .HasConversion<string>()
-                .IsRequired();
         }
     }
 

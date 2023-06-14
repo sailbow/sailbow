@@ -36,12 +36,10 @@ namespace Sb.Api
             return null;
         }
 
-        public static Guid? GetUserId(this HttpContext context)
+        public static Guid GetUserId(this HttpContext context)
         {
             string id = context.GetClaim(CustomClaimTypes.Id);
-            return Guid.TryParse(id, out Guid userId)
-                ? userId
-                : null;
+            return Guid.Parse(id);
         }
         public static AuthorizedUser GetUserFromClaims(this HttpContext context)
         {

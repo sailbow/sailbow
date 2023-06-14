@@ -24,14 +24,14 @@ namespace Sb.Api.Controllers
         [FromBody] ModuleOption moduleData)
         {
             moduleData.ModuleId = moduleId;
-            moduleData.AuthorId = HttpContext.GetUserId().Value;
-            return await _moduleService.AddModuleData(moduleData);
+            moduleData.AuthorId = HttpContext.GetUserId();
+            return await _moduleService.AddModuleOption(moduleData);
         }
 
         [HttpDelete("{optionId}")]
-        public async Task DeleteModuleOption(string optionId)
+        public async Task DeleteModuleOption(Guid optionId)
         {
-            await _moduleService.DeleteModuleData(optionId);
+            await _moduleService.DeleteModuleOption(optionId);
         }
 
         private readonly IModuleService _moduleService;

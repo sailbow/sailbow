@@ -61,7 +61,8 @@ namespace Sb.Api.Services
             Boat boat = await _db.Boats.FindAsync(boatId);
             boat.Description = edits.Description;
             boat.Name = string.IsNullOrWhiteSpace(edits.Name) ? boat.Name : edits.Name;
-            boat.Banner = edits.Banner ?? boat.Banner;
+            boat.BannerUrl = edits.BannerUrl;
+            boat.BannerColor = edits.BannerColor;
             _db.Update(boat);
             await _db.SaveChangesAsync();
         }
@@ -128,13 +129,13 @@ namespace Sb.Api.Services
             boat.Crew.Add(new CrewMember
             {
                 UserId = Guid.Parse(user.Id),
-                Role = Role.Sailor
+                Role = BoatRole.Sailor
             });
-            await _db.UpdateAsync(boat);
+            await _db.SaveChangesAsync();
             return boat;
         }
 
-        public async Task AddCrewMember(Guid boatId, Guid userId, Role role)
+        public async Task AddCrewMember(Guid boatId, Guid userId, BoatRole role)
         {
             CrewMember crewMember = await _db.CrewMembers
                 .Where(cm => cm.BoatId == boatId)
@@ -162,48 +163,47 @@ namespace Sb.Api.Services
                 .ExecuteDeleteAsync();
         }
 
-        //public async Task<IEnumerable<Invite>> CreateInvites(Guid boatId, IEnumerable<Invite> invites)
-        //{
-        //    Guard.Against.Null(invites, nameof(invites));
-        //    Boat boat = await GetBoat(boatId);
-        //    //var authResult = await _authService.AuthorizeAsync(_context.User, boat, AuthorizationPolicies.EditBoatPolicy);
-        //    //Guard.Against.Forbidden(authResult);
+        public async Task<IEnumerable<Invite>> CreateInvites(Guid boatId, IEnumerable<Invite> invites)
+        {
+            Guard.Against.Null(invites, nameof(invites));
+            Boat boat = await GetBoat(boatId);
 
-        //    var existingInvites = await _db.GetAsync<Invite>(i => i.BoatId == boatId);
-        //    var newInvites = invites
-        //        .Where((i) => !existingInvites.Any(ei => ei.BoatId == i.BoatId));
-        //    List<Invite> created = new();
-        //    foreach (var invite in newInvites)
-        //    {
-        //        invite.InviterId = _context.GetUserId().Value;
-        //        invite.BoatId = boatId;
-        //        created.Add(await _db.InsertAsync(invite));
-        //    }
+            List<Invite> existingInvites = await _db.Invites
+                .Where(i => i.BoatId == boatId)
+                .ToListAsync();
 
-        //    return created;
-        //}
+            IEnumerable<Invite> newInvites = invites
+                .Where((i) => !existingInvites.Any(ei => ei.BoatId == i.BoatId))
+                .Select(i =>
+                {
+                    i.ExpiresUtc = DateTime.UtcNow.AddDays(1);
+                    return i;
+                });
 
-        //public async Task<InviteDetails> GetInviteById(Guid boatId, Guid inviteId)
-        //{
-        //    Invite invite = await _db.GetByIdAsync<Invite>(inviteId);
-        //    Guard.Against.EntityMissing(invite, nameof(invite));
-        //    Boat boat = await _db.GetByIdAsync<Boat>(boatId);
-        //    Guard.Against.EntityMissing(boat, nameof(boat));
-        //    CrewMember captain = boat.Crew.First(cm => cm.Role == Role.Captain);
-        //    User captainUserData = await _db.GetByIdAsync<User>(captain.UserId);
-        //    return new InviteDetails
-        //    {
-        //        Id = inviteId.ToString(),
-        //        BoatName = boat.Name,
-        //        Banner = boat.Banner,
-        //        Captain = new CrewMemberWithUserInfo
-        //        {
-        //            UserId = captain.UserId,
-        //            Name = captainUserData.Name,
-        //            Role = captain.Role
-        //        }
-        //    };
-        //}
+            await _db.Invites.AddRangeAsync(newInvites);
+            await _db.SaveChangesAsync();
+
+            return newInvites;
+        }
+
+        public async Task<InviteDetails> GetInviteById(Guid inviteId)
+        {
+            Invite invite = await _db.Invites
+                .Where(i => i.Id == inviteId)
+                .Include(i => i.Boat.Crew)
+                .Include(i => i.Boat.Captain)
+                .FirstOrDefaultAsync();
+
+            Guard.Against.EntityMissing(invite, nameof(invite));
+
+            return new InviteDetails
+            {
+                Id = inviteId.ToString(),
+                BoatName = invite.Boat.Name,
+                InvitedByUserEmail = invite.Inviter.Name,
+                InvitedByUserName = invite.Inviter.Email
+            };
+        }
 
         //public async Task AcceptBoatInvite(Guid boatId, Guid inviteId, string email)
         //{

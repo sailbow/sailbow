@@ -12,7 +12,6 @@ using Sb.Api.Configuration;
 using Sb.Api.Middleware;
 using Sb.Api.Services;
 using Sb.Data;
-using Sb.Data.Serialization;
 using Sb.Email;
 using Sb.OAuth2;
 
@@ -96,12 +95,6 @@ services
         };
     });
 
-services.AddMongoDB(opts =>
-{
-    opts.ConnectionString = configuration["Mongo:ConnectionString"];
-    opts.DatabaseName = configuration["Mongo:DatabaseName"];
-});
-
 services.AddSbEmailClients()
     .AddSendGridClient(opts =>
     {
@@ -119,8 +112,6 @@ services.AddControllers()
     {
         opts.UseCamelCasing(true);
         opts.SerializerSettings.Converters.Add(new StringEnumConverter());
-        opts.SerializerSettings.Converters.Add(new ModuleWithDataJsonConverter());
-        opts.SerializerSettings.Converters.Add(new ModuleOptionDataJsonConverter());
     });
 
 var app = builder.Build();

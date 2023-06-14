@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 using Sb.Api.Configuration;
 using Sb.Data;
-using Sb.Data.Models;
+using Sb.Api.Models;
 
 namespace Sb.Api.Services
 {
@@ -40,7 +40,6 @@ namespace Sb.Api.Services
             SecurityToken token = handler.CreateToken(tokenProperties);
             return new TokenBase
             {
-                Id = Guid.NewGuid(),
                 Type = tokenType,
                 Expires = token.ValidTo,
                 Value = handler.WriteToken(token)

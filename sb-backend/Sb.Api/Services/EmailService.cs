@@ -13,7 +13,7 @@ namespace Sb.Api.Services
 {
     public class EmailService
     {
-        private readonly IRepository _repo;
+        private readonly SbContext _db;
 
         private readonly HttpContext _httpContext;
         private readonly IAuthorizationService _authorizationService;
@@ -25,7 +25,7 @@ namespace Sb.Api.Services
         private readonly ILogger<EmailService> _logger;
 
         public EmailService(
-            IRepository repo,
+            SbContext db,
             IHttpContextAccessor contextAccessor,
             IAuthorizationService authorizationService,
             IEmailClient emailClient,
@@ -33,7 +33,7 @@ namespace Sb.Api.Services
             IOptions<SbApiConfig> sbApiConfig,
             ILogger<EmailService> logger)
         {
-            _repo = repo;
+            _db = db;
             _httpContext = contextAccessor.HttpContext;
             _authorizationService = authorizationService;
             _emailClient = emailClient;
@@ -46,7 +46,7 @@ namespace Sb.Api.Services
         {
             Guard.Against.Null(invites, nameof(invites));
 
-            Boat boat = await _repo.GetByIdAsync<Boat>(boatId);
+            Boat boat = await _db.Boats.FindAsync(boatId);
             Guard.Against.EntityMissing(boat, nameof(boat));
 
             foreach (Invite invite in invites)

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 using RestSharp;
+using RestSharp.Authenticators.OAuth2;
 
 namespace Sb.OAuth2
 {
@@ -20,23 +21,30 @@ namespace Sb.OAuth2
 
         public override async Task<AuthorizedUser> GetAuthorizedUserAsync(string token)
         {
-            var client = new RestClient("https://www.googleapis.com/oauth2/v3/userinfo");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET)
-                .AddHeader("Authorization", $"Bearer {token}");
-
-            IRestResponse res = await client.ExecuteAsync(request);
+            RestClient client = CreateGoogleRestClient("https://www.googleapis.com", token);
+            RestRequest request = new("oauth2/v3/userinfo", Method.Get);
+            RestResponse res = await client.ExecuteAsync(request);
             EnsureSuccess(res);
             return JsonConvert.DeserializeObject<GoogleUserInfo>(res.Content, SerializerSettings);
         }
 
         public override async Task RevokeTokenAsync(string token)
         {
-            RestClient client = new("https://oauth2.googleapis.com/revoke");
-            var request = new RestRequest(Method.POST)
-                .AddParameter("token", token)
-                .AddHeader("Authorization", $"Bearer {token}");
+            RestClient client = CreateGoogleRestClient("https://oauth2.googleapis.com", token);
+            RestRequest request = new("revoke", Method.Get);
+            request.AddParameter("token", token);
             await client.ExecuteAsync(request);
+        }
+
+        private RestClient CreateGoogleRestClient(string baseUrl, string accessToken)
+        {
+            RestClientOptions options = new(baseUrl)
+            {
+                MaxTimeout = TimeSpan.FromSeconds(60).Milliseconds,
+                Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(accessToken, "Bearer")
+            };
+
+            return new RestClient(options);
         }
     }
 }

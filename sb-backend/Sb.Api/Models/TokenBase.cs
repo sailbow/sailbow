@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Sb.Data.Models
+namespace Sb.Api.Models
 {
-    [PersistenceModel("Tokens")]
-    public class TokenBase : EntityBase
+    public class TokenBase
     {
         public string Value { get; set; }
         public DateTime Expires { get; set; }

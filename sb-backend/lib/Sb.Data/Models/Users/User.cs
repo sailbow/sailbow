@@ -15,7 +15,14 @@ namespace Sb.Data.Models
         [JsonIgnore]
         public string Hash { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+
+        [JsonIgnore]
+        public ICollection<Boat> OwnedBoats { get; set; }
+
+        [JsonIgnore]
         public ICollection<ConnectedAccount> ConnectedAccounts { get; set; }
+
+        [JsonIgnore]
         public ICollection<CrewMember> CrewMemberships { get; set; }
     }
 
@@ -24,8 +31,7 @@ namespace Sb.Data.Models
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("Users")
-                .Property(u => u.Name)
+            builder.Property(u => u.Name)
                 .HasMaxLength(50)
                 .IsRequired();
 

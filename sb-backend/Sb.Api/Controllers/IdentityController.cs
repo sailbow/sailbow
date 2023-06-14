@@ -17,7 +17,7 @@ namespace Sb.Api.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> GetMe()
         {
-            User user = await _db.Users.FindAsync(HttpContext.GetUserId().GetValueOrDefault());
+            User user = await _db.Users.FindAsync(HttpContext.GetUserId());
             if (user is null)
                 return NotFound();
             return Ok(user);

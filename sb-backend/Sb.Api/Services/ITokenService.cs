@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-using Sb.Data.Models;
+using Sb.Api.Models;
 
 namespace Sb.Api.Services
 {

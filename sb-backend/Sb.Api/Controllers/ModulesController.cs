@@ -24,48 +24,40 @@ public class ModulesController : ApiControllerBase
     }
 
     [HttpGet("{moduleId}")]
-    public async Task<ModuleWithData> GetModuleById([FromRoute] Guid boatId, [FromRoute] string moduleId)
+    public async Task<Module> GetModuleById([FromRoute] Guid boatId, [FromRoute] Guid moduleId)
     {
         await _boatService.GetBoatById(boatId);
-        ModuleWithData m = await _moduleService.GetModuleByIdAsync(moduleId);
+        Module m = await _moduleService.GetModuleByIdAsync(moduleId);
         if (m.BoatId != boatId)
         {
             throw new MissingEntityException($"Module '{moduleId}' not found for boat '{boatId}'");
-        }
-        if (m.Settings.AnonymousVoting)
-        {
-            foreach (ModuleOption md in m.Options)
-            {
-                md.Votes = new List<ModuleVote>();
-            }
         }
         return m;
     }
 
     [HttpPatch("{moduleId}/settings")]
-    public async Task UpdateModuleSettings(string moduleId, [FromBody] ModuleSettings settings)
+    public async Task UpdateModuleSettings(Guid moduleId, [FromBody] ModuleSettings settings)
     {
         await _moduleService.UpdateModuleSettings(moduleId, settings);
     }
 
-    [HttpPut]
-    public async Task<ModuleWithData> UpsertModule([FromRoute] Guid boatId, [FromBody] ModuleWithData module)
-    {
-        module.BoatId = boatId;
-        module.AuthorId = module.AuthorId ?? HttpContext.GetUserId();
-        Module m = _mapper.Map<ModuleWithData, Module>(module);
-        m = await _moduleService.UpsertModule(m);
-        ModuleWithData returnModule = _mapper.Map<Module, ModuleWithData>(m);
-        returnModule.Options = await _moduleService.UpsertModuleData(m.Id, module.Options);
-        return returnModule;
-    }
+    //[HttpPut]
+    //public async Task<ModuleWithData> UpsertModule([FromRoute] Guid boatId, [FromBody] ModuleWithData module)
+    //{
+    //    module.BoatId = boatId;
+    //    module.AuthorId = module.AuthorId ?? HttpContext.GetUserId();
+    //    Module m = _mapper.Map<ModuleWithData, Module>(module);
+    //    m = await _moduleService.UpsertModule(m);
+    //    ModuleWithData returnModule = _mapper.Map<Module, ModuleWithData>(m);
+    //    returnModule.Options = await _moduleService.UpsertModuleData(m.Id, module.Options);
+    //    return returnModule;
+    //}
 
     [HttpDelete]
     public async Task<ActionResult> DeleteModule(
         [FromRoute] Guid boatId,
-        [FromRoute] string moduleId)
+        [FromRoute] Guid moduleId)
     {
-        Guard.Against.NullOrWhiteSpace(boatId);
         await _moduleService.DeleteModule(HttpContext.GetUserId(), moduleId);
         return Ok();
     }
@@ -73,33 +65,31 @@ public class ModulesController : ApiControllerBase
     [HttpPost("{moduleId}/{optionId}/vote")]
     public async Task<ActionResult> Vote(
         [FromRoute] Guid boatId,
-        [FromRoute] string moduleId,
-        [FromRoute] string optionId)
+        [FromRoute] Guid moduleId,
+        [FromRoute] Guid optionId)
     {
-        Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
         await _boatService.GetBoatById(boatId);
-        await _moduleService.Vote(HttpContext.GetUserId(), moduleId, optionId);
+        await _moduleService.VoteForModuleOption(HttpContext.GetUserId(), moduleId, optionId);
         return Ok();
     }
 
     [HttpDelete("{moduleId}/{optionId}/vote")]
     public async Task<ActionResult> UnVote(
         [FromRoute] Guid boatId,
-        [FromRoute] string moduleId,
-        [FromRoute] string optionId)
+        [FromRoute] Guid moduleId,
+        [FromRoute] Guid optionId)
     {
-        Guard.Against.NullOrWhiteSpace(boatId, nameof(boatId));
         await _boatService.GetBoatById(boatId);
-        await _moduleService.UnVote(HttpContext.GetUserId(), moduleId, optionId);
+        await _moduleService.UnVote(HttpContext.GetUserId(), moduleId);
         return Ok();
     }
 
-    [HttpPost("{moduleId}/finalizeOption")]
-    public async Task FinalizeOption(string moduleId, [FromBody] FinalizeOptionRequest finalizeOptionRequest)
-    {
-        await _moduleService
-            .FinalizeOption(HttpContext.GetUserId(), moduleId, finalizeOptionRequest.OptionId);
-    }
+    //[HttpPost("{moduleId}/finalizeOption")]
+    //public async Task FinalizeOption(string moduleId, [FromBody] FinalizeOptionRequest finalizeOptionRequest)
+    //{
+    //    await _moduleService
+    //        .FinalizeOption(HttpContext.GetUserId(), moduleId, finalizeOptionRequest.OptionId);
+    //}
 
 
     private readonly IModuleService _moduleService;

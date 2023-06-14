@@ -31,7 +31,7 @@ namespace Sb.Api.Services
             {
                 AuthorId = userId,
                 ModuleId = moduleId,
-                ModuleOptionData = optionData
+                Data = optionData
             };
             module.ModuleOptions.Add(newOption);
             _db.Modules.Update(module);

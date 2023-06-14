@@ -1,6 +1,6 @@
 ﻿namespace Sb.Data.Models
 {
-    public enum Role
+    public enum BoatRole
     {
         Captain,
         Assistant,

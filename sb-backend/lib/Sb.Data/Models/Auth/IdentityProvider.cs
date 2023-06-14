@@ -7,7 +7,7 @@ namespace Sb.Data.Models
 {
     public class IdentityProvider
     {
-        public int Id { get; set; }
+        public IdentityProviderEnum Id { get; set; }
         public string Name { get; set; }
     }
 
@@ -26,12 +26,14 @@ namespace Sb.Data.Models
                 .HasKey(ip => ip.Id);
 
             builder.Property(ip => ip.Id)
-                .HasConversion<int>();
+                .HasConversion<int>()
+                .IsRequired();
 
-            builder.Property(ip => ip.Name).IsRequired();
+            builder.Property(ip => ip.Name)
+                .IsRequired();
 
             builder.HasData(Enum.GetValues<IdentityProviderEnum>()
-                .Select(ip => new IdentityProvider { Id = (int)ip, Name = ip.ToString()}));
+                .Select(ip => new IdentityProvider { Id = ip, Name = Enum.GetName(ip) }));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Net;
 
+using Sb.Api.Models;
 using Sb.Api.Services;
-using Sb.Data.Models;
 
 namespace Sb.Api.Middleware
 {

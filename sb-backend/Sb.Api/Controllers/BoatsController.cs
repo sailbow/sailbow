@@ -1,9 +1,11 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 
 using Ardalis.GuardClauses;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 using Sb.Api.Models;
 using Sb.Api.Services;
 using Sb.Data;
@@ -17,47 +19,33 @@ namespace Sb.Api.Controllers
         private readonly BoatService _boatService;
         private readonly EmailService _emailService;
         private readonly SbContext _db;
+        private readonly IMapper _mapper;
 
         public BoatsController(
             BoatService boatService,
             EmailService emailService,
-            SbContext db)
+            SbContext db,
+            IMapper mapper)
         {
             _boatService = boatService;
             _emailService = emailService;
             _db = db;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<Boat> CreateBoat(
-            [FromBody] Boat boat,
-            [FromQuery] bool generateCode = false,
-            [FromQuery] int? codeExpiresUnix = null)
+        public async Task<Boat> CreateBoat([FromBody] CreateBoatRequest createBoatRequest)
         {
-            Guid id = HttpContext.GetUserId().GetValueOrDefault();
+            Guid id = HttpContext.GetUserId();
 
-            var invitees = boat.Crew.Where(cm => cm.Email != HttpContext.GetClaim(ClaimTypes.Email));
-            boat.Crew = new List<CrewMember>
+            Boat newBoat = _mapper.Map<Boat>(createBoatRequest);
+            newBoat.CaptainUserId = id;
+            newBoat.Crew.Add(new CrewMember
             {
-                new CrewMember
-                {
-                    UserId = id,
-                    Role = Role.Captain,
-                    Info = string.Empty
-                }
-            };
-            boat = await _boatService.CreateBoat(boat);
-            if (generateCode)
-                boat.Code = await _boatService.GenerateCodeInvite(boat.Id, codeExpiresUnix);
-
-            //await SendBoatInvites(boat.Id, invitees.Select(invitee => new Invite
-            //{
-            //    BoatId = boat.Id,
-            //    Email = invitee.Email,
-            //    Role = invitee.Role
-            //}));
-
-            return boat;
+                UserId = id,
+                Role = BoatRole.Captain
+            });
+            return await _boatService.CreateBoat(newBoat);
         }
 
         [HttpGet]
@@ -67,7 +55,7 @@ namespace Sb.Api.Controllers
             [FromQuery] string search = "")
         {
             return _boatService.GetBoats(
-                HttpContext.GetUserId().Value, page, perPage, search);
+                HttpContext.GetUserId(), page, perPage, search);
         }
 
         [HttpGet("{boatId}")]
@@ -103,69 +91,37 @@ namespace Sb.Api.Controllers
             return Ok(boat);
         }
 
-        //[HttpGet("{boatId}/invites")]
-        //public async Task<IEnumerable<Invite>> GetInvites(Guid boatId)
-        //{
-        //    // Perform read validation but don't need the result
-        //    await _boatService.GetBoatById(boatId);
-        //    return await _repo.GetAsync<Invite>(i => i.BoatId == boatId);
-        //}
+        [HttpPost("{boatId}/crew")]
+        public async Task<IActionResult> AddCrewMember(Guid boatId, [FromBody] AddCrewMemberRequest addCrewMemberRequest)
+        {
+            await _boatService.AddCrewMember(boatId, addCrewMemberRequest.UserId, addCrewMemberRequest.Role);
+            return Ok();
+        }
 
-        //[HttpGet("{boatId}/invites/{inviteId}")]
-        //public async Task<ActionResult<InviteDetails>> GetInvite(Guid boatId, Guid inviteId)
-        //{
-        //    InviteDetails invite = await _boatService.GetInviteById(boatId, inviteId);
-        //    return Ok(invite);
-        //}
+        [HttpGet("{boatId}/crew")]
+        public async Task<IEnumerable<CrewMemberWithUserInfo>> GetCrew(Guid boatId)
+        {
+            Boat boat = await _db.Boats
+                .Where(b => b.Id == boatId)
+                .Include(b => b.Crew)
+                    .ThenInclude(cm => cm.User)
+                .FirstOrDefaultAsync();
 
-        //[HttpPost("{boatId}/invites")]
-        //public async Task<IActionResult> SendBoatInvites(Guid boatId, [FromBody] IEnumerable<Invite> invites)
-        //{
-        //    var newInvites = await _boatService.CreateInvites(boatId, invites);
-        //    await _emailService.SendBoatInvitations(boatId, newInvites);
-        //    return Ok();
-        //}
+            return boat.Crew
+                .Select(cm => new CrewMemberWithUserInfo
+                {
+                    UserId = cm.UserId,
+                    Name = cm.User.Name,
+                    Email = cm.User.Email,
+                    Role = cm.Role
+                });
+        }
 
-        //[HttpPost("{boatId}/invites/{inviteId}/accept")]
-        //public async Task<BoatDto> AcceptInvite(Guid boatId, Guid inviteId)
-        //{
-        //    await _boatService.AcceptBoatInvite(boatId, inviteId, HttpContext.GetClaim(ClaimTypes.Email));
-        //    return await _boatService.GetBoatById(boatId);
-
-        //}
-
-        //[HttpPost("{boatId}/crew")]
-        //public Task<Boat> AddCrewMember(Guid boatId, [FromBody] CrewMember crewMember)
-        //    => _boatService.AddCrewMember(boatId, crewMember);
-
-        //[HttpGet("{boatId}/crew")]
-        //public async Task<IEnumerable<CrewMemberWithUserInfo>> GetCrew(Guid boatId)
-        //{
-        //    Boat boat = await _boatService.GetBoatById(boatId);
-        //    var crewUserIds = boat.Crew.Select(c => c.UserId);
-        //    IEnumerable<User> users = await _db.Users
-        //        .GetAsync<User>(u => crewUserIds.Contains(u.Id));
-
-        //    List<CrewMemberWithUserInfo> crew = new();
-        //    foreach (var user in users)
-        //    {
-        //        CrewMember cm = boat.Crew.First(u => u.UserId == user.Id);
-        //        crew.Add(new CrewMemberWithUserInfo
-        //        {
-        //            UserId = user.Id,
-        //            Name = user.Name,
-        //            Role = cm.Role,
-        //            Info = cm.Info
-        //        });
-        //    }
-        //    return crew;
-        //}
-
-        //[HttpDelete("{boatId}/crew/{userId}")]
-        //public async Task<IActionResult> DeleteCrewMember(Guid boatId, Guid userId)
-        //{
-        //    await _boatService.DeleteCrewMember(boatId, userId);
-        //    return Ok();
-        //}
+        [HttpDelete("{boatId}/crew/{userId}")]
+        public async Task<IActionResult> DeleteCrewMember(Guid boatId, Guid userId)
+        {
+            await _boatService.DeleteCrewMember(boatId, userId);
+            return Ok();
+        }
     }
 }

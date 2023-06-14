@@ -7,6 +7,7 @@ namespace Sb.Api.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public Banner Banner { get; set; }
+        public Uri BannerUrl { get; set; }
+        public string BannerColor { get; set; }
     }
 }
