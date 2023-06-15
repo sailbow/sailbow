@@ -3,14 +3,16 @@
 using AutoMapper;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Sb.Api.Models;
 using Sb.Api.Services;
 using Sb.Api.Validation;
+using Sb.Data;
 using Sb.Data.Models;
 
 namespace Sb.Api.Controllers;
 
-[Route("api/boats/{boatId}/modules")]
+[Route("api/modules")]
 public class ModulesController : ApiControllerBase
 {
     public ModulesController(
@@ -23,43 +25,61 @@ public class ModulesController : ApiControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet("{moduleId}")]
-    public async Task<Module> GetModuleById([FromRoute] Guid boatId, [FromRoute] Guid moduleId)
+    [HttpPost]
+    public async Task<ActionResult<Module>> CreateModule(
+    [FromBody] CreateModuleRequest createModuleRequest,
+    [FromServices] SbContext db)
     {
-        await _boatService.GetBoatById(boatId);
-        Module m = await _moduleService.GetModuleByIdAsync(moduleId);
-        if (m.BoatId != boatId)
+        Boat boat = await db.Boats
+            .Where(b => b.Id == createModuleRequest.BoatId)
+            .Include(b => b.Crew)
+            .FirstOrDefaultAsync();
+
+        Module newModule = new()
         {
-            throw new MissingEntityException($"Module '{moduleId}' not found for boat '{boatId}'");
-        }
-        return m;
+            BoatId = createModuleRequest.BoatId,
+            CreatedByCrewMemberId = boat.Crew
+                .First(cm => cm.UserId == HttpContext.GetUserId())
+                .Id,
+            Name = createModuleRequest.Name,
+            Description = createModuleRequest.Description,
+            Settings = new ModuleSettings
+            {
+                AllowMultiple = createModuleRequest.AllowMultipleVotes,
+                AnonymousVoting = createModuleRequest.AnonymousVoting,
+                Deadline = createModuleRequest.VotingDeadling,
+            }
+        };
+        await db.Modules.AddAsync(newModule);
+        await db.SaveChangesAsync();
+        return Ok(newModule);
+    }
+
+    [HttpGet("{moduleId}")]
+    public async Task<Module> GetModuleById(Guid moduleId)
+    {
+        return await _moduleService.GetModuleByIdAsync(moduleId);
     }
 
     [HttpPatch("{moduleId}/settings")]
     public async Task UpdateModuleSettings(Guid moduleId, [FromBody] ModuleSettings settings)
     {
-        await _moduleService.UpdateModuleSettings(moduleId, settings);
+        settings.ModuleId = moduleId;
+        await _moduleService.UpdateModuleSettings(settings);
     }
 
-    //[HttpPut]
-    //public async Task<ModuleWithData> UpsertModule([FromRoute] Guid boatId, [FromBody] ModuleWithData module)
-    //{
-    //    module.BoatId = boatId;
-    //    module.AuthorId = module.AuthorId ?? HttpContext.GetUserId();
-    //    Module m = _mapper.Map<ModuleWithData, Module>(module);
-    //    m = await _moduleService.UpsertModule(m);
-    //    ModuleWithData returnModule = _mapper.Map<Module, ModuleWithData>(m);
-    //    returnModule.Options = await _moduleService.UpsertModuleData(m.Id, module.Options);
-    //    return returnModule;
-    //}
 
-    [HttpDelete]
-    public async Task<ActionResult> DeleteModule(
-        [FromRoute] Guid boatId,
-        [FromRoute] Guid moduleId)
+    [HttpDelete("{moduleId}")]
+    public async Task<ActionResult> DeleteModule(Guid moduleId)
     {
         await _moduleService.DeleteModule(HttpContext.GetUserId(), moduleId);
         return Ok();
+    }
+
+    [HttpPost("{moduleId}/options")]
+    public async Task AddModuleOption(Guid moduleId, [FromBody] ModuleOption option)
+    {
+        await Task.CompletedTask;
     }
 
     [HttpPost("{moduleId}/{optionId}/vote")]

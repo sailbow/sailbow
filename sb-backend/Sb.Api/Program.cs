@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +15,7 @@ using Sb.Api.Services;
 using Sb.Data;
 using Sb.Email;
 using Sb.OAuth2;
+using System.Text.Json.Serialization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
@@ -28,6 +30,7 @@ services
     })
     .AddSwaggerGen(opts =>
     {
+        opts.UseOneOfForPolymorphism();
         opts.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
         {
             In = ParameterLocation.Header,
@@ -52,7 +55,6 @@ services
             }
         });
     })
-    .AddSwaggerGenNewtonsoftSupport()
     .AddEndpointsApiExplorer()
     .Configure<JwtConfig>(configuration.GetSection("Jwt"))
     .Configure<EmailConfig>(configuration.GetSection("Email"))
@@ -108,10 +110,10 @@ services.AddSbHttpClients()
     });
 
 services.AddControllers()
-    .AddNewtonsoftJson(opts =>
+    .AddJsonOptions(opts =>
     {
-        opts.UseCamelCasing(true);
-        opts.SerializerSettings.Converters.Add(new StringEnumConverter());
+        opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
     });
 
 var app = builder.Build();

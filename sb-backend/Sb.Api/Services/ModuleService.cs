@@ -60,9 +60,14 @@ namespace Sb.Api.Services
             throw new NotImplementedException();
         }
 
-        public Task UpdateModuleSettings(Guid moduleId, ModuleSettings settings)
+        public async Task UpdateModuleSettings(ModuleSettings settings)
         {
-            throw new NotImplementedException();
+            ModuleSettings existingSettings = await _db.ModuleSettings.FindAsync(settings.Id);
+            existingSettings.AllowMultiple = settings.AllowMultiple;
+            existingSettings.AnonymousVoting = settings.AnonymousVoting;
+            existingSettings.Deadline = settings.Deadline;
+
+            await _db.SaveChangesAsync();
         }
 
         public Task VoteForModuleOption(Guid userId, Guid moduleId, Guid moduleOptionId)
