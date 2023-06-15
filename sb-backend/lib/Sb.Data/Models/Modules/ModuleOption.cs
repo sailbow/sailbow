@@ -38,9 +38,10 @@ namespace Sb.Data.Models
                     str => JsonSerializer.Deserialize<ModuleOptionData>(str, serializerOptions))
                 .IsRequired();
 
-            builder.OwnsMany(mo => mo.Votes)
-                .WithOwner(v => v.ModuleOption)
-                .HasForeignKey(v => v.ModuleOptionId);
+            builder.HasMany(mo => mo.Votes)
+                .WithOne(v => v.ModuleOption)
+                .HasForeignKey(v => v.ModuleOptionId)
+                .IsRequired();
         }
     }
 }

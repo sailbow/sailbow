@@ -34,8 +34,7 @@ namespace Sb.Data.Models
     {
         public void Configure(EntityTypeBuilder<Module> builder)
         {
-            builder.ToTable("Modules")
-                .HasOne(m => m.CreatedByCrewMember)
+            builder.HasOne(m => m.CreatedByCrewMember)
                 .WithMany()
                 .HasForeignKey(m => m.CreatedByCrewMemberId)
                 .IsRequired();
@@ -48,18 +47,15 @@ namespace Sb.Data.Models
                 .HasMaxLength(250)
                 .IsRequired(false);
 
-            builder
-                .OwnsMany(m => m.ModuleOptions, mo => mo
-                    .WithOwner(o => o.Module)
-                    .HasForeignKey(o => o.ModuleId))
+            builder.HasMany(m => m.ModuleOptions)
+                .WithOne(mo => mo.Module)
+                .HasForeignKey(mo => mo.ModuleId)
+                .IsRequired();
 
-                .OwnsOne(m => m.Settings)
-                    .WithOwner(ms => ms.Module)
-                    .HasForeignKey(ms => ms.ModuleId);
-
-            builder.HasOne(m => m.FinalizedOption)
-                .WithOne()
-                .IsRequired(false);
+            builder.HasOne(m => m.Settings)
+                .WithOne(s => s.Module)
+                .HasForeignKey<ModuleSettings>(s => s.ModuleId)
+                .IsRequired();
         }
     }
 

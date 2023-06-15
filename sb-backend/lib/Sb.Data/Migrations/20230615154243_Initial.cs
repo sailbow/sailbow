@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -18,8 +17,7 @@ namespace Sb.Data.Migrations
                 name: "IdentityProviders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -48,7 +46,9 @@ namespace Sb.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    BannerColor = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: true),
+                    BannerUrl = table.Column<string>(type: "text", nullable: true),
                     CaptainUserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -87,46 +87,6 @@ namespace Sb.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BoatBanners",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    BoatId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Show = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    Type = table.Column<string>(type: "text", nullable: false, defaultValue: "Color"),
-                    Value = table.Column<string>(type: "text", nullable: true),
-                    Position = table.Column<int>(type: "integer", nullable: false, defaultValue: 0)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BoatBanners", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BoatBanners_Boats_BoatId",
-                        column: x => x.BoatId,
-                        principalTable: "Boats",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BoatCodes",
-                columns: table => new
-                {
-                    BoatId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: true),
-                    ExpiresAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BoatCodes", x => x.BoatId);
-                    table.ForeignKey(
-                        name: "FK_BoatCodes_Boats_BoatId",
-                        column: x => x.BoatId,
-                        principalTable: "Boats",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CrewMembers",
                 columns: table => new
                 {
@@ -154,12 +114,59 @@ namespace Sb.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Invites",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    InviterId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BoatId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    BoatRole = table.Column<string>(type: "text", nullable: false, defaultValue: "Sailor"),
+                    ExpiresUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invites", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invites_Boats_BoatId",
+                        column: x => x.BoatId,
+                        principalTable: "Boats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Invites_Users_InviterId",
+                        column: x => x.InviterId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ModuleOptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModuleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Data = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModuleOptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ModuleOptions_CrewMembers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "CrewMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ModuleOptionVotes",
                 columns: table => new
                 {
                     CrewMemberId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModuleOptionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModuleOptionId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    ModuleOptionId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -168,6 +175,12 @@ namespace Sb.Data.Migrations
                         name: "FK_ModuleOptionVotes_CrewMembers_CrewMemberId",
                         column: x => x.CrewMemberId,
                         principalTable: "CrewMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ModuleOptionVotes_ModuleOptions_ModuleOptionId",
+                        column: x => x.ModuleOptionId,
+                        principalTable: "ModuleOptions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -180,10 +193,10 @@ namespace Sb.Data.Migrations
                     BoatId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByCrewMemberId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Type = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
                     Order = table.Column<int>(type: "integer", nullable: false),
-                    FinalizedOptionId = table.Column<Guid>(type: "uuid", nullable: true)
+                    FinalizedOptionId = table.Column<Guid>(type: "uuid", nullable: true),
+                    FinalizedOptionId1 = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -200,60 +213,11 @@ namespace Sb.Data.Migrations
                         principalTable: "CrewMembers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DateModuleOptions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModuleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DateModuleOptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DateModuleOptions_CrewMembers_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "CrewMembers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DateModuleOptions_Modules_ModuleId",
-                        column: x => x.ModuleId,
-                        principalTable: "Modules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LocationModuleOptions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModuleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LocationModuleOptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LocationModuleOptions_CrewMembers_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "CrewMembers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LocationModuleOptions_Modules_ModuleId",
-                        column: x => x.ModuleId,
-                        principalTable: "Modules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Modules_ModuleOptions_FinalizedOptionId1",
+                        column: x => x.FinalizedOptionId1,
+                        principalTable: "ModuleOptions",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -261,8 +225,8 @@ namespace Sb.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AllowMultiple = table.Column<bool>(type: "boolean", nullable: false),
-                    AnonymousVoting = table.Column<bool>(type: "boolean", nullable: false),
+                    AllowMultiple = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    AnonymousVoting = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     Deadline = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ModuleId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -287,22 +251,9 @@ namespace Sb.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BoatBanners_BoatId",
-                table: "BoatBanners",
-                column: "BoatId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BoatCodes_Value",
-                table: "BoatCodes",
-                column: "Value",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Boats_CaptainUserId",
                 table: "Boats",
-                column: "CaptainUserId",
-                unique: true);
+                column: "CaptainUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ConnectedAccounts_IdentityProviderId",
@@ -320,34 +271,29 @@ namespace Sb.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DateModuleOptions_AuthorId",
-                table: "DateModuleOptions",
+                name: "IX_Invites_BoatId",
+                table: "Invites",
+                column: "BoatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invites_InviterId",
+                table: "Invites",
+                column: "InviterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModuleOptions_AuthorId",
+                table: "ModuleOptions",
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DateModuleOptions_ModuleId",
-                table: "DateModuleOptions",
-                column: "ModuleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LocationModuleOptions_AuthorId",
-                table: "LocationModuleOptions",
-                column: "AuthorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LocationModuleOptions_ModuleId",
-                table: "LocationModuleOptions",
+                name: "IX_ModuleOptions_ModuleId",
+                table: "ModuleOptions",
                 column: "ModuleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ModuleOptionVotes_ModuleOptionId",
                 table: "ModuleOptionVotes",
                 column: "ModuleOptionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ModuleOptionVotes_ModuleOptionId1",
-                table: "ModuleOptionVotes",
-                column: "ModuleOptionId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Modules_BoatId",
@@ -360,35 +306,61 @@ namespace Sb.Data.Migrations
                 column: "CreatedByCrewMemberId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Modules_FinalizedOptionId",
+                name: "IX_Modules_FinalizedOptionId1",
                 table: "Modules",
-                column: "FinalizedOptionId",
-                unique: true);
+                column: "FinalizedOptionId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ModuleSettings_ModuleId",
                 table: "ModuleSettings",
                 column: "ModuleId",
                 unique: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_ModuleOptions_Modules_ModuleId",
+                table: "ModuleOptions",
+                column: "ModuleId",
+                principalTable: "Modules",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "BoatBanners");
+            migrationBuilder.DropForeignKey(
+                name: "FK_Boats_Users_CaptainUserId",
+                table: "Boats");
 
-            migrationBuilder.DropTable(
-                name: "BoatCodes");
+            migrationBuilder.DropForeignKey(
+                name: "FK_CrewMembers_Users_UserId",
+                table: "CrewMembers");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_CrewMembers_Boats_BoatId",
+                table: "CrewMembers");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Modules_Boats_BoatId",
+                table: "Modules");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_ModuleOptions_CrewMembers_AuthorId",
+                table: "ModuleOptions");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Modules_CrewMembers_CreatedByCrewMemberId",
+                table: "Modules");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_ModuleOptions_Modules_ModuleId",
+                table: "ModuleOptions");
 
             migrationBuilder.DropTable(
                 name: "ConnectedAccounts");
 
             migrationBuilder.DropTable(
-                name: "DateModuleOptions");
-
-            migrationBuilder.DropTable(
-                name: "LocationModuleOptions");
+                name: "Invites");
 
             migrationBuilder.DropTable(
                 name: "ModuleOptionVotes");
@@ -400,16 +372,19 @@ namespace Sb.Data.Migrations
                 name: "IdentityProviders");
 
             migrationBuilder.DropTable(
-                name: "Modules");
-
-            migrationBuilder.DropTable(
-                name: "CrewMembers");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Boats");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "CrewMembers");
+
+            migrationBuilder.DropTable(
+                name: "Modules");
+
+            migrationBuilder.DropTable(
+                name: "ModuleOptions");
         }
     }
 }

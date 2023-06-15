@@ -46,9 +46,10 @@ namespace Sb.Data.Models
                 .HasForeignKey(cm => cm.UserId)
                 .IsRequired();
 
-            builder.OwnsMany(c => c.ConnectedAccounts, ca => ca
-                .WithOwner(ca => ca.User)
-                .HasForeignKey(ca => ca.UserId));
+            builder.HasMany(u => u.ConnectedAccounts)
+                .WithOne(ca => ca.User)
+                .HasForeignKey(ca => ca.UserId)
+                .IsRequired();
         }
     }
 }

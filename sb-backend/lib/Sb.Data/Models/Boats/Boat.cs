@@ -13,7 +13,7 @@ namespace Sb.Data.Models
         public string Description { get; set; }
         public string BannerColor { get; set; }
         public Uri BannerUrl { get; set; }
-        public Code Code { get; set; }
+        //public Code Code { get; set; }
         public Guid CaptainUserId { get; set; }
         public User Captain { get; set; }
 
@@ -33,22 +33,20 @@ namespace Sb.Data.Models
                 .HasForeignKey(b => b.CaptainUserId)
                 .IsRequired();
 
-            builder
-                .OwnsOne(b => b.Code, c => c
-                    .WithOwner(c => c.Boat)
-                    .HasForeignKey(c => c.BoatId))
+            builder.HasMany(b => b.Crew)
+                .WithOne(cm => cm.Boat)
+                .HasForeignKey(cm => cm.BoatId)
+                .IsRequired();
 
-                .OwnsMany(b => b.Crew, cm => cm
-                    .WithOwner(c => c.Boat)
-                    .HasForeignKey(c => c.BoatId))
+            builder.HasMany(b => b.Invites)
+                .WithOne(i => i.Boat)
+                .HasForeignKey(i => i.BoatId)
+                .IsRequired();
 
-                .OwnsMany(b => b.Modules, m => m
-                    .WithOwner(mo => mo.Boat)
-                    .HasForeignKey(mo => mo.BoatId))
-
-                .OwnsMany(b => b.Invites, i => i
-                    .WithOwner(i => i.Boat)
-                    .HasForeignKey(i => i.BoatId));
+            builder.HasMany(b => b.Modules)
+                .WithOne(m => m.Boat)
+                .HasForeignKey(m => m.BoatId)
+                .IsRequired();
 
             builder.Property(b => b.Description)
                 .HasMaxLength(256)

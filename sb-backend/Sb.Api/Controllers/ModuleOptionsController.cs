@@ -11,7 +11,7 @@ namespace Sb.Api.Controllers
     public class ModuleOptionsController : ApiControllerBase
     {
         public ModuleOptionsController(
-            IModuleService moduleService)
+            ModuleService moduleService)
         {
             _moduleService = moduleService;
 
@@ -25,7 +25,7 @@ namespace Sb.Api.Controllers
         {
             moduleData.ModuleId = moduleId;
             moduleData.AuthorId = HttpContext.GetUserId();
-            return await _moduleService.AddModuleOption(moduleData);
+            return await _moduleService.AddModuleOption(moduleData.AuthorId, moduleId, moduleData);
         }
 
         [HttpDelete("{optionId}")]
@@ -34,6 +34,6 @@ namespace Sb.Api.Controllers
             await _moduleService.DeleteModuleOption(optionId);
         }
 
-        private readonly IModuleService _moduleService;
+        private readonly ModuleService _moduleService;
     }
 }

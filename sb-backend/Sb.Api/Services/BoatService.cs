@@ -43,12 +43,12 @@ namespace Sb.Api.Services
         {
             Boat boat = await _db.Boats
                 .Where(b => b.Id == boatId)
-                .Include(b => b.Modules)
+                .Include(b => b.Crew)
                 .FirstOrDefaultAsync();
 
             Guard.Against.EntityMissing(boat, nameof(boatId));
 
-            BoatDto b = (BoatDto)boat;
+            BoatDto b = _mapper.Map<BoatDto>(boat);
             b.Role = b.Crew
                 .First(cm => cm.UserId == _context.GetUserId())
                 .Role;
@@ -87,53 +87,53 @@ namespace Sb.Api.Services
                 .ToListAsync();
         }
 
-        public async Task<Code> GenerateCodeInvite(Guid boatId, int? expiresUnix)
-        {
-            Boat boat = await GetBoat(boatId);
+        //public async Task<Code> GenerateCodeInvite(Guid boatId, int? expiresUnix)
+        //{
+        //    Boat boat = await GetBoat(boatId);
 
-            DateTimeOffset offset = expiresUnix.HasValue
-                ? DateTimeOffset.FromUnixTimeSeconds(expiresUnix.Value)
-                : DateTimeOffset.UtcNow;
+        //    DateTimeOffset offset = expiresUnix.HasValue
+        //        ? DateTimeOffset.FromUnixTimeSeconds(expiresUnix.Value)
+        //        : DateTimeOffset.UtcNow;
 
-            boat.Code = new Code
-            {
-                Value = Guid.NewGuid().ToString(),
-                ExpiresAt = offset.UtcDateTime
-            };
+        //    boat.Code = new Code
+        //    {
+        //        Value = Guid.NewGuid().ToString(),
+        //        ExpiresAt = offset.UtcDateTime
+        //    };
 
-            _db.Boats.Update(boat);
-            await _db.SaveChangesAsync();
-            return boat.Code;
-        }
+        //    _db.Boats.Update(boat);
+        //    await _db.SaveChangesAsync();
+        //    return boat.Code;
+        //}
 
-        public async Task<Code> GetCodeInvite(Guid boatId)
-        {
-            Boat boat = await GetBoat(boatId);
-            Guard.Against.EntityMissing(boat.Code, nameof(boat.Code));
-            return boat.Code;
-        }
+        //public async Task<Code> GetCodeInvite(Guid boatId)
+        //{
+        //    Boat boat = await GetBoat(boatId);
+        //    Guard.Against.EntityMissing(boat.Code, nameof(boat.Code));
+        //    return boat.Code;
+        //}
 
 
-        public async Task<Boat> AcceptCodeInvite(Guid boatId, string code)
-        {
-            Boat boat = await GetBoat(boatId);
-            Guard.Against.EntityMissing(boat.Code, nameof(boat.Code));
+        //public async Task<Boat> AcceptCodeInvite(Guid boatId, string code)
+        //{
+        //    Boat boat = await GetBoat(boatId);
+        //    Guard.Against.EntityMissing(boat.Code, nameof(boat.Code));
 
-            AuthorizedUser user = _context.GetUserFromClaims();
-            if (boat.Crew.Any(cm => cm.UserId == Guid.Parse(user.Id)))
-                throw new ConflictException();
+        //    AuthorizedUser user = _context.GetUserFromClaims();
+        //    if (boat.Crew.Any(cm => cm.UserId == Guid.Parse(user.Id)))
+        //        throw new ConflictException();
 
-            if (boat.Code.Value != code)
-                throw new ValidationException("Code has expired or is invalid");
+        //    if (boat.Code.Value != code)
+        //        throw new ValidationException("Code has expired or is invalid");
 
-            boat.Crew.Add(new CrewMember
-            {
-                UserId = Guid.Parse(user.Id),
-                Role = BoatRole.Sailor
-            });
-            await _db.SaveChangesAsync();
-            return boat;
-        }
+        //    boat.Crew.Add(new CrewMember
+        //    {
+        //        UserId = Guid.Parse(user.Id),
+        //        Role = BoatRole.Sailor
+        //    });
+        //    await _db.SaveChangesAsync();
+        //    return boat;
+        //}
 
         public async Task AddCrewMember(Guid boatId, Guid userId, BoatRole role)
         {

@@ -28,17 +28,18 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet("mates")]
-        public async Task<ActionResult<IEnumerable<CrewMember>>> GetMates()
+        public async Task<ActionResult<IEnumerable<User>>> GetMates()
         {
             Guid userId = HttpContext.GetUserId();
             var boats = await _boatService.GetAllBoats(userId);
 
             List<User> users = await _db.Users
                 .Where(u => u.Id == userId)
-                .Include(u => u.CrewMemberships)
-                    .ThenInclude(cm => cm.Boat)
-                        .ThenInclude(b => b.Crew.Where(cm => cm.UserId != userId))
-                .DistinctBy(u => u.Id)
+                .SelectMany(u => u.CrewMemberships
+                    .SelectMany(cm => cm.Boat.Crew
+                        .Select(cm => cm.User)))
+                .Distinct()
+                .Where(u => u.Id != userId)
                 .ToListAsync();
 
             return Ok(users);

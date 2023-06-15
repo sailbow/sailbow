@@ -23,15 +23,14 @@ namespace Sb.Api.Services
             _mapper = mapper;
         }
 
-        public async Task<ModuleOption> AddModuleOption(Guid userId, Guid moduleId, ModuleOptionData optionData)
+        public async Task<ModuleOption> AddModuleOption(Guid userId, Guid moduleId, ModuleOption optionData)
         {
             Module module = await _db.Modules.FindAsync(moduleId);
             Guard.Against.EntityMissing(module, nameof(module));
             ModuleOption newOption = new()
             {
                 AuthorId = userId,
-                ModuleId = moduleId,
-                Data = optionData
+                ModuleId = moduleId
             };
             module.ModuleOptions.Add(newOption);
             _db.Modules.Update(module);

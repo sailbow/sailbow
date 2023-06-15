@@ -75,7 +75,11 @@ namespace Sb.Api.Controllers
                 if (string.IsNullOrWhiteSpace(user.Email))
                     return BadRequest("Invalid email");
 
-                User existingUser = await db.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+                User existingUser = await db.Users
+                    .Where(u => u.Email == user.Email)
+                    .Include(u => u.ConnectedAccounts)
+                    .FirstOrDefaultAsync();
+
                 if (existingUser is null)
                 {
                     existingUser = new User
@@ -84,10 +88,19 @@ namespace Sb.Api.Controllers
                         Email = user.Email,
                         ConnectedAccounts = new List<ConnectedAccount>
                         {
-                            new ConnectedAccount{ IdentityProviderId = (int)provider }
+                            new ConnectedAccount { IdentityProviderId = (IdentityProviderEnum)(int)provider }
                         }
                     };
-                    await db.AddAsync(existingUser);
+                    await db.Users.AddAsync(existingUser);
+                    await db.SaveChangesAsync();
+                }
+                else if (!existingUser.ConnectedAccounts.Any(ca => (int)ca.IdentityProviderId == (int)provider))
+                {
+                    existingUser.ConnectedAccounts.Add(new ConnectedAccount
+                    {
+                        IdentityProviderId = (IdentityProviderEnum)(int)provider
+                    });
+                    db.Users.Update(existingUser);
                     await db.SaveChangesAsync();
                 }
 

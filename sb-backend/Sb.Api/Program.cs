@@ -65,7 +65,7 @@ services
     .AddTransient<ITokenService, TokenService>()
     .AddTransient<ValidateAccessTokenMiddleware>()
     .AddTransient<IUserService, UserService>()
-    //.AddTransient<IModuleService, ModuleService>()
+    .AddTransient<ModuleService>()
     .AddAutoMapper(typeof(Program).Assembly)
     .AddCors(opts =>
     {
@@ -134,6 +134,10 @@ app
     .UseEndpoints(endpoints =>
     {
         endpoints.MapControllers();
+        if (env.IsDevelopment())
+        {
+            endpoints.MapSwagger();
+        }
     });
 
 app.Run();

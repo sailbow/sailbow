@@ -36,6 +36,7 @@ namespace Sb.Api.Middleware
             "/api/auth/login",
             "/api/auth/authorize",
             "/api/auth/register",
+            "/swagger/index.html"
         };
     }
 }

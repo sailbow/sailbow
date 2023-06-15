@@ -7,7 +7,7 @@ namespace Sb.Data.Models
     public class ConnectedAccount
     {
         public Guid UserId { get; set; }
-        public int IdentityProviderId { get; set; }
+        public IdentityProviderEnum IdentityProviderId { get; set; }
         public IdentityProvider IdentityProvider { get; set; }
         public User User { get; set; }
     }
@@ -20,9 +20,13 @@ namespace Sb.Data.Models
             builder.ToTable("ConnectedAccounts")
                 .HasKey(ca => new { ca.UserId, ca.IdentityProviderId });
 
+            builder.Property(ca => ca.IdentityProviderId)
+                .HasConversion<int>();
+
             builder.HasOne(ca => ca.IdentityProvider)
                 .WithMany()
-                .HasForeignKey(ca => ca.IdentityProviderId);
+                .HasForeignKey(ca => ca.IdentityProviderId)
+                .IsRequired();
         }
     }
 }

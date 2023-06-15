@@ -14,7 +14,7 @@ namespace Sb.Api.Controllers;
 public class ModulesController : ApiControllerBase
 {
     public ModulesController(
-        IModuleService moduleService,
+        ModuleService moduleService,
         IMapper mapper,
         BoatService boatService)
     {
@@ -92,7 +92,7 @@ public class ModulesController : ApiControllerBase
     //}
 
 
-    private readonly IModuleService _moduleService;
+    private readonly ModuleService _moduleService;
     private readonly BoatService _boatService;
     private readonly IMapper _mapper;
 }

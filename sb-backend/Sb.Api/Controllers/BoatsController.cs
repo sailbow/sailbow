@@ -70,26 +70,26 @@ namespace Sb.Api.Controllers
             await _boatService.UpdateBoatDetails(boatId, request);
         }
 
-        [HttpPut("{boatId}/code")]
-        public async Task<ActionResult<Code>> GenerateCodeInvite(Guid boatId, [FromQuery] int? expiresUnix)
-        {
-            Code code = await _boatService.GenerateCodeInvite(boatId, expiresUnix);
-            return Ok(code);
-        }
+        //[HttpPut("{boatId}/code")]
+        //public async Task<ActionResult<BoatCode>> GenerateCodeInvite(Guid boatId, [FromQuery] int? expiresUnix)
+        //{
+        //    BoatCode code = await _boatService.GenerateCodeInvite(boatId, expiresUnix);
+        //    return Ok(code);
+        //}
 
-        [HttpGet("{boatId}/code")]
-        public async Task<ActionResult<Code>> GetCodeInvite(Guid boatId)
-        {
-            Code code = await _boatService.GetCodeInvite(boatId);
-            return Ok(code);
-        }
+        //[HttpGet("{boatId}/code")]
+        //public async Task<ActionResult<BoatCode>> GetCodeInvite(Guid boatId)
+        //{
+        //    BoatCode code = await _boatService.GetCodeInvite(boatId);
+        //    return Ok(code);
+        //}
 
-        [HttpPost("{boatId}/code/accept")]
-        public async Task<ActionResult<Boat>> AcceptCodeInvite(Guid boatId, [FromQuery] string code)
-        {
-            Boat boat = await _boatService.AcceptCodeInvite(boatId, code);
-            return Ok(boat);
-        }
+        //[HttpPost("{boatId}/code/accept")]
+        //public async Task<ActionResult<Boat>> AcceptCodeInvite(Guid boatId, [FromQuery] string code)
+        //{
+        //    Boat boat = await _boatService.AcceptCodeInvite(boatId, code);
+        //    return Ok(boat);
+        //}
 
         [HttpPost("{boatId}/crew")]
         public async Task<IActionResult> AddCrewMember(Guid boatId, [FromBody] AddCrewMemberRequest addCrewMemberRequest)
