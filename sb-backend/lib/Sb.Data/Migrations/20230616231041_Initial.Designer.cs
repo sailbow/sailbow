@@ -12,7 +12,7 @@ using Sb.Data;
 namespace Sb.Data.Migrations
 {
     [DbContext(typeof(SbContext))]
-    [Migration("20230615154243_Initial")]
+    [Migration("20230616231041_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -92,6 +92,29 @@ namespace Sb.Data.Migrations
                     b.HasIndex("ModuleOptionId");
 
                     b.ToTable("ModuleOptionVotes", (string)null);
+                });
+
+            modelBuilder.Entity("Sb.Data.Models.ModuleSettings", b =>
+                {
+                    b.Property<Guid>("ModuleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("AllowMultiple")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("AnonymousVoting")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("Deadline")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("ModuleId");
+
+                    b.ToTable("ModuleSettings", (string)null);
                 });
 
             modelBuilder.Entity("Sb.Data.Models.Boat", b =>
@@ -187,14 +210,14 @@ namespace Sb.Data.Migrations
                     b.Property<Guid>("CreatedByCrewMemberId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 
                     b.Property<Guid?>("FinalizedOptionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("FinalizedOptionId1")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -205,11 +228,14 @@ namespace Sb.Data.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
                     b.HasIndex("BoatId");
 
                     b.HasIndex("CreatedByCrewMemberId");
-
-                    b.HasIndex("FinalizedOptionId1");
 
                     b.ToTable("Modules");
                 });
@@ -218,7 +244,7 @@ namespace Sb.Data.Migrations
                 {
                     b.HasBaseType("Sb.Data.Models.EntityBase");
 
-                    b.Property<Guid>("AuthorId")
+                    b.Property<Guid>("CreatedByCrewMemberId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Data")
@@ -228,37 +254,11 @@ namespace Sb.Data.Migrations
                     b.Property<Guid>("ModuleId")
                         .HasColumnType("uuid");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("CreatedByCrewMemberId");
 
                     b.HasIndex("ModuleId");
 
                     b.ToTable("ModuleOptions");
-                });
-
-            modelBuilder.Entity("Sb.Data.Models.ModuleSettings", b =>
-                {
-                    b.HasBaseType("Sb.Data.Models.EntityBase");
-
-                    b.Property<bool>("AllowMultiple")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("AnonymousVoting")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<DateTime?>("Deadline")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("ModuleId")
-                        .HasColumnType("uuid");
-
-                    b.HasIndex("ModuleId")
-                        .IsUnique();
-
-                    b.ToTable("ModuleSettings");
                 });
 
             modelBuilder.Entity("Sb.Data.Models.User", b =>
@@ -321,6 +321,17 @@ namespace Sb.Data.Migrations
                     b.Navigation("ModuleOption");
                 });
 
+            modelBuilder.Entity("Sb.Data.Models.ModuleSettings", b =>
+                {
+                    b.HasOne("Sb.Data.Models.Module", "Module")
+                        .WithOne("Settings")
+                        .HasForeignKey("Sb.Data.Models.ModuleSettings", "ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Module");
+                });
+
             modelBuilder.Entity("Sb.Data.Models.Boat", b =>
                 {
                     b.HasOne("Sb.Data.Models.User", "Captain")
@@ -378,28 +389,22 @@ namespace Sb.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sb.Data.Models.CrewMember", "CreatedByCrewMember")
+                    b.HasOne("Sb.Data.Models.CrewMember", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedByCrewMemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sb.Data.Models.ModuleOption", "FinalizedOption")
-                        .WithMany()
-                        .HasForeignKey("FinalizedOptionId1");
-
                     b.Navigation("Boat");
 
-                    b.Navigation("CreatedByCrewMember");
-
-                    b.Navigation("FinalizedOption");
+                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("Sb.Data.Models.ModuleOption", b =>
                 {
-                    b.HasOne("Sb.Data.Models.CrewMember", "Author")
+                    b.HasOne("Sb.Data.Models.CrewMember", "CreatedByCrewMember")
                         .WithMany()
-                        .HasForeignKey("AuthorId")
+                        .HasForeignKey("CreatedByCrewMemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -409,18 +414,7 @@ namespace Sb.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Author");
-
-                    b.Navigation("Module");
-                });
-
-            modelBuilder.Entity("Sb.Data.Models.ModuleSettings", b =>
-                {
-                    b.HasOne("Sb.Data.Models.Module", "Module")
-                        .WithOne("Settings")
-                        .HasForeignKey("Sb.Data.Models.ModuleSettings", "ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("CreatedByCrewMember");
 
                     b.Navigation("Module");
                 });

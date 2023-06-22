@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json;
 
 namespace Sb.Data.Models
 {
@@ -30,6 +30,11 @@ namespace Sb.Data.Models
         {
             builder.Property(cm => cm.Role)
                 .HasConversion<string>()
+                .IsRequired();
+
+            builder.HasOne(cm => cm.Boat)
+                .WithMany(b => b.Crew)
+                .HasForeignKey(cm => cm.BoatId)
                 .IsRequired();
 
             builder.HasOne(cm => cm.User)

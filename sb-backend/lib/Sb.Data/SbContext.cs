@@ -14,6 +14,7 @@ public class SbContext : DbContext
     public DbSet<Invite> Invites { get; set; }
     public DbSet<Module> Modules { get; set; }
     public DbSet<ModuleOption> ModuleOptions { get; set; }
+    public DbSet<ModuleOptionVote> ModuleOptionVotes { get; set; }
     public DbSet<ModuleSettings> ModuleSettings { get; set; }
     public DbSet<User> Users { get; set; }
 

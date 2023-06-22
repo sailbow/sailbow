@@ -7,6 +7,12 @@ namespace Sb.Api.Models
 		string Description,
 		bool AllowMultipleVotes = false,
 		bool AnonymousVoting = false,
-		DateTime? VotingDeadling = null);
+		DateTime? VotingDeadline = null);
+
+	public record VoteForModuleOptionRequest(
+		Guid OptionId);
+
+	public record UnVoteModuleOptionRequest(
+		Guid OptionId);
 }
 

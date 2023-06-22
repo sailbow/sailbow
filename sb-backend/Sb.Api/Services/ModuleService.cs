@@ -23,21 +23,6 @@ namespace Sb.Api.Services
             _mapper = mapper;
         }
 
-        public async Task<ModuleOption> AddModuleOption(Guid userId, Guid moduleId, ModuleOption optionData)
-        {
-            Module module = await _db.Modules.FindAsync(moduleId);
-            Guard.Against.EntityMissing(module, nameof(module));
-            ModuleOption newOption = new()
-            {
-                AuthorId = userId,
-                ModuleId = moduleId
-            };
-            module.ModuleOptions.Add(newOption);
-            _db.Modules.Update(module);
-            await _db.SaveChangesAsync();
-            return newOption;
-        }
-
         public async Task DeleteModule(Guid userId, Guid moduleId)
         {
             await _db.Modules
@@ -62,7 +47,7 @@ namespace Sb.Api.Services
 
         public async Task UpdateModuleSettings(ModuleSettings settings)
         {
-            ModuleSettings existingSettings = await _db.ModuleSettings.FindAsync(settings.Id);
+            ModuleSettings existingSettings = await _db.ModuleSettings.FindAsync(settings.ModuleId);
             existingSettings.AllowMultiple = settings.AllowMultiple;
             existingSettings.AnonymousVoting = settings.AnonymousVoting;
             existingSettings.Deadline = settings.Deadline;

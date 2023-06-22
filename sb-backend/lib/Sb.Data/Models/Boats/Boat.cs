@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,7 +17,11 @@ namespace Sb.Data.Models
         public User Captain { get; set; }
 
         public ICollection<CrewMember> Crew { get; set; } = new List<CrewMember>();
+
+        [JsonIgnore]
         public ICollection<Module> Modules { get; set; } = new List<Module>();
+
+        [JsonIgnore]
         public ICollection<Invite> Invites { get; set; } = new List<Invite>();
     }
 
@@ -31,11 +34,6 @@ namespace Sb.Data.Models
             builder.HasOne(b => b.Captain)
                 .WithMany(u => u.OwnedBoats)
                 .HasForeignKey(b => b.CaptainUserId)
-                .IsRequired();
-
-            builder.HasMany(b => b.Crew)
-                .WithOne(cm => cm.Boat)
-                .HasForeignKey(cm => cm.BoatId)
                 .IsRequired();
 
             builder.HasMany(b => b.Invites)

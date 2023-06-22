@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Sb.Data.Models
@@ -10,11 +10,15 @@ namespace Sb.Data.Models
     public class ModuleOption : EntityBase
     {
         public Guid ModuleId { get; set; }
-        public Guid AuthorId { get; set; }
-        public ICollection<ModuleOptionVote> Votes { get; set; }
-        public CrewMember Author { get; set; }
-        public Module Module { get; set; }
+        public Guid CreatedByCrewMemberId { get; set; }
+        public ICollection<ModuleOptionVote> Votes { get; set; } = new List<ModuleOptionVote>();
         public ModuleOptionData Data { get; set; }
+
+        [JsonIgnore]
+        public CrewMember CreatedByCrewMember { get; set; }
+
+        [JsonIgnore]
+        public Module Module { get; set; }
     }
 
     internal class ModuleOptionEntityTypeConfiguration
@@ -22,9 +26,9 @@ namespace Sb.Data.Models
     {
         public void Configure(EntityTypeBuilder<ModuleOption> builder)
         {
-            builder.HasOne(mo => mo.Author)
+            builder.HasOne(mo => mo.CreatedByCrewMember)
                 .WithMany()
-                .HasForeignKey(mo => mo.AuthorId)
+                .HasForeignKey(mo => mo.CreatedByCrewMemberId)
                 .IsRequired();
 
             var serializerOptions = new JsonSerializerOptions(new JsonSerializerOptions

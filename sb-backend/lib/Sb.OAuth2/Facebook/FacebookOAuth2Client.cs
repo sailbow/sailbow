@@ -39,8 +39,7 @@ namespace Sb.OAuth2
         {
             RestClientOptions options = new(baseUrl)
             {
-                MaxTimeout = TimeSpan.FromSeconds(60).Milliseconds,
-                
+                MaxTimeout = TimeSpan.FromSeconds(60).Milliseconds,                
                 Authenticator = new OAuth2UriQueryParameterAuthenticator("Bearer")
             };
 

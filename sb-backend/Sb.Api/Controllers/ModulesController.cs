@@ -33,6 +33,7 @@ public class ModulesController : ApiControllerBase
         Boat boat = await db.Boats
             .Where(b => b.Id == createModuleRequest.BoatId)
             .Include(b => b.Crew)
+            .AsNoTracking()
             .FirstOrDefaultAsync();
 
         Module newModule = new()
@@ -47,7 +48,7 @@ public class ModulesController : ApiControllerBase
             {
                 AllowMultiple = createModuleRequest.AllowMultipleVotes,
                 AnonymousVoting = createModuleRequest.AnonymousVoting,
-                Deadline = createModuleRequest.VotingDeadling,
+                Deadline = createModuleRequest.VotingDeadline,
             }
         };
         await db.Modules.AddAsync(newModule);
@@ -56,9 +57,13 @@ public class ModulesController : ApiControllerBase
     }
 
     [HttpGet("{moduleId}")]
-    public async Task<Module> GetModuleById(Guid moduleId)
+    public async Task<Module> GetModuleById(
+        Guid moduleId,
+        [FromServices] SbContext db)
     {
-        return await _moduleService.GetModuleByIdAsync(moduleId);
+        return await db.Modules
+            .Include(m => m.Settings)
+            .FirstOrDefaultAsync(m => m.Id == moduleId);
     }
 
     [HttpPatch("{moduleId}/settings")]
@@ -77,30 +82,106 @@ public class ModulesController : ApiControllerBase
     }
 
     [HttpPost("{moduleId}/options")]
-    public async Task AddModuleOption(Guid moduleId, [FromBody] ModuleOption option)
+    public async Task<ModuleOption> AddModuleOption(
+        Guid moduleId,
+        [FromBody] ModuleOptionData optionData,
+        [FromServices] SbContext db)
     {
-        await Task.CompletedTask;
+        Module module = await db.Modules
+            .Include(m => m.Boat.Crew)
+            .FirstOrDefaultAsync(m => m.Id == moduleId);
+
+        ModuleOption newOption = new()
+        {
+            ModuleId = moduleId,
+            CreatedByCrewMemberId = module.Boat.Crew.First(cm => cm.UserId == HttpContext.GetUserId()).Id,
+            Data = optionData
+        };
+        module.ModuleOptions.Add(newOption);
+        await db.SaveChangesAsync();
+        return newOption;
     }
 
-    [HttpPost("{moduleId}/{optionId}/vote")]
-    public async Task<ActionResult> Vote(
-        [FromRoute] Guid boatId,
-        [FromRoute] Guid moduleId,
-        [FromRoute] Guid optionId)
+    [HttpGet("{moduleId}/options")]
+    public async Task<IEnumerable<ModuleOption>> GetModuleOptions(
+        Guid moduleId,
+        [FromServices] SbContext db)
     {
-        await _boatService.GetBoatById(boatId);
-        await _moduleService.VoteForModuleOption(HttpContext.GetUserId(), moduleId, optionId);
+        return await db.ModuleOptions
+            .Include(mo => mo.Votes)
+            .Where(mo => mo.ModuleId == moduleId)
+            .ToListAsync();
+    }
+
+    [HttpPost("{moduleId}/vote")]
+    public async Task<ActionResult<ModuleOptionVote>> VoteForModuleOption(
+        Guid moduleId,
+        [FromBody] VoteForModuleOptionRequest voteRequest,
+        [FromServices] SbContext db)
+    {
+        Module module = await db.Modules
+            .Include(m => m.Settings)
+            .Include(m => m.Boat.Crew)
+            .Include(m => m.ModuleOptions)
+                .ThenInclude(mo => mo.Votes)
+            .FirstOrDefaultAsync(m => m.Id == moduleId);
+
+        Guid crewMemberId = module.Boat.Crew
+            .First(cm => cm.UserId == HttpContext.GetUserId())
+            .Id;
+
+        IEnumerable<ModuleOptionVote> existingVotes = module.ModuleOptions
+            .SelectMany(mo => mo.Votes
+                .Where(v => v.CrewMemberId == crewMemberId));
+
+        ModuleOptionVote identicalVote = existingVotes
+            .FirstOrDefault(v => v.ModuleOptionId == voteRequest.OptionId);
+
+        if (identicalVote != null)
+        {
+            return Ok(identicalVote);
+        }
+
+        if (!module.Settings.AllowMultiple)
+        {
+            db.ModuleOptionVotes.RemoveRange(existingVotes);
+        }
+
+        await db.ModuleOptionVotes.AddAsync(new ModuleOptionVote
+        {
+            CrewMemberId = crewMemberId,
+            ModuleOptionId = voteRequest.OptionId
+        });
+
+        await db.SaveChangesAsync();
         return Ok();
     }
 
-    [HttpDelete("{moduleId}/{optionId}/vote")]
+    [HttpDelete("{moduleId}/vote")]
     public async Task<ActionResult> UnVote(
-        [FromRoute] Guid boatId,
-        [FromRoute] Guid moduleId,
-        [FromRoute] Guid optionId)
+        Guid moduleId,
+        [FromBody] UnVoteModuleOptionRequest unVoteRequest,
+        [FromServices] SbContext db)
     {
-        await _boatService.GetBoatById(boatId);
-        await _moduleService.UnVote(HttpContext.GetUserId(), moduleId);
+        Module module = await db.Modules
+            .Include(m => m.Boat.Crew)
+            .Include(m => m.ModuleOptions)
+                .ThenInclude(mo => mo.Votes)
+            .FirstOrDefaultAsync(m => m.Id == moduleId);
+
+        Guid crewMemberId = module.Boat.Crew
+            .FirstOrDefault(cm => cm.UserId == HttpContext.GetUserId())
+            .Id;
+
+        ModuleOptionVote voteToDelete = module.ModuleOptions
+            .FirstOrDefault(mo => mo.Id == unVoteRequest.OptionId)
+            .Votes
+            .Where(v => v.ModuleOptionId == unVoteRequest.OptionId)
+            .Where(v => v.CrewMemberId == crewMemberId)
+            .FirstOrDefault();
+
+        db.ModuleOptionVotes.Remove(voteToDelete);
+        await db.SaveChangesAsync();
         return Ok();
     }
 

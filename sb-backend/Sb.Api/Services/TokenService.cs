@@ -42,7 +42,8 @@ namespace Sb.Api.Services
             {
                 Type = tokenType,
                 Expires = token.ValidTo,
-                Value = handler.WriteToken(token)
+                Value = handler.WriteToken(token),
+                UserId = userId
             };
         }
 

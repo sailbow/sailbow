@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json;
 
 namespace Sb.Data.Models
 {
@@ -16,14 +14,15 @@ namespace Sb.Data.Models
         public string Description { get; set; }
         public int Order { get; set; }
         public Guid? FinalizedOptionId { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public ModuleType Type { get; set; }
         public ModuleSettings Settings { get; set; }
+
+        [JsonIgnore]
         public Boat Boat { get; set; }
 
         [JsonIgnore]
-        public ModuleOption FinalizedOption { get; set; }
-
-        [JsonIgnore]
-        public CrewMember CreatedByCrewMember { get; set; }
+        public CrewMember CreatedBy { get; set; }
 
         [JsonIgnore]
         public ICollection<ModuleOption> ModuleOptions { get; set; } = new List<ModuleOption>();
@@ -34,7 +33,7 @@ namespace Sb.Data.Models
     {
         public void Configure(EntityTypeBuilder<Module> builder)
         {
-            builder.HasOne(m => m.CreatedByCrewMember)
+            builder.HasOne(m => m.CreatedBy)
                 .WithMany()
                 .HasForeignKey(m => m.CreatedByCrewMemberId)
                 .IsRequired();
@@ -47,6 +46,11 @@ namespace Sb.Data.Models
                 .HasMaxLength(250)
                 .IsRequired(false);
 
+            builder.Property(m => m.Type)
+                .HasConversion<string>()
+                .HasMaxLength(25)
+                .IsRequired();
+
             builder.HasMany(m => m.ModuleOptions)
                 .WithOne(mo => mo.Module)
                 .HasForeignKey(mo => mo.ModuleId)
@@ -57,11 +61,5 @@ namespace Sb.Data.Models
                 .HasForeignKey<ModuleSettings>(s => s.ModuleId)
                 .IsRequired();
         }
-    }
-
-    public enum ModuleType
-    {
-        Date,
-        Location
     }
 }

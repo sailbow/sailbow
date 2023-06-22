@@ -64,10 +64,21 @@ namespace Sb.Api.Controllers
             return await _boatService.GetBoatById(boatId);
         }
 
-        [HttpPatch("{boatId}/details")]
+        [HttpPatch("{boatId}")]
         public async Task UpdateDetails(Guid boatId, [FromBody] UpdateBoatDetailsRequest request)
         {
             await _boatService.UpdateBoatDetails(boatId, request);
+        }
+
+        [HttpGet("{boatId}/modules")]
+        public async Task<IEnumerable<Module>> GetBoatModules(
+            Guid boatId,
+            [FromServices] SbContext db)
+        {
+            return await db.Modules
+                .Include(m => m.Settings)
+                .Where(m => m.BoatId == boatId)
+                .ToListAsync();
         }
 
         //[HttpPut("{boatId}/code")]

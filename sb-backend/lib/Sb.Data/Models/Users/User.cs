@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json;
 
 namespace Sb.Data.Models
 {
@@ -12,9 +10,10 @@ namespace Sb.Data.Models
     {
         public string Name { get; set; }
         public string Email { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+
         [JsonIgnore]
         public string Hash { get; set; }
-        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
         [JsonIgnore]
         public ICollection<Boat> OwnedBoats { get; set; }

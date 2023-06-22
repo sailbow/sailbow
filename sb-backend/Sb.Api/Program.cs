@@ -2,12 +2,9 @@ using System.Text;
 using System.Text.Json;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
-
-using Newtonsoft.Json.Converters;
 
 using Sb.Api.Configuration;
 using Sb.Api.Middleware;
@@ -55,7 +52,6 @@ services
             }
         });
     })
-    .AddEndpointsApiExplorer()
     .Configure<JwtConfig>(configuration.GetSection("Jwt"))
     .Configure<EmailConfig>(configuration.GetSection("Email"))
     .Configure<SbApiConfig>(configuration.GetSection("SbApi"))
@@ -65,7 +61,6 @@ services
     .AddTransient<BoatService>()
     .AddTransient<EmailService>()
     .AddTransient<ITokenService, TokenService>()
-    .AddTransient<ValidateAccessTokenMiddleware>()
     .AddTransient<IUserService, UserService>()
     .AddTransient<ModuleService>()
     .AddAutoMapper(typeof(Program).Assembly)
@@ -112,6 +107,7 @@ services.AddSbHttpClients()
 services.AddControllers()
     .AddJsonOptions(opts =>
     {
+        opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
     });
@@ -131,14 +127,15 @@ app
     .UseCors()
     .UseAuthentication()
     .UseAuthorization()
-    .UseMiddleware<ValidateAccessTokenMiddleware>()
     .UseMiddleware<ExceptionHandlerMiddleware>()
     .UseEndpoints(endpoints =>
     {
         endpoints.MapControllers();
         if (env.IsDevelopment())
         {
-            endpoints.MapSwagger();
+            endpoints
+                .MapSwagger()
+                .AllowAnonymous();
         }
     });
 
