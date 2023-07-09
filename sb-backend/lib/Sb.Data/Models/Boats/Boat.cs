@@ -10,15 +10,12 @@ namespace Sb.Data.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string BannerColor { get; set; }
-        public Uri BannerUrl { get; set; }
-        //public Code Code { get; set; }
         public Guid CaptainUserId { get; set; }
         public User Captain { get; set; }
-
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public BoatBanner Banner { get; set; }
         public ICollection<CrewMember> Crew { get; set; } = new List<CrewMember>();
 
-        [JsonIgnore]
         public ICollection<Module> Modules { get; set; } = new List<Module>();
 
         [JsonIgnore]
@@ -46,6 +43,11 @@ namespace Sb.Data.Models
                 .HasForeignKey(m => m.BoatId)
                 .IsRequired();
 
+            builder.HasOne(b => b.Banner)
+                .WithOne(b => b.Boat)
+                .HasForeignKey<BoatBanner>(b => b.BoatId)
+                .IsRequired();
+
             builder.Property(b => b.Description)
                 .HasMaxLength(256)
                 .IsRequired(false);
@@ -54,15 +56,8 @@ namespace Sb.Data.Models
                 .HasMaxLength(25)
                 .IsRequired();
 
-            builder.Property(b => b.BannerUrl)
-                .HasConversion(
-                    url => url.ToString(),
-                    str => new Uri(str))
-                .IsRequired(false);
-
-            builder.Property(b => b.BannerColor)
-                .HasMaxLength(6)
-                .IsRequired(false);
+            builder.Property(b => b.DateCreated)
+                .IsRequired();
         }
     }
 }

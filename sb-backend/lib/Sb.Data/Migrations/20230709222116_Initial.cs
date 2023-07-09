@@ -47,9 +47,8 @@ namespace Sb.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
                     Description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    BannerColor = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: true),
-                    BannerUrl = table.Column<string>(type: "text", nullable: true),
-                    CaptainUserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    CaptainUserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,6 +81,27 @@ namespace Sb.Data.Migrations
                         name: "FK_ConnectedAccounts_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BoatBanners",
+                columns: table => new
+                {
+                    BoatId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Show = table.Column<bool>(type: "boolean", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: false),
+                    Value = table.Column<string>(type: "text", nullable: false),
+                    Position = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BoatBanners", x => x.BoatId);
+                    table.ForeignKey(
+                        name: "FK_BoatBanners_Boats_BoatId",
+                        column: x => x.BoatId,
+                        principalTable: "Boats",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -310,6 +330,9 @@ namespace Sb.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "BoatBanners");
+
             migrationBuilder.DropTable(
                 name: "ConnectedAccounts");
 

@@ -46,6 +46,13 @@ namespace Sb.Api.Controllers
             return Ok(await userService.AuthenticateAsync(login.Email, login.Password));
         }
 
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await Task.CompletedTask;
+            return Ok();
+        }
+
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(
@@ -151,7 +158,7 @@ namespace Sb.Api.Controllers
             return BadRequest();
         }
 
-        private IEnumerable<Claim> GenerateUserClaims(User user)
+        private static IEnumerable<Claim> GenerateUserClaims(User user)
             => new List<Claim>()
                 .AddIfValid(ClaimTypes.Name, user.Name)
                 .AddIfValid(ClaimTypes.Email, user.Email)

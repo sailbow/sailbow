@@ -59,7 +59,7 @@ namespace Sb.Api.Controllers
         }
 
         [HttpGet("{boatId}")]
-        public async Task<BoatDto> GetBoatById(Guid boatId)
+        public async Task<Boat> GetBoatById(Guid boatId)
         {
             return await _boatService.GetBoatById(boatId);
         }

@@ -12,7 +12,7 @@ using Sb.Data;
 namespace Sb.Data.Migrations
 {
     [DbContext(typeof(SbContext))]
-    [Migration("20230616231041_Initial")]
+    [Migration("20230709222116_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,6 +24,30 @@ namespace Sb.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Sb.Data.Models.BoatBanner", b =>
+                {
+                    b.Property<Guid>("BoatId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("Position")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Show")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("BoatId");
+
+                    b.ToTable("BoatBanners", (string)null);
+                });
 
             modelBuilder.Entity("Sb.Data.Models.ConnectedAccount", b =>
                 {
@@ -121,15 +145,11 @@ namespace Sb.Data.Migrations
                 {
                     b.HasBaseType("Sb.Data.Models.EntityBase");
 
-                    b.Property<string>("BannerColor")
-                        .HasMaxLength(6)
-                        .HasColumnType("character varying(6)");
-
-                    b.Property<string>("BannerUrl")
-                        .HasColumnType("text");
-
                     b.Property<Guid>("CaptainUserId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasMaxLength(256)
@@ -283,6 +303,17 @@ namespace Sb.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Sb.Data.Models.BoatBanner", b =>
+                {
+                    b.HasOne("Sb.Data.Models.Boat", "Boat")
+                        .WithOne("Banner")
+                        .HasForeignKey("Sb.Data.Models.BoatBanner", "BoatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Boat");
+                });
+
             modelBuilder.Entity("Sb.Data.Models.ConnectedAccount", b =>
                 {
                     b.HasOne("Sb.Data.Models.IdentityProvider", "IdentityProvider")
@@ -421,6 +452,8 @@ namespace Sb.Data.Migrations
 
             modelBuilder.Entity("Sb.Data.Models.Boat", b =>
                 {
+                    b.Navigation("Banner");
+
                     b.Navigation("Crew");
 
                     b.Navigation("Invites");

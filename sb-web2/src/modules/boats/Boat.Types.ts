@@ -1,8 +1,8 @@
 import { User } from 'shared/user/User';
 
 export enum BannerType {
-    Color = 'Color',
-    Link = 'Link',
+    Color = 'color',
+    Link = 'link',
 }
 
 export interface BannerState {
@@ -14,9 +14,9 @@ export interface BannerState {
 
 // move to role
 export enum Role {
-    Captain = 'Captain',
-    Assistant = 'Assistant',
-    Sailor = 'Sailor',
+    Captain = 'captain',
+    Assistant = 'assistant',
+    Sailor = 'sailor',
     Owner = 'Owner',
 }
 
@@ -33,8 +33,8 @@ export enum ModuleName {
 }
 
 export enum ModuleType {
-    Date = 'Date',
-    Location = 'Location',
+    Date = 'date',
+    Location = 'location',
 }
 
 export enum ModuleMode {

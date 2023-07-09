@@ -39,21 +39,24 @@ namespace Sb.Api.Services
             return boat;
         }
 
-        public async Task<BoatDto> GetBoatById(Guid boatId)
+        public async Task<Boat> GetBoatById(Guid boatId)
         {
             Boat boat = await _db.Boats
                 .Where(b => b.Id == boatId)
                 .Include(b => b.Crew)
+                .Include(b => b.Banner)
+                .Include(b => b.Modules)
+                    .ThenInclude(m => m.ModuleOptions)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync();
 
             Guard.Against.EntityMissing(boat, nameof(boatId));
 
-            BoatDto b = _mapper.Map<BoatDto>(boat);
-            b.Role = b.Crew
-                .First(cm => cm.UserId == _context.GetUserId())
-                .Role;
+            // b.Role = b.Crew
+            //     .First(cm => cm.UserId == _context.GetUserId())
+            //     .Role;
 
-            return b;
+            return boat;
         }
 
         public async Task UpdateBoatDetails(Guid boatId, UpdateBoatDetailsRequest edits)
@@ -61,8 +64,7 @@ namespace Sb.Api.Services
             Boat boat = await _db.Boats.FindAsync(boatId);
             boat.Description = edits.Description;
             boat.Name = string.IsNullOrWhiteSpace(edits.Name) ? boat.Name : edits.Name;
-            boat.BannerUrl = edits.BannerUrl;
-            boat.BannerColor = edits.BannerColor;
+            boat.Banner = edits.Banner ?? boat.Banner;
             _db.Update(boat);
             await _db.SaveChangesAsync();
         }
@@ -71,6 +73,7 @@ namespace Sb.Api.Services
         {
             return await _db.Boats
                 .Where(b => b.Crew.Any(cm => cm.UserId == userId))
+                .Include(b => b.Banner)
                 .ToListAsync();
         }
 
@@ -82,6 +85,10 @@ namespace Sb.Api.Services
             return await _db.Boats
                 .Where(b => b.Crew.Any(cm => cm.UserId == userId))
                 .Where(b => search == string.Empty || b.Name.Contains(search))
+                .Include(b => b.Banner)
+                .Include(b => b.Modules)
+                    .ThenInclude(m => m.ModuleOptions)
+                .OrderByDescending(b => b.DateCreated)
                 .Skip(page.GetValueOrDefault(0))
                 .Take(perPage.GetValueOrDefault(10))
                 .ToListAsync();
@@ -127,7 +134,7 @@ namespace Sb.Api.Services
         //        throw new ValidationException("Code has expired or is invalid");
 
         //    boat.Crew.Add(new CrewMember
-        //    {
+        //    {s
         //        UserId = Guid.Parse(user.Id),
         //        Role = BoatRole.Sailor
         //    });
