@@ -9,15 +9,15 @@ namespace Sb.Data.Models
     {
         public Guid InviterId { get; set; }
         public Guid BoatId { get; set; }
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
         public BoatRole BoatRole { get; set; }
         public DateTime ExpiresUtc { get; set; }
 
         [JsonIgnore]
-        public User Inviter { get; set; }
+        public User? Inviter { get; set; }
 
         [JsonIgnore]
-        public Boat Boat { get; set; }
+        public Boat? Boat { get; set; }
     }
 
     internal class InviteEntityTypeConfiguration

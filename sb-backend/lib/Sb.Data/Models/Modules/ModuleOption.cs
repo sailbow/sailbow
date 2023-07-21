@@ -12,13 +12,13 @@ namespace Sb.Data.Models
         public Guid ModuleId { get; set; }
         public Guid CreatedByCrewMemberId { get; set; }
         public ICollection<ModuleOptionVote> Votes { get; set; } = new List<ModuleOptionVote>();
-        public ModuleOptionData Data { get; set; }
+        public ModuleOptionData? Data { get; set; }
 
         [JsonIgnore]
-        public CrewMember CreatedByCrewMember { get; set; }
+        public CrewMember? CreatedByCrewMember { get; set; }
 
         [JsonIgnore]
-        public Module Module { get; set; }
+        public Module? Module { get; set; }
     }
 
     internal class ModuleOptionEntityTypeConfiguration
@@ -39,7 +39,7 @@ namespace Sb.Data.Models
             builder.Property(mo => mo.Data)
                 .HasConversion(
                     mo => JsonSerializer.Serialize(mo, serializerOptions),
-                    str => JsonSerializer.Deserialize<ModuleOptionData>(str, serializerOptions))
+                    str => JsonSerializer.Deserialize<ModuleOptionData?>(str, serializerOptions))
                 .IsRequired();
 
             builder.HasMany(mo => mo.Votes)

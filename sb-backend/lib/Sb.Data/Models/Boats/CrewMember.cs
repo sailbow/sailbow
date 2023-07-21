@@ -11,16 +11,16 @@ namespace Sb.Data.Models
         public Guid BoatId { get; set; }
         public Guid UserId { get; set; }
         public BoatRole Role { get; set; }
-        public string Info { get; set; }
+        public string? Info { get; set; }
 
         [JsonIgnore]
-        public User User { get; set; }
+        public User? User { get; set; }
 
         [JsonIgnore]
-        public Boat Boat { get; set; }
+        public Boat? Boat { get; set; }
 
         [JsonIgnore]
-        public ICollection<ModuleOptionVote> Votes { get; set; }
+        public ICollection<ModuleOptionVote> Votes { get; set; } = new List<ModuleOptionVote>();
     }
 
     internal class CrewMemberEntityTypeConfiguration

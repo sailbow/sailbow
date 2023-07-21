@@ -32,7 +32,7 @@ namespace Sb.Api.Controllers
 
         [HttpGet("login")]
         [AllowAnonymous]
-        public string Login(IdentityProviders provider, [FromQuery] string redirectUri, [FromQuery] string state)
+        public string Login(IdentityProvider provider, [FromQuery] string redirectUri, [FromQuery] string state)
         {
             return _clientFactory.GetClient(provider).GetAuthorizationEndpoint(redirectUri, null, null, state);
         }
@@ -66,7 +66,7 @@ namespace Sb.Api.Controllers
         [HttpGet("authorize")]
         [AllowAnonymous]
         public async Task<IActionResult> Authorize(
-            IdentityProviders provider,
+            IdentityProvider provider,
             [FromQuery] string code,
             [FromQuery] string redirectUri,
             [FromQuery] string state,
@@ -83,9 +83,7 @@ namespace Sb.Api.Controllers
                     return BadRequest("Invalid email");
 
                 User existingUser = await db.Users
-                    .Where(u => u.Email == user.Email)
-                    .Include(u => u.ConnectedAccounts)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(u => u.IdentityProviderId == user.Id);
 
                 if (existingUser is null)
                 {
@@ -93,21 +91,9 @@ namespace Sb.Api.Controllers
                     {
                         Name = user.Name,
                         Email = user.Email,
-                        ConnectedAccounts = new List<ConnectedAccount>
-                        {
-                            new ConnectedAccount { IdentityProviderId = (IdentityProviderEnum)(int)provider }
-                        }
+                        IdentityProvider = provider
                     };
                     await db.Users.AddAsync(existingUser);
-                    await db.SaveChangesAsync();
-                }
-                else if (!existingUser.ConnectedAccounts.Any(ca => (int)ca.IdentityProviderId == (int)provider))
-                {
-                    existingUser.ConnectedAccounts.Add(new ConnectedAccount
-                    {
-                        IdentityProviderId = (IdentityProviderEnum)(int)provider
-                    });
-                    db.Users.Update(existingUser);
                     await db.SaveChangesAsync();
                 }
 

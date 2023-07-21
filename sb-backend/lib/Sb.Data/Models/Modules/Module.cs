@@ -10,19 +10,19 @@ namespace Sb.Data.Models
     {
         public Guid BoatId { get; set; }
         public Guid CreatedByCrewMemberId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public int Order { get; set; }
         public Guid? FinalizedOptionId { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
         public ModuleType Type { get; set; }
-        public ModuleSettings Settings { get; set; }
+        public ModuleSettings? Settings { get; set; }
 
         [JsonIgnore]
-        public Boat Boat { get; set; }
+        public Boat? Boat { get; set; }
 
         [JsonIgnore]
-        public CrewMember CreatedBy { get; set; }
+        public CrewMember? CreatedBy { get; set; }
 
         [JsonIgnore]
         public ICollection<ModuleOption> ModuleOptions { get; set; } = new List<ModuleOption>();

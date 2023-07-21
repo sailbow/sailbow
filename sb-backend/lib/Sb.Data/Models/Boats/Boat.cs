@@ -8,12 +8,12 @@ namespace Sb.Data.Models
 {
     public class Boat : EntityBase
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public Guid CaptainUserId { get; set; }
-        public User Captain { get; set; }
+        public User? Captain { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
-        public BoatBanner Banner { get; set; }
+        public BoatBanner? Banner { get; set; }
         public ICollection<CrewMember> Crew { get; set; } = new List<CrewMember>();
 
         public ICollection<Module> Modules { get; set; } = new List<Module>();

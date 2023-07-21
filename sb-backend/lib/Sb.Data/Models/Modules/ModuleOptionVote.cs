@@ -11,10 +11,10 @@ namespace Sb.Data.Models
         public Guid ModuleOptionId { get; set; }
 
         [JsonIgnore]
-        public CrewMember CrewMember { get; set; }
+        public CrewMember? CrewMember { get; set; }
 
         [JsonIgnore]
-        public ModuleOption ModuleOption { get; set; }
+        public ModuleOption? ModuleOption { get; set; }
     }
 
     internal class ModuleVoteEntityTypeConfiguration

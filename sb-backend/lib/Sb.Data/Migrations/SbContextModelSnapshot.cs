@@ -17,7 +17,7 @@ namespace Sb.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -46,21 +46,6 @@ namespace Sb.Data.Migrations
                     b.ToTable("BoatBanners", (string)null);
                 });
 
-            modelBuilder.Entity("Sb.Data.Models.ConnectedAccount", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("IdentityProviderId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UserId", "IdentityProviderId");
-
-                    b.HasIndex("IdentityProviderId");
-
-                    b.ToTable("ConnectedAccounts", (string)null);
-                });
-
             modelBuilder.Entity("Sb.Data.Models.EntityBase", b =>
                 {
                     b.Property<Guid>("Id")
@@ -72,32 +57,6 @@ namespace Sb.Data.Migrations
                     b.ToTable((string)null);
 
                     b.UseTpcMappingStrategy();
-                });
-
-            modelBuilder.Entity("Sb.Data.Models.IdentityProvider", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IdentityProviders", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Google"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Facebook"
-                        });
                 });
 
             modelBuilder.Entity("Sb.Data.Models.ModuleOptionVote", b =>
@@ -292,10 +251,18 @@ namespace Sb.Data.Migrations
                     b.Property<string>("Hash")
                         .HasColumnType("text");
 
+                    b.Property<string>("IdentityProvider")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("IdentityProviderId")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasAnnotation("AllowEmptyStrings", false);
 
                     b.ToTable("Users");
                 });
@@ -309,25 +276,6 @@ namespace Sb.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Boat");
-                });
-
-            modelBuilder.Entity("Sb.Data.Models.ConnectedAccount", b =>
-                {
-                    b.HasOne("Sb.Data.Models.IdentityProvider", "IdentityProvider")
-                        .WithMany()
-                        .HasForeignKey("IdentityProviderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Sb.Data.Models.User", "User")
-                        .WithMany("ConnectedAccounts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IdentityProvider");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Sb.Data.Models.ModuleOptionVote", b =>
@@ -477,8 +425,6 @@ namespace Sb.Data.Migrations
 
             modelBuilder.Entity("Sb.Data.Models.User", b =>
                 {
-                    b.Navigation("ConnectedAccounts");
-
                     b.Navigation("CrewMemberships");
 
                     b.Navigation("OwnedBoats");

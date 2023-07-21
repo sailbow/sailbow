@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace Sb.Data.Migrations
 {
     /// <inheritdoc />
@@ -14,18 +12,6 @@ namespace Sb.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "IdentityProviders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityProviders", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -33,6 +19,8 @@ namespace Sb.Data.Migrations
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IdentityProvider = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: true),
+                    IdentityProviderId = table.Column<string>(type: "text", nullable: true),
                     Hash = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -56,30 +44,6 @@ namespace Sb.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Boats_Users_CaptainUserId",
                         column: x => x.CaptainUserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ConnectedAccounts",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    IdentityProviderId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConnectedAccounts", x => new { x.UserId, x.IdentityProviderId });
-                    table.ForeignKey(
-                        name: "FK_ConnectedAccounts_IdentityProviders_IdentityProviderId",
-                        column: x => x.IdentityProviderId,
-                        principalTable: "IdentityProviders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ConnectedAccounts_Users_UserId",
-                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -262,24 +226,10 @@ namespace Sb.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "IdentityProviders",
-                columns: new[] { "Id", "Name" },
-                values: new object[,]
-                {
-                    { 1, "Google" },
-                    { 2, "Facebook" }
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Boats_CaptainUserId",
                 table: "Boats",
                 column: "CaptainUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ConnectedAccounts_IdentityProviderId",
-                table: "ConnectedAccounts",
-                column: "IdentityProviderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CrewMembers_BoatId",
@@ -334,9 +284,6 @@ namespace Sb.Data.Migrations
                 name: "BoatBanners");
 
             migrationBuilder.DropTable(
-                name: "ConnectedAccounts");
-
-            migrationBuilder.DropTable(
                 name: "Invites");
 
             migrationBuilder.DropTable(
@@ -344,9 +291,6 @@ namespace Sb.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ModuleSettings");
-
-            migrationBuilder.DropTable(
-                name: "IdentityProviders");
 
             migrationBuilder.DropTable(
                 name: "ModuleOptions");

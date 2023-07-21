@@ -2,3 +2,7 @@
 node_modules/
 appsettings.development.json
 sailboat-key.pem
+
+# VSCode
+.vscode/
+**/.vscode/

@@ -13,7 +13,7 @@ namespace Sb.Data.Models
         public DateTime? Deadline { get; set; }
 
         [JsonIgnore]
-        public Module Module { get; set; }
+        public Module? Module { get; set; }
     }
 
     internal class ModuleSettingsEntityTypeConfiguration

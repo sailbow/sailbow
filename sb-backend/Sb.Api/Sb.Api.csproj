@@ -16,20 +16,20 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\lib\Sb.Email\Sb.Email.csproj">
+    <ProjectReference Include="..\lib\Sb.Data\Sb.Data.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\lib\Sb.Data\Sb.Data.csproj">
+    <ProjectReference Include="..\lib\Sb.OAuth2\Sb.OAuth2.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
     <ProjectReference Include="..\lib\Sb.HttpClients\Sb.HttpClients.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\lib\Sb.OAuth2\Sb.OAuth2.csproj">
+    <ProjectReference Include="..\lib\Sb.Email\Sb.Email.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>

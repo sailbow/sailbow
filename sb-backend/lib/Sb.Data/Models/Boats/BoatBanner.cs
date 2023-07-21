@@ -15,11 +15,11 @@ public class BoatBanner
     public Guid BoatId { get; set; }
     public bool Show { get; set; } = false;
     public BannerType Type { get; set; }
-    public string Value { get; set; }
+    public string Value { get; set; } = string.Empty;
     public int? Position { get; set; }
 
     [JsonIgnore]
-    public Boat Boat { get; set; }
+    public Boat? Boat { get; set; }
 }
 
 internal class BoatBannerEntityTypeConfiguration : IEntityTypeConfiguration<BoatBanner>
