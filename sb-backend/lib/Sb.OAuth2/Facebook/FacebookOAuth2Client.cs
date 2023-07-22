@@ -11,9 +11,9 @@ namespace Sb.OAuth2
     public class FacebookOAuth2Client : OAuth2Client
     {
         public FacebookOAuth2Client(ClientCredentials credentials) : base(
-            new Uri("https://www.facebook.com/v14.0/dialog/oauth"),
-            new Uri("https://graph.facebook.com/v14.0/oauth/access_token"),
-            new Uri("https://graph.facebook.com/v14.0/oauth/access_token"),
+            new Uri("https://www.facebook.com/v17.0/dialog/oauth"),
+            new Uri("https://graph.facebook.com/v17.0/oauth/access_token"),
+            new Uri("https://graph.facebook.com/v17.0/oauth/access_token"),
             credentials)
         {
             Defaults.Scope = "public_profile";
@@ -39,8 +39,7 @@ namespace Sb.OAuth2
         {
             RestClientOptions options = new(baseUrl)
             {
-                MaxTimeout = TimeSpan.FromSeconds(60).Milliseconds,                
-                Authenticator = new OAuth2UriQueryParameterAuthenticator("Bearer")
+                MaxTimeout = TimeSpan.FromSeconds(60).Milliseconds,
             };
 
             return new RestClient(options)

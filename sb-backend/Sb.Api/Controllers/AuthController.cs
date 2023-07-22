@@ -91,7 +91,8 @@ namespace Sb.Api.Controllers
                     {
                         Name = user.Name,
                         Email = user.Email,
-                        IdentityProvider = provider
+                        IdentityProvider = provider,
+                        IdentityProviderId = user.Id
                     };
                     await db.Users.AddAsync(existingUser);
                     await db.SaveChangesAsync();
