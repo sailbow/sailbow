@@ -1,13 +1,11 @@
 ﻿using System;
-
-namespace Sb.Data.Models
+namespace Sb.Api.Models
 {
-    [PersistenceModel("Tokens")]
-    public class TokenBase : EntityBase
+    public class TokenBase
     {
         public string Value { get; set; }
         public DateTime Expires { get; set; }
         public TokenType Type { get; set; }
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

@@ -2,6 +2,8 @@
 
 using Ardalis.GuardClauses;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Sb.Api.Models;
 using Sb.Api.Validation;
 using Sb.Data;
@@ -11,21 +13,20 @@ namespace Sb.Api.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepository _repo;
         private readonly ITokenService _tokenService;
+        private readonly SbContext _db;
 
         public UserService(
-            IRepository repo,
-            ITokenService tokenService)
+            ITokenService tokenService,
+            SbContext db)
         {
-            _repo = repo;
             _tokenService = tokenService;
+            _db = db;
         }
 
-        public async Task<User> GetUserById(string userId)
+        public async Task<User> GetUserById(Guid userId)
         {
-            Guard.Against.NullOrWhiteSpace(userId);
-            var user = await _repo.GetByIdAsync<User>(userId);
+            User user = await _db.Users.FindAsync(userId);
             Guard.Against.EntityMissing(user, nameof(user));
             return user;
         }
@@ -40,32 +41,35 @@ namespace Sb.Api.Services
                 throw new ValidationException("Invalid email or passwords don't match");
             }
 
-            if (await _repo.FirstOrDefaultAsync<User>(u => u.Email == user.Email) != null)
+            if ((await _db.Users.FirstOrDefaultAsync(u => u.Email == user.Email)) != null)
                 throw new ValidationException("An account already exists with this email");
 
-            User u = await _repo.InsertAsync(new User
+
+            User u = new User
             {
                 Name = user.Name,
                 Email = user.Email,
-                Hash = BCrypt.Net.BCrypt.HashPassword(user.Password),
-                DateCreated = DateTime.UtcNow
-            });
+                Hash = BCrypt.Net.BCrypt.HashPassword(user.Password)
+            };
+
+            await _db.Users.AddAsync(u);
+            await _db.SaveChangesAsync();
             return new JwtTokensResponse
             {
-                AccessToken = await _tokenService.GenerateToken(u.Id, TokenType.Access, GenerateUserClaims(u)),
-                RefreshToken = await _tokenService.GenerateToken(u.Id, TokenType.Refresh, GenerateUserClaims(u))
+                AccessToken = _tokenService.GenerateToken(u.Id, TokenType.Access, GenerateUserClaims(u)),
+                RefreshToken = _tokenService.GenerateToken(u.Id, TokenType.Refresh, GenerateUserClaims(u))
             };
         }
 
         public async Task<JwtTokensResponse> AuthenticateAsync(string email, string password)
         {
-            User u = await _repo.FirstOrDefaultAsync<User>(u => u.Email == email);
-            Guard.Against.EntityMissing(u, nameof(email));
-            if (!BCrypt.Net.BCrypt.Verify(password, u.Hash)) throw new ValidationException("Invalid email or password");
+            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+            Guard.Against.EntityMissing(user, nameof(user));
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Hash)) throw new ValidationException("Invalid email or password");
             return new JwtTokensResponse
             {
-                AccessToken = await _tokenService.GenerateToken(u.Id, TokenType.Access, GenerateUserClaims(u)),
-                RefreshToken = await _tokenService.GenerateToken(u.Id, TokenType.Refresh, GenerateUserClaims(u))
+                AccessToken = _tokenService.GenerateToken(user.Id, TokenType.Access, GenerateUserClaims(user)),
+                RefreshToken = _tokenService.GenerateToken(user.Id, TokenType.Refresh, GenerateUserClaims(user))
             };
         }
 
@@ -73,6 +77,6 @@ namespace Sb.Api.Services
             => new List<Claim>()
                 .AddIfValid(ClaimTypes.Name, user.Name)
                 .AddIfValid(ClaimTypes.Email, user.Email)
-                .AddIfValid(CustomClaimTypes.Id, user.Id);
+                .AddIfValid(CustomClaimTypes.Id, user.Id.ToString());
     }
 }

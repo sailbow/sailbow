@@ -7,6 +7,6 @@ namespace Sb.Api.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public Banner Banner { get; set; }
+        public BoatBanner Banner { get; set; }
     }
 }

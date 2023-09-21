@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 
 using Sb.Api.Configuration;
 using Sb.Api.Models;
@@ -45,6 +46,13 @@ namespace Sb.Api.Controllers
             return Ok(await userService.AuthenticateAsync(login.Email, login.Password));
         }
 
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await Task.CompletedTask;
+            return Ok();
+        }
+
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(
@@ -62,7 +70,7 @@ namespace Sb.Api.Controllers
             [FromQuery] string code,
             [FromQuery] string redirectUri,
             [FromQuery] string state,
-            [FromServices] IRepository repo,
+            [FromServices] SbContext db,
             [FromServices] ITokenService tokenService)
         {
             try
@@ -74,22 +82,25 @@ namespace Sb.Api.Controllers
                 if (string.IsNullOrWhiteSpace(user.Email))
                     return BadRequest("Invalid email");
 
-                User existingUser = await repo.FirstOrDefaultAsync<User>(u => u.Email == user.Email);
+                User existingUser = await db.Users
+                    .FirstOrDefaultAsync(u => u.IdentityProviderId == user.Id);
+
                 if (existingUser is null)
                 {
-                    existingUser = await repo.InsertAsync(new User
+                    existingUser = new User
                     {
                         Name = user.Name,
                         Email = user.Email,
-                        Provider = provider.ToString(),
-                        ProviderUserId = user.Id,
-                        DateCreated = DateTime.UtcNow
-                    });
+                        IdentityProvider = provider,
+                        IdentityProviderId = user.Id
+                    };
+                    await db.Users.AddAsync(existingUser);
+                    await db.SaveChangesAsync();
                 }
 
                 IEnumerable<Claim> claims = GenerateUserClaims(existingUser);
-                TokenBase accessToken = await tokenService.GenerateToken(existingUser.Id, TokenType.Access, claims);
-                TokenBase refreshToken = await tokenService.GenerateToken(existingUser.Id, TokenType.Refresh, claims);
+                TokenBase accessToken = tokenService.GenerateToken(existingUser.Id, TokenType.Access, claims);
+                TokenBase refreshToken = tokenService.GenerateToken(existingUser.Id, TokenType.Refresh, claims);
                 return Ok(new JwtTokensResponse
                 {
                     AccessToken = accessToken,
@@ -98,7 +109,6 @@ namespace Sb.Api.Controllers
             }
             catch (OAuth2Exception e)
             {
-                Console.WriteLine(e.Content);
                 if (e.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return Unauthorized();
@@ -114,41 +124,31 @@ namespace Sb.Api.Controllers
 
         [HttpPost("refresh")]
         [AllowAnonymous]
-        public async Task<IActionResult> RefreshToken(
+        public IActionResult RefreshToken(
             [FromBody] TokenBase token,
             [FromServices] ITokenService tokenService)
         {
             AuthorizedUser u = HttpContext.GetUserFromClaims();
-            if (await tokenService.IsTokenValid(u.Id, token.Value, TokenType.Refresh))
+            if (!Guid.TryParse(u.Id, out Guid userId))
+            {
+                return BadRequest();
+            }
+
+            if (tokenService.IsTokenValid(userId, token.Value, TokenType.Refresh))
             {
                 return Ok(new JwtTokensResponse
                 {
-                    AccessToken = await tokenService.GenerateToken(u.Id, TokenType.Access, HttpContext.User.Claims),
-                    RefreshToken = await tokenService.GenerateToken(u.Id, TokenType.Refresh, HttpContext.User.Claims)
+                    AccessToken = tokenService.GenerateToken(userId, TokenType.Access, HttpContext.User.Claims),
+                    RefreshToken = tokenService.GenerateToken(userId, TokenType.Refresh, HttpContext.User.Claims)
                 });
             }
             return BadRequest();
         }
 
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout([FromServices] ITokenService tokenService)
-        {
-            string token = HttpContext.GetAccessToken();
-            await tokenService.RevokeToken(HttpContext.GetUserId(), token, TokenType.Access);
-            return Ok();
-        }
-
-        [HttpPost("logout-all")]
-        public async Task<IActionResult> LogoutAll([FromServices] ITokenService tokenService)
-        {
-            await tokenService.RevokeAllTokens(HttpContext.GetUserId());
-            return Ok();
-        }
-
-        private IEnumerable<Claim> GenerateUserClaims(User user)
+        private static IEnumerable<Claim> GenerateUserClaims(User user)
             => new List<Claim>()
                 .AddIfValid(ClaimTypes.Name, user.Name)
                 .AddIfValid(ClaimTypes.Email, user.Email)
-                .AddIfValid(CustomClaimTypes.Id, user.Id);
+                .AddIfValid(CustomClaimTypes.Id, user.Id.ToString());
     }
 }

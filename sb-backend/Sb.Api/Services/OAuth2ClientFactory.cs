@@ -1,5 +1,5 @@
 ﻿
-using Sb.Api.Models;
+using Sb.Data.Models;
 using Sb.OAuth2;
 
 namespace Sb.Api.Services

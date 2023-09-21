@@ -1,19 +1,18 @@
 using System.Text;
+using System.Text.Json;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
-using Newtonsoft.Json.Converters;
-
-using Sb.Api.Authorization;
 using Sb.Api.Configuration;
 using Sb.Api.Middleware;
 using Sb.Api.Services;
-using Sb.Data.Serialization;
+using Sb.Data;
 using Sb.Email;
 using Sb.OAuth2;
+using System.Text.Json.Serialization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
@@ -22,8 +21,13 @@ IConfiguration configuration = builder.Configuration;
 services
     .AddOptions()
     .AddHttpContextAccessor()
+    .AddDbContext<SbContext>(opts =>
+    {
+        opts.UseNpgsql(configuration.GetConnectionString("SbPostgres"));
+    })
     .AddSwaggerGen(opts =>
     {
+        opts.UseOneOfForPolymorphism();
         opts.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
         {
             In = ParameterLocation.Header,
@@ -48,8 +52,6 @@ services
             }
         });
     })
-    .AddSwaggerGenNewtonsoftSupport()
-    .AddEndpointsApiExplorer()
     .Configure<JwtConfig>(configuration.GetSection("Jwt"))
     .Configure<EmailConfig>(configuration.GetSection("Email"))
     .Configure<SbApiConfig>(configuration.GetSection("SbApi"))
@@ -59,22 +61,9 @@ services
     .AddTransient<BoatService>()
     .AddTransient<EmailService>()
     .AddTransient<ITokenService, TokenService>()
-    .AddTransient<ValidateAccessTokenMiddleware>()
     .AddTransient<IUserService, UserService>()
-    .AddTransient<IModuleService, ModuleService>()
+    .AddTransient<ModuleService>()
     .AddAutoMapper(typeof(Program).Assembly)
-    .AddAuthorization(opts =>
-    {
-        opts.AddPolicy(AuthorizationPolicies.ReadBoatPolicy, policy =>
-            policy.Requirements.Add(new CrewMemberRequirement()));
-        opts.AddPolicy(AuthorizationPolicies.EditBoatPolicy, policy =>
-            policy.Requirements.Add(new CaptainOrAssistantRequirement()));
-        opts.AddPolicy(AuthorizationPolicies.CaptainPolicy, policy =>
-            policy.Requirements.Add(new CaptainRequirement()));
-    })
-    .AddSingleton<IAuthorizationHandler, CrewMemberAuthorizationHandler>()
-    .AddSingleton<IAuthorizationHandler, CaptainAuthorizationHandler>()
-    .AddSingleton<IAuthorizationHandler, CaptainOrAssistantAuthorizationHandler>()
     .AddCors(opts =>
     {
         opts.AddDefaultPolicy(p =>
@@ -103,12 +92,6 @@ services
         };
     });
 
-services.AddMongoDB(opts =>
-{
-    opts.ConnectionString = configuration["Mongo:ConnectionString"];
-    opts.DatabaseName = configuration["Mongo:DatabaseName"];
-});
-
 services.AddSbEmailClients()
     .AddSendGridClient(opts =>
     {
@@ -122,12 +105,11 @@ services.AddSbHttpClients()
     });
 
 services.AddControllers()
-    .AddNewtonsoftJson(opts =>
+    .AddJsonOptions(opts =>
     {
-        opts.UseCamelCasing(true);
-        opts.SerializerSettings.Converters.Add(new StringEnumConverter());
-        opts.SerializerSettings.Converters.Add(new ModuleWithDataJsonConverter());
-        opts.SerializerSettings.Converters.Add(new ModuleDataJsonConverter());
+        opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
     });
 
 var app = builder.Build();
@@ -145,11 +127,16 @@ app
     .UseCors()
     .UseAuthentication()
     .UseAuthorization()
-    .UseMiddleware<ValidateAccessTokenMiddleware>()
     .UseMiddleware<ExceptionHandlerMiddleware>()
     .UseEndpoints(endpoints =>
     {
         endpoints.MapControllers();
+        if (env.IsDevelopment())
+        {
+            endpoints
+                .MapSwagger()
+                .AllowAnonymous();
+        }
     });
 
 app.Run();

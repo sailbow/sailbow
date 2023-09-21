@@ -1,4 +1,4 @@
-﻿namespace Sb.Data.Models
+﻿namespace Sb.Api.Models
 {
     public enum TokenType
     {

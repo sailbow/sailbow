@@ -5,15 +5,13 @@ import { EndpointFunction } from 'util/http/Endpoints';
 import { Http } from 'util/http/Http';
 
 export enum Provider {
-    Google,
-    Facebook,
+    Google = "google",
+    Facebook = "facebook"
 }
 
 export const ProviderToUriMapper: Record<string, string> = {
-    [Provider.Google]: `${window.location.origin}${Routes.Public.Login}?provider=${process.env
-        .REACT_APP_PROVIDER_GOOGLE!}`,
-    [Provider.Facebook]: `${window.location.origin}${Routes.Public.Login}?provider=${process.env
-        .REACT_APP_PROVIDER_FACEBOOK!}`,
+    [Provider.Google]: `${window.location.origin}${Routes.Public.Login}?provider=${Provider.Google}`,
+    [Provider.Facebook]: `${window.location.origin}${Routes.Public.Login}?provider=${Provider.Facebook}`,
 };
 
 export interface RedirectResponse {

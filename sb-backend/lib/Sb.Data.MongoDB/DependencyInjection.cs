@@ -27,15 +27,14 @@ namespace Microsoft.Extensions.DependencyInjection
                 conventions: new ConventionPack { new StringObjectIdConvention() },
                 filter: t => true);
 
-            BsonClassMap.RegisterClassMap<ModuleData>(md =>
+            BsonClassMap.RegisterClassMap<ModuleOption>(md =>
             {
                 md.AutoMap();
-                md.UnmapField(md => md.NumVotes);
                 md.UnmapField(md => md.Type);
                 md.SetIsRootClass(true);
             });
-            BsonClassMap.RegisterClassMap<DateModuleData>();
-            BsonClassMap.RegisterClassMap<LocationModuleData>();
+            BsonClassMap.RegisterClassMap<DateModuleOptionData>();
+            BsonClassMap.RegisterClassMap<LocationModuleOption>();
 
             services.AddTransient<IRepository, MongoRepository>();
             services.AddTransient<IIdGenerator, ObjectIdGenerator>();

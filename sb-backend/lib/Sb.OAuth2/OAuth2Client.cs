@@ -56,9 +56,8 @@ namespace Sb.OAuth2
 
         public async Task<OAuthTokens> GenerateAccessTokensAsync(string authCode, string redirectUri, string state)
         {
-            var client = new RestClient(_tokenUrl);
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST)
+            var client = new RestClient();
+            var request = new RestRequest(_tokenUrl, Method.Post)
                 .AddHeader("Content-Type", "application/x-www-form-urlencoded")
                 .AddParameter(ParameterKeys.Code, authCode)
                 .AddParameter(ParameterKeys.RedirectUri, redirectUri)
@@ -66,7 +65,7 @@ namespace Sb.OAuth2
                 .AddParameter(ParameterKeys.ClientId, _clientCredentials.ClientId)
                 .AddParameter(ParameterKeys.ClientSecret, _clientCredentials.ClientSecret)
                 .AddParameter(ParameterKeys.GrantType, "authorization_code");
-            IRestResponse res = await client.ExecuteAsync(request);
+            RestResponse res = await client.ExecuteAsync(request);
             if (!res.IsSuccessful)
             {
                 throw new OAuth2Exception(res.StatusCode, res.Content);
@@ -76,16 +75,15 @@ namespace Sb.OAuth2
 
         public async Task<OAuthTokens> RefreshTokenAsync(string refreshToken)
         {
-            var client = new RestClient(_tokenRefreshUrl);
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST)
+            var client = new RestClient();
+            var request = new RestRequest(_tokenRefreshUrl, Method.Post)
                 .AddHeader("Content-Type", "application/x-www-form-urlencoded")
                 .AddParameter(ParameterKeys.RefreshToken, refreshToken)
                 .AddParameter(ParameterKeys.ClientId, _clientCredentials.ClientId)
                 .AddParameter(ParameterKeys.ClientSecret, _clientCredentials.ClientSecret)
                 .AddParameter(ParameterKeys.GrantType, "refresh_token");
 
-            IRestResponse res = await client.ExecuteAsync(request);
+            RestResponse res = await client.ExecuteAsync(request);
             if (!res.IsSuccessful)
             {
                 throw new OAuth2Exception(res.StatusCode, res.Content);
@@ -99,7 +97,7 @@ namespace Sb.OAuth2
         protected virtual Dictionary<string, string> GetAdditionalAuthorizationParameters()
             => new();
 
-        protected void EnsureSuccess(IRestResponse res)
+        protected void EnsureSuccess(RestResponse res)
         {
             if (!res.IsSuccessful)
             {
