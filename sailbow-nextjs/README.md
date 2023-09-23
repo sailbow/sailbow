@@ -19,7 +19,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Database migrations with Drizzle
 
-Generate migration using ```npm run migrate:generate```. This will create a migration file in ```src/app/db/migrations```
+Generate migration using ```npm run migration:generate```. This will create a migration file in ```src/app/db/migrations```
 
-Execute migration using ```npm run migrate:push```. Make sure the ```DATABASE_URL``` variable is set in your ```.env``` file
+Execute migration using ```npm run migration:push```. Make sure the ```DATABASE_URL``` variable is set in your ```.env``` file
 
