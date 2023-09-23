@@ -1,4 +1,6 @@
 import { pgTable, varchar, text, timestamp, boolean, integer, json, serial } from "drizzle-orm/pg-core";
+import { createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
 // TODOS:
 // 1) Indexes
@@ -9,7 +11,7 @@ export const users = pgTable("users", {
 	email: varchar("email", { length: 256 }).notNull().unique(),
 	phone: text("phone").unique(),
 	hash: varchar("hash", { length: 256 }),
-	createdOn: timestamp("created_on", { withTimezone: true }).notNull().defaultNow(),
+	createdOn: timestamp("created_on", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
 });
 
 export const boats = pgTable("boats", {
@@ -17,7 +19,7 @@ export const boats = pgTable("boats", {
 	name: varchar("name", { length: 50 }).notNull(),
 	description: varchar("description", { length: 256 }),
 	captainUserId: integer("captain_user_id").notNull().references(() => users.id, { onDelete: "cascade" } ),
-	createdOn: timestamp("created_on", { withTimezone: true }).notNull().defaultNow(),
+	createdOn: timestamp("created_on", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
 });
 
 export const boatBanners = pgTable("boat_banners", {
@@ -33,7 +35,7 @@ export const crewMembers = pgTable("crew_members", {
 	boatId: integer("boat_id").notNull().references(() => boats.id, { onDelete: "cascade" } ),
 	userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" } ),
 	role: text("role", { enum: [ "captain", "firstMate", "crewMember" ]}).notNull(),
-	createdOn: timestamp("created_on", { withTimezone: true }).notNull().defaultNow(),
+	createdOn: timestamp("created_on", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
 });
 
 export const modules = pgTable("modules", {
@@ -43,7 +45,7 @@ export const modules = pgTable("modules", {
 	description: varchar("description", { length: 250 }),
 	order: integer("order").notNull(),
 	finalizedOptionId: integer("finalized_option_id"),
-	createdOn: timestamp("created_on", { withTimezone: true }).notNull(),
+	createdOn: timestamp("created_on", { withTimezone: true, mode: "string" }).notNull(),
 	type: text("type", { enum: [ "date", "location" ]}).notNull(),
 	authorUserId: integer("author_user_id").notNull().references(() => users.id)
 })
@@ -52,7 +54,7 @@ export const moduleSettings = pgTable("module_settings", {
 	moduleId: integer("module_id").primaryKey().notNull().references(() => modules.id, { onDelete: "cascade" } ),
 	allowMultiple: boolean("allow_multiple").default(false).notNull(),
 	anonymousVoting: boolean("anonymous_voting").default(false).notNull(),
-	deadline: timestamp("deadline", { withTimezone: true }),
+	deadline: timestamp("deadline", { withTimezone: true, mode: "string" }),
 });
 
 export const moduleOptions = pgTable("module_options", {
@@ -65,3 +67,6 @@ export const moduleOptionVotes = pgTable("module_option_votes", {
 	crewMemberId: integer("crew_member_id").notNull().references(() => crewMembers.id, { onDelete: "cascade" } ),
 	moduleOptionId: integer("module_option_id").notNull().references(() => moduleOptions.id, { onDelete: "cascade" } ),
 })
+
+const safeUserSchema = createSelectSchema(users).omit({ hash: true })
+export type SafeUser = z.infer<typeof safeUserSchema>
