@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
-import Provider from './_trpc/Provider'
-
-const inter = Inter({ subsets: ['latin'] })
+import { ClientProviders } from './ClientProviders'
+import ServerProviders from './ServerProviders'
+import { RedirectToSignIn, SignIn, SignedIn, SignedOut } from '@clerk/nextjs'
+import NavBar from './_components/NavBar'
 
 export const metadata: Metadata = {
   title: 'Sailbow',
@@ -17,12 +16,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <Provider>{children}</Provider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body>
+        <ServerProviders>
+          <ClientProviders>
+            <SignedIn>
+              <NavBar/>
+              {children}
+            </SignedIn>
+            <SignedOut>
+              <SignIn />
+            </SignedOut>
+          </ClientProviders>
+        </ServerProviders>
+      </body>
+    </html>
   )
 }
