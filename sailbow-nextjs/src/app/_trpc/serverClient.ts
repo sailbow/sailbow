@@ -4,7 +4,7 @@ import { appRouter } from "@/server";
 export const serverClient = appRouter.createCaller({
   links: [
     httpBatchLink({
-      url: process.env.WEBSITE_URL ?? "http://localhost:3000",
+      url: process.env.NEXT_PUBLIC_WEBSITE_URL ?? "http://localhost:3000",
     }),
   ],
 });

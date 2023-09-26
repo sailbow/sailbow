@@ -1,19 +1,19 @@
-import type { Metadata } from 'next'
-import './globals.css'
-import { ClientProviders } from './ClientProviders'
-import ServerProviders from './ServerProviders'
-import { RedirectToSignIn, SignIn, SignedIn, SignedOut } from '@clerk/nextjs'
-import NavBar from './_components/NavBar'
+import type { Metadata } from "next";
+import { ClientProviders } from "./ClientProviders";
+import ServerProviders from "./ServerProviders";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import NavBar from "./_components/NavBar";
+import { Box } from "@chakra-ui/react";
 
 export const metadata: Metadata = {
-  title: 'Sailbow',
-  description: 'Sailbow Website',
-}
+  title: "Sailbow",
+  description: "Sailbow Website",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -21,15 +21,15 @@ export default function RootLayout({
         <ServerProviders>
           <ClientProviders>
             <SignedIn>
-              <NavBar/>
-              {children}
+              <NavBar />
+              <Box p={4}>{children}</Box>
             </SignedIn>
             <SignedOut>
-              <SignIn />
+              <Box p={4}>{children}</Box>
             </SignedOut>
           </ClientProviders>
         </ServerProviders>
       </body>
     </html>
-  )
+  );
 }
