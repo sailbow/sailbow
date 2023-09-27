@@ -3,7 +3,7 @@ import { Center } from "@chakra-ui/react";
 
 export default function Page() {
   return (
-    <Center>
+    <Center p={4}>
       <SignIn />
     </Center>
   );
