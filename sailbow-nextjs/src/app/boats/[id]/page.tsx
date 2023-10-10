@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 async function GetBoatById(id: number): Promise<Boat | undefined> {
   return await db.query.boats.findFirst({
     where: eq(boats.id, id),
+    with: { banner: true },
   });
 }
 
