@@ -1,4 +1,4 @@
-import { SkeletonLoader } from "./_components";
+import { SkeletonLoader } from "@/app/_components";
 
 export default function Loading() {
   return <SkeletonLoader />;

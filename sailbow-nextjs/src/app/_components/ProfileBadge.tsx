@@ -8,7 +8,7 @@ export default function ProfileBadge() {
         <Spinner />
       </ClerkLoading>
       <ClerkLoaded>
-        <UserButton afterSignOutUrl="/" />
+        <UserButton afterSignOutUrl="/sign-in" />
       </ClerkLoaded>
     </Flex>
   );

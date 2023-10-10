@@ -1,5 +1,5 @@
 "use client";
-import { Box, Flex, HStack, useColorModeValue, Image } from "@chakra-ui/react";
+import { Box, Flex, HStack, Image } from "@chakra-ui/react";
 import ProfileBadge from "./ProfileBadge";
 import { Link } from "@chakra-ui/next-js";
 
@@ -9,10 +9,6 @@ interface Props {
 }
 
 const Links = [
-  // {
-  //   name: "Home",
-  //   path: "/",
-  // },
   {
     name: "Boats",
     path: "/boats",
@@ -42,7 +38,7 @@ const NavLink = (props: Props) => {
 export default function NavBar() {
   return (
     <>
-      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+      <Box bg="gray.100" px={4}>
         <Flex
           h={16}
           alignItems={"center"}
@@ -55,7 +51,7 @@ export default function NavBar() {
                 <Image
                   width="40px"
                   height="40px"
-                  src="./sailbow.svg"
+                  src="/sailbow.svg"
                   alt="Sailbow logo"
                 />
               </Link>

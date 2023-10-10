@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ClientProviders } from "./ClientProviders";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/nextjs";
-import NavBar from "./_components/NavBar";
+import { NavBar } from "./_components";
 import { Box } from "@chakra-ui/react";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function RootLayout({
           <ClerkProvider>
             <SignedIn>
               <NavBar />
-              <Box p={4}>{children}</Box>
+              <Box p={1}>{children}</Box>
             </SignedIn>
             <SignedOut>{children}</SignedOut>
           </ClerkProvider>
