@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-export default function BoatsLayout({
+export default function DockLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -7,9 +7,11 @@ export default function BoatsLayout({
   return (
     <section>
       <Box borderWidth="1px" borderRadius="lg" textAlign="center">
-        Shared on /boats/* routes
+        Shared on /dock/* routes
       </Box>
-      {children}
+      <Box p={3}>
+        {children}
+      </Box>
     </section>
   );
 }

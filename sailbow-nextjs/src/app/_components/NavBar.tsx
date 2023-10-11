@@ -2,6 +2,7 @@
 import { Box, Flex, HStack, Image } from "@chakra-ui/react";
 import ProfileBadge from "./ProfileBadge";
 import { Link } from "@chakra-ui/next-js";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 interface Props {
   children: React.ReactNode;
@@ -10,14 +11,13 @@ interface Props {
 
 const Links = [
   {
-    name: "Boats",
-    path: "/boats",
+    name: "Dock",
+    path: "/dock",
   },
 ];
 
 const NavLink = (props: Props) => {
   const { children, path } = props;
-
   return (
     <Link
       as="a"

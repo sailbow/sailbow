@@ -1,6 +1,6 @@
 "use client";
 import BoatCard from "./BoatCard";
-import { SimpleGrid } from "@chakra-ui/react";
+import { Box, Grid, SimpleGrid, Stack } from "@chakra-ui/react";
 import { type Boat } from "@/db/schema";
 
 interface Props {
@@ -8,12 +8,11 @@ interface Props {
 }
 export default function BoatsContainer({ boats }: Props): JSX.Element {
   return (
-    <SimpleGrid
-      spacing={4}
-      templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
-    >
+    <SimpleGrid minChildWidth='120px' spacing='10px'>
       {boats.map((boat) => (
-        <BoatCard key={boat.id} boat={boat} />
+        <Box key={boat.id}>
+          <BoatCard boat={boat} />
+        </Box>
       ))}
     </SimpleGrid>
   );

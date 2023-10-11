@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { ClientProviders } from "./ClientProviders";
-import { ClerkProvider, SignedIn, SignedOut } from "@clerk/nextjs";
-import { NavBar } from "./_components";
-import { Box } from "@chakra-ui/react";
+import { ClerkProvider, SignedIn } from "@clerk/nextjs";
+import { NavBar } from "@/app/_components"
 
 export const metadata: Metadata = {
   title: "Sailbow",
@@ -16,17 +15,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <ClientProviders>
-          <ClerkProvider>
+      <ClerkProvider>
+        <body>
+          <ClientProviders>
             <SignedIn>
               <NavBar />
-              <Box p={1}>{children}</Box>
             </SignedIn>
-            <SignedOut>{children}</SignedOut>
-          </ClerkProvider>
-        </ClientProviders>
-      </body>
+            {children}
+          </ClientProviders>
+        </body>
+      </ClerkProvider>
     </html>
   );
 }

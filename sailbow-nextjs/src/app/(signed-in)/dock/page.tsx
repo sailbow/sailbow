@@ -11,9 +11,10 @@ import {
   Divider,
   Text,
 } from "@chakra-ui/react";
-import BoatsContainer from "../_components/BoatsContainer";
+import BoatsContainer from "../../_components/BoatsContainer";
+import { ClerkLoaded } from "@clerk/nextjs";
 
-export default async function BoatsPage() {
+export default async function DockPage() {
   const user = await userService.getUser();
   const memberships = await db.query.crewMembers.findMany({
     where: eq(crewMembers.userId, user.id),
@@ -26,5 +27,7 @@ export default async function BoatsPage() {
     },
   });
   const boats = memberships.map((m) => m.boat);
-  return <BoatsContainer boats={boats} />;
+  return (
+    <BoatsContainer boats={boats} />
+  )
 }
