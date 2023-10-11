@@ -1,11 +1,16 @@
 import { Center, Heading, Stack } from "@chakra-ui/react";
-import { SignInButton, SignedOut } from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import Image from "next/image";
+import { currentUser } from "@clerk/nextjs";
 
-export default function Page() {
+export default async function Page() {
+  const user = await currentUser();
   return (
     <main>
       <Center p={5}>
+        <SignedIn>
+          <Heading>Welcome {user?.firstName}!</Heading>
+        </SignedIn>
         <SignedOut>
           <Stack spacing={4} textAlign="center" alignItems="center">
             <Image
@@ -17,7 +22,6 @@ export default function Page() {
             <Heading>Assemble your crew.</Heading>
             <Heading>Chart a course.</Heading>
             <Heading>Set sail.</Heading>
-
             <SignInButton />
           </Stack>
         </SignedOut>
