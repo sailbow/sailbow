@@ -1,18 +1,12 @@
 import { userService } from "@/lib";
 import { db } from "@/db";
-import { boats, crewMembers } from "@/db/schema";
-import { eq, InferSelectModel } from "drizzle-orm";
 import {
-  Card,
-  CardBody,
-  CardHeader,
-  HStack,
-  Heading,
-  Divider,
-  Text,
-} from "@chakra-ui/react";
-import BoatsContainer from "../../_components/BoatsContainer";
-import { ClerkLoaded } from "@clerk/nextjs";
+  crewMembers,
+} from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { BoatsContainer } from "@/components"
+import { Box, Flex } from "@chakra-ui/react";
+import CreateBoatForm from "@/app/_components/CreateBoatForm";
 
 export default async function DockPage() {
   const user = await userService.getUser();
@@ -26,8 +20,16 @@ export default async function DockPage() {
       },
     },
   });
-  const boats = memberships.map((m) => m.boat);
+  const boats = memberships.map((m) => m.boat) ?? []
+
   return (
-    <BoatsContainer boats={boats} />
+    <Flex alignItems="" gap="2">
+      <Box flex={3}>
+        <BoatsContainer boats={boats} />
+      </Box>
+      <Box flex={1}>
+        <CreateBoatForm />
+      </Box>
+    </Flex>
   )
 }

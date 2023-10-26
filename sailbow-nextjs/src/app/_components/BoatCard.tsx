@@ -1,5 +1,5 @@
 "use client";
-import { type Boat } from "@/db/schema";
+import { Boat, BoatBanner } from "@/db/schema";
 import {
   Card,
   CardBody,
@@ -12,18 +12,18 @@ import {
 } from "@chakra-ui/react";
 import NextLink from 'next/link'
 
-export default function BoatCard({ boat }: { boat: Boat }): JSX.Element {
+export default function BoatCard({ boat, banner }: { boat: Boat, banner: BoatBanner }): JSX.Element {
   return (
     <Card w="sm">
       <LinkOverlay as={NextLink} href={`/dock/${boat.id}`}>
         <CardBody>
-          {boat.banner.type == "color" ? (
+          {banner.type == "color" ? (
             <Box h="sm" />
           ) : (
             <Image
-              h="sm"
+              // boxSize="90%"
               alt={"Image for boat " + boat.name}
-              src={boat.banner.value}
+              src={banner.value}
             />
           )}
           <Divider />

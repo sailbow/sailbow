@@ -1,151 +1,164 @@
 {
   "version": "5",
-  "dialect": "pg",
-  "id": "fa394433-e997-452c-b144-4fcdda0dcdc9",
+  "dialect": "mysql",
+  "id": "3398aa63-a074-4462-9bc5-5a4fd6a543eb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "boat_banners": {
       "name": "boat_banners",
-      "schema": "",
       "columns": {
         "boat_id": {
           "name": "boat_id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         },
         "show": {
           "name": "show",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false,
           "default": true
         },
         "type": {
           "name": "type",
-          "type": "text",
+          "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "value": {
           "name": "value",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "position": {
           "name": "position",
-          "type": "integer",
+          "type": "int",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "boat_banners_boat_id_boats_id_fk": {
-          "name": "boat_banners_boat_id_boats_id_fk",
-          "tableFrom": "boat_banners",
-          "tableTo": "boats",
-          "columnsFrom": [
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "boat_banners_boat_id": {
+          "name": "boat_banners_boat_id",
+          "columns": [
             "boat_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          ]
         }
       },
-      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "boats": {
       "name": "boats",
-      "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
         },
         "name": {
           "name": "name",
           "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "description": {
           "name": "description",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "captain_user_id": {
           "name": "captain_user_id",
-          "type": "text",
+          "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "created_on": {
           "name": "created_on",
-          "type": "timestamp with time zone",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "boats_id": {
+          "name": "boats_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "crew_members": {
       "name": "crew_members",
-      "schema": "",
       "columns": {
         "boat_id": {
           "name": "boat_id",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "role": {
           "name": "role",
-          "type": "text",
+          "type": "varchar(25)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "created_on": {
           "name": "created_on",
-          "type": "timestamp with time zone",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
         }
       },
-      "indexes": {},
-      "foreignKeys": {
-        "crew_members_boat_id_boats_id_fk": {
-          "name": "crew_members_boat_id_boats_id_fk",
-          "tableFrom": "crew_members",
-          "tableTo": "boats",
-          "columnsFrom": [
+      "indexes": {
+        "boat_id_idx": {
+          "name": "boat_id_idx",
+          "columns": [
             "boat_id"
           ],
-          "columnsTo": [
-            "id"
+          "isUnique": false
+        },
+        "user_id_idx": {
+          "name": "user_id_idx",
+          "columns": [
+            "user_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "isUnique": false
         }
       },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "crew_members_boat_id_user_id": {
           "name": "crew_members_boat_id_user_id",
@@ -157,39 +170,93 @@
       },
       "uniqueConstraints": {}
     },
+    "module_comments": {
+      "name": "module_comments",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "module_id": {
+          "name": "module_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "comment": {
+          "name": "comment",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "module_id_idx": {
+          "name": "module_id_idx",
+          "columns": [
+            "module_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "module_comments_id": {
+          "name": "module_comments_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
     "module_option_votes": {
       "name": "module_option_votes",
-      "schema": "",
       "columns": {
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "module_option_id": {
           "name": "module_option_id",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {
-        "module_option_votes_module_option_id_module_options_id_fk": {
-          "name": "module_option_votes_module_option_id_module_options_id_fk",
-          "tableFrom": "module_option_votes",
-          "tableTo": "module_options",
-          "columnsFrom": [
+      "indexes": {
+        "user_id_idx": {
+          "name": "user_id_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        },
+        "module_option_id_idx": {
+          "name": "module_option_id_idx",
+          "columns": [
             "module_option_id"
           ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "isUnique": false
         }
       },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "module_option_votes_module_option_id_user_id": {
           "name": "module_option_votes_module_option_id_user_id",
@@ -203,61 +270,65 @@
     },
     "module_options": {
       "name": "module_options",
-      "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
         },
         "module_id": {
           "name": "module_id",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "data": {
           "name": "data",
           "type": "json",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {
-        "module_options_module_id_modules_id_fk": {
-          "name": "module_options_module_id_modules_id_fk",
-          "tableFrom": "module_options",
-          "tableTo": "modules",
-          "columnsFrom": [
+      "indexes": {
+        "module_id_idx": {
+          "name": "module_id_idx",
+          "columns": [
             "module_id"
           ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "isUnique": false
         }
       },
-      "compositePrimaryKeys": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "module_options_id": {
+          "name": "module_options_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "module_settings": {
       "name": "module_settings",
-      "schema": "",
       "columns": {
         "module_id": {
           "name": "module_id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         },
         "allow_multiple": {
           "name": "allow_multiple",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false,
           "default": false
         },
         "anonymous_voting": {
@@ -265,114 +336,118 @@
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false,
           "default": false
         },
         "deadline": {
           "name": "deadline",
-          "type": "timestamp with time zone",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "module_settings_module_id_modules_id_fk": {
-          "name": "module_settings_module_id_modules_id_fk",
-          "tableFrom": "module_settings",
-          "tableTo": "modules",
-          "columnsFrom": [
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "module_settings_module_id": {
+          "name": "module_settings_module_id",
+          "columns": [
             "module_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          ]
         }
       },
-      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "modules": {
       "name": "modules",
-      "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
         },
         "boat_id": {
           "name": "boat_id",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "varchar(100)",
+          "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "description": {
           "name": "description",
-          "type": "varchar(250)",
+          "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "order": {
           "name": "order",
-          "type": "integer",
+          "type": "int",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "created_on": {
           "name": "created_on",
-          "type": "timestamp with time zone",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
         },
         "type": {
           "name": "type",
-          "type": "text",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "finalized_option_id": {
           "name": "finalized_option_id",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "author_id": {
           "name": "author_id",
-          "type": "text",
+          "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {
-        "modules_boat_id_boats_id_fk": {
-          "name": "modules_boat_id_boats_id_fk",
-          "tableFrom": "modules",
-          "tableTo": "boats",
-          "columnsFrom": [
+      "indexes": {
+        "boat_id_idx": {
+          "name": "boat_id_idx",
+          "columns": [
             "boat_id"
           ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "isUnique": false
         }
       },
-      "compositePrimaryKeys": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "modules_id": {
+          "name": "modules_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     }
   },
-  "enums": {},
   "schemas": {},
   "_meta": {
     "schemas": {},

@@ -7,8 +7,9 @@ if (!process.env.DATABASE_URL) throw new Error("Missing DATABASE_URL env paramet
 export default {
     schema: "./src/db/schema.ts",
     out: "./src/db/migrations",
-    driver: 'pg',
+    driver: "mysql2",
+    strict: true,
     dbCredentials: {
-        connectionString: process.env.DATABASE_URL,
-    }
+        connectionString: process.env.DATABASE_URL as string
+    },
 } satisfies Config;

@@ -7,8 +7,12 @@ export default function SignedInLayout({
     children: React.ReactNode;
 }) {
     return (
-        <Box p={2}>
-            {children}
-        </Box>
+        <>
+            <NavBar />
+            <Box p={2}>
+                {children}
+            </Box>
+
+        </>
     )
 }

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ClientProviders } from "./ClientProviders";
-import { ClerkProvider, SignedIn } from "@clerk/nextjs";
-import { NavBar } from "@/app/_components"
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Sailbow",
@@ -18,9 +17,6 @@ export default function RootLayout({
       <ClerkProvider>
         <body>
           <ClientProviders>
-            <SignedIn>
-              <NavBar />
-            </SignedIn>
             {children}
           </ClientProviders>
         </body>
