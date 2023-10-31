@@ -7,6 +7,7 @@ const serverEnvSchema = z.object({
     DATABASE_HOST: z.string().min(1),
     DATABASE_USERNAME: z.string().min(1),
     DATABASE_PASSWORD: z.string().min(1),
+    UNSPLASH_API_KEY: z.string().min(1)
 })
 
 const clientEnvSchema = z.object({
@@ -22,7 +23,8 @@ const parsedServerSchema = serverEnvSchema.safeParse({
     POSTGRES_URL: process.env.POSTGRES_URL,
     DATABASE_HOST: process.env.DATABASE_HOST,
     DATABASE_USERNAME: process.env.DATABASE_USERNAME,
-    DATABASE_PASSWORD: process.env.DATABASE_PASSWORD
+    DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
+    UNSPLASH_API_KEY: process.env.UNSPLASH_API_KEY
 })
 
 const parsedClientSchema = clientEnvSchema.safeParse({
