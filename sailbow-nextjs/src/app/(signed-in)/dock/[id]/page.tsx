@@ -1,5 +1,5 @@
-import { db } from "@/db";
-import { boats, type BoatAndBanner } from "@/db/schema";
+import { db } from "@/server/db";
+import { boats, type BoatAndBanner } from "@/server/db/schema";
 import { Heading, Stack, Text } from "@chakra-ui/react";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";

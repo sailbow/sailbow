@@ -5,7 +5,9 @@ import { ChakraProvider } from "@chakra-ui/react";
 export function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
     <CacheProvider>
-      <ChakraProvider>{children}</ChakraProvider>
+      <ChakraProvider>
+        {children}
+      </ChakraProvider>
     </CacheProvider>
   );
 }

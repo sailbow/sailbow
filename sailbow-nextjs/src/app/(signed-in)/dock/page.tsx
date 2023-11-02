@@ -1,12 +1,12 @@
 import { userService } from "@/lib";
-import { db } from "@/db";
+import { db } from "@/server/db";
 import {
   crewMembers,
-} from "@/db/schema";
+} from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { BoatsContainer } from "@/components"
 import { Box, Flex } from "@chakra-ui/react";
-import CreateBoatForm from "@/app/_components/CreateBoatForm";
+import CreateBoatFlyoutForm from "@/app/_components/CreateBoatFlyoutForm";
 
 export default async function DockPage() {
   const user = await userService.getUser();
@@ -23,12 +23,12 @@ export default async function DockPage() {
   const boats = memberships.map((m) => m.boat) ?? []
 
   return (
-    <Flex alignItems="" gap="2">
+    <Flex gap="2">
       <Box flex={3}>
         <BoatsContainer boats={boats} />
       </Box>
       <Box flex={1}>
-        <CreateBoatForm />
+        <CreateBoatFlyoutForm />
       </Box>
     </Flex>
   )

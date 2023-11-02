@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from "@/db";
-import { boats, boatBanners, crewMembers } from '@/db/schema';
+import { db } from "@/server/db";
+import { boats, boatBanners, crewMembers } from '@/server/db/schema';
 import { eq, } from 'drizzle-orm';
 import { userService } from '@/lib';
 import { createInsertSchema } from 'drizzle-zod';

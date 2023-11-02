@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { ClientProviders } from "./ClientProviders";
 import { ClerkProvider } from "@clerk/nextjs";
+import { headers } from "next/headers";
+import { TRPCReactProvider } from "@/trpc/react";
 
 export const metadata: Metadata = {
   title: "Sailbow",
@@ -15,11 +17,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ClerkProvider>
-        <body>
-          <ClientProviders>
-            {children}
-          </ClientProviders>
-        </body>
+        <TRPCReactProvider headers={headers()}>
+          <body>
+            <ClientProviders>
+              {children}
+            </ClientProviders>
+          </body>
+        </TRPCReactProvider>
       </ClerkProvider>
     </html>
   );
