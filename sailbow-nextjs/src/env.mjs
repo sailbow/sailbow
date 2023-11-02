@@ -7,7 +7,8 @@ const serverEnvSchema = z.object({
     DATABASE_HOST: z.string().min(1),
     DATABASE_USERNAME: z.string().min(1),
     DATABASE_PASSWORD: z.string().min(1),
-    UNSPLASH_API_KEY: z.string().min(1)
+    UNSPLASH_API_KEY: z.string().min(1),
+    NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 })
 
 const clientEnvSchema = z.object({
@@ -24,7 +25,8 @@ const parsedServerSchema = serverEnvSchema.safeParse({
     DATABASE_HOST: process.env.DATABASE_HOST,
     DATABASE_USERNAME: process.env.DATABASE_USERNAME,
     DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
-    UNSPLASH_API_KEY: process.env.UNSPLASH_API_KEY
+    UNSPLASH_API_KEY: process.env.UNSPLASH_API_KEY,
+    NODE_ENV: process.env.NODE_ENV
 })
 
 const parsedClientSchema = clientEnvSchema.safeParse({

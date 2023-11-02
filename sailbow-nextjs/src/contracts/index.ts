@@ -9,7 +9,7 @@ type ResponseContract = { responseSchema: ZodType }
 type RequestResponseContract = RequestContract & ResponseContract
 
 export type InferRequestType<T extends RequestContract> = z.infer<T["requestSchema"]>
-export type InferAsyncResponseType<T extends ResponseContract> = Promise<z.infer<T["responseSchema"]>>
+export type InferResponseType<T extends ResponseContract> = z.infer<T["responseSchema"]>
 
 export const CreateBoatContract = {
     requestSchema: createInsertSchema(boats)
