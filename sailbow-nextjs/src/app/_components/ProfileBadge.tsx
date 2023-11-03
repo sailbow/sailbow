@@ -1,11 +1,12 @@
 import { ClerkLoading, ClerkLoaded, UserButton } from "@clerk/nextjs";
-import { Flex, Spinner } from "@chakra-ui/react";
+import { Flex, } from "@chakra-ui/react";
+import { HelmSpinner } from "./HelmSpinner";
 
 export default async function ProfileBadge() {
   return (
     <Flex alignItems="center">
       <ClerkLoading>
-        <Spinner />
+        <HelmSpinner size={32} />
       </ClerkLoading>
       <ClerkLoaded>
         <UserButton afterSignOutUrl="/sign-in" />
