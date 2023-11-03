@@ -6,7 +6,8 @@ import {
 import { eq } from "drizzle-orm";
 import { BoatsContainer, CreateBoatFlyoutForm } from "@/components"
 import { api } from "@/trpc/server";
-import { GetBoatsContract, InferResponseType } from "@/contracts";
+import { InferResponseType } from "@/contracts";
+import { GetBoatsContract } from "@/contracts/dock"
 import { Box, Flex } from "@chakra-ui/react";
 
 type GetBoatsResponse = InferResponseType<typeof GetBoatsContract>

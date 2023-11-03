@@ -1,8 +1,9 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { GetBoatsContract, CreateBoatContract } from "@/contracts";
+import { GetBoatsContract, CreateBoatContract } from "@/contracts/dock";
 import { eq } from "drizzle-orm";
 import { boatBanners, boats, crewMembers } from "@/server/db/schema";
 import { db } from "@/server/db";
+import { TRPCError } from "@trpc/server";
 
 export const dockRouter = createTRPCRouter({
   createBoat: protectedProcedure

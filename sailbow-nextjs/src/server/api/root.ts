@@ -1,4 +1,5 @@
-import { dockRouter } from "@/server/api/routers/dock";
+import { dockRouter } from "@/server/api/routers/dockRouter"
+import { imagesRouter } from "@/server/api/routers/imagesRouter"
 import { createTRPCRouter } from "@/server/api/trpc";
 
 /**
@@ -8,6 +9,7 @@ import { createTRPCRouter } from "@/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   dock: dockRouter,
+  images: imagesRouter
 });
 
 // export type definition of API

@@ -12,25 +12,56 @@ import {
     DrawerContent,
     DrawerCloseButton,
     DrawerHeader,
-    DrawerBody
+    DrawerBody,
+    useToast
 } from "@chakra-ui/react";
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useRouter } from "next/navigation";
-import { CreateBoatContract, InferRequestType } from "@/contracts";
-;
+import { InferRequestType } from "@/contracts";
+import { CreateBoatContract } from "@/contracts/dock"
+import { api } from "@/trpc/react";
 
 type FormData = InferRequestType<typeof CreateBoatContract>
 
 export default function CreateBoatFlyoutForm() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const router = useRouter()
+    const toast = useToast()
 
-    const onSubmit = async (values: FormData) => {
-        const result = await fetch("/api/dock", { method: "POST", body: JSON.stringify(values) })
-        if (result.ok) {
-            const json = await result.json()
-            console.log(json)
-            router.push(`/dock/${json["boatId"]}`)
+    // Option 2: trpc
+    const { isLoading, mutate } = api.dock.createBoat.useMutation({
+        onSuccess: (res) => {
+            router.push(`/dock/${res.boatId}`)
+        },
+        onError: (error) => {
+            toast({
+                title: "Oops!",
+                description: "Something went wrong, please try again later",
+                status: "error",
+                position: "top",
+                isClosable: true
+            })
+        }
+    })
+
+    const onSubmit = (values: FormData) => {
+        // Option 1: Invoke route handler manually with fetch
+        // const result = await fetch("/api/dock", { method: "POST", body: JSON.stringify(values) })
+        // if (result.ok) {
+        //     const json = await result.json()
+        //     router.push(`/dock/${json["boatId"]}`)
+        // }
+
+        // Option 2: trpc
+        mutate(values)
+    }
+
+    const initialValues: FormData = {
+        name: "",
+        description: "",
+        banner: {
+            type: "url",
+            value: "",
         }
     }
 
@@ -50,20 +81,13 @@ export default function CreateBoatFlyoutForm() {
                     <DrawerHeader color="teal.500">Create a Boat</DrawerHeader>
                     <DrawerBody>
                         <Formik
-                            initialValues={{
-                                name: "",
-                                description: "",
-                                banner: {
-                                    type: "url",
-                                    value: "",
-                                }
-                            }}
+                            initialValues={initialValues}
                             validationSchema={toFormikValidationSchema(CreateBoatContract.requestSchema)}
                             onSubmit={onSubmit}
                         >
                             {({ handleSubmit, errors, touched, handleChange }) => (
                                 <form onSubmit={handleSubmit}>
-                                    <VStack spacing={4} align="flex-start" outline="">
+                                    <VStack spacing={4} align="flex-start">
                                         <FormControl isInvalid={!!errors.name && touched.name}>
                                             <FormLabel htmlFor="name">Name</FormLabel>
                                             <Field
@@ -97,18 +121,12 @@ export default function CreateBoatFlyoutForm() {
                                             />
                                             <FormErrorMessage>{errors.banner?.value}</FormErrorMessage>
                                         </FormControl>
-                                        {/* <FormControl isInvalid={!!errors.color && touched.color}>
-                            <FormLabel htmlFor="color">Color</FormLabel>
-                            <Field
-                                as={Input}
-                                id="color"
-                                name="color"
-                                variant="filled"
-                                onChange={handleChange("color")}
-                            />
-                            <FormErrorMessage>{errors.color}</FormErrorMessage>
-                        </FormControl> */}
-                                        <Button type="submit" colorScheme="teal" width="full">
+                                        <Button
+                                            type="submit"
+                                            colorScheme="teal"
+                                            width="full"
+                                            isLoading={isLoading}
+                                        >
                                             Save
                                         </Button>
                                     </VStack>
