@@ -1,12 +1,8 @@
 import { Center, Heading, Stack } from "@chakra-ui/react";
-import { currentUser } from "@clerk/nextjs";
+import GetStartedButton from "./GetStartedButton";
 import Image from "next/image";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 
-export default async function Page() {
-  const user = await currentUser()
-  if (user) redirect("/dock")
+export default function Page() {
   return (
     <main>
       <Center p={5}>
@@ -20,7 +16,7 @@ export default async function Page() {
           <Heading>Assemble your crew.</Heading>
           <Heading>Chart a course.</Heading>
           <Heading>Set sail.</Heading>
-          <Link href="/sign-in">Sign In</Link>
+          <GetStartedButton />
         </Stack>
       </Center>
     </main>
