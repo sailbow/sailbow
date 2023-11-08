@@ -17,14 +17,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ClerkProvider>
-        <TRPCReactProvider headers={headers()}>
-          <body>
-            <ClientProviders>
+        <body>
+          <ClientProviders>
+            <TRPCReactProvider headers={headers()}>
               {children}
-            </ClientProviders>
-          </body>
-        </TRPCReactProvider>
+            </TRPCReactProvider>
+          </ClientProviders>
+        </body>
       </ClerkProvider>
-    </html>
+    </html >
   );
 }

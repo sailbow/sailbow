@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { InferRequestType } from "@/contracts";
 import { CreateBoatContract } from "@/contracts/dock"
 import { api } from "@/trpc/react";
+import { ImageSearchModal } from "@/components"
 
 type FormData = InferRequestType<typeof CreateBoatContract>
 
@@ -80,6 +81,7 @@ export default function CreateBoatFlyoutForm() {
                     <DrawerCloseButton />
                     <DrawerHeader color="teal.500">Create a Boat</DrawerHeader>
                     <DrawerBody>
+                        <ImageSearchModal />
                         <Formik
                             initialValues={initialValues}
                             validationSchema={toFormikValidationSchema(CreateBoatContract.requestSchema)}

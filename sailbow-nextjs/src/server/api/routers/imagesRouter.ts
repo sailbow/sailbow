@@ -23,7 +23,8 @@ export const imagesRouter = createTRPCRouter({
                     cause: await res.text()
                 })
             }
-            
-            return await res.json()
+
+            const data = await res.json()
+            return data["results"]
         })
 })

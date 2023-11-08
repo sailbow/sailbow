@@ -10,9 +10,10 @@ export const SearchImagesContract = {
         orientation: z.enum([ "portrait", "landscape", "squarish" ]).default("landscape").optional()
     }),
     responseSchema: z.array(z.object({
+        id: z.string().min(1),
         width: z.number().min(1),
         height: z.number().min(1),
-        description: z.string(),
+        alt_description: z.string().min(1),
         urls: z.object({
             raw: z.string().url(),
             full: z.string().url(),
