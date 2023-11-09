@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { InferRequestType } from "@/contracts";
 import { CreateBoatContract } from "@/contracts/dock"
 import { api } from "@/trpc/react";
-import { ImageSearchModal } from "@/components"
+import { EmailsInput, ImageSearchModal } from "@/components"
 
 type FormData = InferRequestType<typeof CreateBoatContract>
 
@@ -112,7 +112,7 @@ export default function CreateBoatFlyoutForm() {
                                             />
                                             <FormErrorMessage>{errors.description}</FormErrorMessage>
                                         </FormControl>
-                                        <FormControl isInvalid={!!errors.banner?.value && touched?.banner?.value}>
+                                        {/* <FormControl isInvalid={!!errors.banner?.value && touched?.banner?.value}>
                                             <FormLabel htmlFor="banner.value">Url</FormLabel>
                                             <Field
                                                 as={Input}
@@ -122,6 +122,10 @@ export default function CreateBoatFlyoutForm() {
                                                 onChange={handleChange("banner.value")}
                                             />
                                             <FormErrorMessage>{errors.banner?.value}</FormErrorMessage>
+                                        </FormControl> */}
+                                        <FormControl>
+                                            <FormLabel>Crew Emails</FormLabel>
+                                            <EmailsInput />
                                         </FormControl>
                                         <Button
                                             type="submit"

@@ -1,6 +1,7 @@
 import { dockRouter } from "@/server/api/routers/dockRouter"
 import { imagesRouter } from "@/server/api/routers/imagesRouter"
 import { createTRPCRouter } from "@/server/api/trpc";
+import { invitationsRouter } from "./routers/invitationsRouter";
 
 /**
  * This is the primary router for your server.
@@ -9,7 +10,8 @@ import { createTRPCRouter } from "@/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   dock: dockRouter,
-  images: imagesRouter
+  images: imagesRouter,
+  invitations: invitationsRouter
 });
 
 // export type definition of API
