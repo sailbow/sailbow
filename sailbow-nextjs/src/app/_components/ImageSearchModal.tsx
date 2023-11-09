@@ -85,7 +85,7 @@ export default function ImageSearchModal() {
                         {isSuccess && !isFetching && (
                             <Wrap spacing="4" mt={4}>
                                 {data?.map(image => (
-                                    <WrapItem key={image.id} flex="1">
+                                    <WrapItem key={image.id}>
                                         <Image
                                             src={image.urls.regular}
                                             alt={image.alt_description}
@@ -94,7 +94,7 @@ export default function ImageSearchModal() {
                                             borderRadius="lg"
                                             cursor="pointer"
                                             objectFit="cover"
-                                            minW="300px"
+                                            width="300px"
                                             height="300px"
                                             fallback={<Skeleton w="300px" h="300px" />}
                                         />
