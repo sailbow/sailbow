@@ -6,7 +6,7 @@ export const SendInvitationContract = {
     requestSchema: z.object({
         emailAddress: z.string().email(),
         boatId: z.number(),
-        // redirectUrl: z.string().url().optional(),
+        role: z.enum([ "firstMate", "crewMember" ]),
         publicMetadata: z.any().nullish()
     }),
     responseSchema: z.custom<Invitation>()

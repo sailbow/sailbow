@@ -15,12 +15,12 @@ import {
     DrawerBody,
     useToast
 } from "@chakra-ui/react";
-import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { useRouter } from "next/navigation";
 import { InferRequestType } from "@/contracts";
 import { CreateBoatContract } from "@/contracts/dock"
 import { api } from "@/trpc/react";
-import { EmailsInput, ImageSearchModal } from "@/components"
+import { ImageSearchModal, useCrewInvites } from "@/components"
 
 type FormData = InferRequestType<typeof CreateBoatContract>
 
@@ -28,13 +28,14 @@ export default function CreateBoatFlyoutForm() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const router = useRouter()
     const toast = useToast()
+    const { crewInvites, EmailInputElement } = useCrewInvites()
 
     // Option 2: trpc
     const { isLoading, mutate } = api.dock.createBoat.useMutation({
         onSuccess: (res) => {
             router.push(`/dock/${res.boatId}`)
         },
-        onError: (error) => {
+        onError: () => {
             toast({
                 title: "Oops!",
                 description: "Something went wrong, please try again later",
@@ -46,15 +47,12 @@ export default function CreateBoatFlyoutForm() {
     })
 
     const onSubmit = (values: FormData) => {
-        // Option 1: Invoke route handler manually with fetch
-        // const result = await fetch("/api/dock", { method: "POST", body: JSON.stringify(values) })
-        // if (result.ok) {
-        //     const json = await result.json()
-        //     router.push(`/dock/${json["boatId"]}`)
-        // }
-
-        // Option 2: trpc
-        mutate(values)
+        mutate({
+            ...values,
+            crewInvites: crewInvites.map((b) => {
+                return { emailAddress: b.email, role: b.role }
+            })
+        })
     }
 
     const initialValues: FormData = {
@@ -62,8 +60,9 @@ export default function CreateBoatFlyoutForm() {
         description: "",
         banner: {
             type: "url",
-            value: "",
-        }
+            value: "https://images.unsplash.com/photo-1593351415075-3bac9f45c877?auto=format&fit=crop&q=80&w=640&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        },
+        crewInvites: []
     }
 
     return (
@@ -75,6 +74,7 @@ export default function CreateBoatFlyoutForm() {
                 isOpen={isOpen}
                 placement='right'
                 onClose={onClose}
+                size="md"
             >
                 <DrawerOverlay />
                 <DrawerContent>
@@ -125,7 +125,7 @@ export default function CreateBoatFlyoutForm() {
                                         </FormControl> */}
                                         <FormControl>
                                             <FormLabel>Crew Emails</FormLabel>
-                                            <EmailsInput />
+                                            {EmailInputElement}
                                         </FormControl>
                                         <Button
                                             type="submit"

@@ -9,7 +9,7 @@ export default function DockLayout({
       <Box borderWidth="1px" borderRadius="lg" textAlign="center">
         Shared on /dock/* routes
       </Box>
-      <Box p={3}>
+      <Box p={2}>
         {children}
       </Box>
     </section>

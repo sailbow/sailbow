@@ -7,8 +7,8 @@ if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes("{USERNAME}:{
 }
 
 export default {
-    schema: "./src/db/schema.ts",
-    out: "./src/db/migrations",
+    schema: "./src/server/db/schema.ts",
+    out: "./src/server/db/migrations",
     driver: "mysql2",
     strict: true,
     dbCredentials: {

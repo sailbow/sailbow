@@ -114,7 +114,11 @@ const authMiddleware = t.middleware(({ next, ctx }) => {
     }
     return next({
       ctx: {
-        auth: ctx.auth,
+        auth: {
+          ...ctx.auth,
+          primaryEmail: ctx.auth.user?.emailAddresses
+            .find(e => e.id === ctx.auth.user?.primaryEmailAddressId)?.emailAddress as string
+        }
       },
     })
   })

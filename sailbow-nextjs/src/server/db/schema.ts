@@ -1,9 +1,15 @@
 import { mysqlTable, int, varchar, text, timestamp, boolean, primaryKey, json, index, bigint } from "drizzle-orm/mysql-core";
-import { InferSelectModel, relations, sql } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm";
 import { z } from "zod";
 
-const userIdColumn = (columnName?: string) => varchar(columnName ?? "user_id", { length: 256 })
-	.notNull()
+type UserIdColumnOpts = {
+	columnName?: string,
+	nullable?: boolean
+}
+const userIdColumn = (opts?: UserIdColumnOpts | undefined) => {
+	const col = varchar(opts?.columnName ?? "user_id", { length: 256 })
+	return opts?.nullable ? col : col.notNull()
+}
 
 const createdOnColumn = () => timestamp("created_on")
 	.notNull()
@@ -14,7 +20,7 @@ export const boats = mysqlTable("boats", {
 	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
 	name: varchar("name", { length: 50 }).notNull(),
 	description: varchar("description", { length: 256 }),
-	captainUserId: userIdColumn("captain_user_id"),
+	captainUserId: userIdColumn({ columnName: "captain_user_id" }),
 	createdOn: createdOnColumn()
 })
 
@@ -28,13 +34,14 @@ export const boatBanners = mysqlTable("boat_banners", {
 
 export const crewMembers = mysqlTable("crew_members", {
 	boatId: bigint("boat_id", { mode: "number" }).notNull(),
-	userId: userIdColumn(),
+	userId: userIdColumn({ nullable: true }),
+	email: varchar("email", { length: 256 }),
 	role: varchar("role", { length: 25, enum: ["captain", "firstMate", "crewMember"] }).notNull(),
 	createdOn: createdOnColumn()
 }, (table) => ({
-	pk: primaryKey(table.boatId, table.userId),
 	boatIdIdx: index("boat_id_idx").on(table.boatId),
-	userIdIdx: index("user_id_idx").on(table.userId)
+	userIdIdx: index("user_id_idx").on(table.userId),
+	emailIdx: index("email_idx").on(table.email)
 }))
 
 export const modules = mysqlTable("modules", {
@@ -46,7 +53,7 @@ export const modules = mysqlTable("modules", {
 	createdOn: createdOnColumn(),
 	type: varchar("type", { length: 50 }).$type<ModuleType>().notNull(),
 	finalizedOptionId: bigint("finalized_option_id", { mode: "number" }),
-	authorId: userIdColumn("author_id")
+	authorId: userIdColumn({ columnName: "author_id" })
 }, (table) => ({
 	boatIdIdx: index("boat_id_idx").on(table.boatId)
 }))
@@ -156,6 +163,8 @@ export type Boat = InferSelectModel<typeof boats>
 export type BoatBanner = InferSelectModel<typeof boatBanners>
 export type BoatAndBanner = Boat & { banner: BoatBanner }
 export type CrewMember = InferSelectModel<typeof crewMembers>
+export type CrewMemberRole = CrewMember["role"]
+export type InsertCrewMember = InferInsertModel<typeof crewMembers>
 export type Module = InferSelectModel<typeof modules>
 export type ModuleSettings = InferSelectModel<typeof moduleSettings>
 export type ModuleOption = InferSelectModel<typeof moduleOptions>
