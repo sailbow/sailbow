@@ -1,4 +1,4 @@
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { captainMiddleware, createTRPCRouter, protectedBoatProcedure, protectedProcedure } from "@/server/api/trpc";
 import { GetBoatsContract, CreateBoatContract, GetBoatByIdContract } from "@/contracts/dock";
 import { InferInsertModel, and, eq, inArray, isNull, or } from "drizzle-orm";
 import { CrewMemberRole, InsertCrewMember, boatBanners, boats, crewMembers } from "@/server/db/schema";
@@ -6,6 +6,8 @@ import { db } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import { clerkClient } from "@clerk/nextjs";
 import { getBaseUrl, getUrl } from "@/trpc/shared";
+import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 export const dockRouter = createTRPCRouter({
   createBoat: protectedProcedure
@@ -110,5 +112,19 @@ export const dockRouter = createTRPCRouter({
       }
 
       return membership.boat
+    }),
+
+  deleteBoatById: protectedBoatProcedure
+    .use(captainMiddleware)
+    .input(z.object({
+      boatId: z.number().min(1)
+    }))
+    .mutation(async ({ ctx }) => {
+      await ctx.db.transaction(async (tx) => {
+        await tx.delete(boats).where(eq(boats.id, ctx.boat.id))
+        await tx.delete(boatBanners).where(eq(boatBanners.boatId, ctx.boat.id))
+        await tx.delete(crewMembers).where(eq(crewMembers.boatId, ctx.boat.id))
+      })
+      revalidatePath("/dock", "page")
     })
 })

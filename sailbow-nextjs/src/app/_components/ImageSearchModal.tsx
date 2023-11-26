@@ -103,7 +103,7 @@ export default function ImageSearchModal() {
                             </Wrap>
                         )}
                     </ModalBody>
-                    <ModalFooter>
+                    <ModalFooter justifyContent="flex-start">
                         <Button onClick={saveImage} disabled={!selectedImage}>
                             Use Image
                         </Button>

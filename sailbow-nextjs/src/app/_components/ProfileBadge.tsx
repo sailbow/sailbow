@@ -1,6 +1,6 @@
 import { ClerkLoading, ClerkLoaded, UserButton } from "@clerk/nextjs";
 import { Flex, } from "@chakra-ui/react";
-import { HelmSpinner } from "./HelmSpinner";
+import { HelmSpinner } from "@/components"
 
 export default async function ProfileBadge() {
   return (

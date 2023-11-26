@@ -9,10 +9,13 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import { type NextRequest } from "next/server";
 import superjson from "superjson";
-import { ZodError } from "zod";
+import { ZodError, z } from "zod";
 
 import { db } from "@/server/db";
 import { SignedInAuthObject, SignedOutAuthObject, getAuth } from "@clerk/nextjs/server"
+import { eq } from "drizzle-orm";
+import { boats } from "../db/schema";
+import next from "next";
 
 
 /**
@@ -123,6 +126,43 @@ const authMiddleware = t.middleware(({ next, ctx }) => {
     })
   })
 
+const boatIdInput = z.object({ boatId: z.number().min(1) })
+
+const boatMiddleware = t.middleware(async ({ next, rawInput, ctx }) => {
+  const input = boatIdInput.safeParse(rawInput)
+  if (!input.success) {
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Missing boat id'})
+  }
+
+  const boat = await ctx.db.query.boats.findFirst({
+    where: eq(boats.id, input.data.boatId),
+    with: { crew: true }
+  })
+
+  if (!boat) {
+    throw new TRPCError({ code: 'NOT_FOUND' })
+  }
+
+  if (!boat.crew.some(cm =>
+      cm.userId === ctx.auth.userId || 
+      ctx.auth.user?.emailAddresses.some(e => e.emailAddress === cm.email))) {
+      throw new TRPCError({ code: 'UNAUTHORIZED'})
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      boat
+    }
+  })
+})
+
+export const captainMiddleware = boatMiddleware.unstable_pipe(({ ctx, next }) => {
+  if (ctx.boat.captainUserId !== ctx.auth.userId) {
+    throw new TRPCError({ code: 'UNAUTHORIZED'})
+  }
+  return next({ ctx })
+})
+
 /**
  * Protected (authenticated) procedure
  *
@@ -132,3 +172,4 @@ const authMiddleware = t.middleware(({ next, ctx }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(authMiddleware)
+export const protectedBoatProcedure = protectedProcedure.use(boatMiddleware)

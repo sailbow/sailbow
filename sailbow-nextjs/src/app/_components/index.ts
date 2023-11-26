@@ -1,6 +1,7 @@
 import BoatsContainer from "./BoatsContainer"
 import CreateBoatFlyoutForm from "./CreateBoatFlyoutForm"
 import DefaultNotFound from "./DefaultNotFound"
+import HelmSpinner from "./HelmSpinner"
 import ImageSearchModal from "./ImageSearchModal"
 import NavBar from "./NavBar"
 import ProfileBadge from "./ProfileBadge"
@@ -12,6 +13,7 @@ export {
     BoatsContainer,
     CreateBoatFlyoutForm,
     DefaultNotFound,
+    HelmSpinner,
     ImageSearchModal,
     NavBar,
     ProfileBadge,

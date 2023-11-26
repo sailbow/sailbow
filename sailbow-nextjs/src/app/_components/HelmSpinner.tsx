@@ -2,20 +2,19 @@ import Image from "next/image"
 import { z } from "zod";
 
 const helmSpinnerPropsSchema = z
-    .object({
-        size: z.number().min(1).default(25)
-    })
+  .object({
+    size: z.number().min(1).default(25)
+  })
 
 type HelmSpinnerProps = z.input<typeof helmSpinnerPropsSchema>
 
-export function HelmSpinner(props: HelmSpinnerProps): JSX.Element {
-    const { size } = helmSpinnerPropsSchema.parse(props)
-    const css = `
+export default function HelmSpinner(props: HelmSpinnerProps): JSX.Element {
+  const { size } = helmSpinnerPropsSchema.parse(props)
+  const css = `
     .spinner {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
         position: relative;
       }
       
@@ -33,18 +32,18 @@ export function HelmSpinner(props: HelmSpinnerProps): JSX.Element {
       }
     `
 
-    return (
-        <>
-            <style>{css}</style>
-            <div className="spinner">
-                <Image
-                    src="/helm.svg"
-                    alt="Ship Helm"
-                    className="spinner-image"
-                    width={size}
-                    height={size}
-                />
-            </div>
-        </>
-    );
+  return (
+    <>
+      <style>{css}</style>
+      <div className="spinner">
+        <Image
+          src="/helm.svg"
+          alt="Ship Helm"
+          className="spinner-image"
+          width={size}
+          height={size}
+        />
+      </div>
+    </>
+  );
 };
