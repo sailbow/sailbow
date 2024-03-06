@@ -1,10 +1,10 @@
 import { HelmSpinner } from "@/components";
-import { Center } from "@chakra-ui/react";
+import { AbsoluteCenter } from "@chakra-ui/react";
 
 export default function Loading() {
     return (
-        <Center>
+        <AbsoluteCenter h={300}>
             <HelmSpinner size={100} />
-        </Center>
+        </AbsoluteCenter>
     )
 }

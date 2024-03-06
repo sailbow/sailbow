@@ -21,6 +21,7 @@ import { InferRequestType } from "@/contracts";
 import { CreateBoatContract } from "@/contracts/dock"
 import { api } from "@/trpc/react";
 import { ImageSearchModal, useCrewInvites } from "@/components"
+import { revalidatePath } from "next/cache";
 
 type FormData = InferRequestType<typeof CreateBoatContract>
 
@@ -31,7 +32,7 @@ export default function CreateBoatFlyoutForm() {
     const { crewInvites, EmailInputElement } = useCrewInvites()
 
     // Option 2: trpc
-    const { isLoading, mutate } = api.dock.createBoat.useMutation({
+    const { isLoading, isSuccess, mutate } = api.dock.createBoat.useMutation({
         onSuccess: (res) => {
             router.push(`/dock/${res.boatId}`)
         },
@@ -131,7 +132,7 @@ export default function CreateBoatFlyoutForm() {
                                             type="submit"
                                             colorScheme="teal"
                                             width="full"
-                                            isLoading={isLoading}
+                                            isLoading={isLoading || isSuccess}
                                         >
                                             Save
                                         </Button>

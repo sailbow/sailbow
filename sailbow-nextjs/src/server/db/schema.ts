@@ -1,6 +1,7 @@
 import { mysqlTable, int, varchar, text, timestamp, boolean, primaryKey, json, index, bigint } from "drizzle-orm/mysql-core";
 import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm";
 import { z } from "zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 type UserIdColumnOpts = {
 	columnName?: string,
@@ -158,13 +159,23 @@ export const moduleOptionVotesRelations = relations(moduleOptionVotes, ({ one })
 	})
 }))
 
+// Core schemas
+export const BoatSchema = createSelectSchema(boats)
+export const CreateBoatSchema = createInsertSchema(boats)
+	.omit({ id: true, createdOn: true })
+export const BoatBannerSchema = createInsertSchema(boatBanners)
+
+export const CrewMemberSchema = createSelectSchema(crewMembers)
+export const CreateCrewMemberSchema = createInsertSchema(crewMembers)
+	.extend({ email: z.string().email() })
+
 // Core types
 export type Boat = InferSelectModel<typeof boats>
 export type BoatBanner = InferSelectModel<typeof boatBanners>
 export type BoatAndBanner = Boat & { banner: BoatBanner }
 export type CrewMember = InferSelectModel<typeof crewMembers>
 export type CrewMemberRole = CrewMember["role"]
-export type InsertCrewMember = InferInsertModel<typeof crewMembers>
+export type InsertCrewMember = z.infer<typeof CreateCrewMemberSchema>
 export type Module = InferSelectModel<typeof modules>
 export type ModuleSettings = InferSelectModel<typeof moduleSettings>
 export type ModuleOption = InferSelectModel<typeof moduleOptions>

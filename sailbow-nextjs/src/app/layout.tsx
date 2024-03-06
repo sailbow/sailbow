@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ClerkProvider>
-        <body>
+        <body style={{ height: "100%", width: "100%" }}>
           <ClientProviders>
             <TRPCReactProvider headers={headers()}>
               {children}

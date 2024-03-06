@@ -1,4 +1,4 @@
-import { boats, boatBanners, crewMembers } from "@/server/db/schema"
+import { boats, boatBanners, crewMembers, modules } from "@/server/db/schema"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
 import { type RequestResponseContract, type ResponseContract } from "@/contracts"
@@ -9,11 +9,16 @@ export const CreateBoatContract = {
         .omit({ id: true, captainUserId: true, createdOn: true })
         .extend({
             banner: createInsertSchema(boatBanners).omit({ boatId: true }),
-            crewInvites: z.array(SendInvitationContract.requestSchema
-                .omit({ boatId: true }))
-                .default([])
+            crewInvites: z.array(SendInvitationContract.requestSchema)
+                .default([]),
+            description: z.string().nullable(),
         }),
-    responseSchema: z.object({ boatId: z.number() })
+    responseSchema: createSelectSchema(boats)
+        .extend({
+            banner: createSelectSchema(boatBanners),
+            crew: z.array(createSelectSchema(crewMembers)
+                .extend({ email: z.string().email(), createdOn: z.date() }))
+        })
 } satisfies RequestResponseContract
 
 export const GetBoatsContract = {
@@ -31,6 +36,7 @@ export const GetBoatByIdContract = {
     responseSchema: createSelectSchema(boats)
         .extend({
             banner: createSelectSchema(boatBanners).nullish(),
-            crew: z.array(createSelectSchema(crewMembers)).nullish()
+            crew: z.array(createSelectSchema(crewMembers)).nullish(),
+            modules: z.array(createSelectSchema(modules)).default([])
         })
 }

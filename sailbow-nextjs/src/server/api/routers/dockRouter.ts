@@ -8,6 +8,7 @@ import { clerkClient } from "@clerk/nextjs";
 import { getBaseUrl, getUrl } from "@/trpc/shared";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { CrewMember } from "@/modules/boats/Boat.Types";
 
 export const dockRouter = createTRPCRouter({
   createBoat: protectedProcedure
@@ -23,6 +24,8 @@ export const dockRouter = createTRPCRouter({
         const boatId = parseInt(insertBoatResult.insertId)
         const banner = {
             ...input.banner,
+            show: input.banner.show ?? false,
+            position: input.banner.position ?? 0,
             boatId
         }
         await tx.insert(boatBanners).values(banner)
@@ -30,12 +33,31 @@ export const dockRouter = createTRPCRouter({
           return {
             boatId,
             email: ci.emailAddress,
-            role: ci.role as CrewMemberRole
+            role: ci.role as CrewMemberRole,
           }
         })
-        crew.push({ boatId, userId: ctx.auth.userId, role: "captain" })
+        crew.push({
+          boatId,
+          userId: ctx.auth.userId,
+          email: ctx.auth.primaryEmail,
+          role: "captain"
+        })
         await tx.insert(crewMembers).values(crew)
-        return { boatId }
+        const now = new Date(new Date().toUTCString())
+        crew.forEach(c => {
+          c.createdOn = now
+        });
+        const newCrew = crew as CrewMember[];
+        revalidatePath("/dock")
+        return {
+          id: boatId,
+          name: input.name,
+          description: input.description,
+          banner,
+          captainUserId: ctx.auth.userId,
+          crew: newCrew,
+          createdOn: now
+        }
       })
       
       // Send invitations
@@ -100,7 +122,8 @@ export const dockRouter = createTRPCRouter({
           boat: {
             with: {
               banner: input.includeBanner ? true : undefined,
-              crew: input.includeCrew ? true : undefined
+              crew: input.includeCrew ? true : undefined,
+              modules: true
             }
           }
         }
@@ -125,6 +148,8 @@ export const dockRouter = createTRPCRouter({
         await tx.delete(boatBanners).where(eq(boatBanners.boatId, ctx.boat.id))
         await tx.delete(crewMembers).where(eq(crewMembers.boatId, ctx.boat.id))
       })
+      
       revalidatePath("/dock", "page")
+      revalidatePath(`/dock/${ctx.boat.id}`, "page")
     })
 })
