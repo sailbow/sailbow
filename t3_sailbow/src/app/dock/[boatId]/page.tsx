@@ -8,7 +8,7 @@ export default async function Page({ params }: { params: { boatId: number } }) {
   const boat: Boat = await api.dock.getBoatById.query(params)
   const banner: BoatBanner = bannerSchema.parse(boat)
   return (
-    <main className="container p-4">
+    <div className="p-4">
       <BoatPageHeader boat={boat} />
       <div className="flex flex-col w-full mt-2">
         <div className="w-full h-[200px]">
@@ -21,6 +21,6 @@ export default async function Page({ params }: { params: { boatId: number } }) {
           {boat.description}
         </p>
       </div>
-    </main>
+    </div>
   )
 }

@@ -21,7 +21,7 @@ export default function ImageWithLoader(props: ImageWithLoaderProps) {
                 onLoadingComplete={() => setIsLoaded(true)}
             />
             {!isLoaded && (
-                <Skeleton className="size-full" />
+                <Skeleton className="size-full bg-slate-300" />
             )}
         </div>
     )

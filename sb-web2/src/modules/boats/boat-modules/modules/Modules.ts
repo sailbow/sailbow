@@ -27,7 +27,7 @@ export type ModuleDataType = DateModuleDataType | LocationModuleDataType;
 
 export const renderData = (
     data: ModuleData<any>[],
-    getText: (data: ModuleData<DateModuleDataType>) => string,
+    getText: (data: ModuleData<any>) => string,
     finalizedOptionId?: string,
 ) => {
     const foundData = data.find((d) => d.id === finalizedOptionId);

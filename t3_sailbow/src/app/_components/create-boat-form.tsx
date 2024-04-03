@@ -23,6 +23,10 @@ import BannerModal from "./banner-modal";
 import BoatBannerView from "./boat-banner-view";
 import { useState } from "react";
 
+const defaultBanner : BoatBanner = {
+    bannerType: "color",
+    bannerValue: "#99f6e4"
+}
 export function CreateBoatForm() {
     const router = useRouter();
     const { toast } = useToast();
@@ -38,18 +42,14 @@ export function CreateBoatForm() {
             })
         }
     })
-    const [banner, setBanner] = useState<BoatBanner>({
-        bannerType: "color",
-        bannerValue: "#99f6e4"
-    })
+    const [banner, setBanner] = useState<BoatBanner>(defaultBanner)
 
     const form = useForm<CreateBoat>({
         resolver: zodResolver(createBoatSchema),
         defaultValues: {
+            ...defaultBanner,
             name: "",
             description: "",
-            bannerType: "color",
-            bannerValue: "#99f6e4",
             crewInvites: [],
             // bannerPosition: 0,
         },
@@ -73,8 +73,8 @@ export function CreateBoatForm() {
                     <div className="absolute bottom-0">
                         <BannerModal onBannerChange={(b) => {
                             setBanner(b)
-                            form.setValue("bannerType", banner.bannerType)
-                            form.setValue("bannerValue", banner.bannerValue)
+                            form.setValue("bannerType", b.bannerType)
+                            form.setValue("bannerValue", b.bannerValue)
                         }} />
                     </div>
                 </div>

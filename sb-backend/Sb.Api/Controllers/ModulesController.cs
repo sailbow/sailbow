@@ -63,6 +63,8 @@ public class ModulesController : ApiControllerBase
     {
         return await db.Modules
             .Include(m => m.Settings)
+            .Include(m => m.ModuleOptions)
+            .AsNoTracking()
             .FirstOrDefaultAsync(m => m.Id == moduleId);
     }
 

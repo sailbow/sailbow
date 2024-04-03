@@ -3,6 +3,7 @@ import { type BoatBanner } from "@/lib/schemas/boat"
 import ImageWithLoader from "./image"
 
 export default function BoatBannerView({ banner }: { banner: BoatBanner }) {
+    console.log(banner.bannerType);
     if (banner.bannerType === "color") {
         return (
             <div style={{ backgroundColor: banner.bannerValue }} className="h-full w-full rounded-md" />

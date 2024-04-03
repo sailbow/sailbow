@@ -3,7 +3,7 @@ import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { Box, Flex } from '@chakra-ui/react';
 
 import { useAuthStore } from 'modules/auth/Auth.Store';
-import { ModuleData, ModuleExtended } from 'modules/boats/Boat.Types';
+import { ModuleData, ModuleExtended, ModuleType } from 'modules/boats/Boat.Types';
 import { DateSettings } from 'modules/boats/boat-modules/modules/date/DateSettings';
 import { DateModuleDataType, getText } from 'modules/boats/boat-modules/modules/date/Date';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
@@ -13,7 +13,7 @@ import { TimePicker } from 'shared/time-picker/TimePicker';
 type DataType = ModuleData<DateModuleDataType>;
 
 export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
-    const { id, settings, data } = props;
+    const { id, settings, moduleOptions: data } = props;
     const [widgetData, setWidgetData] = useState<DataType[]>([]);
     const [{ user }] = useAuthStore();
 
@@ -92,7 +92,7 @@ export const DateWidget: FC<ModuleExtended<DateModuleDataType>> = (props) => {
                         name="endTime"
                         placeholder="hh:mm AM"
                         onChange={onDataChange(optionId)}
-                        value={data.endTime}
+                        value={data.endDate ? new Date(data.endDate).getTime(): ''}
                     />
                 </Flex>
             </Box>

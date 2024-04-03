@@ -77,6 +77,7 @@ export type ModuleData<T> = {
 
 export interface Module<T> {
     id: string;
+    boatId: string;
     name: string;
     type: ModuleType;
     order: number;
@@ -85,7 +86,7 @@ export interface Module<T> {
     settings: ModuleSettings;
     actionRequired?: boolean;
     finalizedOptionId?: string;
-    data: ModuleData<T>[];
+    moduleOptions: ModuleData<T>[];
 }
 
 export interface ModuleExtended<T> extends Module<T> {
