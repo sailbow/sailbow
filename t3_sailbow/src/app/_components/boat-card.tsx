@@ -26,7 +26,7 @@ const BoatCard = ({ boat }: { boat: Boat }) => {
     }
     return (
         <Link href={`/dock/${boat.id}`}>
-            <Card className="h-[200px] max-w-sm flex flex-col overflow-hidden transition hover:scale-105">
+            <Card className="h-[250px] flex flex-col overflow-hidden transition-transform duration-300 ease-in-out hover:transform hover:scale-105 hover:border-2 hover:border-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent focus:scale-105 focus:transform">
                 <CardContent className="p-0 relative basis-3/4">
                     {banner}
                 </CardContent>

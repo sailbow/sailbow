@@ -5,7 +5,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "@/components/ui/toaster";
 import { type Metadata } from 'next';
-import { ThemeProvider } from '@/components/ui/theme-provider';
+import { ThemeProvider } from '@/components/theme-provider';
 
 const font = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html className="min-h-screen" lang="en" suppressHydrationWarning>
       <body className={cn(
-        "min-h-full w-full bg-background font-sans antialiased",
+        "min-h-full w-full font-sans antialiased",
         font.variable
       )}>
         <ThemeProvider
