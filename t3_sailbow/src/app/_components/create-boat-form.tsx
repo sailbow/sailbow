@@ -23,7 +23,7 @@ import BannerModal from "./banner-modal";
 import BoatBannerView from "./boat-banner-view";
 import { useState } from "react";
 
-const defaultBanner : BoatBanner = {
+const defaultBanner: BoatBanner = {
     bannerType: "color",
     bannerValue: "#99f6e4"
 }
@@ -68,7 +68,7 @@ export function CreateBoatForm() {
                 </SheetTitle>
             </SheetHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
-                <div className="relative h-[150px] w-full">
+                <div className="relative h-[250px] w-full">
                     <BoatBannerView banner={banner} />
                     <div className="absolute bottom-0">
                         <BannerModal onBannerChange={(b) => {
@@ -101,7 +101,7 @@ export function CreateBoatForm() {
                                 <Textarea
                                     {...field as TextareaProps}
                                     placeholder="A description of your trip"
-                                    className="resize-none"
+                                    className="min-h-32"
                                 />
                             </FormControl>
                             <FormMessage />

@@ -9,8 +9,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { Slash } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export default function BoatPageHeader({ boat }: { boat: Boat | undefined }) {
     return (
@@ -24,7 +22,7 @@ export default function BoatPageHeader({ boat }: { boat: Boat | undefined }) {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator className="[&>svg]:size-lg" />
                     <BreadcrumbItem>
-                        <BreadcrumbPage>{boat?.name}</BreadcrumbPage>
+                        <BreadcrumbPage className="font-semibold">{boat?.name}</BreadcrumbPage>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
