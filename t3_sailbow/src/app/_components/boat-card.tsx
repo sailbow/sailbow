@@ -32,7 +32,7 @@ const BoatCard = ({ boat }: { boat: Boat }) => {
                 </CardContent>
                 <div className="flex items-center basis-1/4">
                     <div className="flex items-center justify-center p-4">
-                        <CardTitle className="text-lg font-semibold">
+                        <CardTitle className="text-lg font-normal">
                             {boat.name}
                         </CardTitle>
                     </div>

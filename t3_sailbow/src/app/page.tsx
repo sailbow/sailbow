@@ -13,15 +13,15 @@ export default async function Home() {
           <div className="text-center text-foreground">
             <Image
               src="/icon.svg"
-              width="150"
-              height="150"
+              width="100"
+              height="100"
               alt="Sailbow Logo"
               className="inline-block mb-8"
             />
 
-            <h1 className="text-4xl text-gray-600 font-bold tracking-tight sm:text-6xl">
+            <div className="text-gray-600 text-3xl font-bold tracking-tight">
               assemble your crew.<br />chart a course.<br />set sail.
-            </h1>
+            </div>
             <p className="mt-6 text-lg leading-8 text-gray-600">
               The easiest way to plan your next group trip
             </p>
