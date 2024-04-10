@@ -16,7 +16,6 @@ export const dockRouter = createTRPCRouter({
   createBoat: protectedProcedure
     .input(createBoatSchema)
     .mutation(async ({ input, ctx }) => {
-      throw new Error();
       const insertBoat: InsertBoat = {
         ...input,
         captainUserId: ctx.auth.userId
