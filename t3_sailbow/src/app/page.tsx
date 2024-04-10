@@ -19,17 +19,17 @@ export default async function Home() {
               className="inline-block mb-8"
             />
 
-            <div className="text-gray-600 text-3xl font-bold tracking-tight">
+            <div className="text-gray-600 text-3xl font-bold tracking-tight leading-none">
               assemble your crew.<br />chart a course.<br />set sail.
             </div>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
+            <p className="mt-6 text-lg leading-8 text-gray-600/90">
               The easiest way to plan your next group trip
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
                 href="/dock"
               >
-                <Button>Get Started</Button>
+                <Button size="lg">Get Started</Button>
               </Link>
             </div>
           </div>

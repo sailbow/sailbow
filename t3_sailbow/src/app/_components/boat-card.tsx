@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import ImageWithLoader from "./image-with-loader";
 
 const BoatCard = ({ boat }: { boat: Boat }) => {
     let banner;
@@ -16,12 +17,7 @@ const BoatCard = ({ boat }: { boat: Boat }) => {
         )
     } else {
         banner = (
-            <Image
-                fill
-                alt={`${boat.name} banner image`}
-                src={boat.bannerValue}
-                objectFit="cover"
-            />
+            <ImageWithLoader src={boat.bannerValue} alt={boat.name + " image"} className="rounded-b-none" />
         )
     }
     return (

@@ -17,9 +17,9 @@ import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbS
 export default async function Page() {
     const boats = await api.dock.getBoats.query();
     return (
-        <div className="h-dvh w-dvw flex flex-col">
+        <div className="h-dvh w-dvw flex flex-col bg-background">
             <Navbar>
-                <div className="flex items-center">
+                <div className="hidden md:flex items-center">
                     <Breadcrumb>
                         <BreadcrumbList className="text-lg">
                             <BreadcrumbItem>

@@ -33,7 +33,7 @@ export default function Page({ params }: { params: { boatId: number } }) {
   return (
     <div className="bg-background">
       <div className="fixed top-0 inset-0 flex h-dvh w-dvw">
-        <aside className="w-1/4 min-w-[200px] p-4 border-r-[1px] border-border/40 overflow-y-auto hidden md:block">
+        <aside className=" w-1/3 min-w-[200px] p-4 border-r-[1px] border-border/40 overflow-y-auto hidden md:block">
           <div className="h-[200px] self-stretch">
             {banner && <BoatBannerView banner={banner} />}
           </div>
@@ -58,24 +58,5 @@ export default function Page({ params }: { params: { boatId: number } }) {
       </div>
     </div>
   )
-  // return (
-  //   <div className="p-4 overflow-hidden">
-  //     <div className="hidden md:block">
-  //       <BoatPageHeader boat={boat} />
-  //     </div>
-  //     <div className="flex flex-col md:flex-row">
-  //       <div className="flex flex-col w-full mt-2">
-  //         <div className="w-full h-[200px]">
-  //           <BoatBannerView banner={banner} />
-  //         </div>
-  //         <h2 className="text-2xl scroll-m-20 tracking-tight">
-  //           {boat.name}
-  //         </h2>
-  //         <p className="leading-7 [&:not(:first-child)]:mt-6">
-  //           {boat.description}
-  //         </p>
-  //       </div>
-  //     </div>
-  //   </div>
-  // )
+
 }

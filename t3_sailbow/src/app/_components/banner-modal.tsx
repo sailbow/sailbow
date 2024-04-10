@@ -15,7 +15,7 @@ import { Spinner } from "./spinner";
 import { useEffect, useState } from "react";
 import { api } from "@/trpc/react";
 import { type BoatBanner } from "@/lib/schemas/boat";
-import ImageWithLoader from "./image";
+import ImageWithLoader from "./image-with-loader";
 import { useToast } from "@/components/ui/use-toast";
 
 interface BannerModalProps {
@@ -50,18 +50,18 @@ export default function BannerModal(props: BannerModalProps) {
                 </Button>
             </DialogTrigger>
             <DialogContent className="w-4/5 max-w-2xl rounded-lg">
-                <Tabs defaultValue="color">
+                <Tabs defaultValue="image">
                     <DialogHeader className="items-center">
-                        <TabsList className="grid w-full max-w-lg grid-cols-2 mb-2">
-                            <TabsTrigger value="color">Color</TabsTrigger>
+                        <TabsList className="grid w-full max-w-lg grid-cols-1 mb-2">
+                            {/* <TabsTrigger value="color">Color</TabsTrigger> */}
                             <TabsTrigger value="image">Image</TabsTrigger>
                         </TabsList>
                     </DialogHeader>
-                    <div className="w-full h-[300px] p-2 overflow-y-auto">
-                        <TabsContent value="color">
+                    <div className="min-w-full min-h-[300px] p-2 overflow-y-auto">
+                        {/* <TabsContent value="color">
                             <h3>Colors tab</h3>
-                        </TabsContent>
-                        <TabsContent value="image" className="w-full h-full">
+                        </TabsContent> */}
+                        <TabsContent value="image" className="w-full h-[500px]">
                             <div className="flex flex-col w-full items-center space-y-2">
                                 <div className="flex w-full max-w-sm items-center space-x-2">
                                     <Input

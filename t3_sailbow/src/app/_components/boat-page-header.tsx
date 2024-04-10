@@ -12,7 +12,7 @@ import Link from "next/link";
 
 export default function BoatPageHeader({ boat }: { boat: Boat | undefined }) {
     return (
-        <div className="flex items-center">
+        <div className="hidden md:flex items-center">
             <Breadcrumb>
                 <BreadcrumbList className="text-lg">
                     <BreadcrumbItem>
@@ -22,7 +22,7 @@ export default function BoatPageHeader({ boat }: { boat: Boat | undefined }) {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator className="[&>svg]:size-lg" />
                     <BreadcrumbItem>
-                        <BreadcrumbPage className="font-semibold">{boat?.name}</BreadcrumbPage>
+                        <BreadcrumbPage className="text-primary font-semibold">{boat?.name}</BreadcrumbPage>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
