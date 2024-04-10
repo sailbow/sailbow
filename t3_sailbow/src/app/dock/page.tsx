@@ -1,20 +1,12 @@
 
 import BoatCard from "../_components/boat-card";
-import { type Boat } from "@/lib/schemas/boat";
-import {
-    Sheet,
-    SheetContent,
-    SheetTrigger,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { CreateBoatForm } from "../_components/create-boat-form";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { api } from "@/trpc/server";
-import { Link, Loader2 } from "lucide-react";
 import { Navbar } from "../_components/nav-bar";
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbPage } from "@/components/ui/breadcrumb";
+import { currentUser } from "@clerk/nextjs";
 
 export default async function Page() {
+    await currentUser();
     const boats = await api.dock.getBoats.query();
     return (
         <div className="h-dvh w-dvw flex flex-col bg-background">
