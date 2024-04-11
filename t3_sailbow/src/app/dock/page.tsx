@@ -11,7 +11,7 @@ export default function Page() {
     return (
         <div className="h-dvh w-dvw flex flex-col bg-background">
             <Navbar>
-                <div className="hidden md:flex items-center">
+                <div className="flex items-center">
                     <Breadcrumb>
                         <BreadcrumbList className="text-lg">
                             <BreadcrumbItem>

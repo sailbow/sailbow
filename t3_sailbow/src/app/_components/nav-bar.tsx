@@ -19,7 +19,7 @@ export function Navbar(props?: NavbarProps) {
     <header className="sticky top-0 z-50 w-full border-b-[1px] border-border/40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex flex-row items-center justify-between p-4">
         <nav className="flex items-center gap-2 text-xl">
-          <Link href="/" className="flex items-center gap-2 text-xl min-w-16">
+          <Link href="/" className="hidden sm:flex items-center min-w-16">
             <Image src="/icon.svg" alt="Sailbow Logo" width={32} height={32} />
           </Link>
           {props?.children}
@@ -47,9 +47,9 @@ export function Navbar(props?: NavbarProps) {
             </DropdownMenu>
             <Sheet>
               <SheetTrigger asChild>
-                <Button>
-                  Create a boat
-                  <Plus className="ml-2 w-6 h-6" />
+                <Button size="sm">
+                  <span className="hidden sm:flex sm:mr-2">Create a boat</span>
+                  <Plus className="w-6 h-6" />
                 </Button>
               </SheetTrigger>
               <SheetContent className="min-h-full overflow-y-auto w-full sm:w-3/5 sm:max-w-none lg:w-2/5">

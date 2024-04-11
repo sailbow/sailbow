@@ -12,7 +12,7 @@ import Link from "next/link";
 
 export default function BoatPageHeader({ boat }: { boat: Boat | undefined }) {
     return (
-        <div className="hidden md:flex items-center">
+        <div className="flex items-center">
             <Breadcrumb>
                 <BreadcrumbList className="text-lg">
                     <BreadcrumbItem>

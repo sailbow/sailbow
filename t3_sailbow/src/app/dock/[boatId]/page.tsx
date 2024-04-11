@@ -46,7 +46,7 @@ export default function Page({ params }: { params: { boatId: number } }) {
           <div className="h-[200px] self-stretch">
             {banner && <BoatBannerView banner={banner} />}
           </div>
-          <h3 className="text-2xl tracking-tight font-semibold">{boat?.name}</h3>
+          <h3 className="text-2xl tracking-tight font-light">{boat?.name}</h3>
           <p>{boat?.description}</p>
         </aside>
         <div className="flex-1 ml-auto overflow-y-auto">

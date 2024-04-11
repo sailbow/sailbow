@@ -8,7 +8,7 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 
 export function UserNav() {
-  const { user, isLoaded } = useUser();
+  const { user } = useUser();
   const { openUserProfile, signOut } = useClerk();
   const { setTheme } = useTheme();
   const router = useRouter();
