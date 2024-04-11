@@ -9,7 +9,7 @@ import { Spinner } from "../_components/spinner";
 export default function Page() {
     const { isLoading, data: boats } = api.dock.getBoats.useQuery()
     return (
-        <div className="h-dvh w-dvw flex flex-col bg-background">
+        <div className="h-dvh w-dvw flex flex-col bg-background overflow-y-auto">
             <Navbar>
                 <div className="flex items-center">
                     <Breadcrumb>
@@ -21,7 +21,7 @@ export default function Page() {
                     </Breadcrumb>
                 </div>
             </Navbar>
-            <main className="flex flex-col p-5 grow overflow-y-auto">
+            <main className="flex flex-col p-5">
                 <Spinner className="size-10 self-center" isVisible={isLoading} />
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {boats?.map(boat => {

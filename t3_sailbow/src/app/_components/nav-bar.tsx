@@ -16,7 +16,7 @@ type NavbarProps = {
 
 export function Navbar(props?: NavbarProps) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b-[1px] border-border/40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b-[1px] border-border/40 bg-background/90 supports-backdrop-blur:bg-background/60">
       <div className="flex flex-row items-center justify-between p-4">
         <nav className="flex items-center gap-2 text-xl">
           <Link href="/" className="hidden sm:flex items-center min-w-16">
