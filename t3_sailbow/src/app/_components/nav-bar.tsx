@@ -9,6 +9,8 @@ import { Bell, Plus } from "lucide-react";
 import { UserNav } from "./user-nav";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+import { cva } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 type NavbarProps = {
   children?: React.ReactNode | undefined;
@@ -16,48 +18,53 @@ type NavbarProps = {
 
 export function Navbar(props?: NavbarProps) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b-[1px] border-border/40 bg-background/90 supports-backdrop-blur:bg-background/60">
-      <div className="flex flex-row items-center justify-between p-4">
-        <nav className="flex items-center gap-2 text-xl">
-          <Link href="/" className="hidden sm:flex items-center min-w-16">
-            <Image src="/icon.svg" alt="Sailbow Logo" width={32} height={32} />
-          </Link>
-          {props?.children}
-        </nav>
-        <div className="flex flex-row-reverse items-center gap-2">
-          <ClerkLoaded>
-            <UserNav />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button size="icon" variant="ghost">
-                  <Bell className="h-6 w-6" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end">
-                <DropdownMenuLabel>
-                  My notifications
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup className="min-h-[100px]">
-                  <p className="font-light text-sm">
-                    Nothing yet to see here!
-                  </p>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button size="sm">
-                  <span className="hidden sm:flex sm:mr-2">Create a boat</span>
-                  <Plus className="w-6 h-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="min-h-full overflow-y-auto w-full sm:w-3/5 sm:max-w-none lg:w-2/5">
-                <CreateBoatForm />
-              </SheetContent>
-            </Sheet>
-          </ClerkLoaded>
-        </div>
+    <header className="
+      sticky top-0 z-50 max-h-16 w-full border-b-[1px] border-border/40 bg-background/90 supports-backdrop-blur:bg-background/60
+      flex flex-row items-center justify-between p-4 overflow-hidden">
+      <nav className="flex items-center space-x-1 text-base sm:text-lg">
+        <Link href="/" className="hidden sm:flex items-center min-w-16">
+          <Image src="/icon.svg" alt="Sailbow Logo" width={24} height={24} />
+        </Link>
+        {props?.children}
+      </nav>
+      <div className="flex flex-row-reverse items-center gap-2">
+        <ClerkLoaded>
+          <UserNav />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon" variant="ghost" className="rounded-full" aria-label="Toggle notifications menu">
+                <Bell className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end">
+              <DropdownMenuLabel>
+                Notifications
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup className="min-h-[100px]">
+                <p className="font-light text-sm">
+                  Nothing yet to see here!
+                </p>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button size="sm" className="hidden sm:inline-flex">
+                <span>Create a boat</span>
+                <Plus className="w-6 h-6 ml-2" />
+              </Button>
+            </SheetTrigger>
+            <SheetTrigger asChild>
+              <Button size="icon" className="sm:hidden rounded-full">
+                <Plus className="w-4 h-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="min-h-full overflow-y-auto w-full sm:w-3/5 sm:max-w-none lg:w-2/5">
+              <CreateBoatForm />
+            </SheetContent>
+          </Sheet>
+        </ClerkLoaded>
       </div>
     </header>
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuGroup, DropdownMenuItem } from "@/components/ui/dropdown-menu";
@@ -14,8 +16,8 @@ export function UserNav() {
   const router = useRouter();
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+      <DropdownMenuTrigger aria-label="Toggle user dropdown" asChild>
+        <Button id="user-dropdown-button" size="icon" variant="ghost" className="rounded-full p-0">
           <Avatar className="h-8 w-8">
             {user?.imageUrl
               ? <AvatarImage src={user.imageUrl} alt={user.fullName + " profile image"} />
@@ -24,11 +26,11 @@ export function UserNav() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
+      <DropdownMenuContent id="user-dropdown" className="w-56" align="end" autoFocus>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user?.fullName}</p>
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="font-medium leading-none">{user?.fullName}</p>
+            <p className="text-sm leading-none text-muted-foreground">
               {user?.primaryEmailAddress?.emailAddress}
             </p>
           </div>

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export default async function Home() {
   return (
-    <div className="h-screen bg-gradient-to-r from-pink-100 to-teal-100">
+    <div className="h-screen bg-gradient-to-b from-primary/95 to-teal-100">
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div className="mx-auto max-w-2xl py-8">
           <div className="text-center text-foreground">
@@ -26,7 +27,10 @@ export default async function Home() {
               <Link
                 href="/dock"
               >
-                <Button size="lg">Get Started</Button>
+                <Button size="lg">
+                  Get Started
+                  <ArrowRight className="size-6 ml-2" />
+                </Button>
               </Link>
             </div>
           </div>
