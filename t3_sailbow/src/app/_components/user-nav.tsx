@@ -2,10 +2,10 @@
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuSub, DropdownMenuPortal } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuSub } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser, useClerk } from "@clerk/nextjs";
-import { LogOut, Moon, Settings, Sun, User } from "lucide-react";
+import { FileText, HelpCircle, LogOut, MessageSquareWarning, Moon, Settings, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 
@@ -26,7 +26,7 @@ export function UserNav() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent id="user-dropdown" className="w-56" align="end">
+      <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="font-medium leading-none">{user?.fullName}</p>
@@ -49,23 +49,36 @@ export function UserNav() {
                 <span>Theme</span>
               </DropdownMenuItem>
             </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem onClick={() => setTheme("light")}>
-                  Light
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                  Dark
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>
-                  System
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                System
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
           </DropdownMenuSub>
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             Settings
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <FileText className="mr-2 h-4 w-4" />
+            Privacy policy
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <MessageSquareWarning className="mr-2 h-4 w-4" />
+            Send feedback
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <HelpCircle className="mr-2 h-4 w-4" />
+            Get help
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
