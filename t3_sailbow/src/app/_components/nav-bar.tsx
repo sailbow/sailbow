@@ -37,8 +37,8 @@ export function Navbar(props?: NavbarProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
-              <DropdownMenuLabel>
-                Notifications
+              <DropdownMenuLabel className="font-normal">
+                <p className="font-medium">Notifications</p>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup className="min-h-[100px]">
