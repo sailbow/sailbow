@@ -1,11 +1,8 @@
-import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 export default async function Home() {
-  noStore();
-
   return (
     <div className="h-screen bg-gradient-to-r from-pink-100 to-teal-100">
       <div className="relative isolate px-6 pt-14 lg:px-8">
