@@ -3,25 +3,34 @@ import BoatBannerView from "@/app/_components/boat-banner-view";
 import BoatPageHeader from "@/app/_components/boat-page-header";
 import { Navbar } from "@/app/_components/nav-bar";
 import { Spinner } from "@/app/_components/spinner";
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { type Boat, type BoatBanner, bannerSchema } from "@/lib/schemas/boat";
 import { api } from "@/trpc/react";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import { Sheet, PanelLeft, Link, Package2, Home, ShoppingCart, Package, Users2, LineChart, Search } from "lucide-react";
-import { Input } from "postcss";
 import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Page({ params }: { params: { boatId: number } }) {
-  const { isLoading, data: boat } = api.dock.getBoatById.useQuery(params)
-  const [banner, setBanner] = useState<BoatBanner | undefined>(undefined)
+  const { error, data: boat } = api.dock.getBoatById.useQuery(params)
+  const [banner, setBanner] = useState<BoatBanner | undefined>(undefined);
+  const { toast } = useToast();
+
   useEffect(() => {
     if (boat) {
       setBanner(bannerSchema.parse(boat));
     }
 
   }, [boat]);
+
+  useEffect(() => {
+    if (error) {
+      console.error(error.message);
+      toast({
+        variant: "destructive",
+        title: "Oops!",
+        description: "Something went wrong, please try again later."
+      })
+    }
+  }, [error, toast]);
 
   if (!banner && !boat) {
     return (
