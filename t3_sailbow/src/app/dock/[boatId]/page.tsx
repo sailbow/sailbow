@@ -50,7 +50,6 @@ export default function Page({ params }: { params: { boatId: number } }) {
           <h3 className="text-2xl">{boat?.name}</h3>
           <p className="leading-none">{boat?.description}</p>
           <Separator className="my-4" />
-
         </aside>
         <div className="flex-1 ml-auto overflow-y-auto">
           <Navbar>
