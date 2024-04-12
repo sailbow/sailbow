@@ -8,6 +8,7 @@ import { type Boat, type BoatBanner, bannerSchema } from "@/lib/schemas/boat";
 import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
 
 export default function Page({ params }: { params: { boatId: number } }) {
   const { error, data: boat } = api.dock.getBoatById.useQuery(params)
@@ -42,12 +43,14 @@ export default function Page({ params }: { params: { boatId: number } }) {
   return (
     <div className="bg-background">
       <div className="fixed top-0 inset-0 flex h-dvh w-dvw">
-        <aside className=" w-1/3 min-w-[200px] p-4 border-r-[1px] border-border/40 overflow-y-auto hidden md:block">
+        <aside className=" w-1/3 min-w-[200px] p-4 border-r-[1px] border-border/40 overflow-y-auto hidden lg:flex lg:flex-col">
           <div className="h-[200px] self-stretch">
             {banner && <BoatBannerView banner={banner} />}
           </div>
-          <h3 className="text-2xl tracking-tight font-light">{boat?.name}</h3>
-          <p>{boat?.description}</p>
+          <h3 className="text-2xl">{boat?.name}</h3>
+          <p className="leading-none">{boat?.description}</p>
+          <Separator className="my-4" />
+
         </aside>
         <div className="flex-1 ml-auto overflow-y-auto">
           <Navbar>

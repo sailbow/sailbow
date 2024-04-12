@@ -19,10 +19,10 @@ type NavbarProps = {
 export function Navbar(props?: NavbarProps) {
   return (
     <header className="
-      sticky top-0 z-50 max-h-16 w-full border-b-[1px] border-border/40 bg-background/90 supports-backdrop-blur:bg-background/60
-      flex flex-row items-center justify-between p-4 overflow-hidden">
-      <nav className="flex items-center space-x-1 text-base sm:text-lg">
-        <Link href="/" className="hidden sm:flex items-center min-w-16">
+      sticky top-0 z-50 min-h-16 w-full border-b-[1px] border-border/40 bg-background/90 supports-backdrop-blur:bg-background/60
+      flex flex-row items-center justify-between p-2 sm:p-4 overflow-hidden">
+      <nav className="flex items-center space-x-4 text-base sm:text-lg">
+        <Link href="/" className="hidden sm:flex items-center">
           <Image src="/icon.svg" alt="Sailbow Logo" width={24} height={24} />
         </Link>
         {props?.children}
@@ -50,13 +50,13 @@ export function Navbar(props?: NavbarProps) {
           </DropdownMenu>
           <Sheet>
             <SheetTrigger asChild>
-              <Button size="sm" className="hidden sm:inline-flex">
+              <Button size="sm" className="hidden md:inline-flex">
                 <span>Create a boat</span>
                 <Plus className="w-6 h-6 ml-2" />
               </Button>
             </SheetTrigger>
             <SheetTrigger asChild>
-              <Button size="icon" className="sm:hidden rounded-full">
+              <Button size="icon" className="hidden xs:inline-flex md:hidden rounded-full">
                 <Plus className="w-4 h-4" />
               </Button>
             </SheetTrigger>

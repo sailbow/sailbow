@@ -17,7 +17,7 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Toggle user dropdown" asChild>
-        <Button id="user-dropdown-button" size="icon" variant="ghost" className="rounded-full p-0">
+        <Button size="icon" variant="ghost" className="rounded-full p-0">
           <Avatar className="h-8 w-8">
             {user?.imageUrl
               ? <AvatarImage src={user.imageUrl} alt={user.fullName + " profile image"} />
