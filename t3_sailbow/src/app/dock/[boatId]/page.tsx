@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import BoatBannerView from "@/app/_components/boat-banner-view";
 import BoatPageHeader from "@/app/_components/boat-page-header";
 import { Navbar } from "@/app/_components/nav-bar";
@@ -9,65 +9,64 @@ import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { type ActiveBoat, useActiveBoat } from "@/hooks/use-boat";
+import { type CrewMember } from "@/lib/common-types";
 
-export default function Page({ params }: { params: { boatId: number } }) {
-  const { error, data: boat } = api.dock.getBoatById.useQuery(params)
+export default function Page() {
   const [banner, setBanner] = useState<BoatBanner | undefined>(undefined);
+  const { activeBoat, error } = useActiveBoat();
+
   const { toast } = useToast();
 
   useEffect(() => {
-    if (boat) {
-      setBanner(bannerSchema.parse(boat));
+    if (activeBoat) {
+      setBanner(bannerSchema.parse(activeBoat));
     }
-
-  }, [boat]);
+  }, [activeBoat]);
 
   useEffect(() => {
     if (error) {
-      console.error(error.message);
+      console.error(error);
       toast({
         variant: "destructive",
         title: "Oops!",
-        description: "Something went wrong, please try again later."
-      })
+        description: "Something went wrong, please try again later.",
+      });
     }
   }, [error, toast]);
 
-  if (!banner && !boat) {
+  if (!banner && !activeBoat) {
     return (
-      <div className="h-dvh w-dvw flex items-center justify-center">
+      <div className="flex h-dvh w-dvw items-center justify-center">
         <Spinner className="size-10" />
       </div>
-    )
+    );
   }
   return (
-    <div className="bg-background">
-      <div className="fixed top-0 inset-0 flex h-dvh w-dvw">
-        <aside className=" w-1/3 min-w-[200px] p-4 border-r-[1px] border-border/40 overflow-y-auto hidden lg:flex lg:flex-col">
-          <div className="h-[200px] self-stretch">
-            {banner && <BoatBannerView banner={banner} />}
-          </div>
-          <h3 className="text-2xl">{boat?.name}</h3>
-          <p className="leading-none">{boat?.description}</p>
-          <Separator className="my-4" />
-        </aside>
-        <div className="flex-1 ml-auto overflow-y-auto">
-          <Navbar>
-            <BoatPageHeader boat={boat} />
-          </Navbar>
-          <div className="flex flex-col items-center space-y-2 pt-2">
-            <div className="flex items-center justify-center gap-2 w-full">
-              <Button variant="outline" size="lg">
-                Add Date
-              </Button>
-              <Button variant="outline" size="lg">
-                Add Location
-              </Button>
-            </div>
+    <div className="fixed inset-0 top-0 flex h-dvh w-dvw bg-muted/40">
+      <aside className=" hidden w-1/3 min-w-[200px] overflow-y-auto border-r-[1px] border-border/40 p-4 lg:flex lg:flex-col">
+        <div className="h-[200px] self-stretch">
+          {banner && <BoatBannerView banner={banner} />}
+        </div>
+        <h3 className="text-2xl">{activeBoat?.name}</h3>
+        <p className="leading-none">{activeBoat?.description}</p>
+        <Separator className="my-4" />
+      </aside>
+      <div className="ml-auto flex-1 overflow-y-auto">
+        <Navbar>
+          <BoatPageHeader boat={activeBoat as Boat} />
+        </Navbar>
+        <div className="flex flex-col items-center space-y-2 pt-2">
+          <div className="flex w-full items-center justify-center gap-2">
+            <Button variant="outline" size="lg">
+              Add Date
+            </Button>
+            <Button variant="outline" size="lg">
+              Add Location
+            </Button>
           </div>
         </div>
       </div>
     </div>
-  )
-
+  );
 }
