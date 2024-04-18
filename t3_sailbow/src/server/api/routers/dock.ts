@@ -1,4 +1,4 @@
-import { captainMiddleware, createTRPCRouter, protectedBoatProcedure, protectedProcedure } from "@/server/api/trpc";
+import { captainMiddleware, createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { type InferInsertModel, and, eq, isNull, or } from "drizzle-orm";
 import { db } from "@/server/db";
 import { TRPCError } from "@trpc/server";
@@ -108,7 +108,7 @@ export const dockRouter = createTRPCRouter({
       return membership.boat
     }),
 
-  deleteBoatById: protectedBoatProcedure
+  deleteBoatById: protectedProcedure
     .use(captainMiddleware)
     .input(z.object({
       boatId: z.number().min(1)

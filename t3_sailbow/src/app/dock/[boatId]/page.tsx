@@ -11,6 +11,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import { type ActiveBoat, useActiveBoat } from "@/hooks/use-boat";
 import { type CrewMember } from "@/lib/common-types";
+import InviteCrewMember from "./invite";
+import Link from "next/link";
 
 export default function Page() {
   const [banner, setBanner] = useState<BoatBanner | undefined>(undefined);
@@ -27,14 +29,29 @@ export default function Page() {
   useEffect(() => {
     if (error) {
       console.error(error);
-      toast({
-        variant: "destructive",
-        title: "Oops!",
-        description: "Something went wrong, please try again later.",
-      });
+      if (error.code !== "NOT_FOUND") {
+        toast({
+          variant: "destructive",
+          title: "Oops!",
+          description: "Something went wrong, please try again later.",
+        });
+      }
     }
   }, [error, toast]);
 
+  if (error && error.code === "NOT_FOUND") {
+    return (
+      <div className="flex h-dvh w-dvw flex-col overflow-y-auto bg-muted/40">
+        <Navbar />
+        <div className="flex w-full flex-col items-center justify-center p-10">
+          <h1 className="text-4xl font-light">404 Not Found</h1>
+          <Button variant="outline" size="lg" asChild>
+            <Link href="/dock">Back to my boats</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
   if (!banner && !activeBoat) {
     return (
       <div className="flex h-dvh w-dvw items-center justify-center">
@@ -44,13 +61,14 @@ export default function Page() {
   }
   return (
     <div className="fixed inset-0 top-0 flex h-dvh w-dvw bg-muted/40">
-      <aside className=" hidden w-1/3 min-w-[200px] overflow-y-auto border-r-[1px] border-border/40 p-4 lg:flex lg:flex-col">
+      <aside className="hidden w-1/3 min-w-[200px] overflow-y-auto border-r-[1px] border-border/40 p-4 lg:flex lg:flex-col">
         <div className="h-[200px] self-stretch">
           {banner && <BoatBannerView banner={banner} />}
         </div>
         <h3 className="text-2xl">{activeBoat?.name}</h3>
         <p className="leading-none">{activeBoat?.description}</p>
         <Separator className="my-4" />
+        <InviteCrewMember />
       </aside>
       <div className="ml-auto flex-1 overflow-y-auto">
         <Navbar>

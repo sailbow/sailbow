@@ -29,8 +29,8 @@ export function Navbar(props?: NavbarProps) {
   return (
     <header
       className="
-      supports-backdrop-blur:bg-background/60 sticky top-0 z-50 flex min-h-16 w-full flex-row items-center
-      justify-between overflow-hidden border-b-[1px] border-border/40 bg-background p-2 sm:p-4"
+      sticky top-0 z-50 flex min-h-16 w-full flex-row items-center
+      justify-between overflow-hidden border-b-[1px] border-border/40 bg-background/60 p-2 sm:p-4"
     >
       <nav className="flex items-center space-x-4 text-base sm:text-lg">
         <Link href="/" className="hidden items-center sm:flex">

@@ -10,9 +10,17 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { Spinner } from "../_components/spinner";
+import { useActiveBoat } from "@/hooks/use-boat";
+import { useEffect } from "react";
 
 export default function Page() {
   const { isLoading, data: boats } = api.dock.getBoats.useQuery();
+  const { setActiveBoat } = useActiveBoat();
+  useEffect(() => {
+    if (setActiveBoat) {
+      setActiveBoat(null);
+    }
+  }, [setActiveBoat]);
   return (
     <div className="flex h-dvh w-dvw flex-col overflow-y-auto bg-muted/40">
       <Navbar>
@@ -27,7 +35,10 @@ export default function Page() {
         </div>
       </Navbar>
       <main className="flex flex-col p-5">
-        <Spinner className="size-10 self-center" isVisible={isLoading} />
+        <Spinner
+          className="size-10 self-center stroke-ring"
+          isVisible={isLoading}
+        />
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {boats?.map((boat) => {
             return <BoatCard key={boat.id} boat={boat} />;

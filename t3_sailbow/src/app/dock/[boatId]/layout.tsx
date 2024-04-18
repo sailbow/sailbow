@@ -12,9 +12,14 @@ export default function Layout({
     boatId: number;
   };
 }) {
-  const { data: boat, error } = api.dock.getBoatById.useQuery({
-    boatId: params.boatId,
-  });
+  const { data: boat, error } = api.dock.getBoatById.useQuery(
+    {
+      boatId: params.boatId,
+    },
+    {
+      retry: false,
+    },
+  );
   const { setActiveBoat, setError } = useActiveBoat();
 
   // Reset active boat on mount
@@ -32,7 +37,10 @@ export default function Layout({
     if (error) {
       console.error(error);
       if (setError) {
-        setError(error.message);
+        setError({
+          code: error.data?.code ?? "INTERNAL_SERVER_ERROR",
+          message: error.message,
+        });
       }
     }
   }, [error, setError]);

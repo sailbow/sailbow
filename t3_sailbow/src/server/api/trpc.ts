@@ -94,7 +94,7 @@ const authMiddleware = t.middleware(async ({ next, ctx }) => {
 
 const boatIdInput = z.object({ boatId: z.number().min(1) })
 
-const boatMiddleware = t.middleware(async ({ next, rawInput, ctx }) => {
+const boatMiddleware = authMiddleware.unstable_pipe(async ({ next, rawInput, ctx }) => {
   const input = boatIdInput.safeParse(rawInput)
   if (!input.success) {
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Missing boat id'})
@@ -138,4 +138,3 @@ export const captainMiddleware = boatMiddleware.unstable_pipe(({ ctx, next }) =>
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(authMiddleware)
-export const protectedBoatProcedure = protectedProcedure.use(boatMiddleware)
