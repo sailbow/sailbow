@@ -14,22 +14,24 @@ export default async function Home() {
               width="100"
               height="100"
               alt="Sailbow Logo"
-              className="inline-block mb-8"
+              className="mb-8 inline-block"
             />
 
-            <div className="text-gray-600 text-3xl font-bold tracking-tight leading-none">
-              assemble your crew.<br />chart a course.<br />set sail.
-            </div>
-            <p className="mt-6 text-lg leading-8 text-gray-600/90">
+            <h1 className="text-2xl font-bold leading-none tracking-tight text-gray-600 sm:text-6xl">
+              assemble your crew.
+              <br />
+              chart a course.
+              <br />
+              set sail.
+            </h1>
+            <p className="mt-6 text-base leading-8 text-gray-600/90 sm:text-lg">
               The easiest way to plan your next group trip
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link
-                href="/dock"
-              >
+              <Link href="/dock">
                 <Button size="lg">
                   Get Started
-                  <ArrowRight className="size-6 ml-2" />
+                  <ArrowRight className="ml-2 size-6" />
                 </Button>
               </Link>
             </div>

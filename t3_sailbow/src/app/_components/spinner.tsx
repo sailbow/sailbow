@@ -11,5 +11,12 @@ export function Spinner(props: SpinnerProps) {
   if (props && props.isVisible === false) {
     return null;
   }
-  return <Loader2 className={cn(props?.className, "animate-spin")} />;
+  return (
+    <Loader2
+      className={cn(
+        props?.className,
+        "size-10 animate-spin stroke-ring dark:stroke-white",
+      )}
+    />
+  );
 }

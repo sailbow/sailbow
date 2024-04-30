@@ -2,11 +2,33 @@
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuSub } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuSub,
+  DropdownMenuPortal,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser, useClerk } from "@clerk/nextjs";
-import { FileText, HelpCircle, LogOut, MessageSquareWarning, Moon, Settings, Sun, User } from "lucide-react";
+import {
+  FileText,
+  HelpCircle,
+  LogOut,
+  MessageSquareWarning,
+  Moon,
+  Settings,
+  Sun,
+  User,
+} from "lucide-react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export function UserNav() {
@@ -19,10 +41,14 @@ export function UserNav() {
       <DropdownMenuTrigger aria-label="Toggle user dropdown" asChild>
         <Button size="icon" variant="ghost" className="rounded-full p-0">
           <Avatar className="h-8 w-8">
-            {user?.imageUrl
-              ? <AvatarImage src={user.imageUrl} alt={user.fullName + " profile image"} />
-              : <Skeleton className="h-8 w-8 bg-gray-300 rounded-full border border-ring" />
-            }
+            {user?.imageUrl ? (
+              <AvatarImage
+                src={user.imageUrl}
+                alt={user.fullName + " profile image"}
+              />
+            ) : (
+              <Skeleton className="h-8 w-8 rounded-full border border-ring bg-gray-300" />
+            )}
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -42,24 +68,26 @@ export function UserNav() {
             Profile
           </DropdownMenuItem>
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger asChild>
+            <DropdownMenuSubTrigger>
               <DropdownMenuItem>
-                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 mr-2" />
-                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 mr-2" />
+                <Sun className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute mr-2 h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                 <span>Theme</span>
               </DropdownMenuItem>
             </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem onClick={() => setTheme("light")}>
-                Light
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")}>
-                Dark
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")}>
-                System
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onClick={() => setTheme("light")}>
+                  Light
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  Dark
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
+                  System
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
           </DropdownMenuSub>
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
@@ -68,10 +96,12 @@ export function UserNav() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <FileText className="mr-2 h-4 w-4" />
-            Privacy policy
-          </DropdownMenuItem>
+          <Link href="/privacy-policy">
+            <DropdownMenuItem>
+              <FileText className="mr-2 h-4 w-4" />
+              Privacy policy
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem>
             <MessageSquareWarning className="mr-2 h-4 w-4" />
             Send feedback
@@ -82,13 +112,17 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut(() => {
-          router.push("/");
-        })}>
+        <DropdownMenuItem
+          onClick={() =>
+            signOut(() => {
+              router.push("/");
+            })
+          }
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
