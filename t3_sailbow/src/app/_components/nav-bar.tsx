@@ -3,6 +3,7 @@ import NotificationsDropdown from "./notifications-dropdown";
 import Crumbs from "./crumbs";
 import {
   ClerkLoaded,
+  ClerkLoading,
   SignInButton,
   SignedIn,
   SignedOut,
