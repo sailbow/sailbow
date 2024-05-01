@@ -15,8 +15,7 @@ import {
   DropdownMenuSub,
   DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useUser, useClerk } from "@clerk/nextjs";
+import { useUser, useClerk, SignInButton } from "@clerk/nextjs";
 import {
   FileText,
   HelpCircle,
@@ -30,25 +29,33 @@ import {
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Spinner } from "./spinner";
 
-export function UserNav() {
-  const { user } = useUser();
+export function UserDropdown() {
+  const { user, isLoaded } = useUser();
   const { openUserProfile, signOut } = useClerk();
   const { setTheme } = useTheme();
   const router = useRouter();
+
+  if (!isLoaded) {
+    return <Spinner className="size-4" />;
+  }
+  if (!user) {
+    return (
+      <SignInButton mode="modal">
+        <Button>Sign In</Button>
+      </SignInButton>
+    );
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Toggle user dropdown" asChild>
         <Button size="icon" variant="ghost" className="rounded-full p-0">
-          <Avatar className="h-8 w-8">
-            {user?.imageUrl ? (
-              <AvatarImage
-                src={user.imageUrl}
-                alt={user.fullName + " profile image"}
-              />
-            ) : (
-              <Skeleton className="h-8 w-8 rounded-full border border-ring bg-gray-300" />
-            )}
+          <Avatar className="h-6 w-6">
+            <AvatarImage
+              src={user.imageUrl}
+              alt={user.fullName + " profile image"}
+            />
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -57,7 +64,7 @@ export function UserNav() {
           <div className="flex flex-col space-y-1">
             <p className="font-medium leading-none">{user?.fullName}</p>
             <p className="text-sm leading-none text-muted-foreground">
-              {user?.primaryEmailAddress?.emailAddress}
+              {user.primaryEmailAddress?.emailAddress}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -68,7 +75,7 @@ export function UserNav() {
             Profile
           </DropdownMenuItem>
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger asChild>
               <DropdownMenuItem>
                 <Sun className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <Moon className="absolute mr-2 h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />

@@ -34,7 +34,7 @@ export default function Page() {
   }
   return (
     <div className="relative size-full overflow-y-auto">
-      <div className="container sticky top-0 z-10 flex items-center justify-between bg-muted p-4">
+      <div className="container sticky top-0 z-10 flex items-center justify-between bg-background p-4">
         <Breadcrumb>
           <BreadcrumbList className="text-xl">
             <BreadcrumbItem>

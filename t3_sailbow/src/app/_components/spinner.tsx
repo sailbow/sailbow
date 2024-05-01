@@ -13,10 +13,7 @@ export function Spinner(props: SpinnerProps) {
   }
   return (
     <Loader2
-      className={cn(
-        props?.className,
-        "size-10 animate-spin stroke-ring dark:stroke-white",
-      )}
+      className={cn("size-8 animate-spin stroke-ring dark:stroke-white")}
     />
   );
 }

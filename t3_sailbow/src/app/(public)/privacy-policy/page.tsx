@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="mt-12 w-full space-y-6 overflow-y-auto">
+    <div className="w-full space-y-6">
       <div className="prose container mx-auto grid gap-5 px-4">
         <div>
           <h1 className="text-4xl font-semibold tracking-tighter">

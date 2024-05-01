@@ -77,7 +77,7 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       spacing: {
-        "navbar-height": "3rem",
+        "navbar-height": "3.5rem",
         "main-height": "calc(100dvh - theme(spacing.navbar-height))"
       }
     },

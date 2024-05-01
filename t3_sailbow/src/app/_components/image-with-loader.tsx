@@ -18,9 +18,8 @@ export default function ImageWithLoader(props: ImageWithLoaderProps) {
         fill
         alt={props.alt}
         src={props.src}
-        objectFit="cover"
         className={cn("object-cover", props.className)}
-        onLoadingComplete={() => setIsLoaded(true)}
+        onLoad={() => setIsLoaded(true)}
       />
       {!isLoaded && (
         <Skeleton className="size-full rounded-none bg-slate-300" />

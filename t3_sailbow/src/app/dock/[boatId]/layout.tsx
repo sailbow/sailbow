@@ -2,16 +2,12 @@
 import { useActiveBoat } from "@/hooks/use-boat";
 import { api } from "@/trpc/react";
 import { useEffect } from "react";
-import { BoatTab } from "./tabs";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { type BoatTab } from "./tabs";
+import { Button } from "@/components/ui/button";
 
 import {
-  createLucideIcon,
   Home,
-  IconNode,
   ListChecks,
-  LucideIcon,
   Megaphone,
   Settings,
   UsersRound,
@@ -21,12 +17,8 @@ import { bannerSchema } from "@/lib/schemas/boat";
 import BoatBannerView from "@/app/_components/boat-banner-view";
 import NotFoundPage from "@/app/_components/not-found-page";
 import { Spinner } from "@/app/_components/spinner";
-
-interface TabButtonProps {
-  iconName: string;
-  text: BoatTab;
-  href: string;
-}
+import clsx from "clsx";
+import { usePathname } from "next/navigation";
 
 export default function Layout({
   children,
@@ -51,6 +43,7 @@ export default function Layout({
     },
   );
   const { activeBoat, setActiveBoat, setError } = useActiveBoat();
+  const path = usePathname();
 
   // Reset active boat on mount
   useEffect(() => {
@@ -96,40 +89,70 @@ export default function Layout({
       )}
 
       <div className="h-[calc(theme(spacing.main-height) - 1rem)] flex w-full overflow-y-auto px-2">
-        <div className="flex size-full flex-col gap-x-4 px-2 pt-2 sm:flex-row">
-          <div className="flex justify-between sm:flex-col sm:justify-normal">
-            <Button variant="ghost" className="justify-start" asChild>
+        <div className="flex size-full flex-col gap-2 pt-2 sm:flex-row">
+          <div className="flex justify-between sm:flex-col sm:justify-normal sm:gap-4">
+            <Button
+              asChild
+              variant="ghost"
+              className={clsx("justify-normal", {
+                "bg-accent": path.endsWith(params.boatId.toString()),
+              })}
+            >
               <Link href={`/dock/${params.boatId}`}>
                 <Home className="size-4 sm:mr-2" />
                 <span className="hidden sm:inline">Overview</span>
               </Link>
             </Button>
-            <Button variant="ghost" className="justify-start" asChild>
+            <Button
+              variant="ghost"
+              asChild
+              className={clsx("justify-normal", {
+                "bg-accent": path.endsWith("itinerary"),
+              })}
+            >
               <Link href={`/dock/${params.boatId}/itinerary`}>
                 <ListChecks className="size-4 sm:mr-2" />
                 <span className="hidden sm:inline">Itinerary</span>
               </Link>
             </Button>
-            <Button variant="ghost" className="justify-start" asChild>
+            <Button
+              variant="ghost"
+              className={clsx("justify-normal", {
+                "bg-accent": path.endsWith("crew"),
+              })}
+              asChild
+            >
               <Link href={`/dock/${params.boatId}/crew`}>
                 <UsersRound className="size-4 sm:mr-2" />
                 <span className="hidden sm:inline">Crew</span>
               </Link>
             </Button>
-            <Button variant="ghost" className="justify-start" asChild>
+            <Button
+              variant="ghost"
+              className={clsx("justify-normal", {
+                "bg-accent": path.endsWith("announcements"),
+              })}
+              asChild
+            >
               <Link href={`/dock/${params.boatId}/announcements`}>
                 <Megaphone className="size-4 flex-none sm:mr-2" />
                 <span className="hidden sm:inline">Announcements</span>
               </Link>
             </Button>
-            <Button variant="ghost" className="justify-start" asChild>
+            <Button
+              variant="ghost"
+              className={clsx("justify-normal", {
+                "bg-accent": path.endsWith("settings"),
+              })}
+              asChild
+            >
               <Link href={`/dock/${params.boatId}/settings`}>
                 <Settings className="size-4 sm:mr-2" />
                 <span className="hidden sm:inline">Settings</span>
               </Link>
             </Button>
           </div>
-          <div className="flex grow px-4">{children}</div>
+          <div className="grow">{children}</div>
         </div>
       </div>
     </div>
