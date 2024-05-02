@@ -30,8 +30,8 @@ export default function Crumbs() {
       <BreadcrumbList className="w-full flex-nowrap gap-1 whitespace-nowrap sm:gap-1">
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Button variant="ghost" asChild>
-              <Link href="/dock">My Boats</Link>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/dock">Boats</Link>
             </Button>
           </BreadcrumbLink>
         </BreadcrumbItem>

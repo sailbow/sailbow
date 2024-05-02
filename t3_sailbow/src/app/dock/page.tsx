@@ -44,16 +44,13 @@ export default function Page() {
         </Breadcrumb>
         <Sheet>
           <SheetTrigger asChild>
-            <Button size="sm" className="hidden md:inline-flex">
+            <Button size="sm" className="hidden sm:inline-flex">
               <span>Create a boat</span>
               <Plus className="ml-2 h-6 w-6" />
             </Button>
           </SheetTrigger>
           <SheetTrigger asChild>
-            <Button
-              size="icon"
-              className="hidden rounded-full xs:inline-flex md:hidden"
-            >
+            <Button size="icon" className="inline-flex rounded-full sm:hidden">
               <Plus className="h-4 w-4" />
             </Button>
           </SheetTrigger>

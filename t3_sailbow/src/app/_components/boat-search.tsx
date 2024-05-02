@@ -17,7 +17,7 @@ export default function BoatSearch() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="justify-start ">
+        <Button variant="ghost" size="sm" className="justify-start">
           <span className="max-w-[150px] overflow-hidden text-ellipsis text-muted-foreground">
             {activeBoat?.name}
           </span>
