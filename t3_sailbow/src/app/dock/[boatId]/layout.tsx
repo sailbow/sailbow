@@ -22,6 +22,7 @@ import { usePathname } from "next/navigation";
 import { BoatNav } from "./boat-nav";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import CenteredSpinner from "@/app/_components/centered-spinner";
 
 export default function Layout({
   children,
@@ -77,11 +78,7 @@ export default function Layout({
   }
 
   if (isLoading || !activeBoat) {
-    return (
-      <div className="mt-8 flex w-full items-center justify-center">
-        <Spinner />
-      </div>
-    );
+    return <CenteredSpinner />;
   }
 
   return (
@@ -92,7 +89,7 @@ export default function Layout({
         </div>
       )}
 
-      <div className="h-[calc(theme(spacing.main-height) - 1rem)] sm: flex flex-col gap-2 gap-4 overflow-y-auto p-2 sm:flex-row sm:p-4">
+      <div className="h-[calc(theme(spacing.main-height) - 1rem)] flex flex-col gap-4 overflow-y-auto p-2 sm:flex-row sm:p-4">
         <TooltipProvider delayDuration={0}>
           <BoatNav
             links={[
