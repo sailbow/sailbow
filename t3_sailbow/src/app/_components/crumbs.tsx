@@ -19,6 +19,7 @@ import { useActiveBoat } from "@/hooks/use-boat";
 import { ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import BoatSearch from "./boat-search";
 
 export default function Crumbs() {
   const path = usePathname();
@@ -26,10 +27,10 @@ export default function Crumbs() {
   const parts = path.split("/").filter((path) => path);
   return (
     <Breadcrumb>
-      <BreadcrumbList className="w-full flex-nowrap gap-1 whitespace-nowrap text-sm text-foreground sm:gap-1">
+      <BreadcrumbList className="w-full flex-nowrap gap-1 whitespace-nowrap sm:gap-1">
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" asChild>
               <Link href="/dock">My Boats</Link>
             </Button>
           </BreadcrumbLink>
@@ -37,21 +38,7 @@ export default function Crumbs() {
         {activeBoat && <BreadcrumbSeparator />}
         {activeBoat && (
           <BreadcrumbItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="justify-start ">
-                  <span className="max-w-[150px] overflow-hidden text-ellipsis">
-                    {activeBoat?.name}
-                  </span>
-                  <ChevronsUpDown className="ml-2 size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>Search</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <p>Nothing to see here yet!</p>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <BoatSearch />
           </BreadcrumbItem>
         )}
         {activeBoat && parts.at(parts.length - 1) !== activeBoat.id.toString()}

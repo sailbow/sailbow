@@ -19,6 +19,9 @@ import NotFoundPage from "@/app/_components/not-found-page";
 import { Spinner } from "@/app/_components/spinner";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
+import { BoatNav } from "./boat-nav";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function Layout({
   children,
@@ -43,6 +46,7 @@ export default function Layout({
     },
   );
   const { activeBoat, setActiveBoat, setError } = useActiveBoat();
+  const isCollapsed = useMediaQuery("(min-width: 640px)");
   const path = usePathname();
 
   // Reset active boat on mount
@@ -88,72 +92,44 @@ export default function Layout({
         </div>
       )}
 
-      <div className="h-[calc(theme(spacing.main-height) - 1rem)] flex w-full overflow-y-auto px-2">
-        <div className="flex size-full flex-col gap-2 pt-2 sm:flex-row">
-          <div className="flex justify-between sm:flex-col sm:justify-normal sm:gap-4">
-            <Button
-              asChild
-              variant="ghost"
-              className={clsx("justify-normal", {
-                "bg-accent": path.endsWith(params.boatId.toString()),
-              })}
-            >
-              <Link href={`/dock/${params.boatId}`}>
-                <Home className="size-4 sm:mr-2" />
-                <span className="hidden sm:inline">Overview</span>
-              </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              asChild
-              className={clsx("justify-normal", {
-                "bg-accent": path.endsWith("itinerary"),
-              })}
-            >
-              <Link href={`/dock/${params.boatId}/itinerary`}>
-                <ListChecks className="size-4 sm:mr-2" />
-                <span className="hidden sm:inline">Itinerary</span>
-              </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              className={clsx("justify-normal", {
-                "bg-accent": path.endsWith("crew"),
-              })}
-              asChild
-            >
-              <Link href={`/dock/${params.boatId}/crew`}>
-                <UsersRound className="size-4 sm:mr-2" />
-                <span className="hidden sm:inline">Crew</span>
-              </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              className={clsx("justify-normal", {
-                "bg-accent": path.endsWith("announcements"),
-              })}
-              asChild
-            >
-              <Link href={`/dock/${params.boatId}/announcements`}>
-                <Megaphone className="size-4 flex-none sm:mr-2" />
-                <span className="hidden sm:inline">Announcements</span>
-              </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              className={clsx("justify-normal", {
-                "bg-accent": path.endsWith("settings"),
-              })}
-              asChild
-            >
-              <Link href={`/dock/${params.boatId}/settings`}>
-                <Settings className="size-4 sm:mr-2" />
-                <span className="hidden sm:inline">Settings</span>
-              </Link>
-            </Button>
-          </div>
+      <div className="h-[calc(theme(spacing.main-height) - 1rem)] sm: flex flex-col gap-2 gap-4 overflow-y-auto p-2 sm:flex-row sm:p-4">
+        <TooltipProvider delayDuration={0}>
+          <BoatNav
+            links={[
+              {
+                title: "Overview",
+                label: "",
+                icon: Home,
+                href: `/dock/${activeBoat.id}`,
+              },
+              {
+                title: "Itinerary",
+                label: "",
+                icon: ListChecks,
+                href: `/dock/${activeBoat.id}/itinerary`,
+              },
+              {
+                title: "Crew",
+                label: "",
+                icon: UsersRound,
+                href: `/dock/${activeBoat.id}/crew`,
+              },
+              {
+                title: "Announcements",
+                label: "",
+                icon: Megaphone,
+                href: `/dock/${activeBoat.id}/announcements`,
+              },
+              {
+                title: "Settings",
+                label: "",
+                icon: Settings,
+                href: `/dock/${activeBoat.id}/settings`,
+              },
+            ]}
+          />
           <div className="grow">{children}</div>
-        </div>
+        </TooltipProvider>
       </div>
     </div>
   );

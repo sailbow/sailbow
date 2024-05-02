@@ -19,18 +19,6 @@ const Sidebar = () => {
   const router = useRouter();
   const { activeBoat } = useActiveBoat();
   const [isOpen, setIsOpen] = useState(false);
-  const SideMenuItem = ({ children }: { children: React.ReactNode[] }) => {
-    return (
-      <Button
-        variant="ghost"
-        onClick={() => setIsOpen(false)}
-        className="justify-start text-base font-medium"
-        asChild
-      >
-        {children}
-      </Button>
-    );
-  };
 
   const handleNav = (href: string) => {
     setIsOpen(false);
