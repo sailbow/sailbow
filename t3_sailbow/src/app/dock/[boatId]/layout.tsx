@@ -47,8 +47,6 @@ export default function Layout({
     },
   );
   const { activeBoat, setActiveBoat, setError } = useActiveBoat();
-  const isCollapsed = useMediaQuery("(min-width: 640px)");
-  const path = usePathname();
 
   // Reset active boat on mount
   useEffect(() => {
@@ -77,17 +75,15 @@ export default function Layout({
     return <NotFoundPage />;
   }
 
-  if (isLoading || !activeBoat) {
-    return <CenteredSpinner />;
-  }
+  // if (isLoading || !activeBoat) {
+  //   return <CenteredSpinner />;
+  // }
 
   return (
     <div className="size-full">
-      {activeBoat && (
-        <div className="top-0 h-40 w-full">
-          <BoatBannerView banner={bannerSchema.parse(activeBoat)} />
-        </div>
-      )}
+      <div className="top-0 h-40 w-full">
+        <BoatBannerView banner={bannerSchema.nullish().parse(activeBoat)} />
+      </div>
 
       <div className="h-[calc(theme(spacing.main-height) - 1rem)] flex flex-col gap-4 overflow-y-auto p-2 sm:flex-row sm:p-4">
         <TooltipProvider delayDuration={0}>
@@ -97,31 +93,31 @@ export default function Layout({
                 title: "Overview",
                 label: "",
                 icon: Home,
-                href: `/dock/${activeBoat.id}`,
+                href: `/dock/${params.boatId}`,
               },
               {
                 title: "Itinerary",
                 label: "",
                 icon: ListChecks,
-                href: `/dock/${activeBoat.id}/itinerary`,
+                href: `/dock/${params.boatId}/itinerary`,
               },
               {
                 title: "Crew",
                 label: "",
                 icon: UsersRound,
-                href: `/dock/${activeBoat.id}/crew`,
+                href: `/dock/${params.boatId}/crew`,
               },
               {
                 title: "Announcements",
                 label: "",
                 icon: Megaphone,
-                href: `/dock/${activeBoat.id}/announcements`,
+                href: `/dock/${params.boatId}/announcements`,
               },
               {
                 title: "Settings",
                 label: "",
                 icon: Settings,
-                href: `/dock/${activeBoat.id}/settings`,
+                href: `/dock/${params.boatId}/settings`,
               },
             ]}
           />

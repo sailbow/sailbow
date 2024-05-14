@@ -13,7 +13,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { UsersRound } from "lucide-react";
+import { UserPlus, UsersRound } from "lucide-react";
 import { Spinner } from "@/app/_components/spinner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -43,23 +43,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { type CrewMember } from "@/lib/common-types";
 
 const TriggerContent = {
   LoadingBoat: <Skeleton className="h-10 bg-gray-300"></Skeleton>,
   BoatLoaded: (
     <Button variant="outline">
-      <UsersRound className="mr-2 size-4" />
-      Invite a user
+      <UserPlus className="mr-2 size-4" />
+      Invite
     </Button>
   ),
 };
 
-const roleValueToDisplay = (value: string): React.ReactNode => {
+export const roleValueToDisplay = (
+  value: CrewMember["role"],
+): React.ReactNode => {
   switch (value) {
     case "firstMate":
       return "First Mate";
     case "crewMember":
       return "Crew Member";
+    case "captain":
+      return "Captain";
   }
 };
 

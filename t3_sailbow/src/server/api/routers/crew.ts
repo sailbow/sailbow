@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { captainMiddleware, createTRPCRouter, protectedProcedure } from "../trpc";
+import { captainMiddleware, createTRPCRouter, protectedProcedure, requiredRoleMiddleware } from "../trpc";
 import { crewMembers } from "@/server/db/schema";
 import { resend } from "@/lib/resend";
 import { BoatInviteTemplate } from "emails";
@@ -7,7 +7,7 @@ import { TRPCError } from "@trpc/server";
 
 export const crewRouter = createTRPCRouter({
   inviteCrewMember: protectedProcedure
-    .use(captainMiddleware)
+    .use(requiredRoleMiddleware(["captain", "firstMate"]))
     .input(z.object({
       email: z.string().email(),
       role: z.enum(["crewMember", "firstMate"])
@@ -36,5 +36,5 @@ export const crewRouter = createTRPCRouter({
       //     inviteeEmail: input.email
       //   })
       // });
-    })
+    }),
 })

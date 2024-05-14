@@ -13,6 +13,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/server/db";
 import { boats } from "../db/schema";
 import { auth, } from "@clerk/nextjs";
+import { type CrewMember } from "@/lib/common-types";
 
 /**
  * 1. CONTEXT
@@ -120,14 +121,24 @@ const boatMiddleware = authMiddleware.unstable_pipe(async ({ next, rawInput, ctx
       boat
     }
   })
-})
+});
+
+export const requiredRoleMiddleware = (roles: CrewMember["role"][]) => {
+  return boatMiddleware.unstable_pipe(({ ctx, next }) => {
+    const membership = ctx.boat.crew.find(cm => cm.userId === ctx.auth.userId);
+    if (!membership || !roles.includes(membership.role)) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return next({ ctx });
+  })
+}
 
 export const captainMiddleware = boatMiddleware.unstable_pipe(({ ctx, next }) => {
   if (ctx.boat.captainUserId !== ctx.auth.userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED'})
   }
   return next({ ctx })
-})
+});
 
 /**
  * Protected (authenticated) procedure
