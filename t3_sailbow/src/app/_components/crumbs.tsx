@@ -20,11 +20,17 @@ import { ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BoatSearch from "./boat-search";
+import { useEffect, useState } from "react";
 
 export default function Crumbs() {
   const path = usePathname();
   const { activeBoat } = useActiveBoat();
+  const [showBoatSearch, setShowBoatSearch] = useState(false);
   const parts = path.split("/").filter((path) => path);
+
+  useEffect(() => {
+    setShowBoatSearch(!!activeBoat && !path.endsWith("/dock"));
+  }, [activeBoat, path]);
   return (
     <Breadcrumb>
       <BreadcrumbList className="w-full flex-nowrap gap-1 whitespace-nowrap sm:gap-1">
@@ -35,8 +41,8 @@ export default function Crumbs() {
             </Button>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        {activeBoat && <BreadcrumbSeparator />}
-        {activeBoat && (
+        {showBoatSearch && <BreadcrumbSeparator />}
+        {showBoatSearch && (
           <BreadcrumbItem>
             <BoatSearch />
           </BreadcrumbItem>

@@ -10,10 +10,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useActiveBoat } from "@/hooks/use-boat";
 import { ChevronsUpDown } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function BoatSearch() {
   const { activeBoat } = useActiveBoat();
-  if (!activeBoat) return;
+  const path = usePathname();
+  if (!activeBoat || path.endsWith("/dock")) return;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
