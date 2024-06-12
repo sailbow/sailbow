@@ -1,8 +1,9 @@
+import { cn } from "@/lib/utils";
 import { Spinner } from "./spinner";
 
-export default function CenteredSpinner() {
+export default function CenteredSpinner(props: { className?: string | null | undefined }) {
   return (
-    <div className="mt-4 flex w-full items-center justify-center">
+    <div className={cn("flex w-full items-center justify-center", props?.className)}>
       <Spinner />
     </div>
   );
