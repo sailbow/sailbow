@@ -30,7 +30,6 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-  console.table(data);
   return (
     <div className="rounded-md border">
       <Table>

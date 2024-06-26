@@ -31,6 +31,7 @@ export default function Crumbs() {
   useEffect(() => {
     setShowBoatSearch(!!activeBoat && !path.endsWith("/dock"));
   }, [activeBoat, path]);
+
   return (
     <Breadcrumb>
       <BreadcrumbList className="w-full flex-nowrap gap-1 whitespace-nowrap sm:gap-1">

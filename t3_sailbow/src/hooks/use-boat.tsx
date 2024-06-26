@@ -1,46 +1,54 @@
 "use client";
 import { type CrewMember } from "@/lib/common-types";
 import { type Boat } from "@/lib/schemas/boat";
-import { TRPCError } from "@trpc/server";
-import { createContext, useContext, useState } from "react";
+import { api } from "@/trpc/react";
+import { useParams } from "next/navigation";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 export type ActiveBoat = Boat & {
   crew: CrewMember[];
   captain?: CrewMember | undefined;
 };
 
-export type ActiveBoatError = {
-  message: string;
-  code: TRPCError["code"];
+type ActiveBoatContextProps = {
+  children: React.ReactNode;
 };
 
 interface ActiveBoatContext {
-  activeBoat: ActiveBoat | null;
-  setActiveBoat: (boat: ActiveBoat | null) => void;
-  error: ActiveBoatError | null;
-  setError: (error: ActiveBoatError) => void;
+  activeBoat: ActiveBoat | null | undefined;
+  isLoading: boolean;
 }
 
-const activeBoatContext = createContext<ActiveBoatContext | null>(null);
+const activeBoatContext = createContext<ActiveBoatContext>({
+  activeBoat: undefined,
+  isLoading: false,
+});
 
-export const ActiveBoatContext = (props: { children: React.ReactNode }) => {
-  const [activeBoat, setActiveBoat] = useState<ActiveBoat | null>(null);
-  const [error, setError] = useState<ActiveBoatError | null>(null);
+export const ActiveBoatContext = ({ children }: ActiveBoatContextProps) => {
+  const params = useParams();
+  const [boatId, setBoatId] = useState(-1);
+  const { isLoading, data: activeBoat } = api.dock.getBoatById.useQuery(
+    { boatId },
+    { enabled: boatId > 0 },
+  );
+  useEffect(() => {
+    if (params.boatId) {
+      setBoatId(parseInt(params.boatId as string));
+    }
+  }, [params]);
   return (
-    <activeBoatContext.Provider
-      value={{ activeBoat, setActiveBoat, error, setError }}
-    >
-      {props.children}
+    <activeBoatContext.Provider value={{ isLoading, activeBoat }}>
+      {children}
     </activeBoatContext.Provider>
   );
 };
 
 export const useActiveBoat = () => {
-  const context = useContext(activeBoatContext);
-  return {
-    activeBoat: context?.activeBoat,
-    setActiveBoat: context?.setActiveBoat,
-    error: context?.error,
-    setError: context?.setError,
-  };
+  return useContext(activeBoatContext);
 };

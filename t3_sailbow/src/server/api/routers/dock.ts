@@ -61,6 +61,7 @@ export const dockRouter = createTRPCRouter({
         });
 
       await Promise.all(invites.map(i => clerkClient.invitations.createInvitation(i)));
+      revalidatePath("/dock");
       return result;
     }),
 
@@ -100,9 +101,7 @@ export const dockRouter = createTRPCRouter({
         }
       })
       if (!membership) {
-        throw new TRPCError({
-          code: "NOT_FOUND"
-        })
+        return null;
       }
 
       return membership.boat
@@ -113,11 +112,11 @@ export const dockRouter = createTRPCRouter({
     .input(z.object({
       boatId: z.number().min(1)
     }))
-    .mutation(async ({ ctx }) => {
+    .mutation(async ({ ctx, input }) => {
       await ctx.db.transaction(async (tx) => {
-        await tx.delete(boats).where(eq(boats.id, ctx.boat.id))
-        await tx.delete(crewMembers).where(eq(crewMembers.boatId, ctx.boat.id))
+        await tx.delete(crewMembers).where(eq(crewMembers.boatId, input.boatId))
+        await tx.delete(boats).where(eq(boats.id, input.boatId))
       })
-      revalidatePath("/dock", "page")
+      revalidatePath("/dock");
     })
 })

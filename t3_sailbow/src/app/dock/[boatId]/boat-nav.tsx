@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { type LucideIcon } from "lucide-react";
+import {
+  Home,
+  ListChecks,
+  Megaphone,
+  Settings,
+  UsersRound,
+  type LucideIcon,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -14,17 +21,44 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { usePathname } from "next/navigation";
 
 interface BoatNavProps {
-  links: {
-    title: string;
-    href: string;
-    label?: string;
-    icon: LucideIcon;
-  }[];
+  boatId: number;
 }
 
-export function BoatNav({ links }: BoatNavProps) {
+export function BoatNav({ boatId }: BoatNavProps) {
   const isSm = useMediaQuery("(max-width: 640px)");
   const path = usePathname();
+  const links = [
+    {
+      title: "Overview",
+      label: "",
+      icon: Home,
+      href: `/dock/${boatId}`,
+    },
+    {
+      title: "Itinerary",
+      label: "",
+      icon: ListChecks,
+      href: `/dock/${boatId}/itinerary`,
+    },
+    {
+      title: "Crew",
+      label: "",
+      icon: UsersRound,
+      href: `/dock/${boatId}/crew`,
+    },
+    {
+      title: "Announcements",
+      label: "",
+      icon: Megaphone,
+      href: `/dock/${boatId}/announcements`,
+    },
+    {
+      title: "Settings",
+      label: "",
+      icon: Settings,
+      href: `/dock/${boatId}/settings`,
+    },
+  ];
   return (
     <div className="mx-auto w-full sm:mx-0 sm:w-auto">
       <nav className="flex justify-between sm:flex-col sm:justify-normal sm:gap-4">

@@ -4,7 +4,6 @@ import Crumbs from "./crumbs";
 import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut } from "@clerk/nextjs";
 import Image from "next/image";
 import { Spinner } from "./spinner";
-import { Button } from "@/components/ui/button";
 import Sidebar from "./side-bar";
 import BoatSearch from "./boat-search";
 import SignInButton from "./sign-in-button";
@@ -13,7 +12,7 @@ export function Navbar() {
   return (
     <header
       className="
-  max-h-navbar-height min-h-navbar-height fixed top-0 z-40 flex w-full items-center
+  fixed top-0 z-40 flex max-h-navbar-height min-h-navbar-height w-full items-center
   gap-2 border-b-[1px] border-border/40 bg-background/90 xs:px-4 sm:gap-4"
     >
       <Image

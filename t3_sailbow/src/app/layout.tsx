@@ -50,10 +50,9 @@ export default function RootLayout({
             }}
           >
             <TRPCReactProvider>
-              <ActiveBoatContext>
-                <>{children}</>
-                <Toaster />
-              </ActiveBoatContext>
+              <ActiveBoatContext>{children}</ActiveBoatContext>
+
+              <Toaster />
             </TRPCReactProvider>
           </ClerkProvider>
         </ThemeProvider>

@@ -7,6 +7,7 @@ import type { CrewMember } from "@/lib/common-types";
 import { roleValueToDisplay } from "../invite";
 import { DataTable } from "@/components/data-table";
 import { CrewMemberActions } from "./crew-member-actions";
+import { Table, TableHeader } from "@/components/ui/table";
 
 const columns: ColumnDef<CrewMember>[] = [
   {
@@ -25,8 +26,5 @@ const columns: ColumnDef<CrewMember>[] = [
 ];
 export function CrewTable() {
   const { activeBoat } = useActiveBoat();
-  if (!activeBoat) {
-    return;
-  }
-  return <DataTable data={activeBoat.crew} columns={columns} />;
+  return <DataTable data={activeBoat?.crew} columns={columns} />;
 }
