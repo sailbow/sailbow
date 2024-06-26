@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/toast";
 import { type Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ActiveBoatContext } from "@/hooks/use-boat";
@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "h-screen w-screen bg-background/40 font-sans antialiased",
+          "h-screen w-screen bg-background font-sans antialiased",
           font.variable,
         )}
       >
@@ -51,8 +51,7 @@ export default function RootLayout({
           >
             <TRPCReactProvider>
               <ActiveBoatContext>{children}</ActiveBoatContext>
-
-              <Toaster />
+              <Toaster richColors={true} />
             </TRPCReactProvider>
           </ClerkProvider>
         </ThemeProvider>

@@ -1,9 +1,19 @@
 import { z } from "zod";
-import { captainMiddleware, createTRPCRouter, protectedProcedure, requiredRoleMiddleware } from "../trpc";
+import { createTRPCRouter, protectedBoatMiddleware, protectedProcedure, requiredRoleMiddleware } from "../trpc";
 import { crewMembers } from "@/server/db/schema";
-import { resend } from "@/lib/resend";
-import { BoatInviteTemplate } from "emails";
 import { TRPCError } from "@trpc/server";
+import { clerkClient, type User } from "@clerk/nextjs/server";
+import { GetPrimaryEmail } from "@/lib/user";
+// import { resend } from "@/lib/resend";
+// import { BoatInviteTemplate } from "emails";
+
+const crewMemberSchema = z.object({
+  id: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
+  imageUrl: z.string(),
+  email: z.string().email(),
+});
 
 export const crewRouter = createTRPCRouter({
   inviteCrewMember: protectedProcedure
@@ -37,4 +47,26 @@ export const crewRouter = createTRPCRouter({
       //   })
       // });
     }),
+
+  getCrew: protectedProcedure
+    .use(protectedBoatMiddleware)
+    .input(z.object({
+      page: z.number().min(1).default(1),
+      perPage: z.number().multipleOf(5).max(100).default(5)
+    }))
+    .output(z.array(crewMemberSchema))
+    .query(async ({ input, ctx }) => {
+      const users: User[] = await clerkClient.users.getUserList({
+        emailAddress: ctx.boat.crew.map(cm => cm.email),
+        limit: input.perPage,
+        offset: (input.page - 1) * input.perPage
+      });
+      return users.map(u => ({
+        id: u.id,
+        firstName: u.firstName ?? "",
+        lastName: u.lastName ?? "",
+        imageUrl: u.imageUrl,
+        email: GetPrimaryEmail(u)
+      }))
+    })
 })

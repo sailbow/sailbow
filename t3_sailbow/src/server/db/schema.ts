@@ -33,7 +33,7 @@ export const boats = pgTable("boats", {
 export const crewMembers = pgTable("crew_members", {
 	boatId: integer("boat_id").notNull().references(() => boats.id),
 	userId: userIdColumn(),
-	email: varchar("email", { length: 256 }),
+	email: varchar("email", { length: 256 }).notNull(),
 	role: varchar("role", { length: 25, enum: ["captain", "firstMate", "crewMember"] }).notNull(),
 	createdOn
 }, (table) => ({

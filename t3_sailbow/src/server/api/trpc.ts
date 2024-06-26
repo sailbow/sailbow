@@ -95,7 +95,7 @@ const authMiddleware = t.middleware(async ({ next, ctx }) => {
 
 const boatIdInput = z.object({ boatId: z.number().min(1) })
 
-const boatMiddleware = authMiddleware.unstable_pipe(async ({ next, rawInput, ctx }) => {
+export const protectedBoatMiddleware = authMiddleware.unstable_pipe(async ({ next, rawInput, ctx }) => {
   const input = boatIdInput.safeParse(rawInput)
   if (!input.success) {
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Missing boat id'})
@@ -124,7 +124,7 @@ const boatMiddleware = authMiddleware.unstable_pipe(async ({ next, rawInput, ctx
 });
 
 export const requiredRoleMiddleware = (roles: CrewMember["role"][]) => {
-  return boatMiddleware.unstable_pipe(({ ctx, next }) => {
+  return protectedBoatMiddleware.unstable_pipe(({ ctx, next }) => {
     const membership = ctx.boat.crew.find(cm => cm.userId === ctx.auth.userId);
     if (!membership || !roles.includes(membership.role)) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -133,7 +133,7 @@ export const requiredRoleMiddleware = (roles: CrewMember["role"][]) => {
   })
 }
 
-export const captainMiddleware = boatMiddleware.unstable_pipe(({ ctx, next }) => {
+export const captainMiddleware = protectedBoatMiddleware.unstable_pipe(({ ctx, next }) => {
   if (ctx.boat.captainUserId !== ctx.auth.userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED'})
   }
