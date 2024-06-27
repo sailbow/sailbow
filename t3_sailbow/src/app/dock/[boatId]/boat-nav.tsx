@@ -91,7 +91,7 @@ export function BoatNav({ boatId }: BoatNavProps) {
           ) : (
             <Link
               key={index}
-              href={link.href}
+              href={link.href as Route}
               className={cn(
                 buttonVariants({ variant: "ghost", size: "sm" }),
                 path === link.href && "bg-accent text-accent-foreground",
