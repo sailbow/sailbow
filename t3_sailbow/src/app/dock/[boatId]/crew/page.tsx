@@ -8,8 +8,8 @@ export default function Page() {
   const { isLoading } = useActiveBoat();
   if (isLoading) return <CenteredSpinner />;
   return (
-    <div className="mt-2 flex w-full flex-col gap-2 sm:mt-0">
-      <div className="flex w-full items-center gap-4">
+    <div className="mt-0 flex size-full flex-col justify-items-end gap-2 overflow-y-auto px-2 pb-2">
+      <div className="sticky top-0 z-10 flex w-full items-center gap-4 bg-background pt-2">
         <h1 className="text-xl leading-none tracking-tight sm:text-3xl">
           Crew
         </h1>
@@ -17,7 +17,9 @@ export default function Page() {
           <InviteCrewMember />
         </div>
       </div>
-      <CrewTable />
+      <div className="flex-1">
+        <CrewTable />
+      </div>
     </div>
   );
 }

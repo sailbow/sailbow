@@ -61,7 +61,7 @@ export function BoatNav({ boatId }: BoatNavProps) {
     },
   ];
   return (
-    <div className="mx-auto w-full sm:mx-0 sm:w-auto">
+    <div className="sticky top-0 z-10 w-full flex-none bg-background p-2 sm:mx-0 sm:w-auto">
       <nav className="flex justify-between sm:flex-col sm:justify-normal sm:gap-4">
         {links.map((link, index) =>
           isSm ? (
