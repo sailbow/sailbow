@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { usePathname } from "next/navigation";
+import { type Route } from "next";
 
 interface BoatNavProps {
   boatId: number;
@@ -67,7 +68,7 @@ export function BoatNav({ boatId }: BoatNavProps) {
             <Tooltip key={index} delayDuration={0}>
               <TooltipTrigger asChild>
                 <Link
-                  href={link.href}
+                  href={link.href as Route}
                   className={cn(
                     buttonVariants({ variant: "ghost", size: "icon" }),
                     "h-9 w-9",

@@ -45,6 +45,7 @@ import {
 } from "@/components/ui/select";
 import { type CrewMember } from "@/lib/common-types";
 import InviteForm from "./invite-form";
+import { useIsXs, useMediaQuery } from "@/hooks/use-media-query";
 
 const TriggerContent = {
   LoadingBoat: (
@@ -56,7 +57,7 @@ const TriggerContent = {
     </Skeleton>
   ),
   BoatLoaded: (
-    <Button variant="outline">
+    <Button>
       <UserPlus className="mr-2 size-4" />
       Invite
     </Button>
@@ -79,13 +80,14 @@ export const roleValueToDisplay = (
 export default function InviteCrewMember() {
   const { activeBoat } = useActiveBoat();
   const [isOpen, setIsOpen] = useState(false);
-
+  const isXs = useIsXs();
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger disabled={!activeBoat} asChild>
         {activeBoat ? TriggerContent.BoatLoaded : TriggerContent.LoadingBoat}
       </PopoverTrigger>
       <PopoverContent
+        side={isXs ? undefined : "left"}
         onInteractOutside={() => setIsOpen(false)}
         onEscapeKeyDown={() => setIsOpen(false)}
       >

@@ -2,6 +2,7 @@ import { type Boat } from "@/lib/schemas/boat";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import ImageWithLoader from "./image-with-loader";
+import { type Route } from "next";
 
 const BoatCard = ({ boat }: { boat: Boat }) => {
   let banner;
@@ -21,6 +22,7 @@ const BoatCard = ({ boat }: { boat: Boat }) => {
       />
     );
   }
+
   return (
     <Card
       className="
@@ -28,7 +30,10 @@ const BoatCard = ({ boat }: { boat: Boat }) => {
       focus-within:scale-105 focus-within:transform focus-within:border-2 focus-within:border-ring
       hover:scale-105 hover:transform hover:border-2 hover:border-ring"
     >
-      <Link className="flex size-full flex-col" href={`/dock/${boat.id}`}>
+      <Link
+        className="flex size-full flex-col"
+        href={`/dock/${boat.id}` as Route}
+      >
         <CardContent className="relative basis-3/4 p-0">{banner}</CardContent>
         <div className="flex basis-1/4 items-center">
           <div className="flex items-center justify-center p-4">
