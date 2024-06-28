@@ -1,10 +1,10 @@
 import { captainMiddleware, createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { type InferInsertModel, and, eq, isNull, or } from "drizzle-orm";
+import { type InferInsertModel, and, eq, isNull, or, like, ilike, inArray, exists } from "drizzle-orm";
 import { db } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { boats, crewMembers } from "@/server/db/schema";
+import { boats, crewMembers, lower } from "@/server/db/schema";
 import { clerkClient } from "@clerk/nextjs";
 import { getUrl } from "@/trpc/shared";
 import { createBoatSchema } from "@/lib/schemas/boat";
@@ -118,5 +118,26 @@ export const dockRouter = createTRPCRouter({
         await tx.delete(boats).where(eq(boats.id, input.boatId))
       })
       revalidatePath("/dock");
+    }),
+  
+  searchBoats: protectedProcedure
+    .input(z.object({
+      query: z.string()
+    }))
+    .query(async ({ input, ctx }) => {
+      return (await ctx.db.query.boats.findMany({
+        where: (and(
+          exists(ctx.db
+            .select({ userId: crewMembers.userId })
+            .from(crewMembers)
+            .where(and(
+              eq(crewMembers.boatId, boats.id),
+              eq(crewMembers.userId, ctx.auth.userId)
+            ))
+          ),
+          ilike(boats.name, `%${input.query}%`)
+        )),
+      }));
+
     })
 })

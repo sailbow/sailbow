@@ -5,7 +5,7 @@ import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut } from "@clerk/nextjs";
 import Image from "next/image";
 import { Spinner } from "./spinner";
 import Sidebar from "./side-bar";
-import BoatSearch from "./boat-search";
+import BoatSearch from "./boat-search/boat-search";
 import SignInButton from "./sign-in-button";
 
 export function Navbar() {

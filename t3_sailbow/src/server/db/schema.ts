@@ -1,5 +1,5 @@
-import { pgTable, integer, varchar, text, timestamp, boolean, primaryKey, json, index, serial } from "drizzle-orm/pg-core";
-import { relations, sql } from "drizzle-orm";
+import { pgTable, integer, varchar, text, timestamp, boolean, primaryKey, json, index, serial, type AnyPgColumn } from "drizzle-orm/pg-core";
+import { type SQL, relations, sql } from "drizzle-orm";
 
 type UserIdColumnOpts = {
 	columnName?: string,
@@ -133,3 +133,8 @@ export const moduleOptionVotesRelations = relations(moduleOptionVotes, ({ one })
 		references: [moduleOptions.id]
 	})
 }))
+
+
+export function lower(column: AnyPgColumn): SQL {
+  return sql`lower(${column})`;
+}

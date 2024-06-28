@@ -19,7 +19,7 @@ import { useActiveBoat } from "@/hooks/use-boat";
 import { ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import BoatSearch from "./boat-search";
+import BoatSearch from "./boat-search/boat-search";
 import { useEffect, useState } from "react";
 
 export default function Crumbs() {
