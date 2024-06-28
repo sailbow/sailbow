@@ -23,13 +23,19 @@ export const crewRouter = createTRPCRouter({
       role: z.enum(["crewMember", "firstMate"])
     }))
     .mutation(async ({ input, ctx }) => {
-      if (ctx.boat.crew.findIndex(cm => cm.email == input.email) !== -1) {
+      const cmIndex = ctx.boat.crew.findIndex(cm => cm.email == input.email)
+      if (cmIndex !== -1) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: `User with email '${input.email}' has already been invited!`,
         });
       }
+      const users = (await clerkClient.users.getUserList({
+        emailAddress: [ input.email ]
+      }));
+      
       await ctx.db.insert(crewMembers).values({
+        userId: users[0]?.id,
         boatId: ctx.boat.id,
         email: input.email,
         role: input.role
