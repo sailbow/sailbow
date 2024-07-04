@@ -50,8 +50,11 @@ export function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Toggle user dropdown" asChild>
-        <Button size="icon" variant="ghost" className="rounded-full p-0">
-          <Avatar className="h-6 w-6">
+        <Button
+          size="icon"
+          className="rounded-full bg-transparent p-0 hover:bg-transparent"
+        >
+          <Avatar className="size-8">
             <AvatarImage
               src={user.imageUrl}
               alt={user.fullName + " profile image"}

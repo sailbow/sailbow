@@ -9,7 +9,7 @@ export default function Page() {
   if (isLoading) return <CenteredSpinner />;
   if (!activeBoat) return <NotFoundPage />;
   return (
-    <div className="size-full pt-2 sm:mt-0">
+    <div className="mt-2 size-full sm:mt-0">
       <h1 className="border-b pb-1 text-xl leading-none tracking-tight sm:text-3xl">
         {activeBoat.name}
       </h1>

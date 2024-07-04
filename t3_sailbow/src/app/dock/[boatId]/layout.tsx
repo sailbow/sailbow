@@ -30,14 +30,30 @@ export default async function Layout({
       <div className="sticky h-40 w-full">
         <BoatBannerView banner={bannerSchema.nullish().parse(boat)} />
       </div>
-      <div className="w-full flex-1 overflow-hidden">
+      <div className="w-full flex-1 overflow-hidden p-4">
         <TooltipProvider delayDuration={0}>
-          <div className="mx-auto flex size-full flex-col justify-items-end sm:flex-row sm:gap-4">
+          <div className="flex size-full flex-col justify-items-end gap-2 sm:flex-row sm:gap-4">
             <BoatNav boatId={params.boatId} />
-            <div className="relative grow overflow-hidden">{children}</div>
+            <div className="relative max-w-5xl grow">{children}</div>
           </div>
         </TooltipProvider>
       </div>
     </div>
   );
+}
+{
+  /* </div>
+        <div className="justify-items-between relative flex size-full flex-col">
+        <div className="top-0 h-40 flex-1">
+          <BoatBannerView banner={bannerSchema.nullish().parse(boat)} />
+        </div>
+        <div className="w-full grow p-4">
+          <TooltipProvider delayDuration={0}>
+            <div className="flex size-full flex-col justify-items-end gap-2 sm:flex-row sm:gap-4">
+              <BoatNav boatId={params.boatId} />
+              <div className="relative max-w-5xl flex-1">{children}</div>
+            </div>
+          </TooltipProvider>
+        </div>
+      </div> */
 }

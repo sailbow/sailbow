@@ -16,9 +16,9 @@ import { api } from "@/trpc/react";
 import { ChevronsUpDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { type ChangeEvent, useState, useEffect } from "react";
-import CenteredSpinner from "../centered-spinner";
+import CenteredSpinner from "./centered-spinner";
 import Link from "next/link";
-import { Route } from "next";
+import { type Route } from "next";
 
 export default function BoatSearch() {
   const { activeBoat } = useActiveBoat();
@@ -59,6 +59,7 @@ export default function BoatSearch() {
       <DropdownMenuContent className="w-72">
         <div className="flex w-full items-center p-2">
           <Input
+            autoFocus
             type="search"
             placeholder="Search..."
             className="flex-1 rounded-lg bg-background"
