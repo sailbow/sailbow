@@ -4,22 +4,17 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TabsContent } from "@radix-ui/react-tabs";
 import { PencilLine } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "./spinner";
 import { useEffect, useState } from "react";
 import { api } from "@/trpc/react";
 import { type BoatBanner } from "@/lib/schemas/boat";
 import ImageWithLoader from "./image-with-loader";
 import { toast } from "@/components/ui/toast";
 import useDebounce from "@/lib/use-debounce";
-import Link from "next/link";
 import CenteredSpinner from "./centered-spinner";
 
 interface BannerModalProps {
