@@ -10,8 +10,8 @@ export default function CreateBoatButton() {
     <Sheet>
       <SheetTrigger asChild>
         <Button size="sm" className="hidden sm:inline-flex">
+          <Plus className="mr-2 h-6 w-6" />
           <span>Create a boat</span>
-          <Plus className="ml-2 h-6 w-6" />
         </Button>
       </SheetTrigger>
       <SheetTrigger asChild>

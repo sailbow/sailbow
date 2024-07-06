@@ -41,19 +41,3 @@ export default async function Layout({
     </div>
   );
 }
-{
-  /* </div>
-        <div className="justify-items-between relative flex size-full flex-col">
-        <div className="top-0 h-40 flex-1">
-          <BoatBannerView banner={bannerSchema.nullish().parse(boat)} />
-        </div>
-        <div className="w-full grow p-4">
-          <TooltipProvider delayDuration={0}>
-            <div className="flex size-full flex-col justify-items-end gap-2 sm:flex-row sm:gap-4">
-              <BoatNav boatId={params.boatId} />
-              <div className="relative max-w-5xl flex-1">{children}</div>
-            </div>
-          </TooltipProvider>
-        </div>
-      </div> */
-}

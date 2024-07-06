@@ -37,19 +37,7 @@ export function CrewTable() {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    initialState: {
-      // pagination: {
-      //   pageIndex: 0,
-      //   pageSize: 10,
-      // },
-    },
   });
   if (!activeBoat) return null;
-  return (
-    <DataTable table={table} />
-    // <div className="flex size-full flex-col justify-between gap-2">
-    //   <DataTable table={table} />
-    //   <DataTablePagination table={table} />
-    // </div>
-  );
+  return <DataTable table={table} />;
 }
