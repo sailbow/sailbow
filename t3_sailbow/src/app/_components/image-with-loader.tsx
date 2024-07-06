@@ -22,7 +22,7 @@ export default function ImageWithLoader(props: ImageWithLoaderProps) {
         onLoad={() => setIsLoaded(true)}
       />
       {!isLoaded && (
-        <Skeleton className="size-full rounded-none bg-slate-300" />
+        <Skeleton className={cn("size-full bg-slate-300", props.className)} />
       )}
     </div>
   );

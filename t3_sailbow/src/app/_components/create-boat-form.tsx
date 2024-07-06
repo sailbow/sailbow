@@ -52,7 +52,6 @@ export function CreateBoatForm() {
       name: "",
       description: "",
       crewInvites: [],
-      // bannerPosition: 0,
     },
   });
 

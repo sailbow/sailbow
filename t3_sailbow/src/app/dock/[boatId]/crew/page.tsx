@@ -21,14 +21,6 @@ export default function Page() {
         <div className="flex-1 overflow-auto">
           <CrewTable />
         </div>
-
-        {/* <div className="my-auto flex-1 overflow-hidden">
-          <CrewTable />
-        </div> */}
-
-        {/* <div className="max-h-[90%]">
-          
-        </div> */}
       </div>
     </div>
   );
