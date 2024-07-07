@@ -7,7 +7,6 @@ import {
   Megaphone,
   Settings,
   UsersRound,
-  type LucideIcon,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -20,12 +19,10 @@ import {
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { usePathname } from "next/navigation";
 import { type Route } from "next";
+import { useBoat } from "@/hooks/use-boat";
 
-interface BoatNavProps {
-  boatId: number;
-}
-
-export function BoatNav({ boatId }: BoatNavProps) {
+export function BoatNav() {
+  const { id: boatId } = useBoat();
   const isSm = useMediaQuery("(max-width: 640px)");
   const path = usePathname();
   const links = [

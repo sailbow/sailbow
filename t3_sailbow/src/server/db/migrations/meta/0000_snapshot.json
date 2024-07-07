@@ -1,10 +1,10 @@
 {
-  "id": "4a0e43d6-f5ec-4ce3-b51d-8e01fe19dd3b",
+  "id": "d4196d2d-54d6-4023-910a-8f2a8006d291",
   "prevId": "00000000-0000-0000-0000-000000000000",
-  "version": "5",
-  "dialect": "pg",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "boats": {
+    "public.boats": {
       "name": "boats",
       "schema": "",
       "columns": {
@@ -38,24 +38,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "type": {
-          "name": "type",
-          "type": "varchar(256)",
+        "banner": {
+          "name": "banner",
+          "type": "json",
           "primaryKey": false,
-          "notNull": true
-        },
-        "bannerValue": {
-          "name": "bannerValue",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "position": {
-          "name": "position",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
+          "notNull": false,
+          "default": "'null'::json"
         },
         "created_on": {
           "name": "created_on",
@@ -69,23 +57,39 @@
         "boats_name_index": {
           "name": "boats_name_index",
           "columns": [
-            "name"
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         },
         "boats_slug_index": {
           "name": "boats_slug_index",
           "columns": [
-            "slug"
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "crew_members": {
+    "public.crew_members": {
       "name": "crew_members",
       "schema": "",
       "columns": {
@@ -105,7 +109,7 @@
           "name": "email",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "role": {
           "name": "role",
@@ -125,23 +129,47 @@
         "crew_members_boat_id_index": {
           "name": "crew_members_boat_id_index",
           "columns": [
-            "boat_id"
+            {
+              "expression": "boat_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         },
         "crew_members_user_id_index": {
           "name": "crew_members_user_id_index",
           "columns": [
-            "user_id"
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         },
         "crew_members_email_index": {
           "name": "crew_members_email_index",
           "columns": [
-            "email"
+            {
+              "expression": "email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -159,10 +187,18 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "crew_members_boat_id_email_pk": {
+          "name": "crew_members_boat_id_email_pk",
+          "columns": [
+            "boat_id",
+            "email"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
-    "module_comments": {
+    "public.module_comments": {
       "name": "module_comments",
       "schema": "",
       "columns": {
@@ -195,9 +231,17 @@
         "module_comments_module_id_index": {
           "name": "module_comments_module_id_index",
           "columns": [
-            "module_id"
+            {
+              "expression": "module_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -218,7 +262,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "module_option_votes": {
+    "public.module_option_votes": {
       "name": "module_option_votes",
       "schema": "",
       "columns": {
@@ -239,16 +283,32 @@
         "module_option_votes_user_id_index": {
           "name": "module_option_votes_user_id_index",
           "columns": [
-            "user_id"
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         },
         "module_option_votes_module_option_id_index": {
           "name": "module_option_votes_module_option_id_index",
           "columns": [
-            "module_option_id"
+            {
+              "expression": "module_option_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -277,7 +337,7 @@
       },
       "uniqueConstraints": {}
     },
-    "module_options": {
+    "public.module_options": {
       "name": "module_options",
       "schema": "",
       "columns": {
@@ -304,9 +364,17 @@
         "module_options_module_id_index": {
           "name": "module_options_module_id_index",
           "columns": [
-            "module_id"
+            {
+              "expression": "module_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -327,7 +395,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "modules": {
+    "public.modules": {
       "name": "modules",
       "schema": "",
       "columns": {
@@ -411,9 +479,17 @@
         "modules_boat_id_index": {
           "name": "modules_boat_id_index",
           "columns": [
-            "boat_id"
+            {
+              "expression": "boat_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {

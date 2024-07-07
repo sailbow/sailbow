@@ -149,3 +149,4 @@ export const captainMiddleware = protectedBoatMiddleware.unstable_pipe(({ ctx, n
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(authMiddleware)
+export const protectedBoatProcedure = t.procedure.use(protectedBoatMiddleware)

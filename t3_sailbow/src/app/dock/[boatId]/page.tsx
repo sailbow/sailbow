@@ -1,19 +1,34 @@
 "use client";
 
-import CenteredSpinner from "@/app/_components/centered-spinner";
-import NotFoundPage from "@/app/_components/not-found-page";
-import { useActiveBoat } from "@/hooks/use-boat";
+import BannerModal from "@/app/_components/banner-modal";
+import { useBoat } from "@/hooks/use-boat";
 
 export default function Page() {
-  const { activeBoat, isLoading } = useActiveBoat();
-  if (isLoading) return <CenteredSpinner />;
-  if (!activeBoat) return <NotFoundPage />;
+  const { name, description, banner, dispatch } = useBoat();
   return (
-    <div className="mt-2 size-full sm:mt-0">
-      <h1 className="border-b pb-1 text-xl leading-none tracking-tight sm:text-3xl">
-        {activeBoat.name}
-      </h1>
-      <p className="mt-2 max-w-xl leading-8">{activeBoat.description}</p>
+    <div className="h-full sm:container">
+      <div className="flex size-full flex-col justify-between gap-2">
+        <div className="flex w-full items-center justify-between">
+          <h1 className="text-xl leading-none tracking-tight sm:text-3xl">
+            {name}
+          </h1>
+
+          {!banner && (
+            <BannerModal
+              banner={banner}
+              onBannerChange={(banner) =>
+                dispatch({
+                  type: "update-banner",
+                  payload: banner,
+                })
+              }
+            />
+          )}
+        </div>
+      </div>
+      <div className="flex-1 overflow-auto">
+        <p className="mt-2 max-w-xl leading-8">{description}</p>
+      </div>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "@/components/ui/toast";
 import { type Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ActiveBoatContext } from "@/hooks/use-boat";
+import { GlobalActiveBoatContext } from "@/hooks/use-boat";
 
 const font = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -50,7 +50,7 @@ export default function RootLayout({
             }}
           >
             <TRPCReactProvider>
-              <ActiveBoatContext>{children}</ActiveBoatContext>
+              <GlobalActiveBoatContext>{children}</GlobalActiveBoatContext>
               <Toaster richColors={true} />
             </TRPCReactProvider>
           </ClerkProvider>

@@ -24,13 +24,9 @@ import { api } from "@/trpc/react";
 import { toast } from "@/components/ui/toast";
 import { Loader2 } from "lucide-react";
 import BannerModal from "./banner-modal";
-import BoatBannerView from "./boat-banner-view";
 import { useState } from "react";
+import ImageWithLoader from "./image-with-loader";
 
-const defaultBanner: BoatBanner = {
-  bannerType: "color",
-  bannerValue: "#99f6e4",
-};
 export function CreateBoatForm() {
   const router = useRouter();
   const { isLoading, mutate } = api.dock.createBoat.useMutation({
@@ -43,12 +39,12 @@ export function CreateBoatForm() {
       });
     },
   });
-  const [banner, setBanner] = useState<BoatBanner>(defaultBanner);
+  const [banner, setBanner] = useState<BoatBanner | null>(null);
 
   const form = useForm<CreateBoat>({
     resolver: zodResolver(createBoatSchema),
     defaultValues: {
-      ...defaultBanner,
+      banner: null,
       name: "",
       description: "",
       crewInvites: [],
@@ -65,17 +61,29 @@ export function CreateBoatForm() {
         <SheetTitle>Create a boat</SheetTitle>
       </SheetHeader>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
-        <div className="relative h-[250px] w-full">
-          <BoatBannerView banner={banner} />
-          <div className="absolute bottom-0">
+        <div className="relative mt-2 w-full">
+          {!!banner ? (
+            <div className="relative h-[200px] w-full">
+              <ImageWithLoader src={banner.regular} alt="banner image" />
+              <div className="absolute inset-x-2 bottom-2 z-10">
+                <BannerModal
+                  banner={banner}
+                  onBannerChange={(b) => {
+                    setBanner(b);
+                    form.setValue("banner", b);
+                  }}
+                />
+              </div>
+            </div>
+          ) : (
             <BannerModal
+              banner={banner}
               onBannerChange={(b) => {
                 setBanner(b);
-                form.setValue("bannerType", b.bannerType);
-                form.setValue("bannerValue", b.bannerValue);
+                form.setValue("banner", b);
               }}
             />
-          </div>
+          )}
         </div>
         <FormField
           control={form.control}

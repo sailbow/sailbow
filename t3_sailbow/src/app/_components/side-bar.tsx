@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useActiveBoat } from "@/hooks/use-boat";
+import { useGlobalActiveBoat } from "@/hooks/use-boat";
 import {
   Sheet,
   SheetContent,
@@ -17,7 +17,7 @@ import ImageWithLoader from "./image-with-loader";
 
 const Sidebar = () => {
   const router = useRouter();
-  const { activeBoat } = useActiveBoat();
+  const { activeBoat } = useGlobalActiveBoat();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleNav = (href: string) => {

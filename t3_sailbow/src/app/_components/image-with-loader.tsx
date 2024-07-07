@@ -13,7 +13,12 @@ interface ImageWithLoaderProps {
 export default function ImageWithLoader(props: ImageWithLoaderProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   return (
-    <div className="relative size-full overflow-hidden">
+    <div
+      className={cn(
+        "relative size-full overflow-hidden rounded-md",
+        props.className,
+      )}
+    >
       <Image
         fill
         alt={props.alt}

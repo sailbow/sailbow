@@ -8,29 +8,20 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useActiveBoat } from "@/hooks/use-boat";
-import { ChevronsUpDown } from "lucide-react";
+import { useGlobalActiveBoat } from "@/hooks/use-boat";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import BoatSearch from "./boat-search";
 import { useEffect, useState } from "react";
 
 export default function Crumbs() {
-  const path = usePathname();
-  const { activeBoat } = useActiveBoat();
+  const params = useParams();
+  const { boat } = useGlobalActiveBoat();
   const [showBoatSearch, setShowBoatSearch] = useState(false);
-  const parts = path.split("/").filter((path) => path);
 
   useEffect(() => {
-    setShowBoatSearch(!!activeBoat && !path.endsWith("/dock"));
-  }, [activeBoat, path]);
+    setShowBoatSearch(!!boat && Object.keys(params).includes("boatId"));
+  }, [boat, params]);
 
   return (
     <Breadcrumb>
@@ -48,7 +39,6 @@ export default function Crumbs() {
             <BoatSearch />
           </BreadcrumbItem>
         )}
-        {activeBoat && parts.at(parts.length - 1) !== activeBoat.id.toString()}
       </BreadcrumbList>
     </Breadcrumb>
   );

@@ -2,20 +2,13 @@ import { z } from "zod";
 import { type boats } from "@/server/db/schema";
 import { type InferSelectModel } from "drizzle-orm";
 
-const colorBannerSchema = z.object({
-    bannerType: z.literal("color"),
-    bannerValue: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Invalid color value")
-})
-
-const imageBannerSchema = z.object({
-    bannerType: z.literal("url"),
-    bannerValue: z.string().url("Invalid image url")
-})
-
-export const bannerSchema = z.discriminatedUnion("bannerType", [
-    colorBannerSchema,
-    imageBannerSchema,
-])
+export const bannerSchema = z.object({
+    thumbnail: z.string().url(),
+    small: z.string().url(),
+    regular: z.string().url(),
+    full: z.string().url(),
+    alt: z.string()
+}).nullable();
 
 export const createBoatSchema = z
     . object({
@@ -24,13 +17,12 @@ export const createBoatSchema = z
         crewInvites: z.array(z.object({
             emailAddress: z.string().email(),
             role: z.enum([ "captain", "firstMate", "crewMember"])
-        }))
+        })),
+        banner: bannerSchema,
     })
-    .and(bannerSchema)
 
 
 export type CreateBoat = z.infer<typeof createBoatSchema>
 export type Boat = InferSelectModel<typeof boats>
 
 export type BoatBanner = z.infer<typeof bannerSchema>
-export type BoatBannerType = BoatBanner["bannerType"]

@@ -1,5 +1,4 @@
 "use client";
-import { Spinner } from "@/app/_components/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -9,11 +8,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
-import { useEffect } from "react";
 import { api } from "@/trpc/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { type ActiveBoat } from "@/hooks/use-boat";
+import { useBoat, type ActiveBoat } from "@/hooks/use-boat";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -33,16 +31,12 @@ const formSchema = z.object({
 });
 
 interface InviteFormProps {
-  activeBoat: ActiveBoat;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-export default function InviteForm({
-  activeBoat,
-  onSuccess,
-  onCancel,
-}: InviteFormProps) {
+export default function InviteForm({ onSuccess, onCancel }: InviteFormProps) {
+  const activeBoat = useBoat();
   const { isLoading, mutateAsync: inviteCrewMember } =
     api.crew.inviteCrewMember.useMutation({
       onError: (error) => {

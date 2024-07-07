@@ -10,12 +10,12 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useActiveBoat } from "@/hooks/use-boat";
+import { useGlobalActiveBoat } from "@/hooks/use-boat";
 import Link from "next/link";
 import { useEffect } from "react";
 
 export default function SettingsHeader() {
-  const { activeBoat } = useActiveBoat();
+  const { activeBoat } = useGlobalActiveBoat();
   useEffect(() => {
     if (activeBoat) console.log(activeBoat);
   }, [activeBoat]);

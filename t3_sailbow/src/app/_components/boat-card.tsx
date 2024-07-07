@@ -3,20 +3,21 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import ImageWithLoader from "./image-with-loader";
 import { type Route } from "next";
+import { Button } from "@/components/ui/button";
+import { Sailboat } from "lucide-react";
 
 const BoatCard = ({ boat }: { boat: Boat }) => {
   let banner;
-  if (boat.bannerType === "color") {
+  if (!boat.banner) {
     banner = (
-      <div
-        style={{ backgroundColor: boat.bannerValue }}
-        className="h-full w-full"
-      />
+      <div className="flex size-full items-center justify-center border-b">
+        <Sailboat className="size-32 stroke-muted-foreground" strokeWidth={1} />
+      </div>
     );
   } else {
     banner = (
       <ImageWithLoader
-        src={boat.bannerValue}
+        src={boat.banner.small}
         alt={boat.name + " image"}
         className="rounded-b-none"
       />

@@ -9,8 +9,10 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "migration:generate": "drizzle-kit generate:pg --config=./drizzle.config.ts",
-    "migration:push": "drizzle-kit push:pg --config=./drizzle.config.ts",
+    "migration:generate": "drizzle-kit generate --config=./drizzle.config.ts",
+    "migration:push": "drizzle-kit push --config=./drizzle.config.ts",
+    "db:check": "drizzle-kit check",
+    "drizzle-kit-up": "drizzle-kit up",
     "email:dev": "email dev"
   },
   "dependencies": {
@@ -67,7 +69,7 @@
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "drizzle-kit": "^0.22.7",
+    "drizzle-kit": "^0.22.8",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.1.0",
     "pg": "^8.11.3",

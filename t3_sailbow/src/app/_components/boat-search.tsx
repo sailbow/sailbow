@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useActiveBoat } from "@/hooks/use-boat";
+import { useGlobalActiveBoat } from "@/hooks/use-boat";
 import useDebounce from "@/lib/use-debounce";
 import { api } from "@/trpc/react";
 import { ChevronsUpDown } from "lucide-react";
@@ -21,7 +21,7 @@ import Link from "next/link";
 import { type Route } from "next";
 
 export default function BoatSearch() {
-  const { activeBoat } = useActiveBoat();
+  const { boat } = useGlobalActiveBoat();
   const [isOpen, setIsOpen] = useState(false);
   const path = usePathname();
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,13 +45,13 @@ export default function BoatSearch() {
     setSearchTerm(e.target.value);
   };
 
-  if (!activeBoat || path.endsWith("/dock")) return;
+  if (!boat || path.endsWith("/dock")) return;
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="justify-start">
           <span className="max-w-[150px] overflow-hidden text-ellipsis text-muted-foreground">
-            {activeBoat.name}
+            {boat.name}
           </span>
           <ChevronsUpDown className="ml-2 size-4" />
         </Button>

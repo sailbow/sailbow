@@ -1,13 +1,15 @@
 "use client";
 import { type CrewMember } from "@/lib/common-types";
 import { type Boat } from "@/lib/schemas/boat";
+import { type BoatBanner } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { useParams } from "next/navigation";
-import {
+import React, {
   createContext,
-  useCallback,
+  useReducer,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -20,35 +22,115 @@ type ActiveBoatContextProps = {
   children: React.ReactNode;
 };
 
-interface ActiveBoatContext {
-  activeBoat: ActiveBoat | null | undefined;
-  isLoading: boolean;
+interface BoatContext extends ActiveBoat {
+  dispatch: React.Dispatch<BoatActions>;
 }
 
-const activeBoatContext = createContext<ActiveBoatContext>({
-  activeBoat: undefined,
-  isLoading: false,
+interface GlobalActiveBoatContext {
+  boat: ActiveBoat | null;
+  setBoat: (boat: ActiveBoat | null) => void;
+}
+
+const initialState: BoatContext = {
+  id: -1,
+  name: "",
+  slug: "",
+  description: "",
+  banner: null,
+  captainUserId: "",
+  crew: [],
+  createdOn: new Date(1970, 1),
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  dispatch: () => {},
+};
+const boatContext = createContext<BoatContext>(initialState);
+
+const globalActiveBoatContext = createContext<GlobalActiveBoatContext>({
+  boat: null,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setBoat: () => {},
 });
 
-export const ActiveBoatContext = ({ children }: ActiveBoatContextProps) => {
-  const params = useParams();
-  const [boatId, setBoatId] = useState(-1);
-  const { isLoading, data: activeBoat } = api.dock.getBoatById.useQuery(
-    { boatId },
-    { enabled: boatId > 0 },
-  );
+type SetActiveBoat = {
+  type: "set-active-boat";
+  payload: ActiveBoat | null | undefined;
+};
+type UpdateIsLoading = { type: "update-is-loading"; payload: boolean };
+type UpdateBanner = { type: "update-banner"; payload: BoatBanner | null };
+type AddCrewMember = { type: "add-crew-member"; payload: CrewMember };
+
+type BoatActions =
+  | SetActiveBoat
+  | UpdateIsLoading
+  | UpdateBanner
+  | AddCrewMember;
+
+const boatReducer = (state: ActiveBoat, action: BoatActions): ActiveBoat => {
+  switch (action.type) {
+    case "update-banner":
+      return {
+        ...state,
+        banner: action.payload,
+      };
+    case "add-crew-member":
+      return {
+        ...state,
+        crew: [...state.crew, action.payload],
+      };
+    default:
+      return state;
+  }
+};
+
+export const BoatContext = ({
+  children,
+  initialBoat,
+}: {
+  children: React.ReactNode;
+  initialBoat: ActiveBoat;
+}) => {
+  const [state, dispatch] = useReducer(boatReducer, initialBoat);
+  const value = useMemo(() => {
+    return {
+      ...state,
+      dispatch,
+    };
+  }, [state, dispatch]);
+
+  const { setBoat } = useGlobalActiveBoat();
+
   useEffect(() => {
-    if (params.boatId) {
-      setBoatId(parseInt(params.boatId as string));
-    }
-  }, [params]);
+    console.log("setting global boat", value);
+    setBoat(value);
+  }, [setBoat, value]);
+
+  return <boatContext.Provider value={value}>{children}</boatContext.Provider>;
+};
+
+export const GlobalActiveBoatContext = ({
+  children,
+}: ActiveBoatContextProps) => {
+  const [boat, setBoat] = useState<ActiveBoat | null>(null);
+  // const value = useMemo(() => {
+  //   return {
+  //     boat,
+  //     setBoat,
+  //   };
+  // }, [boat, setBoat]);
   return (
-    <activeBoatContext.Provider value={{ isLoading, activeBoat }}>
+    <globalActiveBoatContext.Provider value={{ boat, setBoat }}>
       {children}
-    </activeBoatContext.Provider>
+    </globalActiveBoatContext.Provider>
   );
 };
 
-export const useActiveBoat = () => {
-  return useContext(activeBoatContext);
+export const useBoat = () => {
+  const ctx = useContext(boatContext);
+  if (!ctx) {
+    throw new Error("No active boat");
+  }
+  return ctx;
+};
+export const useGlobalActiveBoat = () => {
+  return useContext(globalActiveBoatContext);
 };

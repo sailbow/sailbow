@@ -1,5 +1,6 @@
 import { pgTable, integer, varchar, text, timestamp, boolean, primaryKey, json, index, serial, type AnyPgColumn } from "drizzle-orm/pg-core";
 import { type SQL, relations, sql } from "drizzle-orm";
+import { z } from "zod";
 
 type UserIdColumnOpts = {
 	columnName?: string,
@@ -12,7 +13,13 @@ const sqlDefaultUtcNow = sql`(current_timestamp AT TIME ZONE 'UTC')`;
 
 const createdOn = timestamp("created_on", { withTimezone: true}).notNull().default(sqlDefaultUtcNow);
 
-export const bannerTypes : [string, ...string[]] = ["color", "url"];
+export type BoatBanner = {
+	thumbnail: string,
+	small: string,
+	regular: string,
+	full: string,
+	alt: string,
+}
 
 // Tables
 export const boats = pgTable("boats", {
@@ -21,9 +28,7 @@ export const boats = pgTable("boats", {
 	slug: varchar("slug", { length: 50}),
 	description: varchar("description", { length: 256 }),
 	captainUserId: userIdColumn({ columnName: "captain_user_id" }).notNull(),
-	bannerType: varchar("type", { length: 256, enum: bannerTypes}).notNull(),
-	bannerValue: text("bannerValue").notNull(),
-	bannerPosition: integer("position").notNull().default(0),
+	banner: json("banner").$type<BoatBanner | null>().default(null),
 	createdOn: createdOn
 }, (table) => ({
 	boatNameIdx: index().on(table.name),
@@ -37,6 +42,7 @@ export const crewMembers = pgTable("crew_members", {
 	role: varchar("role", { length: 25, enum: ["captain", "firstMate", "crewMember"] }).notNull(),
 	createdOn
 }, (table) => ({
+	primaryKey: primaryKey({ columns: [table.boatId, table.email]}),
 	boatIdIdx: index().on(table.boatId),
 	userIdIdx: index().on(table.userId),
 	emailIdx: index().on(table.email)

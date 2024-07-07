@@ -33,7 +33,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Boat } from "@/lib/schemas/boat";
-import { useActiveBoat } from "@/hooks/use-boat";
+import { useGlobalActiveBoat } from "@/hooks/use-boat";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import {
@@ -78,26 +78,25 @@ export const roleValueToDisplay = (
 };
 
 export default function InviteCrewMember() {
-  const { activeBoat } = useActiveBoat();
   const [isOpen, setIsOpen] = useState(false);
   const isXs = useIsXs();
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger disabled={!activeBoat} asChild>
-        {activeBoat ? TriggerContent.BoatLoaded : TriggerContent.LoadingBoat}
+      <PopoverTrigger asChild>
+        <Button>
+          <UserPlus className="mr-2 size-4" />
+          Invite
+        </Button>
       </PopoverTrigger>
       <PopoverContent
         side={isXs ? undefined : "left"}
         onInteractOutside={() => setIsOpen(false)}
         onEscapeKeyDown={() => setIsOpen(false)}
       >
-        {activeBoat && (
-          <InviteForm
-            activeBoat={activeBoat}
-            onSuccess={() => setIsOpen(false)}
-            onCancel={() => setIsOpen(false)}
-          />
-        )}
+        <InviteForm
+          onSuccess={() => setIsOpen(false)}
+          onCancel={() => setIsOpen(false)}
+        />
       </PopoverContent>
     </Popover>
   );

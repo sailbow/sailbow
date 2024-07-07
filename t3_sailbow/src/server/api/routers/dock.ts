@@ -1,4 +1,4 @@
-import { captainMiddleware, createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { captainMiddleware, createTRPCRouter, protectedBoatProcedure, protectedProcedure, requiredRoleMiddleware } from "@/server/api/trpc";
 import { type InferInsertModel, and, eq, isNull, or, like, ilike, inArray, exists } from "drizzle-orm";
 import { db } from "@/server/db";
 import { TRPCError } from "@trpc/server";
@@ -104,7 +104,7 @@ export const dockRouter = createTRPCRouter({
         return null;
       }
 
-      return membership.boat
+      return membership.boat;
     }),
 
   deleteBoatById: protectedProcedure
@@ -138,6 +138,5 @@ export const dockRouter = createTRPCRouter({
           ilike(boats.name, `%${input.query}%`)
         )),
       }));
-
-    })
+    }),
 })
