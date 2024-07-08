@@ -10,7 +10,7 @@ const BoatCard = ({ boat }: { boat: Boat }) => {
   let banner;
   if (!boat.banner) {
     banner = (
-      <div className="flex size-full items-center justify-center border-b">
+      <div className="flex size-full items-center justify-center bg-gradient-to-r from-accent via-muted to-accent">
         <Sailboat className="size-32 stroke-muted-foreground" strokeWidth={1} />
       </div>
     );
@@ -27,9 +27,9 @@ const BoatCard = ({ boat }: { boat: Boat }) => {
   return (
     <Card
       className="
-      h-[250px] overflow-hidden transition-transform duration-300 ease-in-out
-      focus-within:scale-105 focus-within:transform focus-within:border-2 focus-within:border-ring
-      hover:scale-105 hover:transform hover:border-2 hover:border-ring"
+      h-[250px] overflow-hidden transition-transform duration-300
+      ease-in-out focus-within:scale-105 focus-within:transform
+      focus-within:border-ring hover:scale-105 hover:transform hover:border-2 hover:border-ring"
     >
       <Link
         className="flex size-full flex-col"

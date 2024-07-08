@@ -13,7 +13,7 @@ export function Navbar() {
     <header
       className="
   fixed top-0 z-40 flex max-h-navbar-height min-h-navbar-height w-full items-center
-  gap-2 border-b-[1px] border-border/40 bg-background/90 px-2 xs:px-4 sm:gap-4"
+  gap-2 border-b-[1px] border-border/40 bg-background/90 px-4 sm:gap-4"
     >
       <Image
         width={24}
@@ -26,7 +26,7 @@ export function Navbar() {
         <div className="hidden xs:flex">
           <Crumbs />
         </div>
-        <div className="flex items-center xs:hidden">
+        <div className="flex items-center gap-2 xs:hidden">
           <Sidebar />
           <BoatSearch />
         </div>

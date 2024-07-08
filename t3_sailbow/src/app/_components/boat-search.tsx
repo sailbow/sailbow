@@ -57,7 +57,7 @@ export default function BoatSearch() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-72">
-        <div className="flex w-full items-center p-2">
+        <div className="flex flex-1 items-center bg-background p-2">
           <Input
             autoFocus
             type="search"
