@@ -18,7 +18,6 @@ import {
   type BoatBanner,
 } from "@/lib/schemas/boat";
 import { Textarea, type TextareaProps } from "@/components/ui/textarea";
-import { SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
 import { toast } from "@/components/ui/toast";
@@ -57,11 +56,12 @@ export function CreateBoatForm() {
 
   return (
     <Form {...form}>
-      <SheetHeader>
-        <SheetTitle>Create a boat</SheetTitle>
-      </SheetHeader>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
-        <div className="relative mt-2 w-full">
+      <div className="text-lg font-semibold text-foreground">Create a boat</div>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="mt-4 w-full space-y-4"
+      >
+        <div className="relative w-full">
           {!!banner ? (
             <div className="relative h-[200px] w-full">
               <ImageWithLoader src={banner.regular} alt="banner image" />
@@ -115,16 +115,16 @@ export function CreateBoatForm() {
             </FormItem>
           )}
         />
-        <SheetFooter>
+        <div className="flex justify-end">
           {isLoading ? (
             <Button disabled>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Save
+              Loading
             </Button>
           ) : (
-            <Button type="submit">Save</Button>
+            <Button type="submit">Create</Button>
           )}
-        </SheetFooter>
+        </div>
       </form>
     </Form>
   );
