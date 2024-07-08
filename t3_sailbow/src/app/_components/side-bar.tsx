@@ -12,16 +12,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Home, Menu } from "lucide-react";
+import { Anchor, Home, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import ImageWithLoader from "./image-with-loader";
 import { type Route } from "next";
 import { useBoatLinks } from "@/lib/use-boat-links";
 import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const links = useBoatLinks();
+  const { boat } = useGlobalActiveBoat();
   const path = usePathname();
 
   return (
@@ -32,19 +34,47 @@ const Sidebar = () => {
         </Button>
       </SheetTrigger>
       <SheetContent side="top">
-        <SheetHeader>
-          <div className="ml-2 size-10">
-            <ImageWithLoader src="/icon.svg" alt="Sailbow Logo" />
-          </div>
+        <SheetHeader className="w-full items-center space-y-0">
+          <SheetTitle className="inline-flex w-full  font-bold">
+            <div className="mr-4 size-8 flex-none">
+              <ImageWithLoader src="/icon.svg" alt="Sailbow Logo" />
+            </div>
+            sailbow
+          </SheetTitle>
         </SheetHeader>
-        {links && (
-          <nav className="mt-4 flex flex-col gap-4">
-            {links.map((link, index) => (
+        <nav className="mt-4 flex flex-col gap-4">
+          <Separator />
+          <div className="flex flex-col gap-2">
+            <SheetClose asChild>
+              <Link
+                href={"/dock"}
+                className={cn(
+                  buttonVariants({
+                    variant: "ghost",
+                    size: "sm",
+                  }),
+                  "justify-start",
+                )}
+              >
+                <Anchor className="mr-2 h-4 w-4" />
+                My Boats
+              </Link>
+            </SheetClose>
+          </div>
+          <Separator />
+          <div className="flex flex-col gap-2">
+            {boat && (
+              <span className="font-semi-bold px-1 py-1">{boat.name}</span>
+            )}
+            {links?.map((link, index) => (
               <SheetClose key={index} asChild>
                 <Link
                   href={link.href as Route}
                   className={cn(
-                    buttonVariants({ variant: "ghost", size: "sm" }),
+                    buttonVariants({
+                      variant: "ghost",
+                      size: "sm",
+                    }),
                     path === link.href && "bg-accent text-accent-foreground",
                     "justify-start",
                   )}
@@ -54,8 +84,8 @@ const Sidebar = () => {
                 </Link>
               </SheetClose>
             ))}
-          </nav>
-        )}
+          </div>
+        </nav>
       </SheetContent>
     </Sheet>
   );

@@ -111,12 +111,6 @@ export const GlobalActiveBoatContext = ({
   children,
 }: ActiveBoatContextProps) => {
   const [boat, setBoat] = useState<ActiveBoat | null>(null);
-  // const value = useMemo(() => {
-  //   return {
-  //     boat,
-  //     setBoat,
-  //   };
-  // }, [boat, setBoat]);
   return (
     <globalActiveBoatContext.Provider value={{ boat, setBoat }}>
       {children}

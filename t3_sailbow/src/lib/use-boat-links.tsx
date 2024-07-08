@@ -1,5 +1,5 @@
 "use client";
-import { useGlobalActiveBoat } from "@/hooks/use-boat";
+import { useBoat, useGlobalActiveBoat } from "@/hooks/use-boat";
 import {
   Home,
   ListChecks,
@@ -8,36 +8,42 @@ import {
   UsersRound,
 } from "lucide-react";
 
+const getLinks = (boatId: number) => [
+  {
+    title: "Overview",
+    icon: Home,
+    href: `/dock/${boatId}`,
+  },
+  {
+    title: "Itinerary",
+
+    icon: ListChecks,
+    href: `/dock/${boatId}/itinerary`,
+  },
+  {
+    title: "Crew",
+    icon: UsersRound,
+    href: `/dock/${boatId}/crew`,
+  },
+  {
+    title: "Announcements",
+    icon: Megaphone,
+    href: `/dock/${boatId}/announcements`,
+  },
+  {
+    title: "Settings",
+    icon: Settings,
+    href: `/dock/${boatId}/settings`,
+  },
+];
 export const useBoatLinks = () => {
   const { boat } = useGlobalActiveBoat();
   if (!boat) return;
 
-  return [
-    {
-      title: "Overview",
-      icon: Home,
-      href: `/dock/${boat.id}`,
-    },
-    {
-      title: "Itinerary",
+  return getLinks(boat.id);
+};
 
-      icon: ListChecks,
-      href: `/dock/${boat.id}/itinerary`,
-    },
-    {
-      title: "Crew",
-      icon: UsersRound,
-      href: `/dock/${boat.id}/crew`,
-    },
-    {
-      title: "Announcements",
-      icon: Megaphone,
-      href: `/dock/${boat.id}/announcements`,
-    },
-    {
-      title: "Settings",
-      icon: Settings,
-      href: `/dock/${boat.id}/settings`,
-    },
-  ];
+export const useRequiredBoatLinks = () => {
+  const { id } = useBoat();
+  return getLinks(id);
 };

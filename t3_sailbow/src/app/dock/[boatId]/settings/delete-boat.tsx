@@ -20,8 +20,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { useBoat } from "@/hooks/use-boat";
 
-export default function DeleteBoat({ boatId }: { boatId: number }) {
+export default function DeleteBoat() {
+  const { id: boatId } = useBoat();
   const router = useRouter();
   const { mutateAsync: deleteBoatById, isLoading: isDeletingBoat } =
     api.dock.deleteBoatById.useMutation({

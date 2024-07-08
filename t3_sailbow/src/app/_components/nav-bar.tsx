@@ -13,20 +13,20 @@ export function Navbar() {
     <header
       className="
   fixed top-0 z-40 flex max-h-navbar-height min-h-navbar-height w-full items-center
-  gap-2 border-b-[1px] border-border/40 bg-background/90 px-4 sm:gap-4"
+  gap-4 border-b-[1px] border-border/40 bg-background/90 px-4"
     >
       <Image
         width={24}
         height={24}
         src="/icon.svg"
         alt="Sailbow Icon"
-        className="hidden xs:flex"
+        className="hidden sm:flex"
       />
       <SignedIn>
-        <div className="hidden xs:flex">
+        <div className="hidden sm:flex">
           <Crumbs />
         </div>
-        <div className="flex items-center gap-2 xs:hidden">
+        <div className="flex items-center gap-2 sm:hidden">
           <Sidebar />
           <BoatSearch />
         </div>

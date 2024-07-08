@@ -61,7 +61,9 @@ export default function BannerModal(props: BannerModalProps) {
           <div className="text-xs italic text-muted-foreground">
             powered by{" "}
             <Button variant="link" className="p-0" asChild>
-              <a href="https://unsplash.com">Unsplash</a>
+              <a href="https://unsplash.com" target="_blank">
+                Unsplash
+              </a>
             </Button>
           </div>
           <div className="sticky top-0 z-10 flex w-full items-center justify-between space-x-8 bg-background">
