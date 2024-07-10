@@ -1,7 +1,5 @@
 import CenteredSpinner from "@/app/_components/centered-spinner";
 
 export default function Loading() {
-  return (
-    <CenteredSpinner />
-  );
+  return <CenteredSpinner className="pt-4" />;
 }

@@ -33,9 +33,10 @@ export const dockRouter = createTRPCRouter({
             role: ci.role,
             userId: null
           }
-        })
-        crew.push({ boatId, userId: ctx.auth.userId, role: "captain", email: ctx.auth.primaryEmail })
-        await tx.insert(crewMembers).values(crew)
+        });
+        crew.push({ boatId, userId: ctx.auth.userId, role: "captain", email: ctx.auth.primaryEmail });
+        await tx.insert(crewMembers).values(crew);
+        revalidatePath("/dock");
         return { boatId }
       })
       

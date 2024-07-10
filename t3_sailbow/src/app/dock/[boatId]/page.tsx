@@ -15,7 +15,6 @@ export default function Page() {
 
           {!banner && (
             <BannerModal
-              banner={banner}
               onBannerChange={(banner) =>
                 dispatch({
                   type: "update-banner",

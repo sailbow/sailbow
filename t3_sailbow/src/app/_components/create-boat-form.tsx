@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -33,17 +33,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 export function CreateBoatForm() {
   const router = useRouter();
-  const { mutateAsync, isLoading } = api.dock.createBoat.useMutation({
-    onError: () => {
-      toast.dismiss();
-      toast.error("Oops!", {
-        description: "Something went wrong, please try again later",
-      });
+  const { mutateAsync, isLoading, isSuccess } = api.dock.createBoat.useMutation(
+    {
+      onError: () => {
+        toast.dismiss();
+        toast.error("Oops!", {
+          description: "Something went wrong, please try again later",
+        });
+      },
     },
-  });
+  );
   const [banner, setBanner] = useState<BoatBanner | null>(null);
 
   const form = useForm<CreateBoat>({
@@ -115,8 +118,17 @@ export function CreateBoatForm() {
             </div>
           </CardContent>
           <CardFooter className="space-x-4">
-            <Button type="submit" size="lg" disabled={isLoading}>
+            <Button type="submit" size="lg" disabled={isLoading || isSuccess}>
               Create
+            </Button>
+            <Button
+              type="button"
+              size="lg"
+              variant="secondary"
+              disabled={isLoading || isSuccess}
+              asChild
+            >
+              <Link href="/dock">Cancel</Link>
             </Button>
           </CardFooter>
         </form>
