@@ -19,6 +19,7 @@ import { type ChangeEvent, useState, useEffect } from "react";
 import CenteredSpinner from "./centered-spinner";
 import Link from "next/link";
 import { type Route } from "next";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function BoatSearch() {
   const { boat } = useGlobalActiveBoat();
@@ -57,16 +58,16 @@ export default function BoatSearch() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-72">
-        <div className="flex flex-1 items-center bg-background p-2">
+        <div className="flex flex-col space-y-3 bg-popover p-2">
           <Input
             autoFocus
             type="search"
             placeholder="Search..."
-            className="flex-1 rounded-lg bg-background"
+            className="rounded-lg"
             onChange={onSearchChange}
           />
+          <DropdownMenuSeparator />
         </div>
-        {!!query && <DropdownMenuSeparator />}
         {isFetching ? (
           <CenteredSpinner />
         ) : boats?.length === 0 ? (
@@ -74,15 +75,17 @@ export default function BoatSearch() {
             No boats were found
           </div>
         ) : (
-          <DropdownMenuGroup>
-            {boats?.map((b) => (
-              <Link key={b.id} href={`/dock/${b.id}` as Route}>
-                <DropdownMenuItem key={b.id} className="space-x-2">
-                  {b.name}
-                </DropdownMenuItem>
-              </Link>
-            ))}
-          </DropdownMenuGroup>
+          <ScrollArea>
+            <DropdownMenuGroup className="max-h-[50dvh] overflow-y-auto">
+              {boats?.map((b) => (
+                <Link key={b.id} href={`/dock/${b.id}` as Route}>
+                  <DropdownMenuItem key={b.id} className="space-x-2">
+                    {b.name}
+                  </DropdownMenuItem>
+                </Link>
+              ))}
+            </DropdownMenuGroup>
+          </ScrollArea>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
