@@ -4,6 +4,7 @@ import ErrorPage from "../_components/error-page";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default async function Page() {
   let boats;
@@ -15,21 +16,20 @@ export default async function Page() {
   }
 
   return (
-    <div className="relative size-full overflow-y-auto">
+    <div className="relative mx-auto h-full max-w-6xl overflow-y-auto xs:container">
       <div className="container sticky top-0 z-10 flex items-center justify-between bg-background p-4">
-        <div className="text-xl font-medium">Boats</div>
+        <div className="text-xl font-medium leading-none tracking-tight">
+          Boats
+        </div>
         <Link
           href="/dock/new"
-          className={buttonVariants({
-            size: "sm",
-            className: "hidden sm:inline-flex",
-          })}
+          className={cn(buttonVariants({ size: "sm" }), "max-xs:rounded-full")}
         >
-          <Plus className="mr-2 h-6 w-6" />
-          <span>Create a boat</span>
+          <Plus className="h-6 w-6" />
+          <span className="hidden xs:ml-2 xs:inline-flex">Create a boat</span>
         </Link>
       </div>
-      <div className="container mx-auto grid w-full grid-cols-1 gap-6 overflow-hidden p-4 px-4 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 overflow-hidden p-4 px-4 sm:grid-cols-2 lg:grid-cols-3">
         {boats.map((boat) => {
           return <BoatCard key={boat.id} boat={boat} />;
         })}

@@ -127,7 +127,7 @@ export const dockRouter = createTRPCRouter({
     }))
     .query(async ({ input, ctx }) => {
       return (await ctx.db.query.boats.findMany({
-        where: (and(
+        where: and(
           exists(ctx.db
             .select({ userId: crewMembers.userId })
             .from(crewMembers)
@@ -137,20 +137,21 @@ export const dockRouter = createTRPCRouter({
             ))
           ),
           ilike(boats.name, `%${input.query}%`)
-        )),
+        ),
+        limit: 50
       }));
     }),
 
   editBoatBanner: protectedProcedure
-  .use(captainMiddleware)
-  .input(z.object({
-    boatId: z.number(),
-    banner: bannerSchema.or(z.null())
-  }))
-  .mutation(async ({ ctx, input }) => {
-    await ctx.db
-      .update(boats)
-      .set({ banner: input.banner})
-      .where(eq(boats.id, ctx.boat.id));
-  })
+    .use(captainMiddleware)
+    .input(z.object({
+      boatId: z.number(),
+      banner: bannerSchema.or(z.null())
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(boats)
+        .set({ banner: input.banner})
+        .where(eq(boats.id, ctx.boat.id));
+    })
 })
