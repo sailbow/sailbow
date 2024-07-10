@@ -1,14 +1,20 @@
+import {
+  BoatPageContainer,
+  BoatPageHeader,
+  BoatPageTitle,
+  BoatPageContent,
+} from "../../boat-page-components";
 import DeleteBoat from "./delete-boat";
 
 export default function Page() {
   return (
-    <div className="size-full overflow-y-auto">
-      <div className="space-y-2">
-        <h1 className="text-xl leading-none tracking-tight sm:text-3xl">
-          Settings
-        </h1>
+    <BoatPageContainer>
+      <BoatPageHeader>
+        <BoatPageTitle>Announcements</BoatPageTitle>
+      </BoatPageHeader>
+      <BoatPageContent>
         <DeleteBoat />
-      </div>
-    </div>
+      </BoatPageContent>
+    </BoatPageContainer>
   );
 }

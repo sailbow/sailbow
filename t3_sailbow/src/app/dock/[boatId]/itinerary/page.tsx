@@ -1,9 +1,19 @@
+import {
+  BoatPageContainer,
+  BoatPageHeader,
+  BoatPageTitle,
+  BoatPageContent,
+} from "../../boat-page-components";
+
 export default function Page() {
   return (
-    <div className="mt-2 size-full sm:mt-0">
-      <h1 className="text-xl leading-none tracking-tight sm:text-3xl">
-        Itinerary
-      </h1>
-    </div>
+    <BoatPageContainer>
+      <BoatPageHeader>
+        <BoatPageTitle>Itinerary</BoatPageTitle>
+      </BoatPageHeader>
+      <BoatPageContent>
+        <div className="w-full text-center">Nothing yet to see here!</div>
+      </BoatPageContent>
+    </BoatPageContainer>
   );
 }
