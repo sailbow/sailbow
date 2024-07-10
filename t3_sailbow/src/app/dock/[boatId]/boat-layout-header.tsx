@@ -21,7 +21,7 @@ export default function BoatLayoutHeader() {
         alt={banner.alt}
       />
       <div className="absolute inset-x-2 bottom-2 z-10">
-        <BannerModal banner={banner} onBannerChange={updateBanner} />
+        <BannerModal variant="editIcon" onBannerChange={updateBanner} />
       </div>
     </div>
   );

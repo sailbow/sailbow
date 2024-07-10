@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FileSearch, ImagePlus, PencilLine } from "lucide-react";
+import { FileSearch, ImageIcon, ImagePlus, PencilLine } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { api } from "@/trpc/react";
@@ -20,11 +20,12 @@ import useDebounce from "@/lib/use-debounce";
 import CenteredSpinner from "./centered-spinner";
 
 interface BannerModalProps {
-  banner: BoatBanner | null;
+  variant?: "add" | "edit" | "editIcon" | undefined;
   onBannerChange: (banner: BoatBanner) => void;
 }
 
 export default function BannerModal(props: BannerModalProps) {
+  const variant = props.variant ?? "add";
   const [query, setQuery] = useState("");
   const searchText = useDebounce(query, 500);
   const { data, isFetching, error } = api.images.search.useQuery(
@@ -43,16 +44,31 @@ export default function BannerModal(props: BannerModalProps) {
     }
   }, [error]);
 
-  const trigger = !props.banner ? (
-    <Button variant="secondary" size="sm">
-      <ImagePlus className="mr-2 size-6" />
-      Add a cover image
-    </Button>
-  ) : (
-    <Button variant="secondary" size="icon">
-      <PencilLine className="size-6" />
-    </Button>
-  );
+  const trigger = (() => {
+    switch (variant) {
+      case "add":
+        return (
+          <Button variant="outline" size="sm">
+            <ImagePlus className="mr-2 size-6" />
+            Add a cover image
+          </Button>
+        );
+      case "edit":
+        return (
+          <Button variant="outline" size="sm">
+            <ImageIcon className="mr-2 size-6" />
+            Edit cover image
+          </Button>
+        );
+      case "editIcon":
+        return (
+          <Button variant="secondary" size="icon">
+            <PencilLine className="size-6" />
+          </Button>
+        );
+    }
+  })();
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>

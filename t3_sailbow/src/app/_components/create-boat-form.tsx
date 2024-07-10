@@ -7,6 +7,7 @@ import {
   Form,
   FormControl,
   FormField,
+  FormInput,
   FormItem,
   FormLabel,
   FormMessage,
@@ -17,22 +18,27 @@ import {
   createBoatSchema,
   type BoatBanner,
 } from "@/lib/schemas/boat";
-import { Textarea, type TextareaProps } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
 import { toast } from "@/components/ui/toast";
-import { Loader2 } from "lucide-react";
+import { Image, ImageIcon, Loader2 } from "lucide-react";
 import BannerModal from "./banner-modal";
 import { useState } from "react";
 import ImageWithLoader from "./image-with-loader";
+import { cn } from "@/lib/utils";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export function CreateBoatForm() {
   const router = useRouter();
-  const { isLoading, mutate } = api.dock.createBoat.useMutation({
-    onSuccess: (res) => {
-      router.push(`/dock/${res.boatId}`);
-    },
+  const { mutateAsync, isLoading } = api.dock.createBoat.useMutation({
     onError: () => {
+      toast.dismiss();
       toast.error("Oops!", {
         description: "Something went wrong, please try again later",
       });
@@ -51,81 +57,70 @@ export function CreateBoatForm() {
   });
 
   function onSubmit(values: CreateBoat) {
-    mutate(values);
+    toast.promise(mutateAsync(values), {
+      loading: "Creating boat...",
+      success: (data) => {
+        router.push(`/dock/${data.boatId}`);
+        return "success";
+      },
+    });
   }
 
   return (
     <Form {...form}>
-      <div className="text-lg font-semibold text-foreground">Create a boat</div>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-4 w-full space-y-4"
-      >
-        <div className="relative w-full">
-          {!!banner ? (
-            <div className="relative h-[200px] w-full">
-              <ImageWithLoader src={banner.regular} alt="banner image" />
-              <div className="absolute inset-x-2 bottom-2 z-10">
+      <Card className="mt-4">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardHeader>
+            <CardTitle className="font-medium">Create a boat</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col space-y-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-current">
+                      Name
+                      <span className="ml-2">
+                        <FormMessage />
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <FormInput {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="self-start">
                 <BannerModal
-                  banner={banner}
+                  variant={!!banner ? "edit" : "add"}
                   onBannerChange={(b) => {
                     setBanner(b);
                     form.setValue("banner", b);
                   }}
                 />
               </div>
+
+              <div className="md relative h-40 w-full rounded-md border bg-background">
+                {banner ? (
+                  <ImageWithLoader src={banner.regular} alt={banner.alt} />
+                ) : (
+                  <ImageIcon
+                    className="size-full stroke-muted-foreground"
+                    strokeWidth={0.75}
+                  />
+                )}
+              </div>
             </div>
-          ) : (
-            <BannerModal
-              banner={banner}
-              onBannerChange={(b) => {
-                setBanner(b);
-                form.setValue("banner", b);
-              }}
-            />
-          )}
-        </div>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  {...(field as TextareaProps)}
-                  placeholder="A description of your trip"
-                  className="min-h-32"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex justify-end">
-          {isLoading ? (
-            <Button disabled>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Loading
+          </CardContent>
+          <CardFooter className="space-x-4">
+            <Button type="submit" size="lg" disabled={isLoading}>
+              Create
             </Button>
-          ) : (
-            <Button type="submit">Create</Button>
-          )}
-        </div>
-      </form>
+          </CardFooter>
+        </form>
+      </Card>
     </Form>
   );
 }
