@@ -3,15 +3,24 @@ import BannerModal from "@/app/_components/banner-modal";
 import ImageWithLoader from "@/app/_components/image-with-loader";
 import { useBoat } from "@/hooks/use-boat";
 import { type BoatBanner } from "@/lib/schemas/boat";
+import { api } from "@/trpc/react";
 
 export default function BoatLayoutHeader() {
-  const { banner, dispatch } = useBoat();
-  const updateBanner = (banner: BoatBanner) => {
-    dispatch({
-      type: "update-banner",
-      payload: banner,
-    });
+  const { id, banner, dispatch } = useBoat();
+  const { mutate } = api.dock.editBoatBanner.useMutation({
+    onMutate: (data) => {
+      dispatch({
+        type: "update-banner",
+        payload: data.banner,
+      });
+    },
+  });
+
+  const updateBanner = (newBanner: BoatBanner) => {
+    if (!banner && !newBanner) return;
+    mutate({ banner: newBanner, boatId: id });
   };
+
   if (!banner) return;
   return (
     <div className="relative h-40 w-full">

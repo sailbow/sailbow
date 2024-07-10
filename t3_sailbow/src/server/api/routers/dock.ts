@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { boats, crewMembers, lower } from "@/server/db/schema";
 import { clerkClient } from "@clerk/nextjs";
 import { getUrl } from "@/trpc/shared";
-import { createBoatSchema } from "@/lib/schemas/boat";
+import { createBoatSchema, bannerSchema } from "@/lib/schemas/boat";
 
 type InsertBoat = InferInsertModel<typeof boats>
 type InsertCrewMember = InferInsertModel<typeof crewMembers>
@@ -140,4 +140,17 @@ export const dockRouter = createTRPCRouter({
         )),
       }));
     }),
+
+  editBoatBanner: protectedProcedure
+  .use(captainMiddleware)
+  .input(z.object({
+    boatId: z.number(),
+    banner: bannerSchema.or(z.null())
+  }))
+  .mutation(async ({ ctx, input }) => {
+    await ctx.db
+      .update(boats)
+      .set({ banner: input.banner})
+      .where(eq(boats.id, ctx.boat.id));
+  })
 })

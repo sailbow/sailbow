@@ -2,9 +2,11 @@
 
 import BannerModal from "@/app/_components/banner-modal";
 import { useBoat } from "@/hooks/use-boat";
+import { api } from "@/trpc/react";
 
 export default function Page() {
-  const { name, description, banner, dispatch } = useBoat();
+  const { id, name, description, banner, dispatch } = useBoat();
+  const { mutate: updateBanner } = api.dock.editBoatBanner.useMutation();
   return (
     <div className="h-full sm:container">
       <div className="flex size-full flex-col justify-between gap-2">
@@ -15,12 +17,13 @@ export default function Page() {
 
           {!banner && (
             <BannerModal
-              onBannerChange={(banner) =>
+              onBannerChange={(newBanner) => {
                 dispatch({
                   type: "update-banner",
-                  payload: banner,
-                })
-              }
+                  payload: newBanner,
+                });
+                updateBanner({ boatId: id, banner: newBanner });
+              }}
             />
           )}
         </div>
