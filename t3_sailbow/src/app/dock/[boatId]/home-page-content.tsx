@@ -7,7 +7,9 @@ import {
 } from "@/components/text-editor";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "@/components/ui/toast";
 import { useBoat } from "@/hooks/use-boat";
+import { api } from "@/trpc/react";
 import { Edit } from "lucide-react";
 import { useState } from "react";
 
@@ -21,6 +23,28 @@ export default function HomePageContent() {
     onTextChange: setDescriptionText,
   });
 
+  const { mutateAsync } = api.dock.editBoatDescription.useMutation({
+    onMutate: (data) => {
+      dispatch({
+        type: "update-description",
+        payload: data.description,
+      });
+      setIsEditingDescription(false);
+    },
+    onError: (err) => {
+      console.error(err);
+      toast.dismiss();
+    },
+  });
+
+  const updateDescription = () => {
+    toast.promise(mutateAsync({ boatId, description: descriptionText }), {
+      loading: "Saving description...",
+      success: "Successfully saved description!",
+      error:
+        "Something went wrong saving the description, please try again later",
+    });
+  };
   if (!editor) {
     return <Skeleton className="size-full bg-slate-300" />;
   }
@@ -40,16 +64,7 @@ export default function HomePageContent() {
             >
               Cancel
             </Button>
-            <Button
-              size="sm"
-              onClick={() => {
-                dispatch({
-                  type: "update-description",
-                  payload: descriptionText,
-                });
-                setIsEditingDescription(false);
-              }}
-            >
+            <Button size="sm" onClick={updateDescription}>
               Save
             </Button>
           </div>

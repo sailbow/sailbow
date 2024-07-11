@@ -45,7 +45,7 @@ const useTextEditor = ({ text, isEditing, onTextChange }: TextEditorProps) => {
       editable: isEditing,
       editorProps: {
         attributes: {
-          class: "px-2 prose-sm focus:outline-none",
+          class: "size-full prose-sm prose-p:my-1 focus:outline-none",
         },
       },
     },
@@ -63,11 +63,11 @@ const TextEditorContent = ({
   return (
     <div
       className={cn(
-        "size-full overflow-auto rounded-md border px-2 py-4 focus-within:border-input [&_*]:size-full",
+        "flex-1 overflow-auto rounded-md border p-4 focus-within:border-input",
         className,
       )}
     >
-      <EditorContent editor={editor} autoFocus />
+      <EditorContent editor={editor} className="size-full" autoFocus />
     </div>
   );
 };

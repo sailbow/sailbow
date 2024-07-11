@@ -26,7 +26,7 @@ export const boats = pgTable("boats", {
 	id: serial("id").primaryKey(),
 	name: varchar("name", { length: 50 }).notNull(),
 	slug: varchar("slug", { length: 50}),
-	description: varchar("description", { length: 256 }),
+	description: text("description"),
 	captainUserId: userIdColumn({ columnName: "captain_user_id" }).notNull(),
 	banner: json("banner").$type<BoatBanner | null>().default(null),
 	createdOn: createdOn

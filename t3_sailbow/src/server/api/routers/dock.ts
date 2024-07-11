@@ -153,5 +153,18 @@ export const dockRouter = createTRPCRouter({
         .update(boats)
         .set({ banner: input.banner})
         .where(eq(boats.id, ctx.boat.id));
+    }),
+
+  editBoatDescription: protectedProcedure
+    .use(captainMiddleware)
+    .input(z.object({
+      boatId: z.number(),
+      description: z.string().nullable(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      await ctx.db
+        .update(boats)
+        .set({ description: input.description })
+        .where(eq(boats.id, ctx.boat.id));
     })
 })

@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "boats" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(50) NOT NULL,
 	"slug" varchar(50),
-	"description" varchar(256),
+	"description" text,
 	"captain_user_id" varchar(256) NOT NULL,
 	"banner" json DEFAULT 'null'::json,
 	"created_on" timestamp with time zone DEFAULT (current_timestamp AT TIME ZONE 'UTC') NOT NULL
