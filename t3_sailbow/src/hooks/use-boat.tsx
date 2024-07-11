@@ -107,7 +107,6 @@ export const BoatContext = ({
   const { setBoat } = useGlobalActiveBoat();
 
   useEffect(() => {
-    console.log("setting global boat", value);
     setBoat(value);
   }, [setBoat, value]);
 

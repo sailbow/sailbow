@@ -1,7 +1,6 @@
 import { BoatNav } from "./boat-nav";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import BoatLayoutHeader from "./boat-layout-header";
-import ActiveBoatWrapper from "./active-boat-wrapper";
 import { api } from "@/trpc/server";
 import { BoatContext } from "@/hooks/use-boat";
 import NotFoundPage from "@/app/_components/not-found-page";
