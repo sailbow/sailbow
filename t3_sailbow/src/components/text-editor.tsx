@@ -5,6 +5,7 @@ import { type Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Toggle } from "./ui/toggle";
 import { Bold, Italic, List, ListOrdered, Heading } from "lucide-react";
+import { Card } from "./ui/card";
 
 interface TextEditorProps {
   text: string | null;
@@ -61,14 +62,9 @@ const TextEditorContent = ({
   className?: string | undefined;
 }) => {
   return (
-    <div
-      className={cn(
-        "flex-1 overflow-auto rounded-md border p-4 focus-within:border-input",
-        className,
-      )}
-    >
+    <Card className={cn("flex-1 p-4 focus-within:border-input", className)}>
       <EditorContent editor={editor} className="size-full" />
-    </div>
+    </Card>
   );
 };
 

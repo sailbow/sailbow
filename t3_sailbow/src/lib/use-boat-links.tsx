@@ -15,15 +15,14 @@ const getLinks = (boatId: number) => [
     href: `/dock/${boatId}`,
   },
   {
-    title: "Itinerary",
-
-    icon: ListChecks,
-    href: `/dock/${boatId}/itinerary`,
-  },
-  {
     title: "Crew",
     icon: UsersRound,
     href: `/dock/${boatId}/crew`,
+  },
+  {
+    title: "Itinerary",
+    icon: ListChecks,
+    href: `/dock/${boatId}/itinerary`,
   },
   {
     title: "Announcements",

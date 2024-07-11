@@ -41,7 +41,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NextTopLoader color="hsl(var(--primary))" />
+          <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
           <ClerkProvider
             appearance={{
               layout: {

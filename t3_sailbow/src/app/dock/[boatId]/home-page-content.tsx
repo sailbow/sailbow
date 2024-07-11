@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { useBoat } from "@/hooks/use-boat";
+import { useIsXs } from "@/hooks/use-media-query";
 import { api } from "@/trpc/react";
 import { Edit } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HomePageContent() {
   const { id: boatId, description, dispatch } = useBoat();
@@ -36,6 +37,8 @@ export default function HomePageContent() {
       toast.dismiss();
     },
   });
+
+  const isXs = useIsXs();
 
   const updateDescription = () => {
     toast.promise(mutateAsync({ boatId, description: descriptionText }), {
@@ -72,7 +75,7 @@ export default function HomePageContent() {
       ) : (
         <div className="flex w-full gap-2">
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => {
               setIsEditingDescription(true);

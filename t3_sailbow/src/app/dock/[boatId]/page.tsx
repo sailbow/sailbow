@@ -12,7 +12,7 @@ import {
 import HomePageContent from "./home-page-content";
 
 export default function Page() {
-  const { id, name, description, banner, dispatch } = useBoat();
+  const { id, name, banner, dispatch } = useBoat();
   const { mutate: updateBanner } = api.dock.editBoatBanner.useMutation();
   return (
     <BoatPageContainer>

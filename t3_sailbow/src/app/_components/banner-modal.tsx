@@ -48,14 +48,14 @@ export default function BannerModal(props: BannerModalProps) {
     switch (variant) {
       case "add":
         return (
-          <Button variant="ghost" size="sm">
+          <Button variant="outline" size="sm">
             <ImagePlus className="size-6 md:mr-2" />
             <span className="hidden md:inline-flex">Add a cover image</span>
           </Button>
         );
       case "edit":
         return (
-          <Button variant="ghost" size="sm">
+          <Button variant="outline" size="sm">
             <ImageIcon className="size-6 md:mr-2" />
             <span className="hidden md:inline-flex">Edit cover image</span>
           </Button>

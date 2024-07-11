@@ -23,10 +23,13 @@ export default async function Page() {
         </div>
         <Link
           href="/dock/new"
-          className={cn(buttonVariants({ size: "sm" }), "max-xs:rounded-full")}
+          className={cn(
+            buttonVariants({ size: "sm" }),
+            "max-xs:size-10 max-xs:rounded-full",
+          )}
         >
-          <Plus className="h-6 w-6" />
-          <span className="hidden xs:ml-2 xs:inline-flex">Create a boat</span>
+          <Plus className="h-6 w-6 xs:mr-2" />
+          <span className="hidden xs:inline-flex">Create a boat</span>
         </Link>
       </div>
       <div className="grid grid-cols-1 gap-6 overflow-hidden p-4 px-4 sm:grid-cols-2 lg:grid-cols-3">
