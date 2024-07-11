@@ -1,12 +1,13 @@
 import "@/app/styles/globals.css";
-import { cn } from "@/lib/utils";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Plus_Jakarta_Sans } from "next/font/google";
-import { TRPCReactProvider } from "@/trpc/react";
-import { Toaster } from "@/components/ui/toast";
-import { type Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toast";
 import { GlobalActiveBoatContext } from "@/hooks/use-boat";
+import { cn } from "@/lib/utils";
+import { TRPCReactProvider } from "@/trpc/react";
+import { ClerkProvider } from "@clerk/nextjs";
+import { type Metadata } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 
 const font = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -16,6 +17,9 @@ const font = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Sailbow",
   description: "Sailbow Web App",
+  icons: {
+    icon: "/sailbow.png",
+  },
 };
 
 export default function RootLayout({
@@ -37,6 +41,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <NextTopLoader color="hsl(var(--primary))" />
           <ClerkProvider
             appearance={{
               layout: {

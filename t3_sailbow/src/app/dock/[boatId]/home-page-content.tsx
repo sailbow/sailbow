@@ -76,7 +76,6 @@ export default function HomePageContent() {
             size="sm"
             onClick={() => {
               setIsEditingDescription(true);
-              editor.commands.focus(0);
             }}
           >
             <Edit className="mr-2 size-6" />

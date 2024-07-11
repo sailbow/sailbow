@@ -67,7 +67,7 @@ const TextEditorContent = ({
         className,
       )}
     >
-      <EditorContent editor={editor} className="size-full" autoFocus />
+      <EditorContent editor={editor} className="size-full" />
     </div>
   );
 };
