@@ -10,7 +10,7 @@ export default function Page() {
   return (
     <BoatPageContainer>
       <BoatPageHeader>
-        <BoatPageTitle>Announcements</BoatPageTitle>
+        <BoatPageTitle>Settings</BoatPageTitle>
       </BoatPageHeader>
       <BoatPageContent>
         <DeleteBoat />

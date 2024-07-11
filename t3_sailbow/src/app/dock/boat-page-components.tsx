@@ -34,7 +34,7 @@ const BoatPageTitle = React.forwardRef<
   <h1
     ref={ref}
     className={cn(
-      "inline-flex break-normal text-3xl leading-none tracking-tight",
+      "inline-flex break-normal text-3xl font-semibold leading-none tracking-tight",
       className,
     )}
     {...props}

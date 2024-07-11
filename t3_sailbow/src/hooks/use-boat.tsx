@@ -58,12 +58,14 @@ type SetActiveBoat = {
 type UpdateIsLoading = { type: "update-is-loading"; payload: boolean };
 type UpdateBanner = { type: "update-banner"; payload: BoatBanner | null };
 type AddCrewMember = { type: "add-crew-member"; payload: CrewMember };
+type UpdateDescription = { type: "update-description"; payload: string | null };
 
 type BoatActions =
   | SetActiveBoat
   | UpdateIsLoading
   | UpdateBanner
-  | AddCrewMember;
+  | AddCrewMember
+  | UpdateDescription;
 
 const boatReducer = (state: ActiveBoat, action: BoatActions): ActiveBoat => {
   switch (action.type) {
@@ -76,6 +78,11 @@ const boatReducer = (state: ActiveBoat, action: BoatActions): ActiveBoat => {
       return {
         ...state,
         crew: [...state.crew, action.payload],
+      };
+    case "update-description":
+      return {
+        ...state,
+        description: action.payload,
       };
     default:
       return state;

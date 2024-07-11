@@ -9,6 +9,7 @@ import {
   BoatPageHeader,
   BoatPageTitle,
 } from "../boat-page-components";
+import HomePageContent from "./home-page-content";
 
 export default function Page() {
   const { id, name, description, banner, dispatch } = useBoat();
@@ -32,7 +33,7 @@ export default function Page() {
         )}
       </BoatPageHeader>
       <BoatPageContent>
-        <p className="leading-8">{description}</p>
+        <HomePageContent />
       </BoatPageContent>
     </BoatPageContainer>
   );
