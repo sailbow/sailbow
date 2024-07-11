@@ -20,7 +20,7 @@ const FinalizeButton = withActionsGuard(Button);
 const GuardedIconButton = withActionsGuard(IconButton);
 
 export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: PropsWithChildren<Props<T>>) => {
-    const { id, name, mode, data, actionRequired, onOptionSave } = props;
+    const { id, name, mode, moduleOptions, actionRequired, onOptionSave } = props;
     const module = useMemo(() => ModulesMapper[name as ModuleType], [name]); // TODO: CHANGE NAME TO TYPE
     const [{ activeBoat }, { setModuleMode, removeModule, selectOption, saveModuleData, cancelOptionEdit }] = useBoat();
 
@@ -136,7 +136,7 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                             fontSize="2xl"
                             icon={<SbCloseIcon />}
                             onClick={() => {
-                                if (data.length) setModuleMode(id, ModuleMode.View);
+                                if (moduleOptions.length) setModuleMode(id, ModuleMode.View);
                                 else setModuleMode(id, ModuleMode.Edit);
                             }}
                             display={mode === ModuleMode.Settings || mode === ModuleMode.Edit ? 'flex' : 'none'}
@@ -154,7 +154,7 @@ export const BoatWidget = <T extends {}>({ children, settingsNode, ...props }: P
                                     cancelOptionEdit(id, oId);
                                 }}
                                 onSave={() => {
-                                    saveModuleData(id, data);
+                                    saveModuleData(id, moduleOptions);
                                 }}
                             />
                             {children}

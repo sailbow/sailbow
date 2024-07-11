@@ -255,7 +255,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                         loading: false,
                         dataLoaded: false,
                         mode: ModuleMode.View,
-                        data: [],
+                        moduleOptions: [],
                     });
                 });
 
@@ -318,11 +318,11 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             const moduleExt: ModuleExtended<any> = {
                 ...currentModule!,
                 ...module,
-                data: module.data.map((d) => ({ ...d, isEditing: false })),
+                moduleOptions: module.moduleOptions.map((d) => ({ ...d, isEditing: false })),
                 dataLoaded: true,
                 loading: false,
                 actionRequired: true,
-                mode: module.data.length ? ModuleMode.View : ModuleMode.Edit,
+                mode: module.moduleOptions.length ? ModuleMode.View : ModuleMode.Edit,
             };
 
             dispatch({
@@ -338,12 +338,12 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             const newId = `new-module-${new Date().getTime()}`;
 
             // TODO: UPDATE MODULE OBJECT INTERFACE
-            const module: Pick<Module<T>, 'name' | 'description' | 'settings' | 'order' | 'data'> & { type: string } = {
+            const module: Pick<Module<T>, 'name' | 'description' | 'settings' | 'order' | 'moduleOptions'> & { type: string } = {
                 name: moduleType,
                 type: moduleType,
                 order: 0,
                 description: '',
-                data: [],
+                moduleOptions: [],
                 settings: {
                     allowMultiple: true,
                     anonymousVoting: true,
@@ -354,6 +354,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             newBoat.modules.push({
                 ...module,
                 id: newId,
+                boatId: newBoat.id,
                 type: moduleType,
                 loading: true,
                 dataLoaded: true,
@@ -369,7 +370,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
                 },
             });
 
-            const response = await upsertModule(newBoat.id, module);
+            const response = await upsertModule(newBoat.id, { ...module, boatId: newBoat.id });
 
             const newModuleIdx = newBoat.modules.findIndex((m) => m.id === newId);
 
@@ -397,7 +398,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
             const dataPayload: Partial<ModuleData<T>>[] = [];
 
             module!.loading = true;
-            module!.data = data;
+            module!.moduleOptions = data;
 
             dispatch({
                 type: BoatActionType.SetModule,
@@ -421,6 +422,7 @@ export const useBoat = (): [BoatState, BoatActionApis] => {
 
             const response = await upsertModule(state.activeBoat!.id, {
                 id: module!.id,
+                boatId: state.activeBoat!.id,
                 data: dataPayload,
                 name: module!.name,
                 type: module!.name,

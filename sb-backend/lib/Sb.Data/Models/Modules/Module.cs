@@ -24,8 +24,7 @@ namespace Sb.Data.Models
         [JsonIgnore]
         public CrewMember? CreatedBy { get; set; }
 
-        [JsonIgnore]
-        public ICollection<ModuleOption> ModuleOptions { get; set; } = new List<ModuleOption>();
+        public List<ModuleOption> ModuleOptions { get; set; } = new List<ModuleOption>();
     }
 
     internal class ModuleEntityTypeConfiguration

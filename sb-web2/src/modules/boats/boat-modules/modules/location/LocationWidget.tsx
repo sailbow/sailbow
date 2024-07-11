@@ -7,17 +7,24 @@ import { ModuleData, ModuleExtended } from 'modules/boats/Boat.Types';
 import { LocationSettings } from 'modules/boats/boat-modules/modules/location/LocationSettings';
 import { LocationModuleDataType, getText } from 'modules/boats/boat-modules/modules/location/Location';
 import { BoatWidget } from 'modules/boats/common/boat-widget/BoatWidget';
+import { Input } from 'shared/input/Input';
 
 type DataType = ModuleData<LocationModuleDataType>;
 
 export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props) => {
-    const { id, settings, data, dataLoaded } = props;
-    const [widgetData, setWidgetData] = useState<DataType[]>(data);
+    const { id, settings, moduleOptions, dataLoaded } = props;
+    const [widgetData, setWidgetData] = useState<DataType[]>(moduleOptions);
     const [{ user }] = useAuthStore();
 
     const onDataChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
         const updatedWidgetData = [...widgetData];
-        // update here
+        const idx = updatedWidgetData.findIndex((w) => w.id === id);
+
+        if (idx !== -1) {
+            updatedWidgetData[idx][e.target.name as keyof LocationModuleDataType] = e.target.value;
+        }
+
         setWidgetData([...updatedWidgetData]);
     };
 
@@ -46,7 +53,21 @@ export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props
     };
 
     const getInputComponent: any = (optionId: string, data: DataType) => {
-        return <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }}></Flex>;
+        return (
+            <Flex w="100%" gap="4" flexDir={{ base: 'column', md: 'row' }}>
+                <Input
+                    onChange={onDataChange(optionId)}
+                    label="Address"
+                    name="address"
+                    placeholder="Enter an address"
+                    required
+                    autoFocus
+                    error={!!data.errors?.address}
+                    errorLabel={data.errors?.address}
+                    value={data.address ?? ''}
+                />
+            </Flex>
+        )
     };
 
     return (
@@ -65,6 +86,7 @@ export const LocationWidget: FC<ModuleExtended<LocationModuleDataType>> = (props
                     votes: [],
                     isEditing: true,
                     errors: {},
+                    address: ''
                 };
 
                 setWidgetData([...widgetData, newData]);

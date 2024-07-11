@@ -1,7 +1,7 @@
 import { ChangeEvent, FunctionComponent, useState, useCallback } from 'react';
 
 import { Box, Input, InputGroup, Image, Flex, Spinner, Text } from '@chakra-ui/react';
-import Gallery, { RenderImageProps } from 'react-photo-gallery';
+import { Gallery, ImageProps, ThumbnailImageProps, } from 'react-grid-gallery';
 
 import { useBoat } from 'modules/boats/Boat.Store';
 import { BannerType, Photo } from 'modules/boats/Boat.Types';
@@ -53,35 +53,30 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
         });
     };
 
-    const imageRenderer = useCallback(
-        (props: RenderImageProps): JSX.Element => {
-            const onSelect = () => {
-                setSelected(props.photo.src);
-                onChange(BannerType.Link, props.photo.src);
-            };
-
-            return (
-                <Box key={props.index} pos="relative" className="gallery-box">
+    const ImageComponent = (props: ThumbnailImageProps) => {
+        const onSelect = () => {
+            setSelected(props.imageProps.src);
+            onChange(BannerType.Link, props.imageProps.src);
+        };
+        return (
+            <Box key={props.index} pos="relative" className="gallery-box">
                     <Image
                         objectFit="cover"
                         borderRadius="md"
-                        src={props.photo.src}
+                        src={props.imageProps.src}
                         onClick={onSelect}
-                        height={props.photo.height}
-                        width={props.photo.width}
+                        height={props.height}
                         style={{ margin: '2px', display: 'block' }}
-                        className={`${selected === props.photo.src ? 'selected' : ''}`}
+                        className={`${selected === props.imageProps.src ? 'selected' : ''}`}
                     />
-                    {selected === props.photo.src && (
+                    {selected === props.imageProps.src && (
                         <Box className="check">
                             <SbCheckIcon />
                         </Box>
                     )}
                 </Box>
-            );
-        },
-        [selected, onChange],
-    );
+        )
+      };
 
     return (
         <Box className="sb-image-search">
@@ -108,7 +103,7 @@ export const ImageSearch: FunctionComponent<Props> = ({ onChange }) => {
                         <Spinner />
                     </Flex>
                 )}
-                <Gallery renderImage={imageRenderer} photos={images} />
+                <Gallery images={images} thumbnailImageComponent={ImageComponent} />
             </Box>
         </Box>
     );

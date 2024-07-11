@@ -1,4 +1,4 @@
-import { ModuleData } from 'modules/boats/Boat.Types';
+import { ModuleData, ModuleType } from 'modules/boats/Boat.Types';
 import { DateSettings } from 'modules/boats/boat-modules/modules/date/DateSettings';
 import { DateManifest } from 'modules/boats/boat-modules/modules/date/DateManifest';
 import { DateWidget } from 'modules/boats/boat-modules/modules/date/DateWidget';
@@ -11,29 +11,29 @@ export type DateModuleDataType = {
     endTime?: string;
 };
 
-export const formatDate = (inputDate: string) => {
-    return new Date(inputDate).toLocaleDateString('en-us', {
+export const formatDate = (inputDate: Date) => {
+    return inputDate.toLocaleString('en-us', {
         weekday: 'short',
         year: 'numeric',
         month: 'short',
         day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
     });
 };
 
-export const getText = (data: ModuleData<DateModuleDataType>) => {
-    let startDate = formatDate(data.startDate);
-    let endDate = data.endDate ? formatDate(data.endDate) : null;
-    let time = '';
+export const getText = (data: DateModuleDataType) => {
+    const startDate: Date = new Date(data.startDate);
+    const endDate: Date | null = data.endDate ? new Date(data.endDate) : null;
+    let text = '';
 
-    if (data.startTime && data.endTime) {
-        time = ` from ${data.startTime} - ${data.endTime}`;
-    } else if (data.startTime && !data.endTime) {
-        time = ` from ${data.startTime} `;
-    } else if (!data.startTime && data.endTime) {
-        time = ` ending at ${data.endTime}`;
+    if (startDate && endDate) {
+        text = `${formatDate(startDate)} - ${formatDate(endDate)}`;
+    } else {
+        text = `${formatDate(startDate)}`;
     }
 
-    return `${startDate}${endDate ? ` - ${endDate}` : ''} ${time}`;
+    return text;
 };
 
 export const DateModule = {

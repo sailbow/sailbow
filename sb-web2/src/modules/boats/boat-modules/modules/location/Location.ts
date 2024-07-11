@@ -4,11 +4,12 @@ import { LocationManifest } from 'modules/boats/boat-modules/modules/location/Lo
 import { LocationWidget } from 'modules/boats/boat-modules/modules/location/LocationWidget';
 import { SbLocationIcon, ModuleLocationImage } from 'shared/icons/Icons';
 
-export type LocationModuleDataType = {};
+export type LocationModuleDataType = {
+    address: string;
+};
 
 export const getText = (data: ModuleData<LocationModuleDataType>) => {
-    // getText function here
-    return '';
+    return data.address;
 };
 
 export const LocationModule = {

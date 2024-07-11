@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-        "@chakra-ui/react": "^2.3.2",
+        "@chakra-ui/react": "^2.8.2",
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
         "@testing-library/jest-dom": "^5.16.5",
@@ -17,8 +17,8 @@
         "lucide-react": "^0.88.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-grid-gallery": "^1.0.1-alpha.0",
         "react-icons": "^4.4.0",
-        "react-photo-gallery": "^8.0.0",
         "react-router-dom": "^6.3.0",
         "react-scripts": "5.0.1",
         "react-select": "^5.4.0",

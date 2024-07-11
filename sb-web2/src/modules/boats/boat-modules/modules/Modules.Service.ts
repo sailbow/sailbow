@@ -7,23 +7,23 @@ import { ModuleDataType } from './Modules';
 
 type ModuleEndpointLabels = 'Add' | 'Upsert' | 'Get';
 export const ModuleEndpoints: Record<ModuleEndpointLabels, EndpointFunction> = {
-    Add: ({ boatId, module }) => ({
+    Add: ({ module }) => ({
         method: 'POST',
-        url: `api/boats/${boatId}/modules`,
+        url: `api/modules`,
         data: {
             ...module,
         },
     }),
-    Upsert: ({ boatId, module }) => ({
-        method: 'PUT',
-        url: `api/boats/${boatId}/modules`,
+    Upsert: ({ module }) => ({
+        method: 'POST',
+        url: `api/modules`,
         data: {
             ...module,
         },
     }),
-    Get: ({ boatId, moduleId }) => ({
+    Get: ({ moduleId }) => ({
         method: 'GET',
-        url: `api/boats/${boatId}/modules/${moduleId}`,
+        url: `api/modules/${moduleId}`,
     }),
 };
 
@@ -37,6 +37,7 @@ export const upsertModule = async (
     boatId: string,
     module: Pick<Module<any>, 'name' | 'description' | 'settings' | 'order'> & {
         id?: string;
+        boatId: string;
         data?: ModuleData<any>[];
         type: string;
     },
@@ -52,6 +53,11 @@ export const upsertModule = async (
 
 export const getModule = async (boatId: string, moduleId: string) => {
     const { data }: AxiosResponse<ModuleExtended<any>> = await Http(ModuleEndpoints.Get({ boatId, moduleId }));
-
+    data.moduleOptions = data.moduleOptions.map(mo => {
+        return {
+            ...mo,
+            ...mo.data,
+        }
+    });
     return data;
 };
