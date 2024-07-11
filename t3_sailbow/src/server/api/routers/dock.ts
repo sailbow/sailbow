@@ -36,7 +36,7 @@ export const dockRouter = createTRPCRouter({
         });
         crew.push({ boatId, userId: ctx.auth.userId, role: "captain", email: ctx.auth.primaryEmail });
         await tx.insert(crewMembers).values(crew);
-        revalidatePath("/dock");
+        revalidatePath("/dock", "page");
         return { boatId }
       })
       
