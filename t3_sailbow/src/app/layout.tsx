@@ -5,7 +5,7 @@ import { GlobalActiveBoatContext } from "@/hooks/use-boat";
 import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
 import { ClerkProvider } from "@clerk/nextjs";
-import { type Metadata } from "next";
+import { type Metadata, type Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 
@@ -20,6 +20,13 @@ export const metadata: Metadata = {
   icons: {
     icon: "/sailbow.png",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
