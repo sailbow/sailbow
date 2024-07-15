@@ -16,7 +16,9 @@
     "email:dev": "email dev"
   },
   "dependencies": {
+    "@auth/core": "^0.34.1",
     "@clerk/nextjs": "^4.29.9",
+    "@convex-dev/auth": "^0.0.36",
     "@hookform/resolvers": "^3.3.4",
     "@neondatabase/serverless": "^0.9.0",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
@@ -48,6 +50,7 @@
     "@trpc/server": "^10.45.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "convex": "^1.13.0",
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1",
     "lucide-react": "^0.356.0",
