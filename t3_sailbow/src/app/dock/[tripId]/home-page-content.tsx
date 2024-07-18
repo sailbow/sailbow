@@ -7,7 +7,6 @@ import {
 } from "@/components/text-editor";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "@/components/ui/toast";
 import { useBoat } from "@/hooks/use-boat";
 import { api } from "@convex/_generated/api";
 import { useMutation } from "convex/react";
