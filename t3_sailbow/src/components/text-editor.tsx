@@ -1,11 +1,13 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { type Editor, EditorContent, useEditor } from "@tiptap/react";
+import { type Editor, EditorContent, Extension, useEditor } from "@tiptap/react";
+import Placeholder, { type PlaceholderOptions} from "@tiptap/extension-placeholder";
 import StarterKit from "@tiptap/starter-kit";
 import { Toggle } from "./ui/toggle";
 import { Bold, Italic, List, ListOrdered, Heading } from "lucide-react";
 import { Card } from "./ui/card";
+import { Textarea } from "./ui/textarea";
 
 interface TextEditorProps {
   text: string | null;
@@ -38,6 +40,10 @@ const useTextEditor = ({ text, isEditing, onTextChange }: TextEditorProps) => {
             },
           },
         }),
+        Placeholder.configure({
+          placeholder: "A description of your trip...",
+          emptyEditorClass: "cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-0 before:left-0 before:text-mauve-11 before:opacity-50 before-pointer-events-none",
+        })
       ],
       content: text,
       onUpdate: ({ editor }) => {
@@ -46,8 +52,9 @@ const useTextEditor = ({ text, isEditing, onTextChange }: TextEditorProps) => {
       editable: isEditing,
       editorProps: {
         attributes: {
-          class: "size-full prose-sm prose-p:my-1 focus:outline-none",
+          class: "prose prose-sm m-4 prose-p:my-0 focus:outline-none",
         },
+        
       },
     },
     [isEditing],
@@ -62,8 +69,8 @@ const TextEditorContent = ({
   className?: string | undefined;
 }) => {
   return (
-    <Card className={cn("flex-1 p-4 focus-within:border-input", className)}>
-      <EditorContent editor={editor} className="size-full" />
+    <Card className="flex flex-col relative size-full overflow-auto">
+      <EditorContent editor={editor} className="relative size-full rounded-lg" />
     </Card>
   );
 };

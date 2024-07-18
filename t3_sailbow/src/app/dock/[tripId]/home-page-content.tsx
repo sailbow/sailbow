@@ -9,12 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { useBoat } from "@/hooks/use-boat";
-import { api } from "@/trpc/react";
+import { api } from "@convex/_generated/api";
+import { useMutation } from "convex/react";
 import { Edit } from "lucide-react";
 import { useState } from "react";
 
 export default function HomePageContent() {
-  const { _id: boatId, description, dispatch } = useBoat();
+  const { _id, description } = useBoat();
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [descriptionText, setDescriptionText] = useState(description);
   const editor = useTextEditor({
@@ -23,33 +24,16 @@ export default function HomePageContent() {
     onTextChange: setDescriptionText,
   });
 
-  const { mutateAsync } = api.dock.editBoatDescription.useMutation({
-    onMutate: (data) => {
-      // dispatch({
-      //   type: "update-description",
-      //   payload: data.description,
-      // });
-      setIsEditingDescription(false);
-    },
-    onError: (err) => {
-      console.error(err);
-      toast.dismiss();
-    },
-  });
-
-  const updateDescription = () => {
-    // toast.promise(mutateAsync({ boatId, description: descriptionText }), {
-    //   loading: "Saving description...",
-    //   success: "Successfully saved description!",
-    //   error:
-    //     "Something went wrong saving the description, please try again later",
-    // });
-  };
+  const updateTripDescription = useMutation(api.trips.mutations.updateTripDescription);
+  const updateDescription = async () => {
+    setIsEditingDescription(false);
+    await updateTripDescription({ tripId: _id, description: descriptionText});
+  }
   if (!editor) {
     return <Skeleton className="size-full bg-slate-300" />;
   }
   return (
-    <div className="flex h-full flex-col gap-2">
+    <div className="size-full flex flex-col gap-2">
       {isEditingDescription ? (
         <div className="flex w-full gap-2">
           <TextEditorToolbar editor={editor} />
@@ -83,7 +67,7 @@ export default function HomePageContent() {
           </Button>
         </div>
       )}
-      <TextEditorContent editor={editor} className="flex-1" />
+      <TextEditorContent editor={editor} />
     </div>
   );
 }

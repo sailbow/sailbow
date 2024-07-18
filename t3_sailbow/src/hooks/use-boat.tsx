@@ -8,10 +8,8 @@ import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { type FunctionReturnType } from "convex/server";
 import React, {
   createContext,
-  useReducer,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 

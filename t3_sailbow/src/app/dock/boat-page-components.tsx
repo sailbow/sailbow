@@ -7,7 +7,7 @@ const BoatPageContainer = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex size-full flex-col space-y-2 sm:container", className)}
+    className={cn("flex size-full flex-col space-y-2 sm:container relative", className)}
     {...props}
   />
 ));
@@ -20,7 +20,7 @@ const BoatPageHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex min-h-10 w-full gap-4", className)}
+    className={cn("flex min-h-10 w-full gap-4 relative", className)}
     {...props}
   />
 ));
@@ -47,7 +47,7 @@ const BoatPageContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex-1", className)} {...props} />
+  <div ref={ref} className={cn("grow overflow-hidden relative", className)} {...props} />
 ));
 
 BoatPageContent.displayName = "BoatPageContent";

@@ -8,9 +8,7 @@ import {
 import InviteCrewMember from "../invite";
 import { CrewTable } from "./crew-table";
 import { api } from "@convex/_generated/api";
-import { preloadQuery } from "convex/nextjs";
-import { auth } from "@clerk/nextjs/server";
-import { preloadProtectedQuery } from "@/lib/convex-helpers";
+import { preloadProtectedQuery } from "@/lib/convex-server-helpers";
 
 export default async function Page({
   params,

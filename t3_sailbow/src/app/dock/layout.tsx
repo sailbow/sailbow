@@ -4,7 +4,6 @@ import { Navbar } from "../_components/nav-bar";
 import ConvexAuthenticated from "./convex-authenticated";
 import { AuthLoading } from "convex/react";
 import CenteredSpinner from "../_components/centered-spinner";
-// import { Authenticated } from "convex/react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

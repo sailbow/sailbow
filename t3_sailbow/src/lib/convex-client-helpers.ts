@@ -9,7 +9,7 @@ export function useConvexQuery<Query extends FunctionReference<"query">>(query: 
 
     const result = useMemo(() => {
         return {
-            isLoading: data !== undefined,
+            isLoading: data === undefined,
             data: data ?? null
         }
     }, [data]);
