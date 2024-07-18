@@ -34,39 +34,35 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { useMutation } from "convex/react";
+import { api as convexApi } from "@convex/_generated/api";
 
 export function CreateBoatForm() {
   const router = useRouter();
-  const { mutateAsync, isLoading, isSuccess } = api.dock.createBoat.useMutation(
-    {
-      onError: () => {
-        toast.dismiss();
-        toast.error("Oops!", {
-          description: "Something went wrong, please try again later",
-        });
-      },
-    },
-  );
+  const createBoat = useMutation(convexApi.trips.mutations.createTrip);
   const [banner, setBanner] = useState<BoatBanner | null>(null);
-
+  const [isCreating, setIsCreating] = useState(false);
   const form = useForm<CreateBoat>({
     resolver: zodResolver(createBoatSchema),
     defaultValues: {
       banner: null,
       name: "",
       description: "",
-      crewInvites: [],
+      // crewInvites: [],
     },
   });
 
-  function onSubmit(values: CreateBoat) {
-    toast.promise(mutateAsync(values), {
-      loading: "Creating boat...",
-      success: (data) => {
-        router.push(`/dock/${data.boatId}`);
-        return "success";
-      },
-    });
+  async function onSubmit(values: CreateBoat) {
+    setIsCreating(true);
+    try {
+      const result = await createBoat(values);
+      router.push(`/dock/${result.tripId}`);
+      toast.success("Success!");
+    } catch {
+      toast.error("Something went wrong, please try again later");
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   return (
@@ -118,14 +114,14 @@ export function CreateBoatForm() {
             </div>
           </CardContent>
           <CardFooter className="space-x-4">
-            <Button type="submit" size="lg" disabled={isLoading || isSuccess}>
+            <Button type="submit" size="lg" disabled={isCreating}>
               Create
             </Button>
             <Button
               type="button"
               size="lg"
               variant="secondary"
-              disabled={isLoading || isSuccess}
+              disabled={isCreating}
               asChild
             >
               <Link href="/dock">Cancel</Link>

@@ -1,22 +1,20 @@
 "use client";
 
 import Link from "next/link";
-
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import { type Route } from "next";
-import { useRequiredBoatLinks } from "@/lib/use-boat-links";
+import { useRequiredTripLinks } from "@/lib/use-boat-links";
 
 export function BoatNav() {
   const path = usePathname();
-  const links = useRequiredBoatLinks();
+  const links = useRequiredTripLinks();
   return (
     <nav className="hidden gap-4 sm:flex sm:flex-col">
       {links.map((link, index) => (
         <Link
           key={index}
-          href={link.href as Route}
+          href={link.href}
           className={cn(
             buttonVariants({ variant: "ghost", size: "sm" }),
             path === link.href && "bg-accent text-accent-foreground",

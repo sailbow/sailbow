@@ -8,7 +8,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
-import { api } from "@/trpc/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useBoat, type ActiveBoat } from "@/hooks/use-boat";
@@ -23,51 +22,71 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { roleValueToDisplay } from "./invite";
+import { Id } from "@convex/_generated/dataModel";
+import { useMutation } from "convex/react";
+import { api } from "@convex/_generated/api";
+import { useState } from "react";
+import { FunctionReturnType } from "convex/server";
+import { SbError } from "@convex/errorUtils";
+import { ConvexError } from "convex/values";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   role: z.enum(["firstMate", "crewMember"]),
-  boatId: z.number().min(1),
+  tripId: z.custom<Id<"trips">>(),
 });
 
 interface InviteFormProps {
+  tripId: Id<"trips">;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-export default function InviteForm({ onSuccess, onCancel }: InviteFormProps) {
-  const activeBoat = useBoat();
-  const { isLoading, mutateAsync: inviteCrewMember } =
-    api.crew.inviteCrewMember.useMutation({
-      onError: (error) => {
-        console.error(error);
-        const message =
-          error.data?.code === "BAD_REQUEST"
-            ? error.message
-            : "Something went wrong sending an invitation, please try again later.";
-        toast.dismiss();
-        toast.warning(message);
-      },
-    });
+export default function InviteForm({
+  tripId,
+  onSuccess,
+  onCancel,
+}: InviteFormProps) {
+  // const { isLoading, mutateAsync: inviteCrewMember } =
+  //   api.crew.inviteCrewMember.useMutation({
+  //     onError: (error) => {
+  //       console.error(error);
+  //       const message =
+  //         error.data?.code === "BAD_REQUEST"
+  //           ? error.message
+  //           : "Something went wrong sending an invitation, please try again later.";
+  //       toast.dismiss();
+  //       toast.warning(message);
+  //     },
+  //   });
 
+  const [inviting, setInviting] = useState(false);
+
+  const inviteCrewMember = useMutation(api.trips.mutations.inviteCrewMember);
   const defaultValues: z.infer<typeof formSchema> = {
     email: "",
     role: "crewMember",
-    boatId: activeBoat.id,
+    tripId: tripId,
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
   });
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    toast.promise(inviteCrewMember(values), {
-      loading: "Sending...",
-      success: () => {
-        onSuccess();
-        return "The invitation has been sent!";
-      },
-    });
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    setInviting(true);
+    try {
+      await inviteCrewMember(values);
+      onSuccess();
+      toast.success("Success!");
+    } catch (err) {
+      if (err instanceof ConvexError && err.data.code == "USER_ERROR") {
+        toast.dismiss();
+        toast.error(err.data.message as string);
+      }
+    } finally {
+      setInviting(false);
+    }
   };
 
   return (
@@ -86,7 +105,11 @@ export default function InviteForm({ onSuccess, onCancel }: InviteFormProps) {
                 <FormMessage className="text-xs" />
               </div>
               <FormControl>
-                <Input placeholder="email@example.com" {...field} />
+                <Input
+                  placeholder="email@example.com"
+                  {...field}
+                  onChange={field.onChange}
+                />
               </FormControl>
             </FormItem>
           )}
@@ -119,12 +142,12 @@ export default function InviteForm({ onSuccess, onCancel }: InviteFormProps) {
           <Button
             type="button"
             variant="secondary"
-            disabled={isLoading}
             onClick={onCancel}
+            disabled={inviting}
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={inviting}>
             Send
           </Button>
         </div>

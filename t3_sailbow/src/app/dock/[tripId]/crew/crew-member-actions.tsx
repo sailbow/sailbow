@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { type CrewMember } from "@/lib/common-types";
+import { type Doc } from "@convex/_generated/dataModel";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -18,7 +18,7 @@ interface DataTableRowActionsProps<TData> {
 
 export function CrewMemberActions({
   row,
-}: DataTableRowActionsProps<CrewMember>) {
+}: DataTableRowActionsProps<Doc<"crews">>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

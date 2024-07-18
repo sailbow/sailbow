@@ -1,12 +1,18 @@
 import { UserDropdown } from "./user-dropdown";
 import NotificationsDropdown from "./notifications-dropdown";
 import Crumbs from "./crumbs";
-import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut } from "@clerk/nextjs";
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+} from "@clerk/nextjs";
 import Image from "next/image";
 import { Spinner } from "./spinner";
 import Sidebar from "./side-bar";
 import BoatSearch from "./boat-search";
-import SignInButton from "./sign-in-button";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   return (
@@ -41,7 +47,9 @@ export function Navbar() {
             <UserDropdown />
           </SignedIn>
           <SignedOut>
-            <SignInButton />
+            <SignInButton mode="modal" signUpFallbackRedirectUrl={"/dock"}>
+              <Button>Sign In</Button>
+            </SignInButton>
           </SignedOut>
         </ClerkLoaded>
       </div>

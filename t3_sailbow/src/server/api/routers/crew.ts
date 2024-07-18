@@ -30,7 +30,7 @@ export const crewRouter = createTRPCRouter({
           message: `User with email '${input.email}' has already been invited!`,
         });
       }
-      const users = (await clerkClient.users.getUserList({
+      const { data: users } = (await clerkClient.users.getUserList({
         emailAddress: [ input.email ]
       }));
       
@@ -62,7 +62,7 @@ export const crewRouter = createTRPCRouter({
     }))
     .output(z.array(crewMemberSchema))
     .query(async ({ input, ctx }) => {
-      const users: User[] = await clerkClient.users.getUserList({
+      const { data: users}: { data: User[]} = await clerkClient.users.getUserList({
         emailAddress: ctx.boat.crew.map(cm => cm.email),
         limit: input.perPage,
         offset: (input.page - 1) * input.perPage

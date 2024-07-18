@@ -1,9 +1,17 @@
-import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+} from "@clerk/nextjs";
+import { Spinner } from "./_components/spinner";
+import Link from "next/link";
 
-export default async function Home() {
+export default function Home() {
   return (
     <div className="h-screen bg-gradient-to-b from-primary/95 to-teal-100">
       <div className="relative isolate px-6 pt-14 lg:px-8">
@@ -28,12 +36,25 @@ export default async function Home() {
               The easiest way to plan your next group trip
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link href="/dock">
-                <Button size="lg">
-                  Get Started
-                  <ArrowRight className="ml-2 size-6" />
-                </Button>
-              </Link>
+              <ClerkLoading>
+                <Spinner />
+              </ClerkLoading>
+              <ClerkLoaded>
+                <SignedIn>
+                  <Link href="/dock" className={buttonVariants({ size: "lg" })}>
+                    My trips
+                    <ArrowRight className="ml-2 size-6" />
+                  </Link>
+                </SignedIn>
+                <SignedOut>
+                  <SignInButton forceRedirectUrl={"/dock"}>
+                    <Button size="lg">
+                      Get Started
+                      <ArrowRight className="ml-2 size-6" />
+                    </Button>
+                  </SignInButton>
+                </SignedOut>
+              </ClerkLoaded>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ import { z, ZodError } from "zod";
 import { eq } from "drizzle-orm";
 import { db } from "@/server/db";
 import { boats } from "../db/schema";
-import { auth, } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { type CrewMember } from "@/lib/common-types";
 
 /**
@@ -80,14 +80,14 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 const authMiddleware = t.middleware(async ({ next, ctx }) => {
-  if (!ctx.auth.userId || !ctx.auth.sessionClaims.email) {
+  console.log(ctx.auth);
+  if (!ctx.auth.userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
   return next({
     ctx: {
       auth: {
-        ...ctx.auth,
-        primaryEmail: ctx.auth.sessionClaims.email
+        ...ctx.auth
       }
     },
   })
@@ -112,7 +112,7 @@ export const protectedBoatMiddleware = authMiddleware.unstable_pipe(async ({ nex
 
   if (!boat.crew.some(cm =>
       cm.userId === ctx.auth.userId || 
-      ctx.auth.user?.emailAddresses.some(e => e.emailAddress === cm.email))) {
+      cm.email === ctx.auth.sessionClaims.email)) {
       throw new TRPCError({ code: 'UNAUTHORIZED'})
   }
   return next({

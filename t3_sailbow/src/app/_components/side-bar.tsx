@@ -16,13 +16,13 @@ import { Anchor, Home, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import ImageWithLoader from "./image-with-loader";
 import { type Route } from "next";
-import { useBoatLinks } from "@/lib/use-boat-links";
+import { useTripLinks } from "@/lib/use-boat-links";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const links = useBoatLinks();
+  const links = useTripLinks();
   const { boat } = useGlobalActiveBoat();
   const path = usePathname();
 

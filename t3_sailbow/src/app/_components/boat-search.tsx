@@ -46,7 +46,10 @@ export default function BoatSearch() {
     setSearchTerm(e.target.value);
   };
 
-  if (!boat || path.endsWith("/dock")) return;
+  if (boat === null || path.endsWith("/dock")) {
+    console.log(boat);
+    return;
+  }
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>

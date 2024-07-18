@@ -2,8 +2,10 @@
 import { type CrewMember } from "@/lib/common-types";
 import { type Boat } from "@/lib/schemas/boat";
 import { type BoatBanner } from "@/server/db/schema";
-import { api } from "@/trpc/react";
-import { useParams } from "next/navigation";
+import { type api } from "@convex/_generated/api";
+import { type Id, type Doc } from "convex/_generated/dataModel";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
+import { type FunctionReturnType } from "convex/server";
 import React, {
   createContext,
   useReducer,
@@ -13,10 +15,9 @@ import React, {
   useState,
 } from "react";
 
-export type ActiveBoat = Boat & {
-  crew: CrewMember[];
-  captain?: CrewMember | undefined;
-};
+export type ActiveBoat = FunctionReturnType<
+  typeof api.trips.queries.getTripById
+>;
 
 type ActiveBoatContextProps = {
   children: React.ReactNode;
@@ -32,14 +33,12 @@ interface GlobalActiveBoatContext {
 }
 
 const initialState: BoatContext = {
-  id: -1,
+  _id: "" as Id<"trips">,
   name: "",
   slug: "",
   description: "",
   banner: null,
-  captainUserId: "",
-  crew: [],
-  createdOn: new Date(1970, 1),
+  _creationTime: 0,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispatch: () => {},
 };
@@ -58,7 +57,7 @@ type SetActiveBoat = {
 type UpdateIsLoading = { type: "update-is-loading"; payload: boolean };
 type UpdateBanner = { type: "update-banner"; payload: BoatBanner | null };
 type AddCrewMember = { type: "add-crew-member"; payload: CrewMember };
-type UpdateDescription = { type: "update-description"; payload: string | null };
+type UpdateDescription = { type: "update-description"; payload: string };
 
 type BoatActions =
   | SetActiveBoat
@@ -73,11 +72,11 @@ const boatReducer = (state: ActiveBoat, action: BoatActions): ActiveBoat => {
       return {
         ...state,
         banner: action.payload,
-      };
+      } as Doc<"trips">;
     case "add-crew-member":
       return {
         ...state,
-        crew: [...state.crew, action.payload],
+        // crew: state.crew ? [action.payload],
       };
     case "update-description":
       return {
@@ -94,9 +93,10 @@ export const BoatContext = ({
   initialBoat,
 }: {
   children: React.ReactNode;
-  initialBoat: ActiveBoat;
+  initialBoat: Preloaded<typeof api.trips.queries.getTripById>;
 }) => {
-  const [state, dispatch] = useReducer(boatReducer, initialBoat);
+  const initial = usePreloadedQuery(initialBoat);
+  const [state, dispatch] = useReducer(boatReducer, initial);
   const value = useMemo(() => {
     return {
       ...state,
@@ -117,6 +117,9 @@ export const GlobalActiveBoatContext = ({
   children,
 }: ActiveBoatContextProps) => {
   const [boat, setBoat] = useState<ActiveBoat | null>(null);
+  useEffect(() => {
+    console.log(boat);
+  }, [boat]);
   return (
     <globalActiveBoatContext.Provider value={{ boat, setBoat }}>
       {children}

@@ -4,10 +4,12 @@ import { Toaster } from "@/components/ui/toast";
 import { GlobalActiveBoatContext } from "@/hooks/use-boat";
 import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
-import { ClerkProvider } from "@clerk/nextjs";
 import { type Metadata, type Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import { ConvexClientProvider } from "@/ConvexProvider";
+import { ClerkProvider } from "@clerk/nextjs";
+import { env } from "@/env";
 
 const font = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -36,38 +38,50 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "h-screen w-screen bg-background font-sans antialiased",
-          font.variable,
-        )}
+      <ClerkProvider
+        publishableKey={env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        signInUrl={env.NEXT_PUBLIC_CLERK_SIGN_IN_URL}
+        signUpUrl={env.NEXT_PUBLIC_CLERK_SIGN_UP_URL}
+        signInFallbackRedirectUrl={
+          env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
+        }
+        signUpFallbackRedirectUrl={
+          env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
+        }
+        appearance={{
+          layout: {
+            shimmer: true,
+          },
+          userButton: {
+            elements: {
+              avatarImage: "border-primary border-3",
+            },
+          },
+        }}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
-          <ClerkProvider
-            appearance={{
-              layout: {
-                shimmer: true,
-              },
-              userButton: {
-                elements: {
-                  avatarImage: "border-primary border-3",
-                },
-              },
-            }}
+        <ConvexClientProvider>
+          <body
+            className={cn(
+              "h-screen w-screen bg-background font-sans antialiased",
+              font.variable,
+            )}
           >
-            <TRPCReactProvider>
-              <GlobalActiveBoatContext>{children}</GlobalActiveBoatContext>
-              <Toaster richColors={true} />
-            </TRPCReactProvider>
-          </ClerkProvider>
-        </ThemeProvider>
-      </body>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
+
+              <TRPCReactProvider>
+                <GlobalActiveBoatContext>{children}</GlobalActiveBoatContext>
+                <Toaster richColors={true} />
+              </TRPCReactProvider>
+            </ThemeProvider>
+          </body>
+        </ConvexClientProvider>
+      </ClerkProvider>
     </html>
   );
 }

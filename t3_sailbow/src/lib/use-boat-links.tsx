@@ -8,41 +8,41 @@ import {
   UsersRound,
 } from "lucide-react";
 
-const getLinks = (boatId: number) => [
+const getLinks = (tripId: string) => [
   {
     title: "Overview",
     icon: Home,
-    href: `/dock/${boatId}`,
+    href: `/dock/${tripId}`,
   },
   {
     title: "Crew",
     icon: UsersRound,
-    href: `/dock/${boatId}/crew`,
+    href: `/dock/${tripId}/crew`,
   },
   {
     title: "Itinerary",
     icon: ListChecks,
-    href: `/dock/${boatId}/itinerary`,
+    href: `/dock/${tripId}/itinerary`,
   },
   {
     title: "Announcements",
     icon: Megaphone,
-    href: `/dock/${boatId}/announcements`,
+    href: `/dock/${tripId}/announcements`,
   },
   {
     title: "Settings",
     icon: Settings,
-    href: `/dock/${boatId}/settings`,
+    href: `/dock/${tripId}/settings`,
   },
 ];
-export const useBoatLinks = () => {
+export const useTripLinks = () => {
   const { boat } = useGlobalActiveBoat();
   if (!boat) return;
 
-  return getLinks(boat.id);
+  return getLinks(boat._id);
 };
 
-export const useRequiredBoatLinks = () => {
-  const { id } = useBoat();
-  return getLinks(id);
+export const useRequiredTripLinks = () => {
+  const { _id } = useBoat();
+  return getLinks(_id);
 };

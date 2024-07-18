@@ -6,7 +6,7 @@ import { type BoatBanner } from "@/lib/schemas/boat";
 import { api } from "@/trpc/react";
 
 export default function BoatLayoutHeader() {
-  const { id, banner, dispatch } = useBoat();
+  const { _id, banner, dispatch } = useBoat();
   const { mutate } = api.dock.editBoatBanner.useMutation({
     onMutate: (data) => {
       dispatch({
@@ -18,7 +18,7 @@ export default function BoatLayoutHeader() {
 
   const updateBanner = (newBanner: BoatBanner) => {
     if (!banner && !newBanner) return;
-    mutate({ banner: newBanner, boatId: id });
+    // mutate({ banner: newBanner, boatId: id });
   };
 
   if (!banner) return;

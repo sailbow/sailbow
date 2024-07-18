@@ -23,7 +23,7 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import { useBoat } from "@/hooks/use-boat";
 
 export default function DeleteBoat() {
-  const { id: boatId } = useBoat();
+  const { _id } = useBoat();
   const router = useRouter();
   const { mutateAsync: deleteBoatById, isLoading: isDeletingBoat } =
     api.dock.deleteBoatById.useMutation({
@@ -38,14 +38,14 @@ export default function DeleteBoat() {
     });
 
   const deleteBoat = async () => {
-    toast.promise(deleteBoatById({ boatId: boatId }), {
-      loading: "Deleting...",
-      success: () => {
-        router.push("/dock");
-        router.refresh();
-        return "Success!";
-      },
-    });
+    // toast.promise(deleteBoatById({ boatId: _id }), {
+    //   loading: "Deleting...",
+    //   success: () => {
+    //     router.push("/dock");
+    //     router.refresh();
+    //     return "Success!";
+    //   },
+    // });
   };
 
   return (

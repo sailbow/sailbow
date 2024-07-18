@@ -1,20 +1,17 @@
-import BoatCard from "../_components/boat-card";
-import { api } from "@/trpc/server";
+"use client";
+import TripCard from "../_components/trip-card";
 import ErrorPage from "../_components/error-page";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useQuery } from "convex/react";
+import { api } from "@convex/_generated/api";
+import CenteredSpinner from "../_components/centered-spinner";
 
-export default async function Page() {
-  let boats;
-  try {
-    boats = await api.dock.getBoats.query();
-  } catch (err) {
-    console.error(err);
-    return <ErrorPage />;
-  }
-
+export default function Page() {
+  const trips = useQuery(api.trips.queries.getUserTrips);
+  if (trips === undefined) return <CenteredSpinner />;
   return (
     <div className="relative mx-auto h-full max-w-6xl overflow-y-auto xs:container">
       <div className="container sticky top-0 z-10 flex items-center justify-between bg-background p-4">
@@ -33,9 +30,12 @@ export default async function Page() {
         </Link>
       </div>
       <div className="grid grid-cols-1 gap-6 overflow-hidden p-4 px-4 sm:grid-cols-2 lg:grid-cols-3">
-        {boats.map((boat) => {
-          return <BoatCard key={boat.id} boat={boat} />;
-        })}
+        {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          trips.map((boat) => {
+            return <TripCard key={boat?._id} trip={boat} />;
+          })
+        }
       </div>
     </div>
   );

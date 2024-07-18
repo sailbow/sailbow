@@ -20,12 +20,12 @@ export default function Crumbs() {
   const [showBoatSearch, setShowBoatSearch] = useState(false);
 
   useEffect(() => {
-    setShowBoatSearch(!!boat && Object.keys(params).includes("boatId"));
+    setShowBoatSearch(!!boat && Object.keys(params).includes("tripId"));
   }, [boat, params]);
 
   return (
     <Breadcrumb>
-      <BreadcrumbList className="w-full flex-nowrap gap-1 whitespace-nowrap sm:gap-1">
+      <BreadcrumbList className="flex-nowrap gap-1 whitespace-nowrap sm:gap-1">
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Button variant="ghost" size="sm" asChild>
