@@ -1,7 +1,7 @@
 import "@/app/styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toast";
-import { GlobalActiveBoatContext } from "@/hooks/use-boat";
+import { GlobalActiveTripContext } from "@/hooks/use-boat";
 import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
 import { type Metadata, type Viewport } from "next";
@@ -75,7 +75,7 @@ export default function RootLayout({
               <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
 
               <TRPCReactProvider>
-                <GlobalActiveBoatContext>{children}</GlobalActiveBoatContext>
+                <GlobalActiveTripContext>{children}</GlobalActiveTripContext>
                 <Toaster richColors={true} />
               </TRPCReactProvider>
             </ThemeProvider>

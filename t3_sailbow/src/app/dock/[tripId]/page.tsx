@@ -1,8 +1,4 @@
 "use client";
-
-import BannerModal from "@/app/_components/banner-modal";
-import { useBoat } from "@/hooks/use-boat";
-import { api } from "@/trpc/react";
 import {
   BoatPageContainer,
   BoatPageContent,
@@ -10,25 +6,18 @@ import {
   BoatPageTitle,
 } from "../boat-page-components";
 import HomePageContent from "./home-page-content";
+import TripBannerModal from "./trip-banner-modal";
+import { useBoat } from "@/hooks/use-boat";
 
 export default function Page() {
-  const { _id: id, name, banner, dispatch } = useBoat();
-  const { mutate: updateBanner } = api.dock.editBoatBanner.useMutation();
+  const { _id, name, banner } = useBoat();
   return (
     <BoatPageContainer>
       <BoatPageHeader>
         <BoatPageTitle>{name}</BoatPageTitle>
         {!banner && (
           <div className="ml-auto">
-            <BannerModal
-              onBannerChange={(newBanner) => {
-                dispatch({
-                  type: "update-banner",
-                  payload: newBanner,
-                });
-                // updateBanner({ boatId: id, banner: newBanner });
-              }}
-            />
+            <TripBannerModal tripId={_id} />
           </div>
         )}
       </BoatPageHeader>

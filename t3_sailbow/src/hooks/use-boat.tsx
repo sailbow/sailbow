@@ -15,7 +15,7 @@ import React, {
   useState,
 } from "react";
 
-export type ActiveBoat = FunctionReturnType<
+export type ActiveTrip = FunctionReturnType<
   typeof api.trips.queries.getTripById
 >;
 
@@ -23,26 +23,21 @@ type ActiveBoatContextProps = {
   children: React.ReactNode;
 };
 
-interface BoatContext extends ActiveBoat {
-  dispatch: React.Dispatch<BoatActions>;
-}
 
 interface GlobalActiveBoatContext {
-  boat: ActiveBoat | null;
-  setBoat: (boat: ActiveBoat | null) => void;
+  boat: ActiveTrip | null;
+  setBoat: (boat: ActiveTrip | null) => void;
 }
 
-const initialState: BoatContext = {
+const initialState: ActiveTrip = {
   _id: "" as Id<"trips">,
   name: "",
   slug: "",
   description: "",
   banner: null,
   _creationTime: 0,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  dispatch: () => {},
 };
-const boatContext = createContext<BoatContext>(initialState);
+const boatContext = createContext<ActiveTrip>(initialState);
 
 const globalActiveBoatContext = createContext<GlobalActiveBoatContext>({
   boat: null,
@@ -52,7 +47,7 @@ const globalActiveBoatContext = createContext<GlobalActiveBoatContext>({
 
 type SetActiveBoat = {
   type: "set-active-boat";
-  payload: ActiveBoat | null | undefined;
+  payload: ActiveTrip | null | undefined;
 };
 type UpdateIsLoading = { type: "update-is-loading"; payload: boolean };
 type UpdateBanner = { type: "update-banner"; payload: BoatBanner | null };
@@ -66,7 +61,7 @@ type BoatActions =
   | AddCrewMember
   | UpdateDescription;
 
-const boatReducer = (state: ActiveBoat, action: BoatActions): ActiveBoat => {
+const boatReducer = (state: ActiveTrip, action: BoatActions): ActiveTrip => {
   switch (action.type) {
     case "update-banner":
       return {
@@ -88,35 +83,28 @@ const boatReducer = (state: ActiveBoat, action: BoatActions): ActiveBoat => {
   }
 };
 
-export const BoatContext = ({
+export const TripContext = ({
   children,
-  initialBoat,
+  initialTrip
 }: {
   children: React.ReactNode;
-  initialBoat: Preloaded<typeof api.trips.queries.getTripById>;
+  initialTrip: Preloaded<typeof api.trips.queries.getTripById>;
 }) => {
-  const initial = usePreloadedQuery(initialBoat);
-  const [state, dispatch] = useReducer(boatReducer, initial);
-  const value = useMemo(() => {
-    return {
-      ...state,
-      dispatch,
-    };
-  }, [state, dispatch]);
+  const trip = usePreloadedQuery(initialTrip);
 
   const { setBoat } = useGlobalActiveBoat();
 
   useEffect(() => {
-    setBoat(value);
-  }, [setBoat, value]);
+    setBoat(trip);
+  }, [setBoat, trip]);
 
-  return <boatContext.Provider value={value}>{children}</boatContext.Provider>;
+  return <boatContext.Provider value={trip}>{children}</boatContext.Provider>;
 };
 
-export const GlobalActiveBoatContext = ({
+export const GlobalActiveTripContext = ({
   children,
 }: ActiveBoatContextProps) => {
-  const [boat, setBoat] = useState<ActiveBoat | null>(null);
+  const [boat, setBoat] = useState<ActiveTrip | null>(null);
   useEffect(() => {
     console.log(boat);
   }, [boat]);
