@@ -39,26 +39,6 @@ export const getById = query({
     })
   }
 })
-export const getTripById = query({
-  args: {
-    tripId: v.string(),
-  },
-  handler: async({ db, auth }, args) => {
-    const user = await getUser(auth);
-    const membership = await db
-      .query("crews")
-      .filter(q => q.and(
-        q.or(
-          q.eq(q.field("userId"), user.tokenIdentifier),
-          q.eq(q.field("email"), user.email)
-        ),
-        q.eq(q.field("tripId"), args.tripId)
-      ))
-      .first();
-    if (!membership) return null;
-    return await getOneFrom(db, "trips", "by_id", membership.tripId, "_id");
-  }
-});
 
 export const getUserTrips = query({
   handler: withAuth(async ({ db, user }) => {
@@ -77,14 +57,15 @@ export const getTripCrew = query({
     tripId: v.id("trips")
   },
   handler: async ({ db, auth }, args) => {
-    const user = await getUser(auth);
-    const memberships = await getMemberships({ user, db })
-    const trip = memberships.filter(m => m.tripId === args.tripId)[0];
-    if (!trip) throw new SbError({ code: "NOT_FOUND" });
-    
-    return await db
-      .query("crews")
-      .withIndex("by_tripId", q => q.eq("tripId", args.tripId))
-      .collect();
+    return await withUser(auth, async (user) => {
+      const memberships = await getMemberships({ user, db })
+      const trip = memberships.filter(m => m.tripId === args.tripId)[0];
+      if (!trip) throw new SbError({ code: "NOT_FOUND" });
+      
+      return await db
+        .query("crews")
+        .withIndex("by_tripId", q => q.eq("tripId", args.tripId))
+        .collect();
+    });
   }
 })

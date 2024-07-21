@@ -8,9 +8,7 @@ import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { type FunctionReturnType } from "convex/server";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-export type ActiveTrip = FunctionReturnType<
-  typeof api.trips.queries.getTripById
->;
+export type ActiveTrip = FunctionReturnType<typeof api.trips.queries.getById>;
 
 type ActiveBoatContextProps = {
   children: React.ReactNode;
@@ -58,7 +56,7 @@ export const TripContext = ({
   initialTrip,
 }: {
   children: React.ReactNode;
-  initialTrip: Preloaded<typeof api.trips.queries.getTripById>;
+  initialTrip: Preloaded<typeof api.trips.queries.getById>;
 }) => {
   const trip = usePreloadedQuery(initialTrip);
 

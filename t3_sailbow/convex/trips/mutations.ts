@@ -1,22 +1,23 @@
 import { mutation } from "@convex/_generated/server";
-import { getUser } from "@convex/authUtils";
+import { withUser } from "@convex/authUtils";
 import { SbError } from "@convex/errorUtils";
 import { tripSchema } from "@convex/schema";
 import { v } from "convex/values";
 
 export const create = mutation({
   args: tripSchema,
-  handler: async (ctx, args) => {
-    const user = await getUser(ctx.auth);
-    const tripId = await ctx.db.insert("trips", args);
-    await ctx.db.insert("crews", {
-      tripId,
-      userId: user.tokenIdentifier,
-      role: "captain",
-      email: user.email!
-    })
-    
-    return { tripId };
+  handler: async ({ auth, db }, args) => {
+    return await withUser(auth, async (user) => {
+      const tripId = await db.insert("trips", args);
+      await db.insert("crews", {
+        tripId,
+        userId: user.tokenIdentifier,
+        role: "captain",
+        email: user.email!
+      })
+      
+      return { tripId };
+    });
   }
 });
 
@@ -25,9 +26,10 @@ export const updateDescription = mutation({
     tripId: v.id("trips"),
     description: v.string()
   },
-  handler: async (ctx, args) => {
-    await getUser(ctx.auth);
-    await ctx.db.patch(args.tripId, { description: args.description });
+  handler: async ({ auth, db }, args) => {
+    await withUser(auth, async () => {
+      await db.patch(args.tripId, { description: args.description });
+    });
   }
 });
 
@@ -36,9 +38,10 @@ export const updateTripBanner = mutation({
     tripId: v.id("trips"),
     banner: tripSchema.banner
   },
-  handler: async (ctx, args) => {
-    await getUser(ctx.auth);
-    await ctx.db.patch(args.tripId, { banner: args.banner });
+  handler: async ({ auth, db }, { tripId, banner }) => {
+    await withUser(auth, async () => {
+      await db.patch(tripId, { banner });
+    });
   }
 });
 
@@ -49,8 +52,8 @@ export const inviteCrewMember = mutation({
     role: v.union(v.literal("crewMember"), v.literal("firstMate"))
   },
   handler: async ({ db, auth }, args) => {
-    const user = await getUser(auth);
-    const existingCm = await db
+    await withUser(auth, async () => {
+      const existingCm = await db
       .query("crews")
       .filter(q => q.and(
         q.eq(q.field("tripId"), args.tripId),
@@ -58,14 +61,15 @@ export const inviteCrewMember = mutation({
       ))
       .first();
 
-    if (existingCm) throw new SbError(
-      {
-        code: "USER_ERROR",
-        message: `User with email '${existingCm.email}' has already been invited!`
-      }
-    );
+      if (existingCm) throw new SbError(
+        {
+          code: "USER_ERROR",
+          message: `User with email '${existingCm.email}' has already been invited!`
+        }
+      );
 
-    await db.insert("crews", args);
+      await db.insert("crews", args);
+    });
   }
 });
 
@@ -73,8 +77,9 @@ export const deleteTrip = mutation({
   args: {
     tripId: v.id("trips")
   },
-  handler: async (ctx, args) => {
-    await getUser(ctx.auth);
-    await ctx.db.delete(args.tripId);
+  handler: async ({ auth, db }, args) => {
+    await withUser(auth, async () => {
+      await db.delete(args.tripId);
+    })
   }
 })
