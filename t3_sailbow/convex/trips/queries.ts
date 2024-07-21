@@ -1,6 +1,6 @@
-import { type DataModel } from "@convex/_generated/dataModel";
+import { Id, type DataModel } from "@convex/_generated/dataModel";
 import { MutationCtx, query, QueryCtx } from "@convex/_generated/server";
-import { getUser } from "@convex/authUtils";
+import { getUser, queryWithAuth, withAuth, withUser } from "@convex/authUtils";
 import { SbError } from "@convex/errorUtils";
 import { asyncMap, pruneNull } from "convex-helpers";
 import { getOneFromOrThrow, getManyFrom, getOneFrom } from "convex-helpers/server/relationships";
@@ -18,13 +18,34 @@ const getMemberships = async ({ user, db }: { user: UserIdentity, db: GenericDat
     ))
     .collect();
 }
+
+export const getById = query({
+  args: {
+    tripId: v.id("trips"),
+  },
+  handler: async ({ db, auth }, { tripId }) => {
+    return await withUser(auth, async (user) => {
+      const membership = await db
+        .query("crews")
+        .withIndex("by_tripId", q => q.eq("tripId", tripId))
+        .filter(q => q.or(
+          q.eq(q.field("userId"), user.tokenIdentifier),
+          q.eq(q.field("email"), user.email)
+        ))
+        .first();
+        
+      if (!membership) return null;
+      return await getOneFrom(db, "trips", "by_id", membership.tripId, "_id");
+    })
+  }
+})
 export const getTripById = query({
   args: {
     tripId: v.string(),
   },
-  handler: async (ctx, args) => {
-    const user = await getUser(ctx.auth);
-    const membership = await ctx.db
+  handler: async({ db, auth }, args) => {
+    const user = await getUser(auth);
+    const membership = await db
       .query("crews")
       .filter(q => q.and(
         q.or(
@@ -34,22 +55,21 @@ export const getTripById = query({
         q.eq(q.field("tripId"), args.tripId)
       ))
       .first();
-    if (!membership) throw new ConvexError("NOT_FOUND");
-    return await getOneFromOrThrow(ctx.db, "trips", "by_id", membership.tripId, "_id");
+    if (!membership) return null;
+    return await getOneFrom(db, "trips", "by_id", membership.tripId, "_id");
   }
 });
 
 export const getUserTrips = query({
-  handler: async ({ db, auth }) => {
-    const user = await getUser(auth);
-
+  handler: withAuth(async ({ db, user }) => {
+    const memberships = await getMemberships({ user, db });
     const trips = (await asyncMap(
-      await getManyFrom(db, "crews", "by_userId", user.tokenIdentifier),
+      memberships,
       (cm) => db.get(cm.tripId)
     ))
 
     return pruneNull(trips);
-  }
+  })
 });
 
 export const getTripCrew = query({

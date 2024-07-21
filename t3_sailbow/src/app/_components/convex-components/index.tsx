@@ -1,20 +1,18 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useConvex, useMutation, useQuery } from "convex/react";
 import { FunctionReference } from "convex/server";
 import { ConvexError, Value } from "convex/values";
-
+import ConvexErrorBoundary from "./error-boundary";
 
 interface UseConvexQueryResult {
   isLoading: boolean;
   data: unknown;
-  error: ConvexError<Value> | null
+  error: ConvexError<Value> | null;
 }
-
-class ConvexErrorBoundary extends React.Component {
-  import React from "react";
+interface Props {
+  children: React.ReactNode;
 }
-const useConvexQuery = () => {
-  return (
-  )
-}
+const useConvexQuery = (props: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
+};

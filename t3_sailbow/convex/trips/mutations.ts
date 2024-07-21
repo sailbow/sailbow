@@ -1,11 +1,10 @@
 import { mutation } from "@convex/_generated/server";
 import { getUser } from "@convex/authUtils";
 import { SbError } from "@convex/errorUtils";
-import { crewMemberSchema, tripSchema } from "@convex/schema";
-import { getOneFrom } from "convex-helpers/server/relationships";
+import { tripSchema } from "@convex/schema";
 import { v } from "convex/values";
 
-export const createTrip = mutation({
+export const create = mutation({
   args: tripSchema,
   handler: async (ctx, args) => {
     const user = await getUser(ctx.auth);
@@ -21,7 +20,7 @@ export const createTrip = mutation({
   }
 });
 
-export const updateTripDescription = mutation({
+export const updateDescription = mutation({
   args: {
     tripId: v.id("trips"),
     description: v.string()
@@ -69,3 +68,13 @@ export const inviteCrewMember = mutation({
     await db.insert("crews", args);
   }
 });
+
+export const deleteTrip = mutation({
+  args: {
+    tripId: v.id("trips")
+  },
+  handler: async (ctx, args) => {
+    await getUser(ctx.auth);
+    await ctx.db.delete(args.tripId);
+  }
+})

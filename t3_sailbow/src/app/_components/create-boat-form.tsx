@@ -19,13 +19,11 @@ import {
   type BoatBanner,
 } from "@/lib/schemas/boat";
 import { useRouter } from "next/navigation";
-import { api } from "@/trpc/react";
 import { toast } from "@/components/ui/toast";
-import { Image, ImageIcon, Loader2 } from "lucide-react";
+import { ImageIcon } from "lucide-react";
 import BannerModal from "./banner-modal";
 import { useState } from "react";
 import ImageWithLoader from "./image-with-loader";
-import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -34,14 +32,28 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { useMutation } from "convex/react";
-import { api as convexApi } from "@convex/_generated/api";
+import { api } from "@convex/_generated/api";
+import { useConvexMutation } from "@/lib/convex-client-helpers";
 
 export function CreateBoatForm() {
   const router = useRouter();
-  const createBoat = useMutation(convexApi.trips.mutations.createTrip);
+  const [tripCreated, setTripCreated] = useState(false);
+  const { mutate: createBoat, isLoading } = useConvexMutation(
+    api.trips.mutations.create,
+    {
+      onSuccess: ({ tripId }) => {
+        setTripCreated(true);
+        toast.success("Success!");
+        router.push(`/dock/${tripId}`);
+      },
+      onError: (error) => {
+        console.error(error);
+        toast.error("Something went wrong, please try again later");
+      },
+    },
+  );
   const [banner, setBanner] = useState<BoatBanner | null>(null);
-  const [isCreating, setIsCreating] = useState(false);
+
   const form = useForm<CreateBoat>({
     resolver: zodResolver(createBoatSchema),
     defaultValues: {
@@ -53,16 +65,7 @@ export function CreateBoatForm() {
   });
 
   async function onSubmit(values: CreateBoat) {
-    setIsCreating(true);
-    try {
-      const result = await createBoat(values);
-      router.push(`/dock/${result.tripId}`);
-      toast.success("Success!");
-    } catch {
-      toast.error("Something went wrong, please try again later");
-    } finally {
-      setIsCreating(false);
-    }
+    await createBoat(values);
   }
 
   return (
@@ -114,14 +117,14 @@ export function CreateBoatForm() {
             </div>
           </CardContent>
           <CardFooter className="space-x-4">
-            <Button type="submit" size="lg" disabled={isCreating}>
+            <Button type="submit" size="lg" disabled={isLoading || tripCreated}>
               Create
             </Button>
             <Button
               type="button"
               size="lg"
               variant="secondary"
-              disabled={isCreating}
+              disabled={isLoading || tripCreated}
               asChild
             >
               <Link href="/dock">Cancel</Link>

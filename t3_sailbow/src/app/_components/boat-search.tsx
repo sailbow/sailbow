@@ -47,7 +47,6 @@ export default function BoatSearch() {
   };
 
   if (boat === null || path.endsWith("/dock")) {
-    console.log(boat);
     return;
   }
   return (

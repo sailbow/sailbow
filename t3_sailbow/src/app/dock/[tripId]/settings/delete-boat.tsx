@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
 import {
@@ -21,32 +20,29 @@ import {
 } from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useBoat } from "@/hooks/use-boat";
+import { api } from "@convex/_generated/api";
+import { useMutation } from "convex/react";
+import { useConvexMutation } from "@/lib/convex-client-helpers";
+import { useState } from "react";
 
 export default function DeleteBoat() {
   const { _id } = useBoat();
   const router = useRouter();
-  const { mutateAsync: deleteBoatById, isLoading: isDeletingBoat } =
-    api.dock.deleteBoatById.useMutation({
-      onError: (error) => {
-        toast.dismiss();
-        if (error.data?.code === "UNAUTHORIZED") {
-          toast.error("You do not have permission to delete this boat!");
-        } else {
-          toast.error("Something went wrong, please try again later");
-        }
-      },
-    });
 
-  const deleteBoat = async () => {
-    // toast.promise(deleteBoatById({ boatId: _id }), {
-    //   loading: "Deleting...",
-    //   success: () => {
-    //     router.push("/dock");
-    //     router.refresh();
-    //     return "Success!";
-    //   },
-    // });
-  };
+  const [wasDeleted, setWasDeleted] = useState(false);
+  const { mutate: deleteTrip, isLoading } = useConvexMutation(
+    api.trips.mutations.deleteTrip,
+    {
+      onSuccess: () => {
+        setWasDeleted(true);
+        toast.success("Deleted successfully. Taking you back to your trips...");
+        router.push("/dock");
+        router.refresh();
+      },
+      onError: () =>
+        toast.error("Something went wrong, please try again later."),
+    },
+  );
 
   return (
     <Card className="w-full">
@@ -74,8 +70,8 @@ export default function DeleteBoat() {
               </DialogClose>
               <Button
                 variant="destructive"
-                onClick={deleteBoat}
-                disabled={isDeletingBoat}
+                onClick={() => deleteTrip({ tripId: _id })}
+                disabled={isLoading || wasDeleted}
               >
                 Delete
               </Button>

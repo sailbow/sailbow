@@ -23,16 +23,18 @@ export default function HomePageContent() {
     onTextChange: setDescriptionText,
   });
 
-  const updateTripDescription = useMutation(api.trips.mutations.updateTripDescription);
+  const updateTripDescription = useMutation(
+    api.trips.mutations.updateDescription,
+  );
   const updateDescription = async () => {
     setIsEditingDescription(false);
-    await updateTripDescription({ tripId: _id, description: descriptionText});
-  }
+    await updateTripDescription({ tripId: _id, description: descriptionText });
+  };
   if (!editor) {
     return <Skeleton className="size-full bg-slate-300" />;
   }
   return (
-    <div className="size-full flex flex-col gap-2">
+    <div className="flex size-full flex-col gap-2">
       {isEditingDescription ? (
         <div className="flex w-full gap-2">
           <TextEditorToolbar editor={editor} />

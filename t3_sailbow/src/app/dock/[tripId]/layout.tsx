@@ -5,17 +5,15 @@ import { api } from "@convex/_generated/api";
 import { preloadProtectedQuery } from "@/lib/convex-server-helpers";
 import { notFound } from "next/navigation";
 import { TripContext } from "@/hooks/use-boat";
+import { type Id } from "@convex/_generated/dataModel";
 export default async function Layout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { tripId: string };
+  params: { tripId: Id<"trips"> };
 }) {
-  const trip = await preloadProtectedQuery(
-    api.trips.queries.getTripById,
-    params,
-  );
+  const trip = await preloadProtectedQuery(api.trips.queries.getById, params);
   if (!trip) {
     return notFound();
   }

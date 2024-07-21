@@ -6,12 +6,7 @@ import { type api } from "@convex/_generated/api";
 import { type Id, type Doc } from "convex/_generated/dataModel";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { type FunctionReturnType } from "convex/server";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export type ActiveTrip = FunctionReturnType<
   typeof api.trips.queries.getTripById
@@ -20,7 +15,6 @@ export type ActiveTrip = FunctionReturnType<
 type ActiveBoatContextProps = {
   children: React.ReactNode;
 };
-
 
 interface GlobalActiveBoatContext {
   boat: ActiveTrip | null;
@@ -59,31 +53,9 @@ type BoatActions =
   | AddCrewMember
   | UpdateDescription;
 
-const boatReducer = (state: ActiveTrip, action: BoatActions): ActiveTrip => {
-  switch (action.type) {
-    case "update-banner":
-      return {
-        ...state,
-        banner: action.payload,
-      } as Doc<"trips">;
-    case "add-crew-member":
-      return {
-        ...state,
-        // crew: state.crew ? [action.payload],
-      };
-    case "update-description":
-      return {
-        ...state,
-        description: action.payload,
-      };
-    default:
-      return state;
-  }
-};
-
 export const TripContext = ({
   children,
-  initialTrip
+  initialTrip,
 }: {
   children: React.ReactNode;
   initialTrip: Preloaded<typeof api.trips.queries.getTripById>;
@@ -91,12 +63,13 @@ export const TripContext = ({
   const trip = usePreloadedQuery(initialTrip);
 
   const { setBoat } = useGlobalActiveBoat();
+  const [value] = useState<ActiveTrip>(trip);
 
   useEffect(() => {
     setBoat(trip);
-  }, [setBoat, trip]);
+  }, [trip, setBoat]);
 
-  return <boatContext.Provider value={trip}>{children}</boatContext.Provider>;
+  return <boatContext.Provider value={value}>{children}</boatContext.Provider>;
 };
 
 export const GlobalActiveTripContext = ({
