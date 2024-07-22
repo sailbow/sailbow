@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useGlobalActiveBoat } from "@/hooks/use-boat";
 import useDebounce from "@/lib/use-debounce";
-import { api } from "@/trpc/react";
 import { ChevronsUpDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { type ChangeEvent, useState, useEffect } from "react";
@@ -20,26 +19,50 @@ import CenteredSpinner from "./centered-spinner";
 import Link from "next/link";
 import { type Route } from "next";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
+import { useConvexQuery } from "@/lib/convex-client-helpers";
+import { api } from "@convex/_generated/api";
+import { useConvex } from "convex/react";
+import { FunctionReturnType } from "convex/server";
 export default function BoatSearch() {
   const { boat } = useGlobalActiveBoat();
   const [isOpen, setIsOpen] = useState(false);
   const path = usePathname();
   const [searchTerm, setSearchTerm] = useState("");
   const query = useDebounce(searchTerm, 500);
-  const { data: boats, isFetching } = api.dock.searchBoats.useQuery(
-    { query: query },
-    {
-      enabled: !!query,
-      keepPreviousData: false,
-    },
-  );
+  const convex = useConvex();
+  const [isLoading, setIsLoading] = useState(false);
+  // const { data: trips, isLoading } = useConvexQuery(
+  //   api.trips.queries.searchTrips,
+  //   { text: query, },
+  // );
+
+  const [trips, setTrips] = useState<
+    FunctionReturnType<typeof api.trips.queries.searchTrips> | undefined
+  >();
 
   useEffect(() => {
     if (!isOpen) {
       setSearchTerm("");
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    async function searchTrips() {
+      try {
+        setIsLoading(true);
+        setTrips(undefined);
+        const results = await convex.query(api.trips.queries.searchTrips, {
+          text: query,
+        });
+        setTrips(results);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    if (query !== "") {
+      void searchTrips();
+    }
+  }, [query, convex]);
 
   const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -70,19 +93,19 @@ export default function BoatSearch() {
           />
           <DropdownMenuSeparator />
         </div>
-        {isFetching ? (
+        {isLoading ? (
           <CenteredSpinner />
-        ) : boats?.length === 0 ? (
+        ) : trips?.length === 0 ? (
           <div className="w-full text-center text-sm text-muted-foreground">
             No boats were found
           </div>
         ) : (
           <ScrollArea>
             <DropdownMenuGroup className="max-h-[50dvh] overflow-y-auto">
-              {boats?.map((b) => (
-                <Link key={b.id} href={`/dock/${b.id}` as Route}>
-                  <DropdownMenuItem key={b.id} className="space-x-2">
-                    {b.name}
+              {trips?.map((t) => (
+                <Link key={t._id} href={`/dock/${t._id}` as Route}>
+                  <DropdownMenuItem className="space-x-2">
+                    {t.name}
                   </DropdownMenuItem>
                 </Link>
               ))}

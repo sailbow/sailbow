@@ -69,3 +69,22 @@ export const getTripCrew = query({
     });
   }
 })
+
+export const searchTrips = query({
+  args: {
+    text: v.string()
+  },
+  handler: async ({ db, auth }, { text }) => {
+    return await withUser(auth, async (user) => {
+      const memberships = await getMemberships({ user, db });
+      const trips = pruneNull(await asyncMap(
+        memberships,
+        async (m) => await db.query("trips")
+        .withSearchIndex("search_trip_name", q => q.search("name", text))
+        .filter(q => q.eq(q.field("_id"), m.tripId))
+        .unique()
+      ));
+      return trips;
+    })
+  }
+})
