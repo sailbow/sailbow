@@ -1,13 +1,20 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { type Editor, EditorContent, Extension, useEditor } from "@tiptap/react";
-import Placeholder, { type PlaceholderOptions} from "@tiptap/extension-placeholder";
+import { type Editor, EditorContent, useEditor } from "@tiptap/react";
+import Placeholder from "@tiptap/extension-placeholder";
 import StarterKit from "@tiptap/starter-kit";
+import LinkExtension from "@tiptap/extension-link";
 import { Toggle } from "./ui/toggle";
-import { Bold, Italic, List, ListOrdered, Heading } from "lucide-react";
+import { Bold, Italic, List, ListOrdered, Heading, Link } from "lucide-react";
 import { Card } from "./ui/card";
-import { Textarea } from "./ui/textarea";
+import { Dialog, DialogClose, DialogContent, DialogFooter } from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { toast } from "./ui/toast";
+import { useEffect, useState } from "react";
+import { z } from "zod";
+import { P } from "node_modules/@clerk/clerk-react/dist/controlComponents-CzpRUsyv.mjs";
 
 interface TextEditorProps {
   text: string | null;
@@ -42,8 +49,17 @@ const useTextEditor = ({ text, isEditing, onTextChange }: TextEditorProps) => {
         }),
         Placeholder.configure({
           placeholder: "A description of your trip...",
-          emptyEditorClass: "cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-0 before:left-0 before:text-mauve-11 before:opacity-50 before-pointer-events-none",
-        })
+          emptyEditorClass:
+            "cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-0 before:left-0 before:text-mauve-11 before:opacity-50 before-pointer-events-none",
+        }),
+        LinkExtension.configure({
+          HTMLAttributes: {
+            class: "text-primary underline font-semibold",
+            target: "_blank",
+            rel: "noreferrer",
+          },
+          openOnClick: "whenNotEditable",
+        }).extend({ inclusive: false }),
       ],
       content: text,
       onUpdate: ({ editor }) => {
@@ -52,9 +68,9 @@ const useTextEditor = ({ text, isEditing, onTextChange }: TextEditorProps) => {
       editable: isEditing,
       editorProps: {
         attributes: {
-          class: "prose prose-sm m-4 prose-p:my-0 focus:outline-none",
+          class:
+            "prose max-w-5xl m-4 prose-p:my-0 focus:outline-none dark:prose-invert",
         },
-        
       },
     },
     [isEditing],
@@ -63,23 +79,99 @@ const useTextEditor = ({ text, isEditing, onTextChange }: TextEditorProps) => {
 
 const TextEditorContent = ({
   editor,
-  className,
 }: {
   editor: Editor | null;
   className?: string | undefined;
 }) => {
   return (
-    <Card className="flex flex-col relative size-full overflow-auto">
-      <EditorContent editor={editor} className="relative size-full rounded-lg" />
+    <Card className="flex size-full flex-col overflow-auto">
+      <EditorContent editor={editor} className="size-full rounded-lg" />
     </Card>
   );
 };
 
+const ConfigureLinkDialog = ({
+  editor,
+  isOpen,
+  setIsOpen,
+}: {
+  editor: Editor;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}) => {
+  const initialUrl = editor.getAttributes("link").href as string;
+  const [url, setUrl] = useState<string | undefined>(initialUrl);
+
+  const saveUrl = () => {
+    if (!url) {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      setIsOpen(false);
+      return;
+    }
+    let newUrl = url.replace("http:", "https:");
+    if (!newUrl.startsWith("https://")) {
+      newUrl = "https://" + newUrl;
+    }
+    if (
+      !/((?:(https|http)\:\/\/)|(?:www\.))([a-zA-Z0-9]{3,192})((\.[a-zA-Z]{2,3}))?(?:(\.[a-zA-Z]{2,3}))$/gi.test(
+        newUrl,
+      )
+    ) {
+      toast.error("Invalid url!");
+    } else {
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({
+          href: newUrl,
+        })
+        .run();
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent>
+        <div className="grid gap-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="url">URL</Label>
+            <Input
+              autoFocus
+              placeholder={"https://example.com"}
+              value={url}
+              onChange={(e) => {
+                e.preventDefault();
+                setUrl(e.target.value);
+              }}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="secondary" onClick={() => setUrl(initialUrl)}>
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button onClick={saveUrl}>Save</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const TextEditorToolbar = ({ editor }: { editor: Editor | null }) => {
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
   if (!editor?.isEditable) {
     return null;
   }
 
+  const isCursorOverLink = !!editor.getAttributes("link").href;
+
+  const handleToggleLink = () => {
+    setIsLinkDialogOpen(true);
+  };
   return (
     <div className="sticky top-0 z-30 flex flex-row items-center gap-1 bg-background">
       <Toggle
@@ -127,6 +219,18 @@ const TextEditorToolbar = ({ editor }: { editor: Editor | null }) => {
       >
         <Heading className="size-4" />
       </Toggle>
+      <Toggle
+        size="sm"
+        pressed={isCursorOverLink}
+        onPressedChange={handleToggleLink}
+      >
+        <Link className="size-4" />
+      </Toggle>
+      <ConfigureLinkDialog
+        editor={editor}
+        isOpen={isLinkDialogOpen}
+        setIsOpen={setIsLinkDialogOpen}
+      />
     </div>
   );
 };

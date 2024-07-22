@@ -19,10 +19,10 @@ import CenteredSpinner from "./centered-spinner";
 import Link from "next/link";
 import { type Route } from "next";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useConvexQuery } from "@/lib/convex-client-helpers";
 import { api } from "@convex/_generated/api";
 import { useConvex } from "convex/react";
-import { FunctionReturnType } from "convex/server";
+import { type FunctionReturnType } from "convex/server";
+
 export default function BoatSearch() {
   const { boat } = useGlobalActiveBoat();
   const [isOpen, setIsOpen] = useState(false);
@@ -31,11 +31,6 @@ export default function BoatSearch() {
   const query = useDebounce(searchTerm, 500);
   const convex = useConvex();
   const [isLoading, setIsLoading] = useState(false);
-  // const { data: trips, isLoading } = useConvexQuery(
-  //   api.trips.queries.searchTrips,
-  //   { text: query, },
-  // );
-
   const [trips, setTrips] = useState<
     FunctionReturnType<typeof api.trips.queries.searchTrips> | undefined
   >();
