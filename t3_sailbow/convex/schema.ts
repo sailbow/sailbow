@@ -28,14 +28,84 @@ export const crewMemberSchema = {
     )
 }
 
+const baseModuleSchema = {
+    tripId: v.id("trips"),
+}
+
+export const moduleSchema = v.union(
+    v.object({
+        ...baseModuleSchema,
+        type: v.literal("date"),
+        startDate: v.string(),
+        startTime: v.optional(v.string()),
+        endDate: v.optional(v.string()),
+        endTime: v.optional(v.string())
+    }),
+    v.object({
+        ...baseModuleSchema,
+        type: v.literal("location"),
+        address: v.string()
+    })
+)
+
+export const commentsSchema = {
+    userId: v.string(),
+    message: v.string(),
+}
+
+export const announcementSchema = {
+    tripId: v.id("trips"),
+    title: v.string(),
+    text: v.string()
+}
+
+export const announcementCommentsSchema = {
+    announcementId: v.id("announcements"),
+    commentId: v.id("comments")
+}
+
+export const pollSchema = {
+    tripId: v.id("trips"),
+    title: v.string(),
+    settings: v.object({
+        allowMultipleVotes: v.boolean(),
+        anonymousVoting: v.boolean()
+    })
+}
+
+export const pollOptionSchema = {
+    pollId: v.id("polls"),
+    votes: v.array(v.string()),
+    option: moduleSchema
+}
+
+
 export default defineSchema({
     trips: defineTable(tripSchema)
         .searchIndex("search_trip_name", {
             searchField: "name",
         }),
+
     crews: defineTable(crewMemberSchema)
         .index("by_userId", ["userId"])
         .index("by_userId_and_tripId", ["userId", "tripId"])
         .index("by_tripId", ["tripId"])
-        .index("by_email", ["email"])
+        .index("by_email", ["email"]),
+
+    announcements: defineTable(announcementSchema)
+        .index("by_tripId", ["tripId"]),
+
+    announcementComments: defineTable(announcementCommentsSchema)
+        .index("by_announcementId", ["announcementId"]),
+    
+    comments: defineTable(commentsSchema),
+
+    modules: defineTable(moduleSchema)
+        .index("by_tripId", ["tripId"]),
+
+    polls: defineTable(pollSchema)
+        .index("by_tripId", ["tripId"]),
+
+    pollOptions: defineTable(pollOptionSchema)
+        .index("by_pollId", ["pollId"])
 })

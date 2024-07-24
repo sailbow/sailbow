@@ -1,4 +1,5 @@
 "use client";
+import NotFoundPage from "@/app/_components/not-found-page";
 import { type CrewMember } from "@/lib/common-types";
 import { type Boat } from "@/lib/schemas/boat";
 import { type BoatBanner } from "@/server/db/schema";
@@ -61,22 +62,22 @@ export const TripContext = ({
   const trip = usePreloadedQuery(initialTrip);
 
   const { setBoat } = useGlobalActiveBoat();
-  const [value] = useState<ActiveTrip>(trip);
 
   useEffect(() => {
     setBoat(trip);
   }, [trip, setBoat]);
 
-  return <boatContext.Provider value={value}>{children}</boatContext.Provider>;
+  return (
+    <boatContext.Provider value={trip}>
+      {!trip ? <NotFoundPage /> : children}
+    </boatContext.Provider>
+  );
 };
 
 export const GlobalActiveTripContext = ({
   children,
 }: ActiveBoatContextProps) => {
   const [boat, setBoat] = useState<ActiveTrip | null>(null);
-  useEffect(() => {
-    console.log(boat);
-  }, [boat]);
   return (
     <globalActiveBoatContext.Provider value={{ boat, setBoat }}>
       {children}

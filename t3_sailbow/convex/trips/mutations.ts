@@ -73,9 +73,18 @@ export const inviteCrewMember = mutation({
   }
 });
 
+export const updateName = mutation({
+  args: { tripId: v.id("trips"), name: v.optional(v.string()) },
+  handler: async ({ auth, db }, { tripId, name }) => {
+    await withUser(auth, async () => {
+      await db.patch(tripId, { name });
+    })
+  }
+})
+
 export const deleteTrip = mutation({
   args: {
-    tripId: v.id("trips")
+    tripId: v.id("trips"),
   },
   handler: async ({ auth, db }, args) => {
     await withUser(auth, async () => {

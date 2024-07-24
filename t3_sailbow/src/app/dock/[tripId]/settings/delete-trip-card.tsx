@@ -25,7 +25,7 @@ import { useMutation } from "convex/react";
 import { useConvexMutation } from "@/lib/convex-client-helpers";
 import { useState } from "react";
 
-export default function DeleteBoat() {
+export default function DeleteTripCard() {
   const { _id } = useBoat();
   const router = useRouter();
 
@@ -45,7 +45,7 @@ export default function DeleteBoat() {
   );
 
   return (
-    <Card className="w-full">
+    <Card className="max-w-2xl">
       <CardHeader>
         <CardTitle>Danger Zone</CardTitle>
         <CardDescription>These actions cannot be undone</CardDescription>

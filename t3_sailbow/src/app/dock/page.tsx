@@ -8,10 +8,12 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import CenteredSpinner from "../_components/centered-spinner";
+import { useUserTrips } from "@/lib/use-queries";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card } from "@/components/ui/card";
 
 export default function Page() {
-  const trips = useQuery(api.trips.queries.getUserTrips);
-  if (trips === undefined) return <CenteredSpinner />;
+  const { data: trips, isPending } = useUserTrips();
   return (
     <div className="relative mx-auto h-full max-w-6xl overflow-y-auto xs:container">
       <div className="container sticky top-0 z-10 flex items-center justify-between bg-background p-4">
@@ -30,12 +32,13 @@ export default function Page() {
         </Link>
       </div>
       <div className="grid grid-cols-1 gap-6 overflow-hidden p-4 px-4 sm:grid-cols-2 lg:grid-cols-3">
-        {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          trips.map((boat) => {
-            return <TripCard key={boat?._id} trip={boat} />;
-          })
-        }
+        {isPending
+          ? Array.from({ length: 3 }).map((_, index) => (
+              <Card key={index} className="h-[250px] overflow-hidden">
+                <Skeleton className="size-full bg-slate-300" />
+              </Card>
+            ))
+          : trips?.map((boat) => <TripCard key={boat?._id} trip={boat} />)}
       </div>
     </div>
   );
