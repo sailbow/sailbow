@@ -19,14 +19,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { useBoat } from "@/hooks/use-boat";
+import { useTrip } from "@/lib/use-trip";
 import { api } from "@convex/_generated/api";
-import { useMutation } from "convex/react";
 import { useConvexMutation } from "@/lib/convex-client-helpers";
 import { useState } from "react";
 
 export default function DeleteTripCard() {
-  const { _id } = useBoat();
+  const { _id } = useTrip();
   const router = useRouter();
 
   const [wasDeleted, setWasDeleted] = useState(false);
@@ -36,7 +35,7 @@ export default function DeleteTripCard() {
       onSuccess: () => {
         setWasDeleted(true);
         toast.success("Deleted successfully. Taking you back to your trips...");
-        router.push("/dock");
+        router.push("/trips");
         router.refresh();
       },
       onError: () =>

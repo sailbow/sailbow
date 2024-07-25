@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,12 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  type CreateBoat,
-  createBoatSchema,
-  type BoatBanner,
-} from "@/lib/schemas/boat";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
 import { ImageIcon } from "lucide-react";
@@ -34,17 +28,34 @@ import {
 import Link from "next/link";
 import { api } from "@convex/_generated/api";
 import { useConvexMutation } from "@/lib/convex-client-helpers";
+import { z } from "zod";
 
-export function CreateBoatForm() {
+const createTripSchema = z.object({
+  name: z.string().min(1, "Name cannot be empty"),
+  description: z.string().default(""),
+  banner: z
+    .object({
+      thumbnail: z.string().url(),
+      small: z.string().url(),
+      regular: z.string().url(),
+      full: z.string().url(),
+      alt: z.string(),
+    })
+    .nullable(),
+});
+
+type CreateTrip = z.infer<typeof createTripSchema>;
+type Banner = Exclude<CreateTrip["banner"], null>;
+export function CreateTripForm() {
   const router = useRouter();
   const [tripCreated, setTripCreated] = useState(false);
-  const { mutate: createBoat, isLoading } = useConvexMutation(
+  const { mutate: createTrip, isLoading } = useConvexMutation(
     api.trips.mutations.create,
     {
       onSuccess: ({ tripId }) => {
         setTripCreated(true);
         toast.success("Success!");
-        router.push(`/dock/${tripId}`);
+        router.push(`/trips/${tripId}`);
       },
       onError: (error) => {
         console.error(error);
@@ -52,20 +63,19 @@ export function CreateBoatForm() {
       },
     },
   );
-  const [banner, setBanner] = useState<BoatBanner | null>(null);
+  const [banner, setBanner] = useState<Banner | null>(null);
 
-  const form = useForm<CreateBoat>({
-    resolver: zodResolver(createBoatSchema),
+  const form = useForm<CreateTrip>({
+    resolver: zodResolver(createTripSchema),
     defaultValues: {
       banner: null,
       name: "",
       description: "",
-      // crewInvites: [],
     },
   });
 
-  async function onSubmit(values: CreateBoat) {
-    await createBoat(values);
+  async function onSubmit(values: CreateTrip) {
+    await createTrip(values);
   }
 
   return (
@@ -127,7 +137,7 @@ export function CreateBoatForm() {
               disabled={isLoading || tripCreated}
               asChild
             >
-              <Link href="/dock">Cancel</Link>
+              <Link href="/trips">Cancel</Link>
             </Button>
           </CardFooter>
         </form>

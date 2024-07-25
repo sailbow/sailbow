@@ -4,13 +4,13 @@ import {
   BoatPageContent,
   BoatPageHeader,
   BoatPageTitle,
-} from "../boat-page-components";
+} from "../trip-page-components";
 import HomePageContent from "./home-page-content";
 import TripBannerModal from "./trip-banner-modal";
-import { useBoat } from "@/hooks/use-boat";
+import { useTrip } from "@/lib/use-trip";
 
 export default function Page() {
-  const { _id, name, banner } = useBoat();
+  const { _id, name, banner } = useTrip();
   return (
     <BoatPageContainer>
       <BoatPageHeader>

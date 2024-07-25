@@ -1,7 +1,7 @@
 import "@/app/styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toast";
-import { GlobalActiveTripContext } from "@/hooks/use-boat";
+import { GlobalActiveTripContext } from "@/lib/use-trip";
 import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
 import { type Metadata, type Viewport } from "next";

@@ -1,5 +1,5 @@
 "use client";
-import { useBoat, useGlobalActiveBoat } from "@/hooks/use-boat";
+import { useTrip, useGlobalActiveTrip } from "@/lib/use-trip";
 import {
   Home,
   ListChecks,
@@ -12,37 +12,37 @@ const getLinks = (tripId: string) => [
   {
     title: "Overview",
     icon: Home,
-    href: `/dock/${tripId}`,
+    href: `/trips/${tripId}`,
   },
   {
     title: "Crew",
     icon: UsersRound,
-    href: `/dock/${tripId}/crew`,
+    href: `/trips/${tripId}/crew`,
   },
   {
     title: "Itinerary",
     icon: ListChecks,
-    href: `/dock/${tripId}/itinerary`,
+    href: `/trips/${tripId}/itinerary`,
   },
   {
     title: "Announcements",
     icon: Megaphone,
-    href: `/dock/${tripId}/announcements`,
+    href: `/trips/${tripId}/announcements`,
   },
   {
     title: "Settings",
     icon: Settings,
-    href: `/dock/${tripId}/settings`,
+    href: `/trips/${tripId}/settings`,
   },
 ];
 export const useTripLinks = () => {
-  const { boat } = useGlobalActiveBoat();
-  if (!boat) return;
+  const { trip } = useGlobalActiveTrip();
+  if (!trip) return;
 
-  return getLinks(boat._id);
+  return getLinks(trip._id);
 };
 
 export const useRequiredTripLinks = () => {
-  const { _id } = useBoat();
+  const { _id } = useTrip();
   return getLinks(_id);
 };

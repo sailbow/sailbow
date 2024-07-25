@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 import { Spinner } from "./spinner";
 import Sidebar from "./side-bar";
-import BoatSearch from "./boat-search";
+import TripSearch from "./trip-search";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
@@ -34,7 +34,7 @@ export function Navbar() {
         </div>
         <div className="flex items-center gap-2 sm:hidden">
           <Sidebar />
-          <BoatSearch />
+          <TripSearch />
         </div>
       </SignedIn>
       <div className="ml-auto flex items-center gap-2">
@@ -47,7 +47,7 @@ export function Navbar() {
             <UserDropdown />
           </SignedIn>
           <SignedOut>
-            <SignInButton mode="modal" signUpFallbackRedirectUrl={"/dock"}>
+            <SignInButton mode="modal" signUpFallbackRedirectUrl={"/trips"}>
               <Button>Sign In</Button>
             </SignInButton>
           </SignedOut>

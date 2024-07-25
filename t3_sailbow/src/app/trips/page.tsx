@@ -1,13 +1,9 @@
 "use client";
 import TripCard from "../_components/trip-card";
-import ErrorPage from "../_components/error-page";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useQuery } from "convex/react";
-import { api } from "@convex/_generated/api";
-import CenteredSpinner from "../_components/centered-spinner";
 import { useUserTrips } from "@/lib/use-queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
@@ -18,10 +14,10 @@ export default function Page() {
     <div className="relative mx-auto h-full max-w-6xl overflow-y-auto xs:container">
       <div className="container sticky top-0 z-10 flex items-center justify-between bg-background p-4">
         <div className="text-xl font-medium leading-none tracking-tight">
-          Boats
+          Trips
         </div>
         <Link
-          href="/dock/new"
+          href="/trips/new"
           className={cn(
             buttonVariants({ size: "sm" }),
             "max-xs:size-10 max-xs:rounded-full",

@@ -41,13 +41,16 @@ export default function Home() {
               </ClerkLoading>
               <ClerkLoaded>
                 <SignedIn>
-                  <Link href="/dock" className={buttonVariants({ size: "lg" })}>
+                  <Link
+                    href="/trips"
+                    className={buttonVariants({ size: "lg" })}
+                  >
                     My trips
                     <ArrowRight className="ml-2 size-6" />
                   </Link>
                 </SignedIn>
                 <SignedOut>
-                  <SignInButton forceRedirectUrl={"/dock"}>
+                  <SignInButton forceRedirectUrl={"/trips"}>
                     <Button size="lg">
                       Get Started
                       <ArrowRight className="ml-2 size-6" />

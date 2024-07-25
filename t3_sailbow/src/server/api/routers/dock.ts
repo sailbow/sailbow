@@ -65,7 +65,7 @@ export const dockRouter = createTRPCRouter({
         await tx.delete(crewMembers).where(eq(crewMembers.boatId, input.boatId))
         await tx.delete(boats).where(eq(boats.id, input.boatId))
       })
-      revalidatePath("/dock");
+      revalidatePath("/trips");
     }),
   
   searchBoats: protectedProcedure

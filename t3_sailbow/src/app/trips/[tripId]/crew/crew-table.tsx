@@ -7,7 +7,7 @@ import {
   type ColumnDef,
 } from "@tanstack/react-table";
 
-import { useBoat } from "@/hooks/use-boat";
+import { useTrip } from "@/lib/use-trip";
 import type { CrewMember } from "@/lib/common-types";
 import { roleValueToDisplay } from "../invite";
 import { DataTable } from "@/components/data-table";

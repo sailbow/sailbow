@@ -32,7 +32,7 @@ const TripCard = ({ trip }: { trip: Doc<"trips"> }) => {
       ease-in-out focus-within:scale-105 focus-within:transform
       focus-within:border-ring hover:scale-105 hover:transform hover:border-2 hover:border-ring"
     >
-      <Link className="flex size-full flex-col" href={`/dock/${trip._id}`}>
+      <Link className="flex size-full flex-col" href={`/trips/${trip._id}`}>
         <CardContent className="relative basis-3/4 p-0">{banner}</CardContent>
         <div className="flex basis-1/4 items-center">
           <div className="flex items-center justify-center p-4">

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useGlobalActiveBoat } from "@/hooks/use-boat";
+import { useGlobalActiveTrip } from "@/lib/use-trip";
 import {
   Sheet,
   SheetClose,
@@ -12,7 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Anchor, Home, Menu } from "lucide-react";
+import { Anchor, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import ImageWithLoader from "./image-with-loader";
 import { type Route } from "next";
@@ -23,7 +23,7 @@ import { Separator } from "@/components/ui/separator";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const links = useTripLinks();
-  const { boat } = useGlobalActiveBoat();
+  const { trip } = useGlobalActiveTrip();
   const path = usePathname();
 
   return (
@@ -47,7 +47,7 @@ const Sidebar = () => {
           <div className="flex flex-col gap-2">
             <SheetClose asChild>
               <Link
-                href={"/dock"}
+                href={"/trips"}
                 className={cn(
                   buttonVariants({
                     variant: "ghost",
@@ -57,14 +57,14 @@ const Sidebar = () => {
                 )}
               >
                 <Anchor className="mr-2 h-4 w-4" />
-                My Boats
+                My Trips
               </Link>
             </SheetClose>
           </div>
           <Separator />
           <div className="flex flex-col gap-2">
-            {boat && (
-              <span className="font-semi-bold px-1 py-1">{boat.name}</span>
+            {trip && (
+              <span className="font-semi-bold px-1 py-1">{trip.name}</span>
             )}
             {links?.map((link, index) => (
               <SheetClose key={index} asChild>

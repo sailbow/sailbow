@@ -8,20 +8,20 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { useGlobalActiveBoat } from "@/hooks/use-boat";
+import { useGlobalActiveTrip } from "@/lib/use-trip";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import BoatSearch from "./boat-search";
+import TripSearch from "./trip-search";
 import { useEffect, useState } from "react";
 
 export default function Crumbs() {
   const params = useParams();
-  const { boat } = useGlobalActiveBoat();
-  const [showBoatSearch, setShowBoatSearch] = useState(false);
+  const { trip } = useGlobalActiveTrip();
+  const [showTripSearch, setShowTripSearch] = useState(false);
 
   useEffect(() => {
-    setShowBoatSearch(!!boat && Object.keys(params).includes("tripId"));
-  }, [boat, params]);
+    setShowTripSearch(!!trip && Object.keys(params).includes("tripId"));
+  }, [trip, params]);
 
   return (
     <Breadcrumb>
@@ -29,14 +29,14 @@ export default function Crumbs() {
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/dock">Boats</Link>
+              <Link href="/trips">Trips</Link>
             </Button>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        {showBoatSearch && <BreadcrumbSeparator />}
-        {showBoatSearch && (
+        {showTripSearch && <BreadcrumbSeparator />}
+        {showTripSearch && (
           <BreadcrumbItem>
-            <BoatSearch />
+            <TripSearch />
           </BreadcrumbItem>
         )}
       </BreadcrumbList>

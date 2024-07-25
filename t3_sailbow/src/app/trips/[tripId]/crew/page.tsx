@@ -4,7 +4,7 @@ import {
   BoatPageContent,
   BoatPageHeader,
   BoatPageTitle,
-} from "../../boat-page-components";
+} from "../../trip-page-components";
 import InviteCrewMember from "../invite";
 import { CrewTable } from "./crew-table";
 import { api } from "@convex/_generated/api";

@@ -10,7 +10,7 @@ import {
 import { toast } from "@/components/ui/toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useBoat, type ActiveTrip } from "@/hooks/use-boat";
+import { useTrip, type ActiveTrip } from "@/lib/use-trip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,

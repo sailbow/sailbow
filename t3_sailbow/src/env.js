@@ -26,8 +26,8 @@ export const env = createEnv({
     NEXT_PUBLIC_CONVEX_URL: z.string().url(),
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().default("/sign-in"),
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().default("/sign-up"),
-    NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: z.string().default("/dock"),
-    NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: z.string().default("/dock"),
+    NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: z.string().default("/trips"),
+    NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: z.string().default("/trips"),
     NEXT_PUBLIC_CLERK_ISSUER_DOMAIN: z.string().default("https://saving-doberman-58.clerk.accounts.dev"),
   },
 

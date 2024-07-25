@@ -1,16 +1,13 @@
-import { type Id } from "@convex/_generated/dataModel";
 import {
   BoatPageContainer,
   BoatPageHeader,
   BoatPageTitle,
   BoatPageContent,
-} from "../../boat-page-components";
+} from "../../trip-page-components";
 import DeleteTripCard from "./delete-trip-card";
 import UpdateNameCard from "./update-name-card";
-import { preloadQuery } from "convex/nextjs";
-import { api } from "@convex/_generated/api";
 
-export default async function Page({ tripId }: { tripId: Id<"trips"> }) {
+export default async function Page() {
   return (
     <BoatPageContainer>
       <BoatPageHeader>

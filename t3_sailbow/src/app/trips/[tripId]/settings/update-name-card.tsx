@@ -7,18 +7,14 @@ import {
   FormField,
   FormInput,
   FormItem,
-  FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/toast";
-import { useBoat } from "@/hooks/use-boat";
+import { useTrip } from "@/lib/use-trip";
 import { useConvexMutation } from "@/lib/convex-client-helpers";
-import { useTrip } from "@/lib/use-queries";
 import { api } from "@convex/_generated/api";
 import { type Id } from "@convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ConvexError } from "convex/values";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -28,7 +24,7 @@ const updateNameSchema = z.object({
 });
 
 export default function UpdateNameCard() {
-  const trip = useBoat();
+  const trip = useTrip();
 
   const form = useForm<z.infer<typeof updateNameSchema>>({
     resolver: zodResolver(updateNameSchema),

@@ -2,7 +2,7 @@ import {
   BoatPageContainer,
   BoatPageContent,
   BoatPageHeader,
-} from "../boat-page-components";
+} from "../trip-page-components";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {

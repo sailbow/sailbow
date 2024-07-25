@@ -3,7 +3,7 @@ import {
   BoatPageHeader,
   BoatPageTitle,
   BoatPageContent,
-} from "../../boat-page-components";
+} from "../../trip-page-components";
 
 export default function Page() {
   return (

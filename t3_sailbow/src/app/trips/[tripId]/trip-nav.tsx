@@ -6,7 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { useRequiredTripLinks } from "@/lib/use-boat-links";
 
-export function BoatNav() {
+export function TripNav() {
   const path = usePathname();
   const links = useRequiredTripLinks();
   return (

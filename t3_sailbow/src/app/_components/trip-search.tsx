@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useGlobalActiveBoat } from "@/hooks/use-boat";
+import { useGlobalActiveTrip } from "@/lib/use-trip";
 import useDebounce from "@/lib/use-debounce";
 import { ChevronsUpDown } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -23,8 +23,8 @@ import { api } from "@convex/_generated/api";
 import { useConvex } from "convex/react";
 import { type FunctionReturnType } from "convex/server";
 
-export default function BoatSearch() {
-  const { boat } = useGlobalActiveBoat();
+export default function TripSearch() {
+  const { trip } = useGlobalActiveTrip();
   const [isOpen, setIsOpen] = useState(false);
   const path = usePathname();
   const [searchTerm, setSearchTerm] = useState("");
@@ -64,7 +64,7 @@ export default function BoatSearch() {
     setSearchTerm(e.target.value);
   };
 
-  if (boat === null || path.endsWith("/dock")) {
+  if (trip === null || path.endsWith("/trips")) {
     return;
   }
   return (
@@ -72,7 +72,7 @@ export default function BoatSearch() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="justify-start">
           <span className="max-w-[150px] overflow-hidden text-ellipsis text-muted-foreground">
-            {boat.name}
+            {trip.name}
           </span>
           <ChevronsUpDown className="ml-2 size-4" />
         </Button>
@@ -92,13 +92,13 @@ export default function BoatSearch() {
           <CenteredSpinner />
         ) : trips?.length === 0 ? (
           <div className="w-full text-center text-sm text-muted-foreground">
-            No boats were found
+            No trips were found
           </div>
         ) : (
           <ScrollArea>
             <DropdownMenuGroup className="max-h-[50dvh] overflow-y-auto">
               {trips?.map((t) => (
-                <Link key={t._id} href={`/dock/${t._id}` as Route}>
+                <Link key={t._id} href={`/trips/${t._id}` as Route}>
                   <DropdownMenuItem className="space-x-2">
                     {t.name}
                   </DropdownMenuItem>

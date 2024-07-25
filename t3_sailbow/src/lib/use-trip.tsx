@@ -1,10 +1,7 @@
 "use client";
 import NotFoundPage from "@/app/_components/not-found-page";
-import { type CrewMember } from "@/lib/common-types";
-import { type Boat } from "@/lib/schemas/boat";
-import { type BoatBanner } from "@/server/db/schema";
 import { type api } from "@convex/_generated/api";
-import { type Id, type Doc } from "convex/_generated/dataModel";
+import { type Id } from "convex/_generated/dataModel";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { type FunctionReturnType } from "convex/server";
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -15,9 +12,9 @@ type ActiveBoatContextProps = {
   children: React.ReactNode;
 };
 
-interface GlobalActiveBoatContext {
-  boat: ActiveTrip | null;
-  setBoat: (boat: ActiveTrip | null) => void;
+interface GlobalActiveTripContext {
+  trip: ActiveTrip | null;
+  setTrip: (trip: ActiveTrip | null) => void;
 }
 
 const initialState: ActiveTrip = {
@@ -30,27 +27,11 @@ const initialState: ActiveTrip = {
 };
 const boatContext = createContext<ActiveTrip>(initialState);
 
-const globalActiveBoatContext = createContext<GlobalActiveBoatContext>({
-  boat: null,
+const globalActiveBoatContext = createContext<GlobalActiveTripContext>({
+  trip: null,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setBoat: () => {},
+  setTrip: () => {},
 });
-
-type SetActiveBoat = {
-  type: "set-active-boat";
-  payload: ActiveTrip | null | undefined;
-};
-type UpdateIsLoading = { type: "update-is-loading"; payload: boolean };
-type UpdateBanner = { type: "update-banner"; payload: BoatBanner | null };
-type AddCrewMember = { type: "add-crew-member"; payload: CrewMember };
-type UpdateDescription = { type: "update-description"; payload: string };
-
-type BoatActions =
-  | SetActiveBoat
-  | UpdateIsLoading
-  | UpdateBanner
-  | AddCrewMember
-  | UpdateDescription;
 
 export const TripContext = ({
   children,
@@ -61,11 +42,11 @@ export const TripContext = ({
 }) => {
   const trip = usePreloadedQuery(initialTrip);
 
-  const { setBoat } = useGlobalActiveBoat();
+  const { setTrip } = useGlobalActiveTrip();
 
   useEffect(() => {
-    setBoat(trip);
-  }, [trip, setBoat]);
+    setTrip(trip);
+  }, [trip, setTrip]);
 
   return (
     <boatContext.Provider value={trip}>
@@ -79,19 +60,19 @@ export const GlobalActiveTripContext = ({
 }: ActiveBoatContextProps) => {
   const [boat, setBoat] = useState<ActiveTrip | null>(null);
   return (
-    <globalActiveBoatContext.Provider value={{ boat, setBoat }}>
+    <globalActiveBoatContext.Provider value={{ trip: boat, setTrip: setBoat }}>
       {children}
     </globalActiveBoatContext.Provider>
   );
 };
 
-export const useBoat = () => {
+export const useTrip = () => {
   const ctx = useContext(boatContext);
   if (!ctx) {
-    throw new Error("No active boat");
+    throw new Error("No active trip");
   }
   return ctx;
 };
-export const useGlobalActiveBoat = () => {
+export const useGlobalActiveTrip = () => {
   return useContext(globalActiveBoatContext);
 };

@@ -7,14 +7,14 @@ import {
 } from "@/components/text-editor";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useBoat } from "@/hooks/use-boat";
+import { useTrip } from "@/lib/use-trip";
 import { api } from "@convex/_generated/api";
 import { useMutation } from "convex/react";
 import { Edit } from "lucide-react";
 import { useState } from "react";
 
 export default function HomePageContent() {
-  const { _id, description } = useBoat();
+  const { _id, description } = useTrip();
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [descriptionText, setDescriptionText] = useState(description);
   const editor = useTextEditor({
