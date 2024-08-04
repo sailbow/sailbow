@@ -3,6 +3,7 @@ import { makeUseQueryWithStatus } from "convex-helpers/react";
 import { type Id } from "@convex/_generated/dataModel";
 import { api } from "@convex/_generated/api";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 
 const useQuery = makeUseQueryWithStatus(useQueries);
 
@@ -13,7 +14,14 @@ const useActiveTripId = () => {
 
 export const useTrip = () => {
   const tripId = useActiveTripId();
-  return useQuery(api.trips.queries.getById, { tripId });
+  const q = useQuery(api.trips.queries.getByIdTest, { tripId });
+
+  return {
+    isPending: q.isPending,
+    data: q.data?.data,
+    applicationError: q.data?.error,
+    error: q.error,
+  };
 };
 
 export const useCrew = () => {

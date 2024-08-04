@@ -11,38 +11,69 @@ import {
 } from "@/components/ui/dialog";
 import { FileSearch, ImageIcon, ImagePlus, PencilLine } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
-import { api } from "@/trpc/react";
+import { useCallback, useEffect, useState } from "react";
+// import { api } from "@/trpc/react";
 import { type BoatBanner } from "@/lib/schemas/boat";
 import ImageWithLoader from "./image-with-loader";
 import { toast } from "@/components/ui/toast";
 import useDebounce from "@/lib/use-debounce";
 import CenteredSpinner from "./centered-spinner";
+import { api } from "@convex/_generated/api";
+import { useAction } from "convex/react";
 
 interface BannerModalProps {
   variant?: "add" | "edit" | "editIcon" | undefined;
   onBannerChange: (banner: BoatBanner) => void;
 }
 
+type ImageData = {
+  id: string;
+  width: number;
+  height: number;
+  alt_description: string;
+  urls: {
+    raw: string;
+    full: string;
+    regular: string;
+    small: string;
+    thumb: string;
+  };
+};
+
 export default function BannerModal(props: BannerModalProps) {
   const variant = props.variant ?? "add";
   const [query, setQuery] = useState("");
   const searchText = useDebounce(query, 500);
-  const { data, isFetching, error } = api.images.search.useQuery(
-    { query: searchText },
-    {
-      enabled: !!searchText && searchText !== "",
-      keepPreviousData: false,
-      meta: { errorMessage: "Failed to search images, please try again later" },
-    },
-  );
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const searchAction = useAction(api.images.actions.search);
+  const [data, setData] = useState<ImageData[] | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // const { data, isFetching, error } = api.images.search.useQuery(
+  //   { query: searchText },
+  //   {
+  //     enabled: !!searchText && searchText !== "",
+  //     keepPreviousData: false,
+  //     meta: { errorMessage: "Failed to search images, please try again later" },
+  //   },
+  // );
+
+  const search = useCallback(async () => {
+    setIsLoading(true);
+    setData(undefined);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const res: ImageData[] = await searchAction({ query: searchText, page: 1 });
+    setData(res);
+    setIsLoading(false);
+  }, [searchAction, searchText]);
+
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (error) {
-      toast.error("Something went wrong, please try again later");
+    if (!!searchText) {
+      void search();
     }
-  }, [error]);
+  }, [searchText, search]);
 
   const trigger = (() => {
     switch (variant) {
@@ -104,7 +135,7 @@ export default function BannerModal(props: BannerModalProps) {
             </DialogClose>
           </div>
           <div className="mt-4 flex-1 overflow-y-auto rounded-md">
-            {isFetching ? (
+            {isLoading ? (
               <CenteredSpinner />
             ) : !searchText ? (
               <div className="inline-flex w-full items-center justify-center pt-4">
