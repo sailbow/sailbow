@@ -29,7 +29,7 @@ export default function Page() {
       </div>
       <div className="grid grid-cols-1 gap-6 overflow-hidden p-4 px-4 sm:grid-cols-2 lg:grid-cols-3">
         {isPending
-          ? Array.from({ length: 3 }).map((_, index) => (
+          ? Array.from({ length: 6 }).map((_, index) => (
               <Card key={index} className="h-[250px] overflow-hidden">
                 <Skeleton className="size-full bg-slate-300" />
               </Card>

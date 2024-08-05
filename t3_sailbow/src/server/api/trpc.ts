@@ -1,151 +1,151 @@
-/**
- * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
- * 1. You want to modify request context (see Part 1).
- * 2. You want to create a new middleware or type of procedure (see Part 3).
- *
- * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
- * need to use are documented accordingly near the end.
- */
-import { initTRPC, TRPCError } from "@trpc/server";
-import superjson from "superjson";
-import { z, ZodError } from "zod";
-import { eq } from "drizzle-orm";
-import { db } from "@/server/db";
-import { boats } from "../db/schema";
-import { auth } from "@clerk/nextjs/server";
-import { type CrewMember } from "@/lib/common-types";
+// /**
+//  * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
+//  * 1. You want to modify request context (see Part 1).
+//  * 2. You want to create a new middleware or type of procedure (see Part 3).
+//  *
+//  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
+//  * need to use are documented accordingly near the end.
+//  */
+// import { initTRPC, TRPCError } from "@trpc/server";
+// import superjson from "superjson";
+// import { z, ZodError } from "zod";
+// import { eq } from "drizzle-orm";
+// import { db } from "@/server/db";
+// import { boats } from "../db/schema";
+// import { auth } from "@clerk/nextjs/server";
+// import { type CrewMember } from "@/lib/common-types";
 
-/**
- * 1. CONTEXT
- *
- * This section defines the "contexts" that are available in the backend API.
- *
- * These allow you to access things when processing a request, like the database, the session, etc.
- *
- * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
- * wrap this and provides the required context.
- *
- * @see https://trpc.io/docs/server/context
- */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
-  return {
-    db,
-    auth: auth(),
-    ...opts,
-  };
-};
+// /**
+//  * 1. CONTEXT
+//  *
+//  * This section defines the "contexts" that are available in the backend API.
+//  *
+//  * These allow you to access things when processing a request, like the database, the session, etc.
+//  *
+//  * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
+//  * wrap this and provides the required context.
+//  *
+//  * @see https://trpc.io/docs/server/context
+//  */
+// export const createTRPCContext = async (opts: { headers: Headers }) => {
+//   return {
+//     db,
+//     auth: auth(),
+//     ...opts,
+//   };
+// };
 
-/**
- * 2. INITIALIZATION
- *
- * This is where the tRPC API is initialized, connecting the context and transformer. We also parse
- * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
- * errors on the backend.
- */
-const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
-  errorFormatter({ shape, error }) {
-    return {
-      ...shape,
-      data: {
-        ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
-      },
-    };
-  },
-});
+// /**
+//  * 2. INITIALIZATION
+//  *
+//  * This is where the tRPC API is initialized, connecting the context and transformer. We also parse
+//  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
+//  * errors on the backend.
+//  */
+// const t = initTRPC.context<typeof createTRPCContext>().create({
+//   transformer: superjson,
+//   errorFormatter({ shape, error }) {
+//     return {
+//       ...shape,
+//       data: {
+//         ...shape.data,
+//         zodError:
+//           error.cause instanceof ZodError ? error.cause.flatten() : null,
+//       },
+//     };
+//   },
+// });
 
-/**
- * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
- *
- * These are the pieces you use to build your tRPC API. You should import these a lot in the
- * "/src/server/api/routers" directory.
- */
+// /**
+//  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
+//  *
+//  * These are the pieces you use to build your tRPC API. You should import these a lot in the
+//  * "/src/server/api/routers" directory.
+//  */
 
-/**
- * This is how you create new routers and sub-routers in your tRPC API.
- *
- * @see https://trpc.io/docs/router
- */
-export const createTRPCRouter = t.router;
+// /**
+//  * This is how you create new routers and sub-routers in your tRPC API.
+//  *
+//  * @see https://trpc.io/docs/router
+//  */
+// export const createTRPCRouter = t.router;
 
-/**
- * Public (unauthenticated) procedure
- *
- * This is the base piece you use to build new queries and mutations on your tRPC API. It does not
- * guarantee that a user querying is authorized, but you can still access user session data if they
- * are logged in.
- */
-export const publicProcedure = t.procedure;
+// /**
+//  * Public (unauthenticated) procedure
+//  *
+//  * This is the base piece you use to build new queries and mutations on your tRPC API. It does not
+//  * guarantee that a user querying is authorized, but you can still access user session data if they
+//  * are logged in.
+//  */
+// export const publicProcedure = t.procedure;
 
-const authMiddleware = t.middleware(async ({ next, ctx }) => {
-  if (!ctx.auth.userId) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' })
-  }
-  return next({
-    ctx: {
-      auth: {
-        ...ctx.auth
-      }
-    },
-  })
-});
+// const authMiddleware = t.middleware(async ({ next, ctx }) => {
+//   if (!ctx.auth.userId) {
+//     throw new TRPCError({ code: 'UNAUTHORIZED' })
+//   }
+//   return next({
+//     ctx: {
+//       auth: {
+//         ...ctx.auth
+//       }
+//     },
+//   })
+// });
 
-const boatIdInput = z.object({ boatId: z.number().min(1) })
+// const boatIdInput = z.object({ boatId: z.number().min(1) })
 
-export const protectedBoatMiddleware = authMiddleware.unstable_pipe(async ({ next, rawInput, ctx }) => {
-  const input = boatIdInput.safeParse(rawInput)
-  if (!input.success) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Missing boat id'})
-  }
+// export const protectedBoatMiddleware = authMiddleware.unstable_pipe(async ({ next, rawInput, ctx }) => {
+//   const input = boatIdInput.safeParse(rawInput)
+//   if (!input.success) {
+//     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Missing boat id'})
+//   }
 
-  const boat = await ctx.db.query.boats.findFirst({
-    where: eq(boats.id, input.data.boatId),
-    with: { crew: true }
-  })
+//   const boat = await ctx.db.query.boats.findFirst({
+//     where: eq(boats.id, input.data.boatId),
+//     with: { crew: true }
+//   })
 
-  if (!boat) {
-    throw new TRPCError({ code: 'NOT_FOUND' })
-  }
+//   if (!boat) {
+//     throw new TRPCError({ code: 'NOT_FOUND' })
+//   }
 
-  if (!boat.crew.some(cm =>
-      cm.userId === ctx.auth.userId || 
-      cm.email === ctx.auth.sessionClaims.email)) {
-      throw new TRPCError({ code: 'UNAUTHORIZED'})
-  }
-  return next({
-    ctx: {
-      ...ctx,
-      boat
-    }
-  })
-});
+//   if (!boat.crew.some(cm =>
+//       cm.userId === ctx.auth.userId || 
+//       cm.email === ctx.auth.sessionClaims.email)) {
+//       throw new TRPCError({ code: 'UNAUTHORIZED'})
+//   }
+//   return next({
+//     ctx: {
+//       ...ctx,
+//       boat
+//     }
+//   })
+// });
 
-export const requiredRoleMiddleware = (roles: CrewMember["role"][]) => {
-  return protectedBoatMiddleware.unstable_pipe(({ ctx, next }) => {
-    const membership = ctx.boat.crew.find(cm => cm.userId === ctx.auth.userId);
-    if (!membership || !roles.includes(membership.role)) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    }
-    return next({ ctx });
-  })
-}
+// export const requiredRoleMiddleware = (roles: CrewMember["role"][]) => {
+//   return protectedBoatMiddleware.unstable_pipe(({ ctx, next }) => {
+//     const membership = ctx.boat.crew.find(cm => cm.userId === ctx.auth.userId);
+//     if (!membership || !roles.includes(membership.role)) {
+//       throw new TRPCError({ code: "UNAUTHORIZED" });
+//     }
+//     return next({ ctx });
+//   })
+// }
 
-export const captainMiddleware = protectedBoatMiddleware.unstable_pipe(({ ctx, next }) => {
-  if (ctx.boat.captainUserId !== ctx.auth.userId) {
-    throw new TRPCError({ code: 'UNAUTHORIZED'})
-  }
-  return next({ ctx })
-});
+// export const captainMiddleware = protectedBoatMiddleware.unstable_pipe(({ ctx, next }) => {
+//   if (ctx.boat.captainUserId !== ctx.auth.userId) {
+//     throw new TRPCError({ code: 'UNAUTHORIZED'})
+//   }
+//   return next({ ctx })
+// });
 
-/**
- * Protected (authenticated) procedure
- *
- * If you want a query or mutation to ONLY be accessible to logged in users, use this. It verifies
- * the session is valid and guarantees `ctx.session.user` is not null.
- *
- * @see https://trpc.io/docs/procedures
- */
-export const protectedProcedure = t.procedure.use(authMiddleware)
-export const protectedBoatProcedure = t.procedure.use(protectedBoatMiddleware)
+// /**
+//  * Protected (authenticated) procedure
+//  *
+//  * If you want a query or mutation to ONLY be accessible to logged in users, use this. It verifies
+//  * the session is valid and guarantees `ctx.session.user` is not null.
+//  *
+//  * @see https://trpc.io/docs/procedures
+//  */
+// export const protectedProcedure = t.procedure.use(authMiddleware)
+// export const protectedBoatProcedure = t.procedure.use(protectedBoatMiddleware)

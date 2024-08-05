@@ -3,7 +3,6 @@ import { makeUseQueryWithStatus } from "convex-helpers/react";
 import { type Id } from "@convex/_generated/dataModel";
 import { api } from "@convex/_generated/api";
 import { useParams } from "next/navigation";
-import { useState } from "react";
 
 const useQuery = makeUseQueryWithStatus(useQueries);
 

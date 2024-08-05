@@ -3,7 +3,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toast";
 import { GlobalActiveTripContext } from "@/lib/use-trip";
 import { cn } from "@/lib/utils";
-import { TRPCReactProvider } from "@/trpc/react";
 import { type Metadata, type Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
@@ -73,11 +72,8 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
-
-              <TRPCReactProvider>
-                <GlobalActiveTripContext>{children}</GlobalActiveTripContext>
-                <Toaster richColors={true} />
-              </TRPCReactProvider>
+              <GlobalActiveTripContext>{children}</GlobalActiveTripContext>
+              <Toaster richColors={true} />
             </ThemeProvider>
           </body>
         </ConvexClientProvider>

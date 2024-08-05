@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Navbar } from "./nav-bar";
 import Link from "next/link";
 
 export default function NotFoundPage() {

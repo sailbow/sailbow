@@ -79,11 +79,6 @@ export default function InviteForm({
       await inviteCrewMember(values);
       onSuccess();
       toast.success("Success!");
-    } catch (err) {
-      if (err instanceof ConvexError && err.data.code == "USER_ERROR") {
-        toast.dismiss();
-        toast.error(err.data.message as string);
-      }
     } finally {
       setInviting(false);
     }

@@ -71,7 +71,7 @@ export default function TripSearch() {
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="justify-start">
-          <span className="max-w-[150px] overflow-hidden text-ellipsis text-muted-foreground">
+          <span className="max-w-[250px] overflow-hidden text-ellipsis">
             {trip.name}
           </span>
           <ChevronsUpDown className="ml-2 size-4" />

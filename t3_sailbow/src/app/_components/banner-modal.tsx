@@ -5,17 +5,14 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FileSearch, ImageIcon, ImagePlus, PencilLine } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useCallback, useEffect, useState } from "react";
-// import { api } from "@/trpc/react";
 import { type BoatBanner } from "@/lib/schemas/boat";
 import ImageWithLoader from "./image-with-loader";
-import { toast } from "@/components/ui/toast";
 import useDebounce from "@/lib/use-debounce";
 import CenteredSpinner from "./centered-spinner";
 import { api } from "@convex/_generated/api";

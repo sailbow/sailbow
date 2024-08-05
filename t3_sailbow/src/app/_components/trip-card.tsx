@@ -1,11 +1,8 @@
-import { type Boat } from "@/lib/schemas/boat";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { type Doc } from "@convex/_generated/dataModel";
+import { Sailboat } from "lucide-react";
 import Link from "next/link";
 import ImageWithLoader from "./image-with-loader";
-import { type Route } from "next";
-import { Button } from "@/components/ui/button";
-import { Sailboat } from "lucide-react";
-import { Doc } from "@convex/_generated/dataModel";
 
 const TripCard = ({ trip }: { trip: Doc<"trips"> }) => {
   let banner;

@@ -1,8 +1,5 @@
 "use client";
-
 import { Ellipsis } from "lucide-react";
-import { type Row } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,13 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { type Doc } from "@convex/_generated/dataModel";
 
-interface DataTableRowActionsProps<TData> {
-  row: Row<TData>;
-}
-
-export function CrewMemberActions({
-  row,
-}: DataTableRowActionsProps<Doc<"crews">>) {
+export function CrewMemberActions({ member }: { member: Doc<"crews"> }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
