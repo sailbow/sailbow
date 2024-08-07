@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
 import { Id } from "@convex/_generated/dataModel";
+import { useActiveTripId } from "@/lib/trip-queries";
 
 export const roleValueToDisplay = (
   value: CrewMember["role"],
@@ -25,7 +26,8 @@ export const roleValueToDisplay = (
   }
 };
 
-export default function InviteCrewMember({ tripId }: { tripId: Id<"trips"> }) {
+export default function InviteCrewMember() {
+  const tripId = useActiveTripId();
   const [isOpen, setIsOpen] = useState(false);
   const isXs = useIsXs();
   return (
@@ -42,7 +44,6 @@ export default function InviteCrewMember({ tripId }: { tripId: Id<"trips"> }) {
         onEscapeKeyDown={() => setIsOpen(false)}
       >
         <InviteForm
-          tripId={tripId}
           onSuccess={() => setIsOpen(false)}
           onCancel={() => setIsOpen(false)}
         />

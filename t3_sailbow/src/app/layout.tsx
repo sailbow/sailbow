@@ -1,7 +1,6 @@
 import "@/app/styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toast";
-import { GlobalActiveTripContext } from "@/lib/use-trip";
 import { cn } from "@/lib/utils";
 import { type Metadata, type Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
@@ -72,7 +71,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
-              <GlobalActiveTripContext>{children}</GlobalActiveTripContext>
+              {children}
               <Toaster richColors={true} />
             </ThemeProvider>
           </body>

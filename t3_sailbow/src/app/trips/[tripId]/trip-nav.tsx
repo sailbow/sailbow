@@ -4,11 +4,11 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import { useRequiredTripLinks } from "@/lib/use-boat-links";
+import { useTripLinks } from "@/lib/use-boat-links";
 
 export function TripNav() {
   const path = usePathname();
-  const links = useRequiredTripLinks();
+  const links = useTripLinks();
   return (
     <nav className="hidden gap-4 sm:flex sm:flex-col">
       {links.map((link, index) => (

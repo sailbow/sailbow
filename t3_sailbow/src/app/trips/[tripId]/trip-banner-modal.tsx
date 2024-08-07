@@ -1,11 +1,18 @@
 "use client";
 import BannerModal from "@/app/_components/banner-modal";
-import { api } from "@convex/_generated/api";
-import { type Id } from "@convex/_generated/dataModel";
-import { useMutation } from "convex/react";
+import { toast } from "@/components/ui/toast";
+import { useUpdateBanner } from "@/lib/trip-mutations";
+import { useActiveTripId } from "@/lib/trip-queries";
 
-export default function TripBannerModal({ tripId }: { tripId: Id<"trips"> }) {
-  const updateBanner = useMutation(api.trips.mutations.updateTripBanner);
+export default function TripBannerModal() {
+  const { mutate: updateBanner } = useUpdateBanner({
+    onSuccess: (_, variables) => {
+      toast.success(
+        `Cover photo ${!!variables.banner ? "updated" : "removed"} successfully!`,
+      );
+    },
+  });
+  const tripId = useActiveTripId();
   return (
     <BannerModal
       onBannerChange={(banner) => updateBanner({ tripId, banner })}

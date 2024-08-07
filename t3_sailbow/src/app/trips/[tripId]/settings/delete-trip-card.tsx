@@ -19,29 +19,30 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { useTrip } from "@/lib/use-trip";
-import { api } from "@convex/_generated/api";
-import { useConvexMutation } from "@/lib/convex-client-helpers";
 import { useState } from "react";
+import { useActiveTripId } from "@/lib/trip-queries";
+import { useDeleteTrip } from "@/lib/trip-mutations";
 
 export default function DeleteTripCard() {
-  const { _id } = useTrip();
+  const tripId = useActiveTripId();
   const router = useRouter();
-
   const [wasDeleted, setWasDeleted] = useState(false);
-  const { mutate: deleteTrip, isLoading } = useConvexMutation(
-    api.trips.mutations.deleteTrip,
-    {
-      onSuccess: () => {
-        setWasDeleted(true);
-        toast.success("Deleted successfully. Taking you back to your trips...");
-        router.push("/trips");
-        router.refresh();
-      },
-      onError: () =>
-        toast.error("Something went wrong, please try again later."),
+  const { mutate, isPending } = useDeleteTrip({
+    onMutate: () => {
+      toast.info("Deleting...");
     },
-  );
+    onSuccess: () => {
+      setWasDeleted(true);
+      toast.dismiss();
+      toast.success("Deleted successfully");
+    },
+    onError: () => toast.error("Something went wrong, please try again later."),
+  });
+
+  const deleteTrip = () => {
+    mutate({ tripId });
+    router.push("/trips");
+  };
 
   return (
     <Card className="max-w-2xl">
@@ -69,8 +70,8 @@ export default function DeleteTripCard() {
               </DialogClose>
               <Button
                 variant="destructive"
-                onClick={() => deleteTrip({ tripId: _id })}
-                disabled={isLoading || wasDeleted}
+                onClick={deleteTrip}
+                disabled={isPending || wasDeleted}
               >
                 Delete
               </Button>

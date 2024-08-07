@@ -9,12 +9,13 @@ import {
   FormItem,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/toast";
-import { useTrip } from "@/lib/use-trip";
 import { useConvexMutation } from "@/lib/convex-client-helpers";
+import { useTrip } from "@/lib/trip-queries";
 import { api } from "@convex/_generated/api";
 import { type Id } from "@convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ConvexError } from "convex/values";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -24,15 +25,18 @@ const updateNameSchema = z.object({
 });
 
 export default function UpdateNameCard() {
-  const trip = useTrip();
+  const { data: trip } = useTrip();
 
   const form = useForm<z.infer<typeof updateNameSchema>>({
     resolver: zodResolver(updateNameSchema),
-    defaultValues: {
-      tripId: trip._id,
-      name: trip.name,
-    },
   });
+
+  useEffect(() => {
+    if (!!trip && !form.control.getFieldState("name").isTouched) {
+      form.setValue("tripId", trip._id);
+      form.setValue("name", trip.name);
+    }
+  }, [trip, form]);
 
   const { isLoading, mutate } = useConvexMutation(
     api.trips.mutations.updateName,

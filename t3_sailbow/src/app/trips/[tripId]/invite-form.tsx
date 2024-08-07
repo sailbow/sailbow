@@ -10,7 +10,6 @@ import {
 import { toast } from "@/components/ui/toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useTrip, type ActiveTrip } from "@/lib/use-trip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -23,12 +22,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { roleValueToDisplay } from "./invite";
 import { Id } from "@convex/_generated/dataModel";
-import { useMutation } from "convex/react";
-import { api } from "@convex/_generated/api";
-import { useState } from "react";
-import { FunctionReturnType } from "convex/server";
-import { SbError } from "@convex/errorUtils";
 import { ConvexError } from "convex/values";
+import { useInviteCrewMember } from "@/lib/trip-mutations";
+import { useActiveTripId } from "@/lib/trip-queries";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -37,32 +33,25 @@ const formSchema = z.object({
 });
 
 interface InviteFormProps {
-  tripId: Id<"trips">;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-export default function InviteForm({
-  tripId,
-  onSuccess,
-  onCancel,
-}: InviteFormProps) {
-  // const { isLoading, mutateAsync: inviteCrewMember } =
-  //   api.crew.inviteCrewMember.useMutation({
-  //     onError: (error) => {
-  //       console.error(error);
-  //       const message =
-  //         error.data?.code === "BAD_REQUEST"
-  //           ? error.message
-  //           : "Something went wrong sending an invitation, please try again later.";
-  //       toast.dismiss();
-  //       toast.warning(message);
-  //     },
-  //   });
-
-  const [inviting, setInviting] = useState(false);
-
-  const inviteCrewMember = useMutation(api.trips.mutations.inviteCrewMember);
+export default function InviteForm({ onSuccess, onCancel }: InviteFormProps) {
+  const tripId = useActiveTripId();
+  const { mutate: inviteCrewMember, isPending } = useInviteCrewMember({
+    onSuccess: () => {
+      toast.success("Invite sent!");
+      onSuccess();
+    },
+    onError: (error) => {
+      if (error instanceof ConvexError && error.data?.code === "USER_ERROR") {
+        toast.error(error.data?.message);
+      } else {
+        toast.error("Something went wrong there, please try again later");
+      }
+    },
+  });
   const defaultValues: z.infer<typeof formSchema> = {
     email: "",
     role: "crewMember",
@@ -74,14 +63,7 @@ export default function InviteForm({
   });
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-    setInviting(true);
-    try {
-      await inviteCrewMember(values);
-      onSuccess();
-      toast.success("Success!");
-    } finally {
-      setInviting(false);
-    }
+    inviteCrewMember(values);
   };
 
   return (
@@ -138,11 +120,11 @@ export default function InviteForm({
             type="button"
             variant="secondary"
             onClick={onCancel}
-            disabled={inviting}
+            disabled={isPending}
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={inviting}>
+          <Button type="submit" disabled={isPending}>
             Send
           </Button>
         </div>

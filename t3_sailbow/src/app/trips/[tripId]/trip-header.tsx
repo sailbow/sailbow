@@ -1,26 +1,33 @@
 "use client";
 import BannerModal from "@/app/_components/banner-modal";
 import ImageWithLoader from "@/app/_components/image-with-loader";
-import { useTrip } from "@/lib/use-trip";
-import { api } from "@convex/_generated/api";
-import { useMutation } from "convex/react";
+import { useUpdateBanner } from "@/lib/trip-mutations";
+import { toast } from "@/components/ui/toast";
+import { useTrip } from "@/lib/trip-queries";
 
 export default function TripHeader() {
-  const { _id, banner } = useTrip();
-  const updateTripBanner = useMutation(api.trips.mutations.updateTripBanner);
+  const { data, isLoading } = useTrip();
+  const { mutate } = useUpdateBanner({
+    onSuccess: (_, variables) => {
+      toast.success(
+        `Cover photo has been ${!!variables.banner ? "updated" : "removed"}!`,
+      );
+    },
+  });
 
-  if (!banner) return;
+  if (isLoading || !data?.banner) return;
+
   return (
     <div className="relative h-40 w-full">
       <ImageWithLoader
         className="rounded-none"
-        src={banner.regular}
-        alt={banner.alt}
+        src={data.banner.full}
+        alt={data.banner.alt}
       />
       <div className="absolute inset-x-2 bottom-2 z-10">
         <BannerModal
           variant="editIcon"
-          onBannerChange={(b) => updateTripBanner({ tripId: _id, banner: b })}
+          onBannerChange={(b) => mutate({ tripId: data._id, banner: b })}
         />
       </div>
     </div>

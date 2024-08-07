@@ -1,4 +1,5 @@
 "use client";
+import { useTrip } from "@/lib/trip-queries";
 import {
   BoatPageContainer,
   BoatPageContent,
@@ -7,17 +8,17 @@ import {
 } from "../trip-page-components";
 import HomePageContent from "./home-page-content";
 import TripBannerModal from "./trip-banner-modal";
-import { useTrip } from "@/lib/use-trip";
 
-export default function Page() {
-  const { _id, name, banner } = useTrip();
+export default function TripOverviewPage() {
+  const { data: trip } = useTrip();
+  if (!trip) return;
   return (
     <BoatPageContainer>
       <BoatPageHeader>
-        <BoatPageTitle>{name}</BoatPageTitle>
-        {!banner && (
+        <BoatPageTitle>{trip.name}</BoatPageTitle>
+        {!trip.banner && (
           <div className="ml-auto">
-            <TripBannerModal tripId={_id} />
+            <TripBannerModal />
           </div>
         )}
       </BoatPageHeader>

@@ -7,32 +7,43 @@ import {
 } from "@/components/text-editor";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTrip } from "@/lib/use-trip";
-import { api } from "@convex/_generated/api";
-import { useMutation } from "convex/react";
+import { toast } from "@/components/ui/toast";
+import { useUpdateDescription } from "@/lib/trip-mutations";
+import { useActiveTripId, useTrip } from "@/lib/trip-queries";
 import { Edit } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HomePageContent() {
-  const { _id, description } = useTrip();
+  const { data: trip, isLoading: isTripLoading } = useTrip();
   const [isEditingDescription, setIsEditingDescription] = useState(false);
-  const [descriptionText, setDescriptionText] = useState(description);
+  const [descriptionText, setDescriptionText] = useState<string | undefined>();
   const editor = useTextEditor({
     isEditing: isEditingDescription,
-    text: descriptionText,
+    text: descriptionText ?? "",
     onTextChange: setDescriptionText,
   });
+  const tripId = useActiveTripId();
 
-  const updateTripDescription = useMutation(
-    api.trips.mutations.updateDescription,
-  );
-  const updateDescription = async () => {
-    setIsEditingDescription(false);
-    await updateTripDescription({ tripId: _id, description: descriptionText });
-  };
-  if (!editor) {
+  const { mutate: updateTripDescription, isPending: isUpdatingDescription } =
+    useUpdateDescription({
+      onSuccess: () => {
+        toast.success("Updated trip description");
+        setIsEditingDescription(false);
+      },
+    });
+
+  useEffect(() => {
+    if (!!trip?.description) {
+      setDescriptionText(trip.description);
+    }
+  }, [trip?.description]);
+
+  if (!editor || isTripLoading) {
     return <Skeleton className="size-full bg-slate-300" />;
   }
+
+  if (!trip) return;
+
   return (
     <div className="flex size-full flex-col gap-2">
       {isEditingDescription ? (
@@ -43,13 +54,22 @@ export default function HomePageContent() {
               size="sm"
               variant="secondary"
               onClick={() => {
-                setDescriptionText(description);
+                setDescriptionText(trip.description);
                 setIsEditingDescription(false);
               }}
             >
               Cancel
             </Button>
-            <Button size="sm" onClick={updateDescription}>
+            <Button
+              size="sm"
+              disabled={isUpdatingDescription}
+              onClick={() =>
+                updateTripDescription({
+                  description: descriptionText ?? "",
+                  tripId,
+                })
+              }
+            >
               Save
             </Button>
           </div>

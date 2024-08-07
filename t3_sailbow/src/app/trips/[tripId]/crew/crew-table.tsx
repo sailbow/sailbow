@@ -1,23 +1,6 @@
 "use client";
 
 import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-  type ColumnDef,
-} from "@tanstack/react-table";
-
-import { useTrip } from "@/lib/use-trip";
-import type { CrewMember } from "@/lib/common-types";
-import { roleValueToDisplay } from "../invite";
-import { DataTable } from "@/components/data-table";
-import { CrewMemberActions } from "./crew-member-actions";
-import { Preloaded, usePreloadedQuery, useQuery } from "convex/react";
-import { api } from "@convex/_generated/api";
-import { type Doc, type Id } from "@convex/_generated/dataModel";
-import { useEffect, useState } from "react";
-import CenteredSpinner from "@/app/_components/centered-spinner";
-import {
   Table,
   TableBody,
   TableCell,
@@ -25,35 +8,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Ellipsis } from "lucide-react";
+import { roleValueToDisplay } from "../invite";
+import { CrewMemberActions } from "./crew-member-actions";
+import { useActiveTripId, useCrew } from "@/lib/trip-queries";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
+import { convexQuery } from "@convex-dev/react-query";
+import { api } from "@convex/_generated/api";
 
-// const columns: ColumnDef<Doc<"crews">>[] = [
-//   {
-//     accessorKey: "email",
-//     header: "Email",
-//   },
-//   {
-//     accessorKey: "role",
-//     header: "Role",
-//     cell: ({ row }) => roleValueToDisplay(row.getValue("role")),
-//   },
-//   {
-//     id: "action",
-//     cell: ({ row }) => <CrewMemberActions row={row} />,
-//   },
-// ];
-export function CrewTable({
-  preloadedCrew,
-}: {
-  preloadedCrew: Preloaded<typeof api.trips.queries.getTripCrew>;
-}) {
-  const crew = usePreloadedQuery(preloadedCrew);
-  // const table = useReactTable({
-  //   data: crew,
-  //   columns,
-  //   getCoreRowModel: getCoreRowModel(),
-  //   getPaginationRowModel: getPaginationRowModel(),
-  // });
+export function CrewTable() {
+  const tripId = useActiveTripId();
+  const { data: crew, isLoading } = useQuery({
+    ...convexQuery(api.trips.queries.getTripCrew, { tripId }),
+  });
   return (
     <Table>
       <TableHeader>
@@ -64,17 +31,26 @@ export function CrewTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {crew.map((member) => (
-          <TableRow key={member._id}>
-            <TableCell>{member.email}</TableCell>
-            <TableCell>{roleValueToDisplay(member.role)}</TableCell>
-            <TableCell>
-              <CrewMemberActions member={member} />
-            </TableCell>
+        {isLoading && !crew ? (
+          <TableRow>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="size-full bg-slate-200">
+                <TableCell />
+              </Skeleton>
+            ))}
           </TableRow>
-        ))}
+        ) : (
+          crew!.map((member) => (
+            <TableRow key={member._id}>
+              <TableCell>{member.email}</TableCell>
+              <TableCell>{roleValueToDisplay(member.role)}</TableCell>
+              <TableCell>
+                <CrewMemberActions member={member} />
+              </TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );
-  // return <DataTable table={table} />;
 }

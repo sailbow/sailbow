@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useGlobalActiveTrip } from "@/lib/use-trip";
 import useDebounce from "@/lib/use-debounce";
 import { ChevronsUpDown } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -20,20 +19,19 @@ import Link from "next/link";
 import { type Route } from "next";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { api } from "@convex/_generated/api";
-import { useConvex } from "convex/react";
-import { type FunctionReturnType } from "convex/server";
+import { useQuery } from "@tanstack/react-query";
+import { convexQuery } from "@convex-dev/react-query";
+import { useTrip } from "@/lib/trip-queries";
 
 export default function TripSearch() {
-  const { trip } = useGlobalActiveTrip();
+  const { data: trip } = useTrip();
   const [isOpen, setIsOpen] = useState(false);
-  const path = usePathname();
   const [searchTerm, setSearchTerm] = useState("");
   const query = useDebounce(searchTerm, 500);
-  const convex = useConvex();
-  const [isLoading, setIsLoading] = useState(false);
-  const [trips, setTrips] = useState<
-    FunctionReturnType<typeof api.trips.queries.searchTrips> | undefined
-  >();
+  const { isFetching, data: trips } = useQuery({
+    ...convexQuery(api.trips.queries.searchTrips, { text: query }),
+    enabled: query !== "",
+  });
 
   useEffect(() => {
     if (!isOpen) {
@@ -41,32 +39,12 @@ export default function TripSearch() {
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    async function searchTrips() {
-      try {
-        setIsLoading(true);
-        setTrips(undefined);
-        const results = await convex.query(api.trips.queries.searchTrips, {
-          text: query,
-        });
-        setTrips(results);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    if (query !== "") {
-      void searchTrips();
-    }
-  }, [query, convex]);
-
   const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setSearchTerm(e.target.value);
   };
 
-  if (trip === null || path.endsWith("/trips")) {
-    return;
-  }
+  if (!trip) return;
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
@@ -88,7 +66,7 @@ export default function TripSearch() {
           />
           <DropdownMenuSeparator />
         </div>
-        {isLoading ? (
+        {isFetching ? (
           <CenteredSpinner />
         ) : trips?.length === 0 ? (
           <div className="w-full text-center text-sm text-muted-foreground">

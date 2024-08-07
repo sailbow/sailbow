@@ -2,7 +2,7 @@ import { mutation } from "@convex/_generated/server";
 import { withUser } from "@convex/authUtils";
 import { SbError } from "@convex/errorUtils";
 import { tripSchema } from "@convex/schema";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 
 export const create = mutation({
   args: tripSchema,
@@ -61,12 +61,10 @@ export const inviteCrewMember = mutation({
       ))
       .first();
 
-      if (existingCm) throw new SbError(
-        {
-          code: "USER_ERROR",
-          message: `User with email '${existingCm.email}' has already been invited!`
-        }
-      );
+      if (existingCm) throw new ConvexError({
+        code: "USER_ERROR",
+        message: `User with email '${args.email}' has already been invited`
+      });
 
       await db.insert("crews", args);
     });

@@ -8,20 +8,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { useGlobalActiveTrip } from "@/lib/use-trip";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import TripSearch from "./trip-search";
-import { useEffect, useState } from "react";
+import { useTrip } from "@/lib/trip-queries";
 
 export default function Crumbs() {
-  const params = useParams();
-  const { trip } = useGlobalActiveTrip();
-  const [showTripSearch, setShowTripSearch] = useState(false);
-
-  useEffect(() => {
-    setShowTripSearch(!!trip && Object.keys(params).includes("tripId"));
-  }, [trip, params]);
+  const { data: trip } = useTrip();
 
   return (
     <Breadcrumb>
@@ -33,8 +25,8 @@ export default function Crumbs() {
             </Button>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        {showTripSearch && <BreadcrumbSeparator />}
-        {showTripSearch && (
+        {!!trip && <BreadcrumbSeparator />}
+        {!!trip && (
           <BreadcrumbItem>
             <TripSearch />
           </BreadcrumbItem>

@@ -46,15 +46,6 @@ export default function BannerModal(props: BannerModalProps) {
   const [data, setData] = useState<ImageData[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
 
-  // const { data, isFetching, error } = api.images.search.useQuery(
-  //   { query: searchText },
-  //   {
-  //     enabled: !!searchText && searchText !== "",
-  //     keepPreviousData: false,
-  //     meta: { errorMessage: "Failed to search images, please try again later" },
-  //   },
-  // );
-
   const search = useCallback(async () => {
     setIsLoading(true);
     setData(undefined);
@@ -76,9 +67,11 @@ export default function BannerModal(props: BannerModalProps) {
     switch (variant) {
       case "add":
         return (
-          <Button variant="outline" size="sm">
+          <Button size="sm">
             <ImagePlus className="size-6 md:mr-2" />
-            <span className="hidden sm:inline-flex">Add a cover image</span>
+            <span className="hidden text-sm sm:inline-flex">
+              Add a cover image
+            </span>
           </Button>
         );
       case "edit":

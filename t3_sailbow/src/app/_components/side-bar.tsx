@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useGlobalActiveTrip } from "@/lib/use-trip";
 import {
   Sheet,
   SheetClose,
@@ -19,11 +18,12 @@ import { type Route } from "next";
 import { useTripLinks } from "@/lib/use-boat-links";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { useTrip } from "@/lib/trip-queries";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const links = useTripLinks();
-  const { trip } = useGlobalActiveTrip();
+  const { data: trip } = useTrip();
   const path = usePathname();
 
   return (
@@ -66,24 +66,25 @@ const Sidebar = () => {
             {trip && (
               <span className="font-semi-bold px-1 py-1">{trip.name}</span>
             )}
-            {links?.map((link, index) => (
-              <SheetClose key={index} asChild>
-                <Link
-                  href={link.href as Route}
-                  className={cn(
-                    buttonVariants({
-                      variant: "ghost",
-                      size: "sm",
-                    }),
-                    path === link.href && "bg-accent text-accent-foreground",
-                    "justify-start",
-                  )}
-                >
-                  <link.icon className="mr-2 h-4 w-4" />
-                  {link.title}
-                </Link>
-              </SheetClose>
-            ))}
+            {trip &&
+              links?.map((link, index) => (
+                <SheetClose key={index} asChild>
+                  <Link
+                    href={link.href as Route}
+                    className={cn(
+                      buttonVariants({
+                        variant: "ghost",
+                        size: "sm",
+                      }),
+                      path === link.href && "bg-accent text-accent-foreground",
+                      "justify-start",
+                    )}
+                  >
+                    <link.icon className="mr-2 h-4 w-4" />
+                    {link.title}
+                  </Link>
+                </SheetClose>
+              ))}
           </div>
         </nav>
       </SheetContent>

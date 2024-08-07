@@ -1,24 +1,11 @@
 import { TripNav } from "./trip-nav";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TripHeader from "./trip-header";
-import { api } from "@convex/_generated/api";
-import { preloadProtectedQuery } from "@/lib/convex-server-helpers";
-import { notFound } from "next/navigation";
-import { TripContext } from "@/lib/use-trip";
-import { type Id } from "@convex/_generated/dataModel";
-export default async function Layout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { tripId: Id<"trips"> };
-}) {
-  const trip = await preloadProtectedQuery(api.trips.queries.getById, params);
-  if (!trip) {
-    return notFound();
-  }
+import NotFoundWrapper from "./not-found-wrapper";
+
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <TripContext initialTrip={trip}>
+    <NotFoundWrapper>
       <div className="relative flex size-full flex-col justify-end">
         <TripHeader />
         <div className="w-full flex-1 overflow-hidden p-4">
@@ -30,6 +17,6 @@ export default async function Layout({
           </TooltipProvider>
         </div>
       </div>
-    </TripContext>
+    </NotFoundWrapper>
   );
 }
