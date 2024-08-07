@@ -10,17 +10,11 @@ import {
 } from "@/components/ui/table";
 import { roleValueToDisplay } from "../invite";
 import { CrewMemberActions } from "./crew-member-actions";
-import { useActiveTripId, useCrew } from "@/lib/trip-queries";
+import { useCrew } from "@/lib/trip-queries";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useQuery } from "@tanstack/react-query";
-import { convexQuery } from "@convex-dev/react-query";
-import { api } from "@convex/_generated/api";
 
 export function CrewTable() {
-  const tripId = useActiveTripId();
-  const { data: crew, isLoading } = useQuery({
-    ...convexQuery(api.trips.queries.getTripCrew, { tripId }),
-  });
+  const { data: crew, isLoading } = useCrew();
   return (
     <Table>
       <TableHeader>
@@ -34,9 +28,9 @@ export function CrewTable() {
         {isLoading && !crew ? (
           <TableRow>
             {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="size-full bg-slate-200">
-                <TableCell />
-              </Skeleton>
+              <TableCell key={i}>
+                <Skeleton key={i} className="h-10 bg-slate-200"></Skeleton>
+              </TableCell>
             ))}
           </TableRow>
         ) : (

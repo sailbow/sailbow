@@ -33,11 +33,6 @@ export const useTrip = () => {
   return useQ({ query: api.trips.queries.getById, args: { tripId } });
 };
 
-// export const useMaybeTrip = () => {
-//   const params = useParams();
-//   return useQ({ query: api.trips.queries.getById, args: { tripId: params.tripId }, enabled: })
-// };
-
 export const useUserTrips = () => {
   return useQ({ query: api.trips.queries.getUserTrips, args: {} });
 };

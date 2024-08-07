@@ -90,3 +90,53 @@ export const deleteTrip = mutation({
     })
   }
 })
+
+export const kickMember = mutation({
+  args: { tripId: v.id("trips"), memberId: v.id("crews") },
+  handler: async ({ auth, db }, { tripId, memberId }) => {
+    await withUser(auth, async (user) => {
+      const crew = await db.query("crews")
+        .withIndex("by_tripId", q => q.eq("tripId", tripId))
+        .collect();
+      const userCrewEntry = crew.find(c => c.userId === user.tokenIdentifier);
+      if (userCrewEntry?.role !== "captain") {
+        throw new ConvexError({
+          code: "USER_ERROR",
+          message: "Only the captain can kick members!"
+        });
+      }
+      if (userCrewEntry?._id === memberId) {
+        throw new ConvexError({
+          code: "USER_ERROR",
+          message: "You can't kick yourself! Try transferring the trip to another member instead."
+        });
+      }
+      await db.delete(memberId);
+    })
+  }
+})
+
+export const changeMemberRole = mutation({
+  args: { tripId: v.id("trips"), memberId: v.id("crews"), role: v.union(v.literal("crewMember"), v.literal("firstMate")) },
+  handler: async ({ auth, db }, { tripId, memberId, role }) => {
+    await withUser(auth, async (user) => {
+      const crew = await db.query("crews")
+        .withIndex("by_tripId", q => q.eq("tripId", tripId))
+        .collect();
+      const userCrewEntry = crew.find(c => c.userId === user.tokenIdentifier);
+      if (userCrewEntry?.role !== "captain" && userCrewEntry?.role !== "firstMate") {
+        throw new ConvexError({
+          code: "USER_ERROR",
+          message: "Only the captain or first mates can change roles!"
+        });
+      }
+      if (userCrewEntry?._id === memberId) {
+        throw new ConvexError({
+          code: "USER_ERROR",
+          message: "You can't change your own role!"
+        });
+      }
+      await db.patch(memberId, { role });
+    })
+  }
+})

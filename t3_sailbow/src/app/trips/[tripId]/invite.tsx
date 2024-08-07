@@ -10,13 +10,14 @@ import { useIsXs } from "@/hooks/use-media-query";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
-import { Id } from "@convex/_generated/dataModel";
+import { Doc, Id } from "@convex/_generated/dataModel";
 import { useActiveTripId } from "@/lib/trip-queries";
 
 export const roleValueToDisplay = (
-  value: CrewMember["role"],
+  value: Doc<"crews">["role"],
 ): React.ReactNode => {
-  switch (value) {
+  // console.log(value);
+  switch (value.trim()) {
     case "firstMate":
       return "First Mate";
     case "crewMember":

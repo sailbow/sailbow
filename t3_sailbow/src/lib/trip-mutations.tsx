@@ -53,4 +53,12 @@ export const useUpdateBanner = (
 
 export const useDeleteTrip = (
   args: UseMutationArgs<typeof api.trips.mutations.deleteTrip>,
-) => useMut(api.trips.mutations.deleteTrip);
+) => useMut(api.trips.mutations.deleteTrip, args);
+
+export const useKickMember = (
+  args: UseMutationArgs<typeof api.trips.mutations.kickMember>,
+) => useMut(api.trips.mutations.kickMember, args);
+
+export const useChangeMemberRole = (
+  args: UseMutationArgs<typeof api.trips.mutations.changeMemberRole>,
+) => useMut(api.trips.mutations.changeMemberRole, args);
