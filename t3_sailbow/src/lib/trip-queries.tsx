@@ -36,3 +36,12 @@ export const useTrip = () => {
 export const useUserTrips = () => {
   return useQ({ query: api.trips.queries.getUserTrips, args: {} });
 };
+
+export const useSearchTrips = (searchText: string) => {
+  console.log(searchText);
+  return useQ({
+    query: api.trips.queries.searchTrips,
+    args: { text: searchText },
+    enabled: searchText !== "",
+  });
+};
