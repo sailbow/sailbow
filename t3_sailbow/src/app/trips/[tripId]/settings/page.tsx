@@ -7,7 +7,7 @@ import {
 import DeleteTripCard from "./delete-trip-card";
 import UpdateNameCard from "./update-name-card";
 
-export default async function SettingsPage() {
+export default function SettingsPage() {
   return (
     <BoatPageContainer>
       <BoatPageHeader>
