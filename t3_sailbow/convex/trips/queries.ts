@@ -4,7 +4,7 @@ import { notFound, outputSchema, success, SuccessfulResult, valueOrNotFound, zod
 import { getUser, queryWithAuth, withAuth, withUser } from "@convex/authUtils";
 import { SbError } from "@convex/errorUtils";
 import { asyncMap, pruneNull } from "convex-helpers";
-import { getOneFromOrThrow, getManyFrom, getOneFrom } from "convex-helpers/server/relationships";
+import { getOneFromOrThrow, getManyFrom, getOneFrom, getManyVia } from "convex-helpers/server/relationships";
 import { zid } from "convex-helpers/server/zod";
 import { type GenericDatabaseReader, type UserIdentity } from "convex/server";
 import { ConvexError, v } from "convex/values";
@@ -44,7 +44,7 @@ export const getById = query({
 })
 
 export const getUserTrips = query({
-  handler: withAuth(async ({ db, user }) => {
+  handler: withAuth(async ({ db, user, }) => {
     const memberships = await getMemberships({ user, db });
     const trips = (await asyncMap(
       memberships,
@@ -65,10 +65,25 @@ export const getTripCrew = query({
       const trip = memberships.filter(m => m.tripId === args.tripId)[0];
       if (!trip) throw new SbError({ code: "NOT_FOUND" });
       
-      return await db
+      const crewRecords = await db
         .query("crews")
         .withIndex("by_tripId", q => q.eq("tripId", args.tripId))
         .collect();
+      
+      const crew = pruneNull(await Promise.all(crewRecords.map(async cm => {
+        return await db.query("users")
+          .withIndex("by_email", q => q.eq("email", cm.email))
+          .unique();
+      })));
+      return crewRecords.map(cm => {
+        const m = crew.find(c => c.email === cm.email);
+        return {
+          ...cm,
+          imageUrl: m!.imageUrl,
+          firstName: m!.firstName,
+          lastName: m!.lastName
+        };
+      })
     });
   }
 })

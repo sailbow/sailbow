@@ -12,14 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import useDebounce from "@/lib/use-debounce";
 import { Check, ChevronsUpDown, Sailboat } from "lucide-react";
-import { type ChangeEvent, useState, useEffect } from "react";
+import { type ChangeEvent, useState, useEffect, useMemo } from "react";
 import CenteredSpinner from "./centered-spinner";
 import Link from "next/link";
 import { type Route } from "next";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useActiveTripId, useSearchTrips, useTrip } from "@/lib/trip-queries";
-import { Doc } from "@convex/_generated/dataModel";
-import Image from "next/image";
+import { type Doc } from "@convex/_generated/dataModel";
 import ImageWithLoader from "./image-with-loader";
 
 const TripDropdownItem = ({ trip }: { trip: Doc<"trips"> }) => {
@@ -53,6 +52,10 @@ export default function TripSearch() {
   const query = useDebounce(searchTerm, 500);
   const { isFetching, data: trips } = useSearchTrips(query);
 
+  const tripResults = useMemo(() => {
+    return trips?.filter((t) => t._id !== trip?._id);
+  }, [trip?._id, trips]);
+
   useEffect(() => {
     if (!isOpen) {
       setSearchTerm("");
@@ -60,7 +63,7 @@ export default function TripSearch() {
   }, [isOpen]);
 
   const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // e.preventDefault();
+    e.preventDefault();
     setSearchTerm(e.target.value);
   };
 
@@ -69,16 +72,17 @@ export default function TripSearch() {
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="justify-start">
-          <span className="max-w-[250px] overflow-hidden text-ellipsis">
+          <span className="max-w-[250px] overflow-hidden text-ellipsis text-sm text-muted-foreground">
             {trip.name}
           </span>
           <ChevronsUpDown className="ml-2 size-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-80" align="start">
-        <div className="flex flex-col space-y-2 bg-popover">
+        <div className="flex flex-col space-y-2 bg-card">
           <div className="p-2">
             <Input
+              autoFocus
               type="search"
               placeholder="Search..."
               className="rounded-lg"
@@ -95,14 +99,14 @@ export default function TripSearch() {
           <DropdownMenuSeparator />
           {isFetching ? (
             <CenteredSpinner />
-          ) : trips?.length === 0 ? (
+          ) : tripResults?.length === 0 ? (
             <div className="w-full text-center text-sm text-muted-foreground">
               No trips were found
             </div>
           ) : (
-            <ScrollArea>
+            <ScrollArea className="min-h-12">
               <DropdownMenuGroup className="max-h-[50dvh] overflow-y-auto">
-                {trips
+                {tripResults
                   ?.filter((t) => t._id !== trip._id)
                   .map((t) => (
                     <Link key={t._id} href={`/trips/${t._id}` as Route}>

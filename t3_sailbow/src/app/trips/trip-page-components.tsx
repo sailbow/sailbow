@@ -8,7 +8,7 @@ const TripPageContainer = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "relative flex size-full flex-col space-y-2 sm:container",
+      "relative flex size-full max-w-full flex-col space-y-2 overflow-hidden sm:container",
       className,
     )}
     {...props}

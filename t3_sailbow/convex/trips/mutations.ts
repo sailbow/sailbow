@@ -1,12 +1,11 @@
 import { mutation } from "@convex/_generated/server";
 import { withUser } from "@convex/authUtils";
-import { SbError } from "@convex/errorUtils";
 import { tripSchema } from "@convex/schema";
 import { ConvexError, v } from "convex/values";
 
 export const create = mutation({
   args: tripSchema,
-  handler: async ({ auth, db }, args) => {
+  handler: async ({ auth, db, }, args) => {
     return await withUser(auth, async (user) => {
       const tripId = await db.insert("trips", args);
       await db.insert("crews", {
@@ -139,4 +138,5 @@ export const changeMemberRole = mutation({
       await db.patch(memberId, { role });
     })
   }
-})
+});
+

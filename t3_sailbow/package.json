@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@auth/core": "^0.34.1",
+    "@clerk/backend": "^1.6.2",
     "@clerk/clerk-react": "^5.2.7",
     "@clerk/elements": "^0.10.4",
     "@clerk/nextjs": "^5.2.4",
@@ -70,6 +71,7 @@
     "server-only": "^0.0.1",
     "sonner": "^1.5.0",
     "superjson": "^2.2.1",
+    "svix": "^1.29.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"

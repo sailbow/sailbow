@@ -79,8 +79,20 @@ export const pollOptionSchema = {
     option: moduleSchema
 }
 
+export const userSchema = {
+    externalId: v.string(),
+    firstName: v.string(),
+    lastName: v.string(),
+    imageUrl: v.string(),
+    email: v.string()
+}
+
 
 export default defineSchema({
+    users: defineTable(userSchema)
+        .index("by_externalId", ["externalId"])
+        .index("by_email", ["email"]),
+
     trips: defineTable(tripSchema)
         .searchIndex("search_trip_name", {
             searchField: "name",

@@ -12,7 +12,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <TooltipProvider delayDuration={0}>
             <div className="flex size-full gap-4">
               <TripNav />
-              <div className="relative max-w-5xl grow">{children}</div>
+              <div className="relative max-w-5xl grow overflow-hidden">
+                {children}
+              </div>
             </div>
           </TooltipProvider>
         </div>
