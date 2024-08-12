@@ -33,10 +33,11 @@ export default function HomePageContent() {
     });
 
   useEffect(() => {
-    if (!!trip?.description) {
+    if (!!trip?.description && !!editor && !editor.isEditable) {
+      editor.chain().setContent(trip.description).run();
       setDescriptionText(trip.description);
     }
-  }, [trip?.description]);
+  }, [trip?.description, editor, descriptionText]);
 
   if (!editor || isTripLoading) {
     return <Skeleton className="size-full bg-slate-300" />;
