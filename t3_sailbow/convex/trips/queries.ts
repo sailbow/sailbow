@@ -1,24 +1,18 @@
-import { Doc, Id, type DataModel } from "@convex/_generated/dataModel";
-import { MutationCtx, query, QueryCtx } from "@convex/_generated/server";
-import { notFound, outputSchema, success, SuccessfulResult, valueOrNotFound, zodQuery } from "@convex/_lib/queryUtils";
-import { getUser, queryWithAuth, withAuth, withUser } from "@convex/authUtils";
+import { type DataModel } from "@convex/_generated/dataModel";
+import { query } from "@convex/_generated/server";
+import { notFound, success, zodQuery } from "@convex/_lib/queryUtils";
+import { withAuth, withUser } from "@convex/authUtils";
 import { SbError } from "@convex/errorUtils";
 import { asyncMap, pruneNull } from "convex-helpers";
-import { getOneFromOrThrow, getManyFrom, getOneFrom, getManyVia } from "convex-helpers/server/relationships";
+import { getOneFrom } from "convex-helpers/server/relationships";
 import { zid } from "convex-helpers/server/zod";
 import { type GenericDatabaseReader, type UserIdentity } from "convex/server";
-import { ConvexError, v } from "convex/values";
-import { z } from "zod";
+import { v } from "convex/values";
 
 const getMemberships = async ({ user, db }: { user: UserIdentity, db: GenericDatabaseReader<DataModel>}) => {
   return await db
     .query("crews")
-    .filter(q => q.and(
-      q.or(
-        q.eq(q.field("userId"), user.tokenIdentifier),
-        q.eq(q.field("email"), user.email)
-      ),
-    ))
+    .withIndex("by_email", q => q.eq("email", user.email!))
     .collect();
 }
 

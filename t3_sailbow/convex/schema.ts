@@ -56,7 +56,7 @@ export const commentsSchema = {
 export const announcementSchema = {
     tripId: v.id("trips"),
     title: v.string(),
-    text: v.string()
+    text: v.string(),
 }
 
 export const announcementCommentsSchema = {
@@ -102,9 +102,13 @@ export default defineSchema({
         .index("by_userId", ["userId"])
         .index("by_userId_and_tripId", ["userId", "tripId"])
         .index("by_tripId", ["tripId"])
-        .index("by_email", ["email"]),
+        .index("by_email", ["email"])
+        .index("by_email_and_tripId", ["email", "tripId"]),
 
-    announcements: defineTable(announcementSchema)
+    announcements: defineTable({
+        ...announcementSchema,
+        createdBy: v.id("users")
+    })
         .index("by_tripId", ["tripId"]),
 
     announcementComments: defineTable(announcementCommentsSchema)

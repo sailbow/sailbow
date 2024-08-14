@@ -62,3 +62,7 @@ export const useKickMember = (
 export const useChangeMemberRole = (
   args: UseMutationArgs<typeof api.trips.mutations.changeMemberRole>,
 ) => useMut(api.trips.mutations.changeMemberRole, args);
+
+export const useCreateAnnouncement = (
+  args: UseMutationArgs<typeof api.announcements.mutations.create>,
+) => useMut(api.announcements.mutations.create, args);

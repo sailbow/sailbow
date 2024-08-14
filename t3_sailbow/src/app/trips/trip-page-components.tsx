@@ -52,7 +52,7 @@ const TripPageContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("relative grow overflow-hidden", className)}
+    className={cn("relative grow overflow-auto", className)}
     {...props}
   />
 ));

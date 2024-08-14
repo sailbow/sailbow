@@ -49,10 +49,14 @@ export const useUserTrips = () => {
 };
 
 export const useSearchTrips = (searchText: string) => {
-  console.log(searchText);
   return useQ({
     query: api.trips.queries.searchTrips,
     args: { text: searchText },
     enabled: searchText !== "",
   });
+};
+
+export const useAnnouncements = () => {
+  const tripId = useActiveTripId();
+  return useQ({ query: api.announcements.queries.get, args: { tripId } });
 };
