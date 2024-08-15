@@ -26,14 +26,16 @@ const TripDropdownItem = ({ trip }: { trip: Doc<"trips"> }) => {
   const activeTripId = useActiveTripId();
   return (
     <div className="flex w-full items-center gap-4">
-      <div className="flex h-12 w-20 shrink-0 items-center overflow-hidden rounded-md">
+      <div className="flex h-12 w-20 shrink-0 items-center justify-center overflow-hidden rounded-md">
         {!!trip.banner ? (
           <ImageWithLoader src={trip.banner.thumbnail} alt={trip.banner.alt} />
         ) : (
-          <Sailboat
-            className="size-10 stroke-muted-foreground"
-            strokeWidth={1}
-          />
+          <div className="flex size-full items-center justify-center bg-gradient-to-r from-muted via-accent to-muted">
+            <Sailboat
+              className="size-10 stroke-muted-foreground"
+              strokeWidth={1}
+            />
+          </div>
         )}
       </div>
       <div className="text-sm font-light">{trip.name}</div>
