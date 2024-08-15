@@ -53,7 +53,7 @@ export default function DeleteTripCard() {
       <CardContent>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="destructive">Delete boat</Button>
+            <Button variant="destructive">Delete trip</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>

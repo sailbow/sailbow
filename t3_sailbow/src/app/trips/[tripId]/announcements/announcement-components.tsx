@@ -169,14 +169,25 @@ export const CreateAnnouncementButton = () => {
 export const AnnouncementList = () => {
   const { data: announcements, isLoading } = useAnnouncements();
   if (isLoading) {
-    return Array.from({ length: 3 }).map((_, i) => (
-      <Card key={i} className="my-4 flex w-full max-w-3xl gap-2 p-4">
-        <Avatar>
-          <Skeleton className="size-full" />
-        </Avatar>
-        <Skeleton className="h-10 flex-1" />
-      </Card>
-    ));
+    return (
+      <div className="grid w-full grid-cols-1 gap-4">
+        {Array.from({ length: 2 }).map((_, i) => (
+          <Card key={i} className="max-w-2xl">
+            <CardHeader className="px-4 pt-4">
+              <div className="flex w-full items-center gap-2">
+                <Avatar>
+                  <Skeleton className="size-full rounded-full" />
+                </Avatar>
+                <Skeleton className="h-10 flex-1" />
+              </div>
+            </CardHeader>
+            <CardContent className="h-32 w-full">
+              <Skeleton className="size-full" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
   }
   if (!announcements) return;
 

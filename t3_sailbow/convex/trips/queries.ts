@@ -1,10 +1,10 @@
-import { type DataModel } from "@convex/_generated/dataModel";
+import { type Doc, type DataModel } from "@convex/_generated/dataModel";
 import { query } from "@convex/_generated/server";
 import { notFound, success, zodQuery } from "@convex/_lib/queryUtils";
 import { withAuth, withUser } from "@convex/authUtils";
 import { SbError } from "@convex/errorUtils";
 import { asyncMap, pruneNull } from "convex-helpers";
-import { getOneFrom } from "convex-helpers/server/relationships";
+import { getManyVia, getOneFrom } from "convex-helpers/server/relationships";
 import { zid } from "convex-helpers/server/zod";
 import { type GenericDatabaseReader, type UserIdentity } from "convex/server";
 import { v } from "convex/values";
@@ -64,20 +64,22 @@ export const getTripCrew = query({
         .withIndex("by_tripId", q => q.eq("tripId", args.tripId))
         .collect();
       
-      const crew = pruneNull(await Promise.all(crewRecords.map(async cm => {
+      const userRecords = pruneNull(await Promise.all(crewRecords.map(async cm => {
         return await db.query("users")
           .withIndex("by_email", q => q.eq("email", cm.email))
           .unique();
       })));
-      return crewRecords.map(cm => {
-        const m = crew.find(c => c.email === cm.email);
+      
+      return pruneNull(crewRecords.map(cm => {
+        const user = userRecords.find(u => u.email == cm.email);
+        if (!user) return null;
         return {
           ...cm,
-          imageUrl: m!.imageUrl,
-          firstName: m!.firstName,
-          lastName: m!.lastName
+          imageUrl: user.imageUrl,
+          firstName: user.firstName,
+          lastName: user.lastName
         };
-      })
+      }));
     });
   }
 })
@@ -89,6 +91,23 @@ export const searchTrips = query({
   handler: async ({ db, auth }, { text }) => {
     return await withUser(auth, async (user) => {
       const memberships = await getMemberships({ user, db });
+      if (!text) {
+        let num = 0;
+        const membs = [] as Doc<"crews">[];
+        for (const m of memberships) {
+          if (num >= 5) break;
+          membs.push(m);
+          num++;
+        }
+        return pruneNull(await asyncMap(
+          membs,
+          async (membership) => {
+            return db.query("trips")
+              .withIndex("by_id", q => q.eq("_id", membership.tripId))
+              .unique()
+          }
+        ))
+      }
       const trips = pruneNull(await asyncMap(
         memberships,
         async (m) => await db.query("trips")

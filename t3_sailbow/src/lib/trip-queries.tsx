@@ -52,7 +52,7 @@ export const useSearchTrips = (searchText: string) => {
   return useQ({
     query: api.trips.queries.searchTrips,
     args: { text: searchText },
-    enabled: searchText !== "",
+    // enabled: searchText !== "",
   });
 };
 

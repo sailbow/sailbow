@@ -6,6 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -79,7 +80,7 @@ export default function TripSearch() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-80" align="start">
-        <div className="flex flex-col space-y-2 bg-card">
+        <div className="flex flex-col bg-card">
           <div className="p-2">
             <Input
               autoFocus
@@ -89,7 +90,9 @@ export default function TripSearch() {
               onChange={onSearchChange}
             />
           </div>
-
+          <DropdownMenuLabel className="font-light">
+            Active trip
+          </DropdownMenuLabel>
           <div
             className="relative flex items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
             onClick={() => setIsOpen(false)}
@@ -97,6 +100,9 @@ export default function TripSearch() {
             <TripDropdownItem trip={trip} />
           </div>
           <DropdownMenuSeparator />
+          <DropdownMenuLabel className="font-light">
+            Other trips
+          </DropdownMenuLabel>
           {isFetching ? (
             <CenteredSpinner />
           ) : tripResults?.length === 0 ? (
@@ -104,15 +110,18 @@ export default function TripSearch() {
               No trips were found
             </div>
           ) : (
-            <ScrollArea className="min-h-12">
+            <ScrollArea className="min-h-8">
               <DropdownMenuGroup className="max-h-[50dvh] overflow-y-auto">
                 {tripResults
                   ?.filter((t) => t._id !== trip._id)
                   .map((t) => (
                     <Link key={t._id} href={`/trips/${t._id}` as Route}>
-                      <DropdownMenuItem>
+                      <div
+                        className="relative flex items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                        onClick={() => setIsOpen(false)}
+                      >
                         <TripDropdownItem trip={t} />
-                      </DropdownMenuItem>
+                      </div>
                     </Link>
                   ))}
               </DropdownMenuGroup>

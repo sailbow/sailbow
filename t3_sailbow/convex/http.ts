@@ -26,7 +26,7 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
 
   switch (event.type) {
     case "user.created":
-    case "user.modified":
+    case "user.updated":
       await ctx.runMutation(api.users.mutations.upsertUser, userSchema.parse(event.data));
     default:
       console.log(`Ignored clerk webhook event: ${event.type}`);

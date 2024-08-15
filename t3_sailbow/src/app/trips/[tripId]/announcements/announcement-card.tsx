@@ -9,33 +9,46 @@ import {
 import { Button } from "@/components/ui/button";
 import { Edit, Heart, MessageCircle, Trash2, User } from "lucide-react";
 import { type Doc } from "@convex/_generated/dataModel";
+import { FunctionReturnType } from "convex/server";
+import { api } from "@convex/_generated/api";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+
+type Announcement = FunctionReturnType<
+  typeof api.announcements.queries.get
+>[number];
 
 export default function AnnouncementCard({
   announcement,
 }: {
-  announcement: Doc<"announcements">;
+  announcement: Announcement;
 }) {
   return (
-    <Card className="max-w-3xl">
+    <Card className="max-w-2xl">
       <CardHeader className="px-4 pt-4">
-        <div className="flex items-center justify-between">
+        <div className="flex justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted">
-              <User className="size-6" />
-            </div>
-            <CardTitle>{announcement.title}</CardTitle>
+            <Avatar>
+              <AvatarImage src={announcement.createdByUser.imageUrl} />
+              <AvatarFallback>
+                <Skeleton className="size-full rounded-full" />
+              </AvatarFallback>
+            </Avatar>
+            <CardTitle className="text-lg xs:text-2xl">
+              {announcement.title}
+            </CardTitle>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex gap-1">
             <Button variant="ghost" className="flex items-center">
               <Edit className="h-4 w-4" />
-              <span className="hidden sm:ml-2 sm:inline-flex">Edit</span>
+              <span className="sr-only">Edit</span>
             </Button>
             <Button
               variant="ghost"
               className="hover:bg-red-200 focus:bg-red-200 dark:hover:bg-red-400 dark:focus:bg-red-400"
             >
               <Trash2 className="h-4 w-4" />
-              <span className="hidden sm:ml-2 sm:inline-flex">Delete</span>
+              <span className="sr-only">Delete</span>
             </Button>
           </div>
         </div>
