@@ -25,7 +25,7 @@ export default function AnnouncementCard({
 }) {
   return (
     <Card className="max-w-2xl">
-      <CardHeader className="px-4 pt-4">
+      <CardHeader className="px-2 pt-2 sm:px-4 sm:pt-4">
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
             <Avatar>
@@ -34,18 +34,28 @@ export default function AnnouncementCard({
                 <Skeleton className="size-full rounded-full" />
               </AvatarFallback>
             </Avatar>
-            <CardTitle className="text-lg xs:text-2xl">
-              {announcement.title}
-            </CardTitle>
+            <div>
+              <CardTitle className="text-sm sm:text-xl">
+                {`${announcement.createdByUser.firstName} ${announcement.createdByUser.lastName}`}
+              </CardTitle>
+              <div className="text-xs text-muted-foreground">
+                {new Date(announcement._creationTime).toDateString()} @
+                {new Date(announcement._creationTime).toLocaleTimeString(
+                  undefined,
+                  { hour: "numeric", minute: "2-digit" },
+                )}
+              </div>
+            </div>
           </div>
           <div className="flex gap-1">
-            <Button variant="ghost" className="flex items-center">
+            <Button variant="ghost" size="icon">
               <Edit className="h-4 w-4" />
               <span className="sr-only">Edit</span>
             </Button>
             <Button
               variant="ghost"
               className="hover:bg-red-200 focus:bg-red-200 dark:hover:bg-red-400 dark:focus:bg-red-400"
+              size="icon"
             >
               <Trash2 className="h-4 w-4" />
               <span className="sr-only">Delete</span>
@@ -54,7 +64,7 @@ export default function AnnouncementCard({
         </div>
       </CardHeader>
       <CardContent>
-        <p className="prose prose-sm dark:prose-invert">{announcement.text}</p>
+        <p className="prose dark:prose-invert">{announcement.text}</p>
       </CardContent>
       <CardFooter className="px-4 pb-4">
         <div className="flex items-center justify-between">
