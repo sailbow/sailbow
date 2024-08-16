@@ -55,7 +55,7 @@ export const commentsSchema = {
 
 export const announcementSchema = {
     tripId: v.id("trips"),
-    title: v.string(),
+    title: v.optional(v.string()),
     text: v.string(),
 }
 

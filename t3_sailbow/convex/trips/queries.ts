@@ -21,7 +21,7 @@ export const getById = query({
     tripId: v.id("trips"),
   },
   handler: async ({ db, auth }, { tripId }) => {
-    return await withUser(auth, async (user) => {
+    return await withUser(auth, db, async (user) => {
       const membership = await db
         .query("crews")
         .withIndex("by_tripId", q => q.eq("tripId", tripId))
@@ -54,7 +54,7 @@ export const getTripCrew = query({
     tripId: v.id("trips")
   },
   handler: async ({ db, auth }, args) => {
-    return await withUser(auth, async (user) => {
+    return await withUser(auth, db, async (user) => {
       const memberships = await getMemberships({ user, db })
       const trip = memberships.filter(m => m.tripId === args.tripId)[0];
       if (!trip) throw new SbError({ code: "NOT_FOUND" });
@@ -89,7 +89,7 @@ export const searchTrips = query({
     text: v.string()
   },
   handler: async ({ db, auth }, { text }) => {
-    return await withUser(auth, async (user) => {
+    return await withUser(auth, db, async (user) => {
       const memberships = await getMemberships({ user, db });
       if (!text) {
         let num = 0;
@@ -123,7 +123,7 @@ export const searchTrips = query({
 export const getByIdTest = zodQuery({
   args: { tripId: zid("trips")},
   handler: async ({ db, auth }, { tripId }) => {
-    return await withUser(auth, async (user) => {
+    return await withUser(auth, db, async (user) => {
       const membership = await db
         .query("crews")
         .withIndex("by_tripId", q => q.eq("tripId", tripId))

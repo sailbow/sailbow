@@ -6,7 +6,7 @@ import { ConvexError, v } from "convex/values";
 export const create = mutation({
   args: tripSchema,
   handler: async ({ auth, db, }, args) => {
-    return await withUser(auth, async (user) => {
+    return await withUser(auth, db, async (user) => {
       const tripId = await db.insert("trips", args);
       await db.insert("crews", {
         tripId,
@@ -26,7 +26,7 @@ export const updateDescription = mutation({
     description: v.string()
   },
   handler: async ({ auth, db }, args) => {
-    await withUser(auth, async () => {
+    await withUser(auth, db, async () => {
       await db.patch(args.tripId, { description: args.description });
     });
   }
@@ -38,7 +38,7 @@ export const updateTripBanner = mutation({
     banner: tripSchema.banner
   },
   handler: async ({ auth, db }, { tripId, banner }) => {
-    await withUser(auth, async () => {
+    await withUser(auth, db, async () => {
       await db.patch(tripId, { banner });
     });
   }
@@ -51,7 +51,7 @@ export const inviteCrewMember = mutation({
     role: v.union(v.literal("crewMember"), v.literal("firstMate"))
   },
   handler: async ({ db, auth }, args) => {
-    await withUser(auth, async () => {
+    await withUser(auth, db, async () => {
       const existingCm = await db
       .query("crews")
       .filter(q => q.and(
@@ -73,7 +73,7 @@ export const inviteCrewMember = mutation({
 export const updateName = mutation({
   args: { tripId: v.id("trips"), name: v.optional(v.string()) },
   handler: async ({ auth, db }, { tripId, name }) => {
-    await withUser(auth, async () => {
+    await withUser(auth, db, async () => {
       await db.patch(tripId, { name });
     })
   }
@@ -84,7 +84,7 @@ export const deleteTrip = mutation({
     tripId: v.id("trips"),
   },
   handler: async ({ auth, db }, args) => {
-    await withUser(auth, async () => {
+    await withUser(auth, db, async () => {
       await db.delete(args.tripId);
     })
   }
@@ -93,11 +93,11 @@ export const deleteTrip = mutation({
 export const kickMember = mutation({
   args: { tripId: v.id("trips"), memberId: v.id("crews") },
   handler: async ({ auth, db }, { tripId, memberId }) => {
-    await withUser(auth, async (user) => {
+    await withUser(auth, db, async (user) => {
       const crew = await db.query("crews")
         .withIndex("by_tripId", q => q.eq("tripId", tripId))
         .collect();
-      const userCrewEntry = crew.find(c => c.userId === user.tokenIdentifier);
+      const userCrewEntry = crew.find(c => c.email === user.email);
       if (userCrewEntry?.role !== "captain") {
         throw new ConvexError({
           code: "USER_ERROR",
@@ -118,11 +118,11 @@ export const kickMember = mutation({
 export const changeMemberRole = mutation({
   args: { tripId: v.id("trips"), memberId: v.id("crews"), role: v.union(v.literal("crewMember"), v.literal("firstMate")) },
   handler: async ({ auth, db }, { tripId, memberId, role }) => {
-    await withUser(auth, async (user) => {
+    await withUser(auth, db, async (user) => {
       const crew = await db.query("crews")
         .withIndex("by_tripId", q => q.eq("tripId", tripId))
         .collect();
-      const userCrewEntry = crew.find(c => c.userId === user.tokenIdentifier);
+      const userCrewEntry = crew.find(c => c.email === user.email);
       if (userCrewEntry?.role !== "captain" && userCrewEntry?.role !== "firstMate") {
         throw new ConvexError({
           code: "USER_ERROR",

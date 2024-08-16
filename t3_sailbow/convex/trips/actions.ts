@@ -10,7 +10,7 @@ export const getCrew = internalAction({
     tripId: v.id("trips")
   },
   handler: async ({ auth, runQuery }, args) => {
-    return await withUser(auth, async () => {
+    return await withUser(auth, db, async () => {
       const crew: Doc<"crews">[] = await runQuery(api.trips.queries.getTripCrew, args);
       const users = (await clerkClient.users.getUserList({
         emailAddress: crew.map(m => m.email)

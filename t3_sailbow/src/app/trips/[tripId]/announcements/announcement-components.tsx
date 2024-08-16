@@ -48,7 +48,6 @@ import AnnouncementCard from "./announcement-card";
 
 const createAnnouncementSchema = z.object({
   tripId: z.custom<Id<"trips">>(),
-  title: z.string().min(1, "Required"),
   text: z.string().min(1, "Required"),
 });
 type CreateAnnouncement = z.infer<typeof createAnnouncementSchema>;
@@ -63,7 +62,9 @@ export const CreateAnnouncementButton = () => {
       close();
     },
     onError: (error) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (error instanceof ConvexError && error.data?.code === "USER_ERROR") {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         toast.error(error.data.message);
       } else {
         toast.error("Something went wrong there, please try again later");
@@ -85,7 +86,7 @@ export const CreateAnnouncementButton = () => {
     if (isOpen) {
       form.reset();
     }
-  }, [isOpen]);
+  }, [isOpen, form]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -99,49 +100,32 @@ export const CreateAnnouncementButton = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col space-y-4"
+            className="flex flex-col"
           >
             <DialogHeader>
               <DialogTitle>New announcement</DialogTitle>
             </DialogHeader>
             <FormField
               control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-current">
-                    Title
-                    <span className="ml-2">
-                      <FormMessage />
-                    </span>
-                  </FormLabel>
-                  <FormControl>
-                    <FormInput {...field} autoFocus />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="text"
-              render={({ field }) => {
-                const { error } = useFormField();
+              render={({ field, formState }) => {
+                const error = formState.errors.text;
 
                 return (
                   <FormItem>
-                    <FormLabel className="text-current">
-                      Message
-                      <span className="ml-2">
-                        <FormMessage />
-                      </span>
-                    </FormLabel>
+                    <div className="mt-1 flex max-h-4 min-h-4 items-center gap-4">
+                      <FormLabel className="sr-only">
+                        Announcement input
+                      </FormLabel>
+                      <FormMessage />
+                    </div>
                     <FormControl>
                       <Textarea
                         className={cn(
-                          "max-h-[50dvh] min-h-32",
+                          "mt-4 max-h-[50dvh] min-h-32",
                           error ? "border-destructive" : "",
                         )}
-                        placeholder="What would you like to announcement?"
+                        placeholder="What would you like to say?"
                         {...field}
                       />
                     </FormControl>
@@ -149,7 +133,7 @@ export const CreateAnnouncementButton = () => {
                 );
               }}
             />
-            <DialogFooter>
+            <DialogFooter className="mt-4">
               <DialogClose>
                 <Button type="button" variant="secondary" disabled={isPending}>
                   Cancel
@@ -198,28 +182,4 @@ export const AnnouncementList = () => {
       ))}
     </div>
   );
-  // return (
-  //   <Accordion
-  //     type="single"
-  //     collapsible
-  //     className="max-h-full w-full overflow-auto"
-  //   >
-  //     {announcements.map((a) => (
-  //       <AnnouncementCard key={a._id} announcement={a} />
-  // <Card
-  //   key={a._id}
-  //   className="my-4 max-h-full max-w-3xl overflow-auto px-4 pt-0"
-  // >
-  //   <AccordionItem value={a._id} className="border-b-0">
-  //     <AccordionTrigger>
-  //       <div className="flex items-center gap-2">
-  //         <CardTitle>{a.title}</CardTitle>
-  //       </div>
-  //     </AccordionTrigger>
-  //     <AccordionContent className="my-2">{a.text}</AccordionContent>
-  //   </AccordionItem>
-  // </Card>
-  // ))}
-  // </Accordion>
-  // );
 };

@@ -1,7 +1,9 @@
 
 import { type QueryCtx} from "./_generated/server";
-import { type UserIdentity, type Auth } from "convex/server";
+import { type UserIdentity, type Auth, type GenericDatabaseReader } from "convex/server";
 import { ConvexError, PropertyValidators } from "convex/values";
+import { type DataModel, type Id } from "./_generated/dataModel";
+import { getOneFromOrThrow } from "convex-helpers/server/relationships";
 
 export const getUser = async (auth: Auth) => {
   const user = await auth.getUserIdentity();
@@ -33,14 +35,20 @@ export const withAuth = <Ctx extends QueryCtx, Args extends [any] | [], Output>(
   };
 };
 
+type UserCustomProps = {
+  userId: Id<"users">
+}
 export const withUser = async <Output>(
   auth: Auth,
-  callback: (user: UserIdentity) => Promise<Output>) => {
+  db: GenericDatabaseReader<DataModel>,
+  callback: (user: UserIdentity & UserCustomProps) => Promise<Output>) => {
   const user = await auth.getUserIdentity();
   if (!user) {
     throw new Error(
       "Unauthenticated call to function requiring authentication"
     );
   }
-  return await callback({...user, tokenIdentifier: user.tokenIdentifier.slice(user.tokenIdentifier.indexOf("|") + 1)});
+  const externalId = user.tokenIdentifier.slice(user.tokenIdentifier.indexOf("|") + 1);
+  const dbUser = await getOneFromOrThrow(db, "users", "by_externalId", externalId);
+  return await callback({...user, userId: dbUser._id });
 }
