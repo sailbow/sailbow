@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useGlobalActiveBoat } from "@/hooks/use-boat";
 import {
   Sheet,
   SheetClose,
@@ -12,18 +11,19 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Anchor, Home, Menu } from "lucide-react";
+import { Anchor, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import ImageWithLoader from "./image-with-loader";
 import { type Route } from "next";
-import { useBoatLinks } from "@/lib/use-boat-links";
+import { useTripLinks } from "@/lib/use-boat-links";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { useTrip } from "@/lib/trip-queries";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const links = useBoatLinks();
-  const { boat } = useGlobalActiveBoat();
+  const links = useTripLinks();
+  const { data: trip } = useTrip();
   const path = usePathname();
 
   return (
@@ -47,7 +47,7 @@ const Sidebar = () => {
           <div className="flex flex-col gap-2">
             <SheetClose asChild>
               <Link
-                href={"/dock"}
+                href={"/trips"}
                 className={cn(
                   buttonVariants({
                     variant: "ghost",
@@ -57,33 +57,34 @@ const Sidebar = () => {
                 )}
               >
                 <Anchor className="mr-2 h-4 w-4" />
-                My Boats
+                My Trips
               </Link>
             </SheetClose>
           </div>
           <Separator />
           <div className="flex flex-col gap-2">
-            {boat && (
-              <span className="font-semi-bold px-1 py-1">{boat.name}</span>
+            {trip && (
+              <span className="font-semi-bold px-1 py-1">{trip.name}</span>
             )}
-            {links?.map((link, index) => (
-              <SheetClose key={index} asChild>
-                <Link
-                  href={link.href as Route}
-                  className={cn(
-                    buttonVariants({
-                      variant: "ghost",
-                      size: "sm",
-                    }),
-                    path === link.href && "bg-accent text-accent-foreground",
-                    "justify-start",
-                  )}
-                >
-                  <link.icon className="mr-2 h-4 w-4" />
-                  {link.title}
-                </Link>
-              </SheetClose>
-            ))}
+            {trip &&
+              links?.map((link, index) => (
+                <SheetClose key={index} asChild>
+                  <Link
+                    href={link.href as Route}
+                    className={cn(
+                      buttonVariants({
+                        variant: "ghost",
+                        size: "sm",
+                      }),
+                      path === link.href && "bg-accent text-accent-foreground",
+                      "justify-start",
+                    )}
+                  >
+                    <link.icon className="mr-2 h-4 w-4" />
+                    {link.title}
+                  </Link>
+                </SheetClose>
+              ))}
           </div>
         </nav>
       </SheetContent>

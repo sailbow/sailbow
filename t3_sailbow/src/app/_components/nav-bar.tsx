@@ -1,12 +1,18 @@
 import { UserDropdown } from "./user-dropdown";
 import NotificationsDropdown from "./notifications-dropdown";
 import Crumbs from "./crumbs";
-import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut } from "@clerk/nextjs";
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+} from "@clerk/nextjs";
 import Image from "next/image";
 import { Spinner } from "./spinner";
 import Sidebar from "./side-bar";
-import BoatSearch from "./boat-search";
-import SignInButton from "./sign-in-button";
+import TripSearch from "./trip-search";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   return (
@@ -28,7 +34,7 @@ export function Navbar() {
         </div>
         <div className="flex items-center gap-2 sm:hidden">
           <Sidebar />
-          <BoatSearch />
+          <TripSearch />
         </div>
       </SignedIn>
       <div className="ml-auto flex items-center gap-2">
@@ -41,7 +47,9 @@ export function Navbar() {
             <UserDropdown />
           </SignedIn>
           <SignedOut>
-            <SignInButton />
+            <SignInButton mode="modal" signUpFallbackRedirectUrl={"/trips"}>
+              <Button>Sign In</Button>
+            </SignInButton>
           </SignedOut>
         </ClerkLoaded>
       </div>

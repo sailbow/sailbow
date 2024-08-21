@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,6 +30,7 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Spinner } from "./spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function UserDropdown() {
   const { user, isLoaded } = useUser();
@@ -38,7 +39,7 @@ export function UserDropdown() {
   const router = useRouter();
 
   if (!isLoaded) {
-    return <Spinner className="size-4" />;
+    return <Spinner className="size-6" />;
   }
   if (!user) {
     return (
@@ -54,11 +55,14 @@ export function UserDropdown() {
           size="icon"
           className="rounded-full bg-transparent p-0 hover:bg-transparent"
         >
-          <Avatar className="size-8">
+          <Avatar>
             <AvatarImage
               src={user.imageUrl}
               alt={user.fullName + " profile image"}
             />
+            <AvatarFallback>
+              <Skeleton className="size-full rounded-full" />
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

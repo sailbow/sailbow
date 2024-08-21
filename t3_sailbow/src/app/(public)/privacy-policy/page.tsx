@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="w-full space-y-6">
-      <div className="prose container mx-auto grid gap-5 px-4">
+    <div className="w-full space-y-6 pt-4">
+      <div className="container prose mx-auto grid max-w-4xl dark:prose-invert">
         <div>
           <h1 className="text-4xl font-semibold tracking-tighter">
             Privacy Policy

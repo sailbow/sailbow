@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,20 +12,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  type CreateBoat,
-  createBoatSchema,
-  type BoatBanner,
-} from "@/lib/schemas/boat";
 import { useRouter } from "next/navigation";
-import { api } from "@/trpc/react";
 import { toast } from "@/components/ui/toast";
-import { Image, ImageIcon, Loader2 } from "lucide-react";
+import { ImageIcon } from "lucide-react";
 import BannerModal from "./banner-modal";
 import { useState } from "react";
 import ImageWithLoader from "./image-with-loader";
-import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -34,39 +26,56 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { api } from "@convex/_generated/api";
+import { useConvexMutation } from "@/lib/convex-client-helpers";
+import { z } from "zod";
 
-export function CreateBoatForm() {
+const createTripSchema = z.object({
+  name: z.string().min(1, "Name cannot be empty"),
+  description: z.string().default(""),
+  banner: z
+    .object({
+      thumbnail: z.string().url(),
+      small: z.string().url(),
+      regular: z.string().url(),
+      full: z.string().url(),
+      alt: z.string(),
+    })
+    .nullable(),
+});
+
+type CreateTrip = z.infer<typeof createTripSchema>;
+type Banner = Exclude<CreateTrip["banner"], null>;
+export function CreateTripForm() {
   const router = useRouter();
-  const { mutateAsync, isLoading, isSuccess } = api.dock.createBoat.useMutation(
+  const [tripCreated, setTripCreated] = useState(false);
+  const { mutate: createTrip, isLoading } = useConvexMutation(
+    api.trips.mutations.create,
     {
-      onError: () => {
-        toast.dismiss();
-        toast.error("Oops!", {
-          description: "Something went wrong, please try again later",
-        });
+      onSuccess: ({ tripId }) => {
+        setTripCreated(true);
+        toast.success("Success!");
+        router.push(`/trips/${tripId}`);
+      },
+      onError: (error) => {
+        console.error(error);
+        toast.error("Something went wrong, please try again later");
       },
     },
   );
-  const [banner, setBanner] = useState<BoatBanner | null>(null);
+  const [banner, setBanner] = useState<Banner | null>(null);
 
-  const form = useForm<CreateBoat>({
-    resolver: zodResolver(createBoatSchema),
+  const form = useForm<CreateTrip>({
+    resolver: zodResolver(createTripSchema),
     defaultValues: {
       banner: null,
       name: "",
       description: "",
-      crewInvites: [],
     },
   });
 
-  function onSubmit(values: CreateBoat) {
-    toast.promise(mutateAsync(values), {
-      loading: "Creating boat...",
-      success: (data) => {
-        router.push(`/dock/${data.boatId}`);
-        return "success";
-      },
-    });
+  async function onSubmit(values: CreateTrip) {
+    await createTrip(values);
   }
 
   return (
@@ -118,17 +127,17 @@ export function CreateBoatForm() {
             </div>
           </CardContent>
           <CardFooter className="space-x-4">
-            <Button type="submit" size="lg" disabled={isLoading || isSuccess}>
+            <Button type="submit" size="lg" disabled={isLoading || tripCreated}>
               Create
             </Button>
             <Button
               type="button"
               size="lg"
               variant="secondary"
-              disabled={isLoading || isSuccess}
+              disabled={isLoading || tripCreated}
               asChild
             >
-              <Link href="/dock">Cancel</Link>
+              <Link href="/trips">Cancel</Link>
             </Button>
           </CardFooter>
         </form>

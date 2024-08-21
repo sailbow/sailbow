@@ -1,5 +1,4 @@
 "use client";
-import { useBoat, useGlobalActiveBoat } from "@/hooks/use-boat";
 import {
   Home,
   ListChecks,
@@ -7,42 +6,35 @@ import {
   Settings,
   UsersRound,
 } from "lucide-react";
+import { useActiveTripId } from "./trip-queries";
 
-const getLinks = (boatId: number) => [
-  {
-    title: "Overview",
-    icon: Home,
-    href: `/dock/${boatId}`,
-  },
-  {
-    title: "Crew",
-    icon: UsersRound,
-    href: `/dock/${boatId}/crew`,
-  },
-  {
-    title: "Itinerary",
-    icon: ListChecks,
-    href: `/dock/${boatId}/itinerary`,
-  },
-  {
-    title: "Announcements",
-    icon: Megaphone,
-    href: `/dock/${boatId}/announcements`,
-  },
-  {
-    title: "Settings",
-    icon: Settings,
-    href: `/dock/${boatId}/settings`,
-  },
-];
-export const useBoatLinks = () => {
-  const { boat } = useGlobalActiveBoat();
-  if (!boat) return;
-
-  return getLinks(boat.id);
-};
-
-export const useRequiredBoatLinks = () => {
-  const { id } = useBoat();
-  return getLinks(id);
+export const useTripLinks = () => {
+  const tripId = useActiveTripId();
+  return [
+    {
+      title: "Overview",
+      icon: Home,
+      href: `/trips/${tripId}`,
+    },
+    {
+      title: "Crew",
+      icon: UsersRound,
+      href: `/trips/${tripId}/crew`,
+    },
+    {
+      title: "Itinerary",
+      icon: ListChecks,
+      href: `/trips/${tripId}/itinerary`,
+    },
+    {
+      title: "Announcements",
+      icon: Megaphone,
+      href: `/trips/${tripId}/announcements`,
+    },
+    {
+      title: "Settings",
+      icon: Settings,
+      href: `/trips/${tripId}/settings`,
+    },
+  ];
 };

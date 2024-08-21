@@ -13,7 +13,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     CLERK_SECRET_KEY: z.string().min(1),
     UNSPLASH_API_KEY: z.string().min(1),
-    RESEND_API_KEY: z.string().min(1)
+    RESEND_API_KEY: z.string().min(1),
   },
 
   /**
@@ -23,8 +23,12 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
-    NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: z.string().min(1).optional().default("/dock"),
-    NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string().min(1).optional().default("/dock"),
+    NEXT_PUBLIC_CONVEX_URL: z.string().url(),
+    NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().default("/sign-in"),
+    NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().default("/sign-up"),
+    NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: z.string().default("/trips"),
+    NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: z.string().default("/trips"),
+    NEXT_PUBLIC_CLERK_ISSUER_DOMAIN: z.string().default("https://saving-doberman-58.clerk.accounts.dev"),
   },
 
   /**
@@ -37,10 +41,13 @@ export const env = createEnv({
     UNSPLASH_API_KEY: process.env.UNSPLASH_API_KEY,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-    NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL,
-    NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL,
+    NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
     NODE_ENV: process.env.NODE_ENV,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
+    NEXT_PUBLIC_CLERK_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL,
+    NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
+    NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL,
+    NEXT_PUBLIC_CLERK_ISSUER_DOMAIN: process.env.NEXT_PUBLIC_CLERK_ISSUER_DOMAIN
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

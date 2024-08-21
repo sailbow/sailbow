@@ -68,7 +68,7 @@ const BoatInviteTemplate = (invite: BoatInvite) => {
               <Button
                 className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-[#36adf2]/90
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                href={`${baseUrl}/dock/${invite.boatId}`}
+                href={`${baseUrl}/trips/${invite.boatId}`}
               >
                 Accept invite
               </Button>
@@ -76,7 +76,7 @@ const BoatInviteTemplate = (invite: BoatInvite) => {
             <Text>
               or copy and paste this URL into your browser:{" "}
               <Link
-                href={`${baseUrl}/dock/${invite.boatId}`}
+                href={`${baseUrl}/trips/${invite.boatId}`}
                 className="text-blue-600"
               >
                 {`${baseUrl}/dock/${invite.boatId}`}

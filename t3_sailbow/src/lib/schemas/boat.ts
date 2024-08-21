@@ -13,11 +13,7 @@ export const bannerSchema = z.object({
 export const createBoatSchema = z
     . object({
         name: z.string().min(1, "Name cannot be empty"),
-        description: z.string().nullable(),
-        crewInvites: z.array(z.object({
-            emailAddress: z.string().email(),
-            role: z.enum([ "captain", "firstMate", "crewMember"])
-        })),
+        description: z.string().default(""),
         banner: bannerSchema,
     })
 
