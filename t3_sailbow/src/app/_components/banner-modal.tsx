@@ -103,7 +103,7 @@ export default function BannerModal(props: BannerModalProps) {
               </a>
             </Button>
           </div>
-          <div className="sticky top-0 z-10 flex w-full items-center justify-between space-x-8 bg-background">
+          <div className="sticky top-0 z-10 flex w-full items-center justify-between space-x-8">
             <div className="flex flex-1 flex-col">
               <Input
                 type="search"

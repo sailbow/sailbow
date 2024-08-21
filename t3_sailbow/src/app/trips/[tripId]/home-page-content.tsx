@@ -46,50 +46,52 @@ export default function HomePageContent() {
   if (!trip) return;
 
   return (
-    <div className="flex size-full flex-col gap-2">
-      {isEditingDescription ? (
-        <div className="flex w-full gap-2">
-          <TextEditorToolbar editor={editor} />
-          <div className="ml-auto flex gap-2">
+    <div className="absolute size-full overflow-hidden">
+      <div className="relative flex size-full flex-col gap-2">
+        {isEditingDescription ? (
+          <div className="sticky top-0 z-30 flex w-full gap-2 bg-inherit">
+            <TextEditorToolbar editor={editor} />
+            <div className="ml-auto flex gap-2">
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => {
+                  setDescriptionText(trip.description);
+                  setIsEditingDescription(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                disabled={isUpdatingDescription}
+                onClick={() =>
+                  updateTripDescription({
+                    description: descriptionText ?? "",
+                    tripId,
+                  })
+                }
+              >
+                Save
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex w-full gap-2">
             <Button
+              variant="outline"
               size="sm"
-              variant="secondary"
               onClick={() => {
-                setDescriptionText(trip.description);
-                setIsEditingDescription(false);
+                setIsEditingDescription(true);
               }}
             >
-              Cancel
-            </Button>
-            <Button
-              size="sm"
-              disabled={isUpdatingDescription}
-              onClick={() =>
-                updateTripDescription({
-                  description: descriptionText ?? "",
-                  tripId,
-                })
-              }
-            >
-              Save
+              <Edit className="mr-2 size-6" />
+              Edit description
             </Button>
           </div>
-        </div>
-      ) : (
-        <div className="flex w-full gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setIsEditingDescription(true);
-            }}
-          >
-            <Edit className="mr-2 size-6" />
-            Edit description
-          </Button>
-        </div>
-      )}
-      <TextEditorContent editor={editor} />
+        )}
+        <TextEditorContent editor={editor} />
+      </div>
     </div>
   );
 }

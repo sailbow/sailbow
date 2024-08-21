@@ -173,7 +173,7 @@ const TextEditorToolbar = ({ editor }: { editor: Editor | null }) => {
     setIsLinkDialogOpen(true);
   };
   return (
-    <div className="sticky top-0 z-30 flex flex-row items-center gap-1 bg-background">
+    <div className="sticky top-0 z-30 flex flex-row flex-wrap items-center gap-1 bg-background">
       <Toggle
         size="sm"
         pressed={editor.isActive("bold")}

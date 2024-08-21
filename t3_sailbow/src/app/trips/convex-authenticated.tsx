@@ -1,11 +1,17 @@
 "use client";
 
-import { Authenticated } from "convex/react";
+import { useConvexAuth } from "convex/react";
+import { RedirectToSignIn } from "@clerk/clerk-react";
 
 export default function ConvexAuthenticated({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <Authenticated>{children}</Authenticated>;
+  const { isAuthenticated, isLoading } = useConvexAuth();
+
+  if (isLoading) return null;
+
+  if (!isAuthenticated) return <RedirectToSignIn />;
+  return children;
 }
