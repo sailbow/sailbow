@@ -23,7 +23,6 @@ import type * as errorUtils from "../errorUtils.js";
 import type * as http from "../http.js";
 import type * as images_actions from "../images/actions.js";
 import type * as tripUtils from "../tripUtils.js";
-import type * as trips_actions from "../trips/actions.js";
 import type * as trips_mutations from "../trips/mutations.js";
 import type * as trips_queries from "../trips/queries.js";
 import type * as users_mutations from "../users/mutations.js";
@@ -46,7 +45,6 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   "images/actions": typeof images_actions;
   tripUtils: typeof tripUtils;
-  "trips/actions": typeof trips_actions;
   "trips/mutations": typeof trips_mutations;
   "trips/queries": typeof trips_queries;
   "users/mutations": typeof users_mutations;
