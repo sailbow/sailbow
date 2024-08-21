@@ -1,7 +1,7 @@
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { z } from "zod";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import { userSchema } from "./_lib/clerk";
 import { Webhook } from "svix";
 
@@ -27,7 +27,7 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
   switch (event.type) {
     case "user.created":
     case "user.updated":
-      await ctx.runMutation(api.users.mutations.upsertUser, userSchema.parse(event.data));
+      await ctx.runMutation(internal.users.mutations.upsertUser, userSchema.parse(event.data));
     default:
       console.log(`Ignored clerk webhook event: ${event.type}`);
   }
