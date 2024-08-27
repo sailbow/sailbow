@@ -18,9 +18,9 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
     "svix-timestamp": request.headers.get("svix-timestamp")!,
     "svix-signature": request.headers.get("svix-signature")!,
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const body: ClerkWebhook = await request.json()
-
   new Webhook(process.env.CLERK_WEBHOOK_SECRET!).verify(JSON.stringify(body), headers);
   const event = clerkWebhookSchema.parse(body);
 
@@ -28,8 +28,10 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
     case "user.created":
     case "user.updated":
       await ctx.runMutation(internal.users.mutations.upsertUser, userSchema.parse(event.data));
+      break;
     default:
       console.log(`Ignored clerk webhook event: ${event.type}`);
+      break;
   }
   return new Response(null, { status: 200 })
 });
