@@ -16,7 +16,7 @@ export const upsertUser = internalMutation({
     };
     const existingUser = await db
       .query("users")
-      .withIndex("by_externalId", q => q.eq("externalId", user.externalId))
+      .withIndex("by_email", q => q.eq("email", user.email))
       .unique();
 
     if (!existingUser) {
