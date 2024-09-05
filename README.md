@@ -1,17 +1,12 @@
-<p align="center">
-    <img src="sb-assets/banner.png" alt="Sailboat banner">
- </p>
+# ![sailbow icon](public/icon.svg)  sailbow
 
-An application to make planning easier for friend groups.
+#### Assemble your crew. Chart a course. Set sail. 🌊
 
-## Applications
+Sailbow is an application that makes group trip and event planning a breeze 😌
 
-- `sb-web`: Web UI
-- `sb-backend`: Backend server libraries, APIs, and database operations
+### **Usage Disclaimer**
+We do NOT use your information at this point in time for anything other than development of the site, meaning:
+1. We do not sell your data to third parties
+2. We do not use your data for training AI
 
-## Code Guidelines
-
-- Branch names should be prefixed with `SBIT-<ISSUE_NUMBER>-<RELEVANT_NAME>`. Example `SBIT-23-google-login`.
-- Pull requests should be prefixed with `[SBIT-<ISSUE_NUMBER>]: <NAME>`. Example `[SBIT-1]: Initial pull request`.
-- Branch off `develop` to resolve the assigned issue/ticket.
-- Prefix namespaces with `sb`. Example `sb-landing-page` for a css class.
+However, Sailbow is in active development! **This means that any data you interact with or create on the site is subject to modification or deletion at the discretion of the maintainers.** This will obviously change if we transition to an alpha stage
