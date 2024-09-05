@@ -13,7 +13,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="h-screen bg-gradient-to-b from-primary/95 to-teal-100">
+    <div className="h-screen bg-gradient-to-b from-yellow-50 to-teal-200">
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div className="mx-auto max-w-2xl py-8">
           <div className="text-center text-foreground">

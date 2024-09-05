@@ -21,15 +21,15 @@ export default function NotificationsDropdown() {
           className="rounded-full"
           aria-label="Toggle notifications menu"
         >
-          <Bell className="size-4" />
+          <Bell className="size-5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
+      <DropdownMenuContent className="w-[90dvw] sm:w-[500px]" align="end">
         <DropdownMenuLabel className="font-normal">
           <p className="font-medium">Notifications</p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup className="min-h-[100px]">
+        <DropdownMenuGroup className="min-h-[100px] px-2 py-1.5">
           <p className="text-sm font-light">Nothing yet to see here!</p>
         </DropdownMenuGroup>
       </DropdownMenuContent>

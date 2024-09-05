@@ -1,6 +1,11 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
+export const roleSchema = v.union(
+    v.literal("captain"),
+    v.literal("firstMate"),
+    v.literal("crewMember")
+)
 export const tripSchema = {
     name: v.string(),
     slug: v.optional(v.string()),
@@ -17,15 +22,19 @@ export const tripSchema = {
     ),
 }
 
+export const inviteSchema = {
+    tripId: v.id("trips"),
+    email: v.string(),
+    role: v.union(v.literal("crewMember"), v.literal("firstMate")),
+    invitedByUserId: v.id("users"),
+    status: v.union(v.literal("pending"), v.literal("declined"), v.literal("accepted")),
+}
+
 export const crewMemberSchema = {
     tripId: v.id("trips"),
     userId: v.optional(v.string()),
     email: v.string(),
-    role: v.union(
-        v.literal("captain"),
-        v.literal("firstMate"),
-        v.literal("crewMember")
-    )
+    role: roleSchema
 }
 
 const baseModuleSchema = {
@@ -97,6 +106,11 @@ export default defineSchema({
         .searchIndex("search_trip_name", {
             searchField: "name",
         }),
+    
+    invitations: defineTable(inviteSchema)
+        .index("by_tripId", ["tripId"])
+        .index("by_email", ["email"])
+        .index("by_email_and_tripId", ["email", "tripId"]),
 
     crews: defineTable(crewMemberSchema)
         .index("by_userId", ["userId"])

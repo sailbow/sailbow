@@ -15,7 +15,7 @@ import { Anchor, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import ImageWithLoader from "./image-with-loader";
 import { type Route } from "next";
-import { useTripLinks } from "@/lib/use-boat-links";
+import { useTripLinks } from "@/lib/use-trip-links";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useTrip } from "@/lib/trip-queries";

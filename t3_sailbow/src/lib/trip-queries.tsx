@@ -2,11 +2,7 @@ import { useParams } from "next/navigation";
 import { type Id } from "@convex/_generated/dataModel";
 import { api } from "@convex/_generated/api";
 import { useQuery } from "@tanstack/react-query";
-import {
-  convexQuery,
-  convexAction,
-  useConvexAction,
-} from "@convex-dev/react-query";
+import { convexQuery } from "@convex-dev/react-query";
 import { type FunctionReference } from "convex/server";
 
 type QArgs<TQuery extends FunctionReference<"query", "public">> = {
@@ -15,11 +11,6 @@ type QArgs<TQuery extends FunctionReference<"query", "public">> = {
   enabled?: boolean | undefined;
 };
 
-type AArgs<TAction extends FunctionReference<"action", "public">> = {
-  action: TAction;
-  args: TAction["_args"];
-  enabled?: boolean | undefined;
-};
 const useQ = <TQuery extends FunctionReference<"query", "public">>(
   args: QArgs<TQuery>,
 ) => {

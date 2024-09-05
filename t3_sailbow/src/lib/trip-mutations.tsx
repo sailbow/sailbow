@@ -36,8 +36,8 @@ export const useCreateTrip = (
 ) => useMut(api.trips.mutations.create, args);
 
 export const useInviteCrewMember = (
-  args: UseMutationArgs<typeof api.trips.mutations.inviteCrewMember>,
-) => useMut(api.trips.mutations.inviteCrewMember, args);
+  args: UseMutationArgs<typeof api.invitations.mutations.create>,
+) => useMut(api.invitations.mutations.create, args);
 
 export const useUpdateDescription = (
   args: UseMutationArgs<typeof api.trips.mutations.updateDescription>,

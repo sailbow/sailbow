@@ -12,9 +12,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { toast } from "./ui/toast";
-import { useEffect, useState } from "react";
-import { z } from "zod";
-import { P } from "node_modules/@clerk/clerk-react/dist/controlComponents-CzpRUsyv.mjs";
+import { useState } from "react";
 
 interface TextEditorProps {
   text: string | null;

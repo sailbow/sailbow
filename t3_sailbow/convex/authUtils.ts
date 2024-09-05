@@ -38,6 +38,7 @@ export const withAuth = <Ctx extends QueryCtx, Args extends [any] | [], Output>(
 type UserCustomProps = {
   userId: Id<"users">
 }
+
 export const withUser = async <Output>(
   auth: Auth,
   db: GenericDatabaseReader<DataModel>,

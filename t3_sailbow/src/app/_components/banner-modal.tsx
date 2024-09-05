@@ -11,16 +11,16 @@ import {
 import { FileSearch, ImageIcon, ImagePlus, PencilLine } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useCallback, useEffect, useState } from "react";
-import { type BoatBanner } from "@/lib/schemas/boat";
 import ImageWithLoader from "./image-with-loader";
 import useDebounce from "@/lib/use-debounce";
 import CenteredSpinner from "./centered-spinner";
 import { api } from "@convex/_generated/api";
 import { useAction } from "convex/react";
+import { type Doc } from "@convex/_generated/dataModel";
 
 interface BannerModalProps {
   variant?: "add" | "edit" | "editIcon" | undefined;
-  onBannerChange: (banner: BoatBanner) => void;
+  onBannerChange: (banner: Doc<"trips">["banner"] | null) => void;
 }
 
 type ImageData = {
