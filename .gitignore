@@ -1,7 +1,0 @@
-.DS_Store
-node_modules/
-appsettings.development.json
-sailboat-key.pem
-
-# VSCode
-.vscode/
