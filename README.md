@@ -2,19 +2,21 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/sailbow/sailbow/main/sb-web/public/icon.svg">
     <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/sailbow/sailbow/main/sb-web/public/icon.svg" width="350" height="70" style="max-width: 100%;">
-    <img alt="Sailbow logo" src="https://raw.githubusercontent.com/sailbow/sailbow/main/sb-web/public/icon.svg width="350" height="70" style="max-width: 100%;">
+    <img alt="Sailbow logo" src="https://raw.githubusercontent.com/sailbow/sailbow/main/sb-web/public/icon.svg width="350" height="100" style="max-width: 100%;">
   </picture>
 </p>
-
-<p align="center">
-  Assemble your crew. Chart a course. Set sail.
+<p>
+  <h1 align="center">
+    assemble your crew.<br/>chart a course.</br>set sail.
+  <h1/>
 </p>
 
----
-#### Sailbow is an application that makes group trip and event planning a breeze 😌
+<p>
+  Sailbow is an application that makes group trip and event planning a breeze 😌
+</p>
 
-### **Usage Disclaimer**
----
+
+## **Usage Disclaimer**
 We do NOT use your information at this point in time for anything other than development of the site, meaning:
 1. We do not sell your data to third parties
 2. We do not use your data for training AI
