@@ -106,7 +106,7 @@ const ChangeMemberRoleModal = ({
     },
     onSuccess: () => {
       toast.dismiss();
-      toast.success(`Successfully update the role for ${member.email}`);
+      toast.success(`Successfully updated the role for ${member.email}`);
       setIsOpen(false);
     },
     onError: (error) => {
