@@ -135,6 +135,13 @@ export const changeMemberRole = mutation({
           message: "You can't change your own role!"
         });
       }
+      const targetMember = crew.find(c => c._id === memberId);
+      if (targetMember!.role === "captain") {
+        throw new ConvexError({
+          code: "USER_ERROR",
+          message: "You can't change the role of the captain!"
+        })
+      }
       await db.patch(memberId, { role });
     })
   }

@@ -8,7 +8,10 @@ export default clerkMiddleware((auth, request) => {
     auth().protect();
   }
   return NextResponse.next();
-})
+}, {
+  signInUrl: "/sign-in",
+  signUpUrl: "/sign-up"
+});
 
 export const config = {
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
