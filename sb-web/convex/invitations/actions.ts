@@ -3,7 +3,7 @@ import { v } from "convex/values";
 import { clerkClient } from "@convex/_lib/clerk";
 
 function getBaseUrl() {
-  if (process.env.WEBSITE_BASE_URLL) return `https://${process.env.WEBSITE_BASE_URL}`;
+  if (process.env.WEBSITE_BASE_URL) return process.env.WEBSITE_BASE_URL;
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
