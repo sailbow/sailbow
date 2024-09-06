@@ -102,7 +102,7 @@ const ChangeMemberRoleModal = ({
 }) => {
   const { mutate: changeRole, isPending } = useChangeMemberRole({
     onMutate: () => {
-      toast.info("Kicking member...");
+      toast.info("Changing role...");
     },
     onSuccess: () => {
       toast.dismiss();
