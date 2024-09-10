@@ -1,8 +1,8 @@
-import { query } from "@convex/_generated/server";
-import { withUser } from "@convex/authUtils";
-import { SbError } from "@convex/errorUtils";
+import { query } from "../_generated/server";
+import { withUser } from "../authUtils";
+import { SbError } from "../errorUtils";
 import { getOneFromOrThrow } from "convex-helpers/server/relationships";
-import { ConvexError, v } from "convex/values";
+import { v } from "convex/values";
 
 export const byId = query({
   args: {

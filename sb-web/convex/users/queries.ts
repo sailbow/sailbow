@@ -1,4 +1,4 @@
-import { query } from "@convex/_generated/server";
+import { query } from "../_generated/server";
 import { ConvexError } from "convex/values";
 
 export const me = query({

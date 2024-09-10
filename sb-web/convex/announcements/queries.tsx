@@ -1,6 +1,6 @@
-import { query } from "@convex/_generated/server";
-import { withUser } from "@convex/authUtils";
-import { throwIfNotMember } from "@convex/tripUtils";
+import { query } from "../_generated/server";
+import { withUser } from "../authUtils";
+import { throwIfNotMember } from "../tripUtils";
 import { asyncMap } from "convex-helpers";
 import { v } from "convex/values";
 

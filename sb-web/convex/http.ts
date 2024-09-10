@@ -2,7 +2,7 @@ import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { z } from "zod";
 import { api, internal } from "./_generated/api";
-import { userSchema } from "./_lib/clerk";
+import { userSchema } from "./lib/clerk";
 import { Webhook } from "svix";
 
 const clerkWebhookSchema = z.object({

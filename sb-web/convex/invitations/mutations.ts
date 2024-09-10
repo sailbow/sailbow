@@ -1,6 +1,6 @@
-import { internal } from "@convex/_generated/api";
-import { mutation } from "@convex/_generated/server";
-import { withUser } from "@convex/authUtils";
+import { internal } from "../_generated/api";
+import { mutation } from "../_generated/server";
+import { withUser } from "../authUtils";
 import { getOneFromOrThrow } from "convex-helpers/server/relationships";
 import { ConvexError, v } from "convex/values";
 
@@ -36,19 +36,14 @@ export const create = mutation({
         invitedByUserId: user.userId,
         status: "pending",
       });
-
-      if (!(await db.query("users")
-        .withIndex("by_email", q => q.eq("email", args.email))
-        .unique())) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          await ctx.scheduler.runAfter(0, internal.invitations.actions.sendTripInvite, {
-            email: args.email,
-            inviteId: inviteId,
-            invitedByEmail: user.email!,
-            invitedByName: user.name!,
-            tripName: (await db.get(args.tripId))!.name
-          })
-      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      await ctx.scheduler.runAfter(0, internal.invitations.actions.sendTripInvite, {
+        email: args.email,
+        inviteId: inviteId,
+        invitedByEmail: user.email!,
+        invitedByName: user.name!,
+        tripName: (await db.get(args.tripId))!.name
+      })
     })
   }
 })

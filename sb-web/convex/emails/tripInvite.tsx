@@ -1,3 +1,4 @@
+import * as React from "react";
 import { z } from "zod";
 import {
   Body,
@@ -12,8 +13,8 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
-import TwConfig from "@convex/emails/tailwind-config";
-import { getBaseUrl } from "@convex/_lib/utils";
+import TwConfig from "../lib/tailwindConfig";
+import { getBaseUrl } from "../lib/utils";
 
 const tripInviteSchema = z.object({
   inviteId: z.string().min(1),
@@ -29,17 +30,17 @@ const baseUrl = getBaseUrl();
 
 const TripInviteTemplate = (invite: TripInvite) => {
   return (
-    <Tailwind config={TwConfig}>
-      <Html lang="en">
-        <Body className="mx-auto my-auto bg-background px-2 font-sans antialiased">
+    <Html lang="en">
+      <Tailwind config={TwConfig}>
+        <Body className="mx-auto my-auto bg-amber-50 p-4 font-sans antialiased">
           <Container className="mx-auto my-[40px] flex max-w-[465px] flex-col items-start justify-around rounded border border-border p-[20px]">
             <Section>
               <Img
-                src="https://raw.githubusercontent.com/sailbow/sailbow/main/sb-web/public/icon.svg"
+                src="https://raw.githubusercontent.com/sailbow/sailbow/main/sb-web/public/sailbow.png"
                 width="50"
                 height="50"
                 alt="Sailbow"
-                className="mx-auto my-0"
+                className="mx-auto my-0 block"
               />
             </Section>
             <Heading className="p-0 text-center text-xl font-normal">
@@ -58,12 +59,12 @@ const TripInviteTemplate = (invite: TripInvite) => {
               ) has invited you to the group trip{" "}
               <strong>{invite.tripName}</strong> on <strong>Sailbow</strong>.
             </Text>
-            <Section className="text-center">
+            <Section className="mb-[32px] mt-[32px] text-center">
               <Button
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-primary text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                className="rounded bg-teal-500 px-5 py-3 text-center font-semibold text-white no-underline"
                 href={`${baseUrl}/accept-invite/${invite.inviteId}`}
               >
-                Accept invite
+                Accept Invite
               </Button>
             </Section>
             <Text>
@@ -87,14 +88,13 @@ const TripInviteTemplate = (invite: TripInvite) => {
             </Text>
           </Container>
         </Body>
-      </Html>
-    </Tailwind>
+      </Tailwind>
+    </Html>
   );
 };
 
 TripInviteTemplate.PreviewProps = {
   inviteId: 1,
-  tripId: 1,
   tripName: "Test Trip Name",
   inviteeEmail: "test@example.com",
   invitedByName: "Jane Doe",

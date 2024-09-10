@@ -1,6 +1,6 @@
-import { mutation } from "@convex/_generated/server";
-import { withUser } from "@convex/authUtils";
-import { tripSchema } from "@convex/schema";
+import { mutation } from "../_generated/server";
+import { withUser } from "../authUtils";
+import { tripSchema } from "../schema";
 import { ConvexError, v } from "convex/values";
 
 export const create = mutation({

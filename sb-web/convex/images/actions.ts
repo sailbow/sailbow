@@ -1,4 +1,4 @@
-import { action } from "@convex/_generated/server";
+import { action } from "../_generated/server";
 import { ConvexError, v } from "convex/values";
 import { z } from "zod";
 
