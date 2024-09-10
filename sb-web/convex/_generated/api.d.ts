@@ -14,17 +14,21 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as _lib_clerk from "../_lib/clerk.js";
-import type * as _lib_queryUtils from "../_lib/queryUtils.js";
 import type * as announcements_mutations from "../announcements/mutations.js";
 import type * as announcements_queries from "../announcements/queries.js";
 import type * as authUtils from "../authUtils.js";
+import type * as emails_tripInvite from "../emails/tripInvite.js";
 import type * as errorUtils from "../errorUtils.js";
 import type * as http from "../http.js";
 import type * as images_actions from "../images/actions.js";
 import type * as invitations_actions from "../invitations/actions.js";
 import type * as invitations_mutations from "../invitations/mutations.js";
 import type * as invitations_queries from "../invitations/queries.js";
+import type * as lib_clerk from "../lib/clerk.js";
+import type * as lib_queryUtils from "../lib/queryUtils.js";
+import type * as lib_resend from "../lib/resend.js";
+import type * as lib_tailwindConfig from "../lib/tailwindConfig.js";
+import type * as lib_utils from "../lib/utils.js";
 import type * as tripUtils from "../tripUtils.js";
 import type * as trips_mutations from "../trips/mutations.js";
 import type * as trips_queries from "../trips/queries.js";
@@ -40,17 +44,21 @@ import type * as users_queries from "../users/queries.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  "_lib/clerk": typeof _lib_clerk;
-  "_lib/queryUtils": typeof _lib_queryUtils;
   "announcements/mutations": typeof announcements_mutations;
   "announcements/queries": typeof announcements_queries;
   authUtils: typeof authUtils;
+  "emails/tripInvite": typeof emails_tripInvite;
   errorUtils: typeof errorUtils;
   http: typeof http;
   "images/actions": typeof images_actions;
   "invitations/actions": typeof invitations_actions;
   "invitations/mutations": typeof invitations_mutations;
   "invitations/queries": typeof invitations_queries;
+  "lib/clerk": typeof lib_clerk;
+  "lib/queryUtils": typeof lib_queryUtils;
+  "lib/resend": typeof lib_resend;
+  "lib/tailwindConfig": typeof lib_tailwindConfig;
+  "lib/utils": typeof lib_utils;
   tripUtils: typeof tripUtils;
   "trips/mutations": typeof trips_mutations;
   "trips/queries": typeof trips_queries;

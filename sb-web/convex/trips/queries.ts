@@ -1,8 +1,8 @@
-import { type Doc, type DataModel } from "@convex/_generated/dataModel";
-import { query } from "@convex/_generated/server";
-import { notFound, success, zodQuery } from "@convex/_lib/queryUtils";
-import { withAuth, withUser } from "@convex/authUtils";
-import { SbError } from "@convex/errorUtils";
+import { type Doc, type DataModel } from "../_generated/dataModel";
+import { query } from "../_generated/server";
+import { notFound, success, zodQuery } from "../lib/queryUtils";
+import { withAuth, withUser } from "../authUtils";
+import { SbError } from "../errorUtils";
 import { asyncMap, pruneNull } from "convex-helpers";
 import { getManyVia, getOneFrom } from "convex-helpers/server/relationships";
 import { zid } from "convex-helpers/server/zod";

@@ -1,5 +1,5 @@
 import { type GenericDatabaseReader, type UserIdentity } from "convex/server";
-import { Id, type DataModel } from "./_generated/dataModel";
+import { type Id, type DataModel } from "./_generated/dataModel";
 import { ConvexError } from "convex/values";
 
 

@@ -1,7 +1,7 @@
-import { mutation } from "@convex/_generated/server";
-import { withUser } from "@convex/authUtils";
-import { announcementSchema } from "@convex/schema";
-import { throwIfNotMember } from "@convex/tripUtils";
+import { mutation } from "../_generated/server";
+import { withUser } from "../authUtils";
+import { announcementSchema } from "../schema";
+import { throwIfNotMember } from "../tripUtils";
 
 export const create = mutation({
   args: announcementSchema,

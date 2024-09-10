@@ -1,0 +1,98 @@
+import { type TailwindConfig } from "@react-email/components";
+
+const TwConfig: TailwindConfig = {
+  theme: {
+    fontSize: {
+      xs: ["12px", { lineHeight: "16px" }],
+      sm: ["14px", { lineHeight: "20px" }],
+      base: ["16px", { lineHeight: "24px" }],
+      lg: ["18px", { lineHeight: "28px" }],
+      xl: ["20px", { lineHeight: "28px" }],
+      "2xl": ["24px", { lineHeight: "32px" }],
+      "3xl": ["30px", { lineHeight: "36px" }],
+      "4xl": ["36px", { lineHeight: "36px" }],
+      "5xl": ["48px", { lineHeight: "1" }],
+      "6xl": ["60px", { lineHeight: "1" }],
+      "7xl": ["72px", { lineHeight: "1" }],
+      "8xl": ["96px", { lineHeight: "1" }],
+      "9xl": ["144px", { lineHeight: "1" }],
+    },
+    spacing: {
+      px: "1px",
+      0: "0",
+      0.5: "2px",
+      1: "4px",
+      1.5: "6px",
+      2: "8px",
+      2.5: "10px",
+      3: "12px",
+      3.5: "14px",
+      4: "16px",
+      5: "20px",
+      6: "24px",
+      7: "28px",
+      8: "32px",
+      9: "36px",
+      10: "40px",
+      11: "44px",
+      12: "48px",
+      14: "56px",
+      16: "64px",
+      20: "80px",
+      24: "96px",
+      28: "112px",
+      32: "128px",
+      36: "144px",
+      40: "160px",
+      44: "176px",
+      48: "192px",
+      52: "208px",
+      56: "224px",
+      60: "240px",
+      64: "256px",
+      72: "288px",
+      80: "320px",
+      96: "384px",
+    },
+    extend: {
+      colors: {
+        border: "hsl(202 30% 82%)",
+        input: "hsl(202 30% 50%)",
+        ring: "hsl(202 88% 58%)",
+        background: "hsl(55 92% 98%)",
+        foreground: "hsl(202 5% 10%)",
+        primary: {
+          DEFAULT: "hsl(173 80% 40%)",
+          foreground: "hsl(0 0% 100%)",
+        },
+        secondary: {
+          DEFAULT: "hsl(202 30% 90%)",
+          foreground: "hsl(0 0% 0%)",
+        },
+        destructive: {
+          DEFAULT: "hsl(0 84% 60%)",
+          foreground: "hsl(202 5% 100%)",
+        },
+        muted: {
+          DEFAULT: "hsl(240 4.8% 95.9%)",
+          foreground: "hsl(240 3.8% 46.1%)",
+        },
+        accent: {
+          DEFAULT: "hsl(203 89% 85%)",
+          foreground: "hsl(202 5% 15%)",
+        },
+        card: {
+          DEFAULT: "hsl(55 46% 98%)",
+          foreground: "hsl(202 5% 15%)",
+        },
+      },
+      borderRadius: {
+        lg: "0.5rem",
+        md: "calc(0.5rem - 2px)",
+        sm: "calc(0.5rem - 4px)",
+      },
+    },
+  },
+};
+
+export default TwConfig;

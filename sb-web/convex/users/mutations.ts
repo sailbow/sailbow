@@ -1,6 +1,6 @@
-import { internalMutation } from "@convex/_generated/server";
+import { internalMutation } from "../_generated/server";
 import { zodToConvex } from "convex-helpers/server/zod";
-import { userSchema } from "@convex/_lib/clerk";
+import { userSchema } from "../lib/clerk";
 
 const upsertUserSchema = zodToConvex(userSchema);
 
