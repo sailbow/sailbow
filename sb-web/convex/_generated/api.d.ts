@@ -16,9 +16,13 @@ import type {
 } from "convex/server";
 import type * as _lib_clerk from "../_lib/clerk.js";
 import type * as _lib_queryUtils from "../_lib/queryUtils.js";
+import type * as _lib_resend from "../_lib/resend.js";
+import type * as _lib_utils from "../_lib/utils.js";
 import type * as announcements_mutations from "../announcements/mutations.js";
 import type * as announcements_queries from "../announcements/queries.js";
 import type * as authUtils from "../authUtils.js";
+import type * as emails_tailwind_config from "../emails/tailwind-config.js";
+import type * as emails_trip_invite from "../emails/trip-invite.js";
 import type * as errorUtils from "../errorUtils.js";
 import type * as http from "../http.js";
 import type * as images_actions from "../images/actions.js";
@@ -42,9 +46,13 @@ import type * as users_queries from "../users/queries.js";
 declare const fullApi: ApiFromModules<{
   "_lib/clerk": typeof _lib_clerk;
   "_lib/queryUtils": typeof _lib_queryUtils;
+  "_lib/resend": typeof _lib_resend;
+  "_lib/utils": typeof _lib_utils;
   "announcements/mutations": typeof announcements_mutations;
   "announcements/queries": typeof announcements_queries;
   authUtils: typeof authUtils;
+  "emails/tailwind-config": typeof emails_tailwind_config;
+  "emails/trip-invite": typeof emails_trip_invite;
   errorUtils: typeof errorUtils;
   http: typeof http;
   "images/actions": typeof images_actions;

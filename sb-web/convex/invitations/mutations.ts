@@ -41,9 +41,12 @@ export const create = mutation({
         .withIndex("by_email", q => q.eq("email", args.email))
         .unique())) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          await ctx.scheduler.runAfter(0, internal.invitations.actions.sendEmailInvite, {
+          await ctx.scheduler.runAfter(0, internal.invitations.actions.sendTripInvite, {
             email: args.email,
             inviteId: inviteId,
+            invitedByEmail: user.email!,
+            invitedByName: user.name!,
+            tripName: (await db.get(args.tripId))!.name
           })
       }
     })
