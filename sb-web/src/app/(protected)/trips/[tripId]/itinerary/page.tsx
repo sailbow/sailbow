@@ -4,6 +4,7 @@ import {
   BoatPageTitle,
   BoatPageContent,
 } from "../../trip-page-components";
+import { TripDates } from "./trip-dates";
 
 export default function Page() {
   return (
@@ -12,7 +13,7 @@ export default function Page() {
         <BoatPageTitle>Itinerary</BoatPageTitle>
       </BoatPageHeader>
       <BoatPageContent>
-        <div className="w-full text-center">Nothing yet to see here!</div>
+        <TripDates />
       </BoatPageContent>
     </BoatPageContainer>
   );

@@ -17,8 +17,8 @@ export function TripNav() {
           href={link.href}
           className={cn(
             buttonVariants({ variant: "ghost", size: "sm" }),
-            path === link.href && "bg-accent text-accent-foreground",
-            "justify-start",
+            path === link.href && "bg-primary/30 text-accent-foreground",
+            "justify-start hover:bg-primary/30",
           )}
         >
           <link.icon className="mr-2 h-4 w-4" />

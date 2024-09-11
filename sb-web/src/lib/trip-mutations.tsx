@@ -66,3 +66,7 @@ export const useChangeMemberRole = (
 export const useCreateAnnouncement = (
   args: UseMutationArgs<typeof api.announcements.mutations.create>,
 ) => useMut(api.announcements.mutations.create, args);
+
+export const useSetDateRange = (
+  args: UseMutationArgs<typeof api.modules.mutations.setTripDateRange>,
+) => useMut(api.modules.mutations.setTripDateRange, args);

@@ -51,3 +51,8 @@ export const useAnnouncements = () => {
   const tripId = useActiveTripId();
   return useQ({ query: api.announcements.queries.get, args: { tripId } });
 };
+
+export const useModules = () => {
+  const tripId = useActiveTripId();
+  return useQ({ query: api.modules.queries.getTripModules, args: { tripId } });
+};
