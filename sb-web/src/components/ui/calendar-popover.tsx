@@ -14,14 +14,14 @@ import {
 } from "@/components/ui/popover";
 
 export function CalendarPopover({
-  initialDate,
+  triggerText,
+  selectedDate,
   onSelect,
 }: {
-  initialDate: Date | undefined;
-  onSelect: (initalDate: Date | undefined) => void;
+  triggerText: string;
+  selectedDate?: Date | undefined;
+  onSelect: (date: Date | undefined) => void;
 }) {
-  const [date, setDate] = React.useState<Date | undefined>(initialDate);
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -29,22 +29,23 @@ export function CalendarPopover({
           variant={"outline"}
           className={cn(
             "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground",
+            !selectedDate && "text-muted-foreground",
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {selectedDate ? (
+            format(selectedDate, "PPP")
+          ) : (
+            <span>{triggerText}</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
           captionLayout="dropdown"
           mode="single"
-          selected={date}
-          onSelect={(date) => {
-            setDate(date);
-            onSelect(date);
-          }}
+          selected={selectedDate}
+          onSelect={onSelect}
         />
       </PopoverContent>
     </Popover>

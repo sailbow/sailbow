@@ -3,7 +3,7 @@
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarPopover } from "@/components/ui/calendar-popover";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DateTimePicker } from "@/components/ui/datetime-picker";
+// import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useModules } from "@/lib/trip-queries";
@@ -45,25 +45,25 @@ export const TripDates = (props: PropsWithChildren) => {
           /> */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Start Date</Label>
-            <DateTimePicker
+            {/* <DateTimePicker
               hourCycle={12}
               value={startDateInfo}
               onChange={setStartDateInfo}
               displayFormat={{ hour12: "PP hh:mm a" }}
               granularity="minute"
               placeholder="Start date"
-            />
+            /> */}
           </div>
           <div className="flex flex-1 flex-col space-y-2">
             <Label>End Date</Label>
-            <DateTimePicker
+            {/* <DateTimePicker
               hourCycle={12}
               value={endDateInfo}
               onChange={setEndDateInfo}
               displayFormat={{ hour12: "PP hh:mm a" }}
               granularity="minute"
               placeholder="End date"
-            />
+            /> */}
           </div>
         </div>
       </CardContent>

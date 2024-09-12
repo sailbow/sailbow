@@ -97,6 +97,14 @@ export const userSchema = {
     email: v.string()
 }
 
+export const itineraryItemSchema = v.object({
+    tripId: v.id("trips"),
+    title: v.string(),
+    date: v.optional(v.string()),
+    time: v.union(v.null(), v.string()),
+    location: v.union(v.null(), v.string()),
+    details: v.union(v.null(), v.string())
+})
 
 export default defineSchema({
     users: defineTable(userSchema)
@@ -126,6 +134,8 @@ export default defineSchema({
     })
         .index("by_tripId", ["tripId"]),
 
+    itineraryItems: defineTable(itineraryItemSchema)
+        .index("by_tripId", ["tripId"]),
     announcementComments: defineTable(announcementCommentsSchema)
         .index("by_announcementId", ["announcementId"]),
     
