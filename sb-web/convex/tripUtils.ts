@@ -20,4 +20,5 @@ export const throwIfNotMember = async (user: UserIdentity, tripId: Id<"trips">, 
   if (!membership) throw new ConvexError({
     code: "NOT_FOUND"
   });
+  return membership;
 }

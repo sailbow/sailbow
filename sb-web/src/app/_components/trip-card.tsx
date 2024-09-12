@@ -8,7 +8,7 @@ const TripCard = ({ trip }: { trip: Doc<"trips"> }) => {
   let banner;
   if (!trip.banner) {
     banner = (
-      <div className="flex size-full items-center justify-center bg-gradient-to-r from-accent via-muted to-accent">
+      <div className="flex size-full items-center justify-center bg-gradient-to-r from-primary/30 via-muted to-primary/30">
         <Sailboat className="size-32 stroke-muted-foreground" strokeWidth={1} />
       </div>
     );

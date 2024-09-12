@@ -47,13 +47,13 @@ export default function AnnouncementCard({
             </div>
           </div>
           <div className="flex gap-1">
-            <Button variant="gray_ghost" size="icon">
+            <Button variant="ghost" size="icon">
               <Edit className="h-4 w-4 " />
               <span className="sr-only">Edit</span>
             </Button>
             <Button
               variant="ghost"
-              className="hover:bg-red-200 focus:bg-red-200 dark:hover:bg-red-400 dark:focus:bg-red-400"
+              className="hover:bg-destructive/30"
               size="icon"
             >
               <Trash2 className="h-4 w-4" />

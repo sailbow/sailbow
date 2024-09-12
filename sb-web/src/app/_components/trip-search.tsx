@@ -20,6 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useActiveTripId, useSearchTrips, useTrip } from "@/lib/trip-queries";
 import { type Doc } from "@convex/_generated/dataModel";
 import ImageWithLoader from "./image-with-loader";
+import { useIsXs } from "@/hooks/use-media-query";
 
 const TripDropdownItem = ({ trip }: { trip: Doc<"trips"> }) => {
   const activeTripId = useActiveTripId();
@@ -29,7 +30,7 @@ const TripDropdownItem = ({ trip }: { trip: Doc<"trips"> }) => {
         {!!trip.banner ? (
           <ImageWithLoader src={trip.banner.thumbnail} alt={trip.banner.alt} />
         ) : (
-          <div className="flex size-full items-center justify-center bg-gradient-to-r from-muted via-accent to-muted">
+          <div className="flex size-full items-center justify-center bg-gradient-to-r from-muted via-primary/30 to-muted">
             <Sailboat
               className="size-10 stroke-muted-foreground"
               strokeWidth={1}
@@ -53,6 +54,7 @@ export default function TripSearch() {
   const [searchTerm, setSearchTerm] = useState("");
   const query = useDebounce(searchTerm, 500);
   const { isFetching, data: trips } = useSearchTrips(query);
+  const isXs = useIsXs();
 
   const tripResults = useMemo(() => {
     return trips?.filter((t) => t._id !== trip?._id);
@@ -73,8 +75,12 @@ export default function TripSearch() {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="justify-start">
-          <span className="max-w-[250px] overflow-hidden text-ellipsis text-sm text-muted-foreground">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="justify-start [&>span]:hover:text-accent-foreground"
+        >
+          <span className="max-w-[250px] overflow-hidden text-ellipsis text-sm">
             {trip.name}
           </span>
           <ChevronsUpDown className="ml-2 size-4" />
@@ -84,7 +90,7 @@ export default function TripSearch() {
         <div className="flex flex-col bg-card">
           <div className="p-2">
             <Input
-              autoFocus
+              autoFocus={!isXs}
               type="search"
               placeholder="Search..."
               className="rounded-lg"
