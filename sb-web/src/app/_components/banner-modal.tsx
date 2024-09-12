@@ -17,6 +17,8 @@ import CenteredSpinner from "./centered-spinner";
 import { api } from "@convex/_generated/api";
 import { useAction } from "convex/react";
 import { type Doc } from "@convex/_generated/dataModel";
+import { useDisclosure } from "@/lib/use-disclosure";
+import { cn } from "@/lib/utils";
 
 interface BannerModalProps {
   variant?: "add" | "edit" | "editIcon" | undefined;
@@ -55,7 +57,7 @@ export default function BannerModal(props: BannerModalProps) {
     setIsLoading(false);
   }, [searchAction, searchText]);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const disclosure = useDisclosure();
 
   useEffect(() => {
     if (!!searchText) {
@@ -91,9 +93,9 @@ export default function BannerModal(props: BannerModalProps) {
   })();
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog {...disclosure}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-2xl pt-2">
+      <DialogContent className="max-w-2xl px-3 pt-2 sm:px-6">
         <div className="flex h-[500px] w-full flex-col">
           <div className="text-xs italic text-muted-foreground">
             powered by{" "}
@@ -103,12 +105,12 @@ export default function BannerModal(props: BannerModalProps) {
               </a>
             </Button>
           </div>
-          <div className="sticky top-0 z-10 flex w-full items-center justify-between space-x-8">
+          <div className="sticky top-0 z-10 flex w-full items-center justify-between space-x-4">
             <div className="flex flex-1 flex-col">
               <Input
                 type="search"
-                className="flex-1"
-                placeholder="Search for an image..."
+                className={cn("flex-1", !query && "font-light")}
+                placeholder="Search..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
@@ -117,7 +119,7 @@ export default function BannerModal(props: BannerModalProps) {
             <DialogClose asChild>
               <Button
                 variant="secondary"
-                size="sm"
+                className="max-w-[80px] text-wrap text-xs sm:max-w-none sm:text-sm"
                 onClick={() => props.onBannerChange(null)}
               >
                 Remove image
@@ -148,7 +150,7 @@ export default function BannerModal(props: BannerModalProps) {
                         full: v.urls.full,
                         alt: v.alt_description,
                       });
-                      setIsOpen(false);
+                      disclosure.setClosed();
                     }}
                   >
                     <ImageWithLoader
