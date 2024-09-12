@@ -86,7 +86,7 @@ export default function HomePageContent() {
               }}
             >
               <Edit className="mr-2 size-6" />
-              Edit description
+              Edit details
             </Button>
           </div>
         )}
