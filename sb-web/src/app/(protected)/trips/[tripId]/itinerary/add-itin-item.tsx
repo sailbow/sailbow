@@ -3,8 +3,6 @@
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarPopover } from "@/components/ui/calendar-popover";
-import { DateTimePicker } from "@/components/ui/datetime-picker";
 import {
   Dialog,
   DialogClose,
@@ -20,7 +18,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -34,11 +31,10 @@ import { useUpsertItinItem } from "@/lib/trip-mutations";
 import { useActiveTripId } from "@/lib/trip-queries";
 import { useDisclosure } from "@/lib/use-disclosure";
 import { cn } from "@/lib/utils";
-import { Id } from "@convex/_generated/dataModel";
+import { type Id } from "@convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ConvexError } from "convex/values";
 import { CalendarIcon, ListPlusIcon } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
