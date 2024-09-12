@@ -30,7 +30,6 @@ import { type Id } from "@convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ConvexError } from "convex/values";
 import { Megaphone } from "lucide-react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AnnouncementCard from "./announcement-card";
@@ -43,7 +42,7 @@ type CreateAnnouncement = z.infer<typeof createAnnouncementSchema>;
 
 export const CreateAnnouncementButton = () => {
   const activeTripId = useActiveTripId();
-  const { isOpen, onOpenChange, close } = useDisclosure();
+  const disclosure = useDisclosure();
 
   const { mutate: createAnnouncement, isPending } = useCreateAnnouncement({
     onSuccess: () => {
@@ -71,16 +70,10 @@ export const CreateAnnouncementButton = () => {
     createAnnouncement(values);
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      form.reset();
-    }
-  }, [isOpen, form]);
-
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogTrigger>
-        <Button size="sm">
+    <Dialog {...disclosure}>
+      <DialogTrigger asChild>
+        <Button onClick={() => form.reset()}>
           <Megaphone className="size-6 xs:mr-2" />
           <span className="hidden xs:inline-flex">Create announcement</span>
         </Button>
@@ -143,8 +136,8 @@ export const AnnouncementList = () => {
   const { data: announcements, isLoading } = useAnnouncements();
   if (isLoading) {
     return (
-      <div className="grid w-full grid-cols-1 gap-4">
-        {Array.from({ length: 2 }).map((_, i) => (
+      <div className="mt-4 grid w-full grid-cols-1 gap-4">
+        {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i} className="max-w-2xl">
             <CardHeader className="px-4 pt-4">
               <div className="flex w-full items-center gap-2">
@@ -165,7 +158,7 @@ export const AnnouncementList = () => {
   if (!announcements) return;
 
   return (
-    <div className="grid w-full grid-cols-1 gap-4">
+    <div className="mt-4 grid w-full grid-cols-1 gap-4">
       {announcements.map((a) => (
         <AnnouncementCard key={a._id} announcement={a} />
       ))}

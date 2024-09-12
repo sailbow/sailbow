@@ -52,7 +52,7 @@ export const AddItinItem = () => {
   const disclosure = useDisclosure();
   const { mutate: upsertItinItem, isPending } = useUpsertItinItem({
     onSuccess: () => {
-      disclosure.close();
+      disclosure.setClosed();
       toast.success("Itinerary item added!");
     },
     onError: (error) => {
@@ -83,11 +83,11 @@ export const AddItinItem = () => {
     });
   };
   return (
-    <Dialog open={disclosure.isOpen} onOpenChange={disclosure.onOpenChange}>
-      <DialogTrigger>
-        <Button variant="outline" onClick={() => form.reset()}>
-          <ListPlusIcon className="mr-2 size-4 shrink-0" />
-          <div className="hover:text-accent-foreground">Add Itinerary Item</div>
+    <Dialog {...disclosure}>
+      <DialogTrigger asChild>
+        <Button onClick={() => form.reset()}>
+          <ListPlusIcon className="mr-2 size-6 shrink-0" />
+          Add Itinerary Item
         </Button>
       </DialogTrigger>
       <DialogContent>

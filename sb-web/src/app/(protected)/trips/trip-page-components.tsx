@@ -24,7 +24,7 @@ const TripPageHeader = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "sticky top-0 z-40 flex min-h-10 w-full gap-4 bg-background",
+      "sticky top-0 z-40 flex min-h-10 w-full max-w-4xl gap-4 bg-background pr-1 pt-1",
       className,
     )}
     {...props}
@@ -53,7 +53,11 @@ const TripPageContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("relative grow", className)} {...props} />
+  <div
+    ref={ref}
+    className={cn("relative max-w-4xl grow", className)}
+    {...props}
+  />
 ));
 
 TripPageContent.displayName = "BoatPageContent";

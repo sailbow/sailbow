@@ -19,7 +19,7 @@ export const ItinItemList = () => {
         disabled={true}
         type="single"
         defaultValue="1"
-        className="w-full max-w-2xl"
+        className="w-full"
       >
         {Array.from({ length: 3 }, (v, k) => (
           <AccordionItem value="1" key={k}>

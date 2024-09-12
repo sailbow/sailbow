@@ -1,3 +1,4 @@
+import { getOneFromOrThrow } from "convex-helpers/server/relationships";
 import { mutation } from "../_generated/server";
 import { withUser } from "../authUtils";
 import { tripSchema } from "../schema";
@@ -111,6 +112,14 @@ export const kickMember = mutation({
         });
       }
       await db.delete(memberId);
+      const invitation = await db.query("invitations")
+        .withIndex("by_email_and_tripId", q => q
+          .eq("email", crew.find(cm => cm._id === memberId)!.email)
+          .eq("tripId", tripId))
+        .first();
+      if (invitation) {
+        await db.delete(invitation._id);
+      }
     })
   }
 })

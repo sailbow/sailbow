@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { roleValueToDisplay } from "../invite";
+import { roleValueToDisplay } from "./invite-button";
 import { CrewMemberActions } from "./crew-member-actions";
 import { useCrew } from "@/lib/trip-queries";
 import { Skeleton } from "@/components/ui/skeleton";

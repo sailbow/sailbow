@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { roleValueToDisplay } from "../invite";
+import { roleValueToDisplay } from "./invite-button";
 
 const KickMemberModal = ({
   member,

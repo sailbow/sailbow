@@ -1,25 +1,25 @@
 import { useState } from "react";
 
 type Disclosure = {
-  isOpen: boolean;
+  open: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  open: () => void;
-  close: () => void;
+  setOpened: () => void;
+  setClosed: () => void;
 };
 export const useDisclosure = (): Disclosure => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setIsOpen] = useState(false);
 
-  function open() {
+  function setOpened() {
     setIsOpen(true);
   }
-  function close() {
+  function setClosed() {
     setIsOpen(false);
   }
 
   return {
-    isOpen,
-    onOpenChange: setIsOpen,
     open,
-    close,
+    setOpened,
+    onOpenChange: setIsOpen,
+    setClosed,
   };
 };

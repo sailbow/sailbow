@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { roleValueToDisplay } from "./invite";
+import { roleValueToDisplay } from "./invite-button";
 import { type Id } from "@convex/_generated/dataModel";
 import { ConvexError } from "convex/values";
 import { useInviteCrewMember } from "@/lib/trip-mutations";

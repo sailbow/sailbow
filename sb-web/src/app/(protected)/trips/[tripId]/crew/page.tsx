@@ -4,7 +4,7 @@ import {
   BoatPageHeader,
   BoatPageTitle,
 } from "../../trip-page-components";
-import InviteCrewMember from "../invite";
+import InviteButton from "./invite-button";
 import { CrewTable } from "./crew-table";
 
 export default function CrewPage() {
@@ -13,7 +13,7 @@ export default function CrewPage() {
       <BoatPageHeader>
         <BoatPageTitle>Crew</BoatPageTitle>
         <div className="ml-auto">
-          <InviteCrewMember />
+          <InviteButton />
         </div>
       </BoatPageHeader>
       <BoatPageContent>
