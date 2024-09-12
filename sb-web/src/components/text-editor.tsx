@@ -46,9 +46,10 @@ const useTextEditor = ({ text, isEditing, onTextChange }: TextEditorProps) => {
           },
         }),
         Placeholder.configure({
-          placeholder: "A description of your trip...",
+          placeholder: "Trip details, contact info, etc...",
           emptyEditorClass:
             "cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-0 before:left-0 before:text-mauve-11 before:opacity-50 before-pointer-events-none",
+          showOnlyWhenEditable: false,
         }),
         LinkExtension.configure({
           HTMLAttributes: {
@@ -174,6 +175,15 @@ const TextEditorToolbar = ({ editor }: { editor: Editor | null }) => {
     <div className="sticky top-0 z-30 flex flex-row flex-wrap items-center gap-1 bg-background">
       <Toggle
         size="sm"
+        pressed={editor.isActive("heading")}
+        onPressedChange={() => {
+          editor.chain().focus().toggleHeading({ level: 1 }).run();
+        }}
+      >
+        <Heading className="size-4" />
+      </Toggle>
+      <Toggle
+        size="sm"
         pressed={editor.isActive("bold")}
         onPressedChange={() => {
           editor.chain().focus().toggleBold().run();
@@ -207,15 +217,6 @@ const TextEditorToolbar = ({ editor }: { editor: Editor | null }) => {
         }}
       >
         <ListOrdered className="size-4" />
-      </Toggle>
-      <Toggle
-        size="sm"
-        pressed={editor.isActive("heading")}
-        onPressedChange={() => {
-          editor.chain().focus().toggleHeading({ level: 1 }).run();
-        }}
-      >
-        <Heading className="size-4" />
       </Toggle>
       <Toggle
         size="sm"
