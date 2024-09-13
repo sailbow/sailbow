@@ -47,7 +47,7 @@ export const CreateAnnouncementButton = () => {
   const { mutate: createAnnouncement, isPending } = useCreateAnnouncement({
     onSuccess: () => {
       toast.success("Announcement posted!");
-      close();
+      disclosure.setClosed();
     },
     onError: (error) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

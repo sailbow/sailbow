@@ -17,7 +17,7 @@ export default function Page() {
         </div>
       </BoatPageHeader>
       <BoatPageContent>
-        <div className="mt-4 flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4">
           <ItinItemList />
         </div>
       </BoatPageContent>

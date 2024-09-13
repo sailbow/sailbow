@@ -40,7 +40,7 @@ export function CrewTable() {
         <TableBody>
           {isLoading && !crew ? (
             <TableRow>
-              {Array.from({ length: 5 }).map((_, i) => (
+              {Array.from({ length: 4 }).map((_, i) => (
                 <TableCell key={i}>
                   <Skeleton key={i} className="h-10 bg-slate-200"></Skeleton>
                 </TableCell>
