@@ -18,15 +18,19 @@ import { Button } from "@/components/ui/button";
 import NotFoundPage from "@/app/_components/not-found-page";
 import { toast } from "@/components/ui/toast";
 import { type Id } from "@convex/_generated/dataModel";
+import Redirect from "@/app/_components/redirect";
+import { useEffect } from "react";
 
 export default function AcceptInvitePage() {
   const { inviteId } = useParams<{ inviteId: Id<"invitations"> }>();
   const router = useRouter();
   const { data: me } = useQuery(convexQuery(api.users.queries.me, {}));
 
-  const { isLoading, data: invite } = useQuery(
-    convexQuery(api.invitations.queries.byId, { inviteId }),
-  );
+  const {
+    isLoading,
+    data: invite,
+    error,
+  } = useQuery(convexQuery(api.invitations.queries.byId, { inviteId }));
 
   const {
     isPending: isAcceptingInvite,
@@ -48,7 +52,15 @@ export default function AcceptInvitePage() {
     },
   });
 
-  if (isLoading || !me) return <CenteredSpinner />;
+  useEffect(() => {
+    if (invite?.status === "accepted") {
+      toast.info("You already accepted this invite!");
+      router.push(`/trips/${invite.tripId}`);
+    }
+  }, [invite, router]);
+
+  if (isLoading || !me || invite?.status === "accepted")
+    return <CenteredSpinner />;
 
   if (!invite) return <NotFoundPage />;
 
