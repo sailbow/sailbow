@@ -18,19 +18,27 @@ import { Button } from "@/components/ui/button";
 import NotFoundPage from "@/app/_components/not-found-page";
 import { toast } from "@/components/ui/toast";
 import { type Id } from "@convex/_generated/dataModel";
-import Redirect from "@/app/_components/redirect";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { type FunctionReturnType } from "convex/server";
 
+type Invite = FunctionReturnType<typeof api.invitations.queries.byId>;
 export default function AcceptInvitePage() {
   const { inviteId } = useParams<{ inviteId: Id<"invitations"> }>();
   const router = useRouter();
   const { data: me } = useQuery(convexQuery(api.users.queries.me, {}));
 
-  const {
-    isLoading,
-    data: invite,
-    error,
-  } = useQuery(convexQuery(api.invitations.queries.byId, { inviteId }));
+  const [invite, setInvite] = useState<Invite | undefined>();
+
+  const { isLoading, data } = useQuery({
+    ...convexQuery(api.invitations.queries.byId, { inviteId }),
+    enabled: !invite,
+  });
+
+  useEffect(() => {
+    if (!invite) {
+      setInvite(data);
+    }
+  }, [invite, data]);
 
   const {
     isPending: isAcceptingInvite,
@@ -39,7 +47,7 @@ export default function AcceptInvitePage() {
   } = useMutation({
     mutationFn: useConvexMutation(api.invitations.mutations.accept),
     onSuccess: () => {
-      router.push(`/trips/${invite?.tripId}`);
+      router.push(`/trips/${invite!.tripId}`);
       toast.success("Invitation accepted!");
     },
   });
@@ -48,14 +56,14 @@ export default function AcceptInvitePage() {
     mutationFn: useConvexMutation(api.invitations.mutations.decline),
     onSuccess: () => {
       router.push("/trips");
-      toast.warning(`Invitation to join ${invite?.tripName} declined`);
+      toast.warning(`Invitation to join ${invite!.tripName} declined`);
     },
   });
 
   useEffect(() => {
     if (invite?.status === "accepted") {
-      toast.info("You already accepted this invite!");
       router.push(`/trips/${invite.tripId}`);
+      toast.info("You already accepted this invite!");
     }
   }, [invite, router]);
 
@@ -70,12 +78,13 @@ export default function AcceptInvitePage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              Invitation to join{" "}
+              Invitation to join the trip{" "}
               <span className="font-semibold">{invite.tripName}</span>
             </DialogTitle>
             <DialogDescription>
               {invite.invitedBy.firstName} {invite.invitedBy.lastName} has
-              invited you to join {invite.tripName}. Would you like to accept?
+              invited you to join the trip {invite.tripName}. Would you like to
+              accept?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

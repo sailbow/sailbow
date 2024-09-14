@@ -61,3 +61,11 @@ export const useItinItems = () => {
   const tripId = useActiveTripId();
   return useQ({ query: api.itinerary.queries.list, args: { tripId } });
 };
+
+export const usePendingAndDeclinedInvites = () => {
+  const tripId = useActiveTripId();
+  return useQ({
+    query: api.invitations.queries.listPendingAndDeclined,
+    args: { tripId },
+  });
+};

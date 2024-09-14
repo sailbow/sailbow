@@ -3,6 +3,7 @@ import { mutation } from "../_generated/server";
 import { withUser } from "../authUtils";
 import { getOneFromOrThrow } from "convex-helpers/server/relationships";
 import { ConvexError, v } from "convex/values";
+import { throwIfNotMember } from "../tripUtils";
 
 export const create = mutation({
   args: {
@@ -14,8 +15,9 @@ export const create = mutation({
     return await withUser(ctx.auth, ctx.db, async (user) => {
       const { db } = ctx;
       const existingInvite = await db.query("invitations")
-        .withIndex("by_email_and_tripId", q => q.eq("email", args.email).eq("tripId", args.tripId))
-        .unique();
+        .withIndex("by_email_and_tripId", q => q.eq("email", args.email.toLowerCase()).eq("tripId", args.tripId))
+        .filter(q => q.eq(q.field("status"), "pending"))
+        .first();
 
       if (!!existingInvite) throw new ConvexError({
         code: "USER_ERROR",
@@ -85,6 +87,25 @@ export const decline = mutation({
         });
       }
       await ctx.db.patch(invite._id, { status: "declined" });
+    })
+  }
+});
+
+export const cancel = mutation({
+  args: {
+    inviteId: v.id("invitations")
+  },
+  handler: async (ctx, args) => {
+    return await withUser(ctx.auth, ctx.db, async (user) => {
+      const invite = await getOneFromOrThrow(ctx.db, "invitations", "by_id", args.inviteId, "_id");
+      const membership = await throwIfNotMember(user, invite.tripId, ctx.db);
+      if (membership.role !== "captain" && membership.role !=="firstMate") {
+        throw new ConvexError({
+          code: "USER_ERROR",
+          message: "Only the captain or first mates can cancel invitations!"
+        });
+      }
+      await ctx.db.delete(invite._id);
     })
   }
 });

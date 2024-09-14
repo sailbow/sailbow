@@ -74,3 +74,7 @@ export const useSetDateRange = (
 export const useUpsertItinItem = (
   args: UseMutationArgs<typeof api.itinerary.mutations.upsert>,
 ) => useMut(api.itinerary.mutations.upsert, args);
+
+export const useCancelInvite = (
+  args: UseMutationArgs<typeof api.invitations.mutations.cancel>,
+) => useMut(api.invitations.mutations.cancel, args);
