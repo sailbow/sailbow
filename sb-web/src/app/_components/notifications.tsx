@@ -30,55 +30,6 @@ type InferNotificationType<TType extends Notification["type"]> = Extract<
 type InviteNotification = InferNotificationType<"invite">;
 type AnnouncementNotification = InferNotificationType<"announcement">;
 
-const NotificationComponents = (notification: Doc<"notifications">) => {
-  switch (notification.type) {
-    case "invite":
-      return <InviteNotification notification={notification} />;
-    case "announcement":
-      return;
-  }
-};
-
-const AnnouncementNotification = ({
-  notification,
-}: {
-  notification: AnnouncementNotification;
-}) => {
-  return <NotificationItem notification={notification}></NotificationItem>;
-};
-function InviteNotification({
-  notification,
-}: {
-  notification: InviteNotification;
-}) {
-  const { data, isLoading } = useInvite(notification.data.inviteId);
-  return (
-    <NotificationItem key={notification._id} notification={notification}>
-      {isLoading || !data ? (
-        <div className="flex size-full gap-6">
-          <Skeleton className="h-full flex-1" />
-          <Skeleton className="h-full w-24 flex-none" />
-        </div>
-      ) : (
-        <div className="flex w-full gap-6">
-          <p className="text-sm">
-            {data.invitedBy.firstName} has invited you to the trip{" "}
-            <span className="font-semibold"> {data.tripName}!</span>
-          </p>
-          <Link
-            href={`/accept-invite/${data._id}`}
-            className={buttonVariants({
-              className: "ml-auto hover:underline",
-              size: "sm",
-            })}
-          >
-            View
-          </Link>
-        </div>
-      )}
-    </NotificationItem>
-  );
-}
 const NotificationItem = ({
   children,
   notification,
@@ -88,11 +39,11 @@ const NotificationItem = ({
   return (
     <div
       className={cn(
-        "relative min-h-16 w-full gap-4 px-2 py-1.5 text-sm outline-none transition-all duration-300 ease-in-out",
+        "relative min-h-16 w-full gap-4 p-2 text-sm outline-none transition-all duration-300 ease-in-out",
         dismissClicked && "-translate-x-full transform opacity-0",
       )}
     >
-      <div className="mb-2 flex w-full items-center justify-between">
+      <div className="mb-2 flex w-full items-end justify-between">
         <div className="text-xs font-light">
           {new Date(notification._creationTime).toDateString()} @
           {new Date(notification._creationTime).toLocaleTimeString(undefined, {
@@ -127,11 +78,59 @@ const NotificationsList = ({
     return <p className="mt-2 w-full text-center font-light">All caught up!</p>;
   }
   return (
-    <div className="grid grid-cols-1 divide-y divide-slate-200">
+    <div className="grid grid-cols-1 space-y-2 divide-y divide-slate-200">
       {notifications.map(NotificationComponents)}
     </div>
   );
 };
+
+const NotificationComponents = (notification: Doc<"notifications">) => {
+  switch (notification.type) {
+    case "invite":
+      return <InviteNotification notification={notification} />;
+    case "announcement":
+      return;
+  }
+};
+
+const AnnouncementNotification = ({
+  notification,
+}: {
+  notification: AnnouncementNotification;
+}) => {
+  return <NotificationItem notification={notification}></NotificationItem>;
+};
+
+function InviteNotification({
+  notification,
+}: {
+  notification: InviteNotification;
+}) {
+  const { data, isLoading } = useInvite(notification.data.inviteId);
+  return (
+    <NotificationItem key={notification._id} notification={notification}>
+      <div className="flex w-full gap-6">
+        {data ? (
+          <p>
+            {data.invitedBy.firstName} has invited you to the trip{" "}
+            <span className="font-semibold"> {data.tripName}!</span>
+          </p>
+        ) : (
+          <Skeleton className="h-9 flex-1" />
+        )}
+
+        <Link
+          href={`/accept-invite/${notification.data.inviteId}`}
+          className={buttonVariants({
+            className: "ml-auto h-8 hover:underline",
+          })}
+        >
+          View
+        </Link>
+      </div>
+    </NotificationItem>
+  );
+}
 
 export default function NotificationsDropdown() {
   const { data, isLoading } = useUnreadNotifications();
@@ -160,7 +159,7 @@ export default function NotificationsDropdown() {
           </DropdownMenuLabel>
         </div>
         <DropdownMenuSeparator className="bg-slate-200" />
-        <DropdownMenuGroup className="p-1">
+        <DropdownMenuGroup className="p-1 pt-0">
           {isLoading || !data ? (
             <CenteredSpinner />
           ) : (
