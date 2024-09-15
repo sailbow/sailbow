@@ -73,7 +73,7 @@ export default function TripSearch() {
 
   if (!trip) return;
   return (
-    <div className="w-full max-w-[180px] sm:max-w-[250px] lg:max-w-[350px]">
+    <div className="max-w-[180px] sm:max-w-[250px] lg:max-w-[350px]">
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="w-full justify-between">

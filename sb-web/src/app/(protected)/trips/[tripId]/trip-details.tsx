@@ -13,7 +13,7 @@ import { useActiveTripId, useTrip } from "@/lib/trip-queries";
 import { Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function HomePageContent() {
+export default function TripDetails() {
   const { data: trip, isLoading: isTripLoading } = useTrip();
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [descriptionText, setDescriptionText] = useState<string | undefined>();
@@ -46,7 +46,7 @@ export default function HomePageContent() {
   if (!trip) return;
 
   return (
-    <div className="absolute size-full overflow-hidden">
+    <div className="absolute size-full overflow-hidden pb-1">
       <div className="relative flex size-full flex-col gap-2">
         {isEditingDescription ? (
           <div className="sticky top-0 z-30 flex w-full gap-2 bg-inherit">

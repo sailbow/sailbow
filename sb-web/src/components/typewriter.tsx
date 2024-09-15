@@ -58,7 +58,7 @@ export default function Typewriter({ phrases }: { phrases: string[] }) {
   const text = useTypewriter(phrases);
 
   return (
-    <h1 className="text-2xl font-bold leading-none tracking-tight text-gray-600 sm:text-6xl">
+    <h1 className="text-3xl font-bold leading-none tracking-tight text-gray-600 sm:text-6xl">
       {text}
       <span className="animate-cursor-blink">|</span>
     </h1>

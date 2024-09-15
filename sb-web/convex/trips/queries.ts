@@ -8,6 +8,7 @@ import { getManyVia, getOneFrom } from "convex-helpers/server/relationships";
 import { zid } from "convex-helpers/server/zod";
 import { type GenericDatabaseReader, type UserIdentity } from "convex/server";
 import { v } from "convex/values";
+import { throwIfNotMember } from "../tripUtils";
 
 const getMemberships = async ({ user, db }: { user: UserIdentity, db: GenericDatabaseReader<DataModel>}) => {
   return await db
@@ -120,23 +121,18 @@ export const searchTrips = query({
   }
 })
 
-export const getByIdTest = zodQuery({
-  args: { tripId: zid("trips")},
-  handler: async ({ db, auth }, { tripId }) => {
-    return await withUser(auth, db, async (user) => {
-      const membership = await db
+export const getCrewCount = query({
+  args: { tripId: v.id("trips") },
+  handler: async (ctx, args) => {
+    return await withUser(ctx.auth, ctx.db, async (user) => {
+      await throwIfNotMember(user, args.tripId, ctx.db);
+      const crew = await ctx.db
         .query("crews")
-        .withIndex("by_tripId", q => q.eq("tripId", tripId))
-        .filter(q => q.or(
-          q.eq(q.field("userId"), user.tokenIdentifier),
-          q.eq(q.field("email"), user.email)
-        ))
-        .first();
+        .withIndex("by_tripId", q => q
+          .eq("tripId", args.tripId))
+        .collect();
 
-      if (!membership) return notFound();
-      const trip = await getOneFrom(db, "trips", "by_id", membership.tripId, "_id");
-      if (!trip) return notFound();
-      return success(trip);
+      return { count: crew.length };
     })
   }
 })

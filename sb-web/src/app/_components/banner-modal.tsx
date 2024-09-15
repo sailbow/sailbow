@@ -70,8 +70,8 @@ export default function BannerModal(props: BannerModalProps) {
       case "add":
         return (
           <Button size="sm">
-            <ImagePlus className="size-6 md:mr-2" />
-            <span className="hidden text-sm sm:inline-flex">
+            <ImagePlus className="size-6 xs:mr-2" />
+            <span className="hidden text-sm xs:inline-flex">
               Add a cover image
             </span>
           </Button>
@@ -79,8 +79,8 @@ export default function BannerModal(props: BannerModalProps) {
       case "edit":
         return (
           <Button variant="outline" size="sm">
-            <ImageIcon className="size-6 md:mr-2" />
-            <span className="hidden sm:inline-flex">Edit cover image</span>
+            <ImageIcon className="mr-2 size-6" />
+            Edit cover image
           </Button>
         );
       case "editIcon":

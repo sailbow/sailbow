@@ -1,5 +1,7 @@
 import { api } from "@convex/_generated/api";
 import { type UseMutationArgs, useMut } from "./convex-client-helpers";
+import { useMutation } from "@tanstack/react-query";
+import { useConvexMutation } from "@convex-dev/react-query";
 
 export const useCreateTrip = (
   args: UseMutationArgs<typeof api.trips.mutations.create>,
@@ -19,7 +21,26 @@ export const useUpdateName = (
 
 export const useUpdateBanner = (
   args: UseMutationArgs<typeof api.trips.mutations.updateTripBanner>,
-) => useMut(api.trips.mutations.updateTripBanner, args);
+) => {
+  return useMutation({
+    mutationFn: useConvexMutation(
+      api.trips.mutations.updateTripBanner,
+    ).withOptimisticUpdate((localStore, args) => {
+      const trip = localStore.getQuery(api.trips.queries.getById, {
+        tripId: args.tripId,
+      });
+      console.log("optimistic banner update", trip);
+      if (trip) {
+        localStore.setQuery(
+          api.trips.queries.getById,
+          { tripId: args.tripId },
+          { ...trip, banner: args.banner },
+        );
+      }
+    }),
+    ...args,
+  });
+};
 
 export const useDeleteTrip = (
   args: UseMutationArgs<typeof api.trips.mutations.deleteTrip>,

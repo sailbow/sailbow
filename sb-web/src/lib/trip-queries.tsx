@@ -18,6 +18,11 @@ export const useTrip = () => {
   return useQ({ query: api.trips.queries.getById, args: { tripId } });
 };
 
+export const useCrewCount = () => {
+  const tripId = useActiveTripId();
+  return useQ({ query: api.trips.queries.getCrewCount, args: { tripId } });
+};
+
 export const useUserTrips = () => {
   return useQ({ query: api.trips.queries.getUserTrips, args: {} });
 };

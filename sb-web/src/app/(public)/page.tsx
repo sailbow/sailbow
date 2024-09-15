@@ -8,9 +8,9 @@ import {
   SignedOut,
   SignInButton,
 } from "@clerk/nextjs";
-import { Spinner } from "./_components/spinner";
+import { Spinner } from "../_components/spinner";
 import Link from "next/link";
-import { Navbar } from "./_components/nav-bar";
+import { Navbar } from "../_components/nav-bar";
 import Typewriter from "@/components/typewriter";
 
 export default function Home() {
