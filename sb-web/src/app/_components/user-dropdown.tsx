@@ -39,7 +39,11 @@ export function UserDropdown() {
   const router = useRouter();
 
   if (!isLoaded) {
-    return <Spinner className="size-6" />;
+    return (
+      <div className="rouded-full inline-flex size-10 items-center justify-center">
+        <Spinner className="size-8" />
+      </div>
+    );
   }
   if (!user) {
     return (

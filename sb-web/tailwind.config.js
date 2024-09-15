@@ -80,6 +80,7 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
+        "cursor-blink": "caret-blink 0.5s ease-out infinite"
       },
       spacing: {
         "navbar-height": "3.5rem",

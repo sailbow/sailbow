@@ -10,10 +10,13 @@ import {
 } from "@clerk/nextjs";
 import { Spinner } from "./_components/spinner";
 import Link from "next/link";
+import { Navbar } from "./_components/nav-bar";
+import Typewriter from "@/components/typewriter";
 
 export default function Home() {
   return (
     <div className="h-screen bg-gradient-to-b from-yellow-50 to-teal-200">
+      <Navbar />
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div className="mx-auto max-w-2xl py-8">
           <div className="text-center text-foreground">
@@ -25,13 +28,9 @@ export default function Home() {
               className="mb-8 inline-block"
             />
 
-            <h1 className="text-2xl font-bold leading-none tracking-tight text-gray-600 sm:text-6xl">
-              assemble your crew.
-              <br />
-              chart a course.
-              <br />
-              set sail.
-            </h1>
+            <Typewriter
+              phrases={["assemble your crew", "chart a course", "set sail"]}
+            />
             <p className="mt-6 text-base leading-8 text-gray-600/90 sm:text-lg">
               The easiest way to plan your next group trip
             </p>
