@@ -31,12 +31,12 @@ export default function TripOverviewPage() {
     <BoatPageContainer>
       <Tabs
         defaultValue="overview"
-        className="relative flex size-full flex-col space-y-2 overflow-auto"
+        className="relative flex size-full flex-col space-y-2"
       >
         <BoatPageHeader>
           <BoatPageTitle>{trip.name}</BoatPageTitle>
         </BoatPageHeader>
-        <BoatPageContent>
+        <BoatPageContent className="overflow-auto">
           <TabsList className="grid flex-1 grid-cols-2">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="details">Details</TabsTrigger>
