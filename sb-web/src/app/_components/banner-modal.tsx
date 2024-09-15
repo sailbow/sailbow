@@ -132,7 +132,7 @@ export default function BannerModal(props: BannerModalProps) {
             ) : !searchText ? (
               <div className="inline-flex w-full items-center justify-center pt-4">
                 <FileSearch
-                  className="mr-2 size-32 stroke-muted-foreground"
+                  className="mr-2 size-32 stroke-gray-300"
                   strokeWidth={1.5}
                 />
               </div>

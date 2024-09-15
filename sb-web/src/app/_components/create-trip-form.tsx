@@ -115,7 +115,7 @@ export function CreateTripForm() {
                   <ImageWithLoader src={banner.regular} alt={banner.alt} />
                 ) : (
                   <ImageIcon
-                    className="size-full stroke-muted-foreground"
+                    className="size-full stroke-gray-300"
                     strokeWidth={0.75}
                   />
                 )}

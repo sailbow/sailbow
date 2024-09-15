@@ -12,7 +12,7 @@ export const useTripLinks = () => {
   const tripId = useActiveTripId();
   return [
     {
-      title: "Overview",
+      title: "Home",
       icon: Home,
       href: `/trips/${tripId}`,
     },
