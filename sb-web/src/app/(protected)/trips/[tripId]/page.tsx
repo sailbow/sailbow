@@ -53,7 +53,7 @@ export default function TripOverviewPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <TripBannerModal />
                     <Link
-                      href={`/trips/${trip._id}/crew`}
+                      href={`/trips/${trip._id}/settings`}
                       className={buttonVariants({
                         variant: "outline",
                         size: "sm",

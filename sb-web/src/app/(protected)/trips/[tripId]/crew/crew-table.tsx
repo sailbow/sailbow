@@ -12,7 +12,7 @@ import { roleValueToDisplay } from "./invite-button";
 import { CrewMemberActions } from "./crew-member-actions";
 import { useCrew } from "@/lib/trip-queries";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Ellipsis, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -58,6 +58,9 @@ export function CrewTable() {
                       src={member.imageUrl}
                       alt={`Profile image for ${member.firstName} ${member.lastName}`}
                     />
+                    <AvatarFallback>
+                      <Skeleton className="size-full rounded-full" />
+                    </AvatarFallback>
                   </Avatar>
                 </TableCell>
                 <TableCell>
