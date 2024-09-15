@@ -101,27 +101,6 @@ export function UserDropdown() {
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
           </DropdownMenuSub>
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            Settings
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <Link href="/privacy-policy">
-            <DropdownMenuItem>
-              <FileText className="mr-2 h-4 w-4" />
-              Privacy policy
-            </DropdownMenuItem>
-          </Link>
-          <DropdownMenuItem>
-            <MessageSquareWarning className="mr-2 h-4 w-4" />
-            Send feedback
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <HelpCircle className="mr-2 h-4 w-4" />
-            Get help
-          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem

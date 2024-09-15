@@ -50,7 +50,7 @@ export function CrewTable() {
             crew!.map((member) => (
               <TableRow
                 key={member._id}
-                className="text-xs xs:text-sm md:text-base"
+                className="text-xs xs:text-sm lg:text-base"
               >
                 <TableCell>
                   <Avatar>
