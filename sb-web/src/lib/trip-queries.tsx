@@ -1,24 +1,7 @@
 import { useParams } from "next/navigation";
 import { type Id } from "@convex/_generated/dataModel";
 import { api } from "@convex/_generated/api";
-import { useQuery } from "@tanstack/react-query";
-import { convexQuery } from "@convex-dev/react-query";
-import { type FunctionReference } from "convex/server";
-
-type QArgs<TQuery extends FunctionReference<"query", "public">> = {
-  query: TQuery;
-  args: TQuery["_args"];
-  enabled?: boolean | undefined;
-};
-
-const useQ = <TQuery extends FunctionReference<"query", "public">>(
-  args: QArgs<TQuery>,
-) => {
-  return useQuery({
-    ...convexQuery(args.query, args.args),
-    enabled: args.enabled ?? true,
-  });
-};
+import { useQ } from "./convex-client-helpers";
 
 export const useActiveTripId = () => {
   const params = useParams<{ tripId: Id<"trips"> }>();

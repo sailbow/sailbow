@@ -48,4 +48,4 @@ export const listPendingAndDeclined = query({
       return pendingAndDeclined;
     })
   }
-})
+});

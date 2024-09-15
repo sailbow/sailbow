@@ -38,6 +38,20 @@ export const create = mutation({
         invitedByUserId: user.userId,
         status: "pending",
       });
+      
+      const userRecord = await db.query("users")
+        .withIndex("by_email", q => q.eq("email", args.email.toLowerCase()))
+        .first();
+      
+      if (!!userRecord) {
+        await db.insert("notifications", {
+          userId: userRecord._id, 
+          type: "invite",
+          data: { inviteId },
+          dismissed: false
+        });
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       await ctx.scheduler.runAfter(0, internal.invitations.actions.sendTripInvite, {
         email: args.email,

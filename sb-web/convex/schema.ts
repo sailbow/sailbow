@@ -104,7 +104,33 @@ export const itineraryItemSchema = v.object({
     time: v.union(v.null(), v.string()),
     location: v.union(v.null(), v.string()),
     details: v.union(v.null(), v.string())
-})
+});
+
+const baseNotification = {
+    userId: v.id("users"),
+    dismissed: v.boolean(),
+};
+
+const invitationNotificationSchema = {
+    ...baseNotification,
+    type: v.literal("invite"),
+    data: v.object({
+        inviteId: v.id("invitations"),
+    })
+}
+
+const announcementNotificationSchema = {
+    ...baseNotification,
+    type: v.literal("announcement"),
+    data: v.object({
+        announcementId: v.id("announcements")
+    })
+}
+
+export const notificationsSchema = v.union(
+    v.object(invitationNotificationSchema),
+    v.object(announcementNotificationSchema)
+)
 
 export default defineSchema({
     users: defineTable(userSchema)
@@ -120,6 +146,9 @@ export default defineSchema({
         .index("by_tripId", ["tripId"])
         .index("by_email", ["email"])
         .index("by_email_and_tripId", ["email", "tripId"]),
+
+    notifications: defineTable(notificationsSchema)
+        .index("by_userId", ["userId"]),
 
     crews: defineTable(crewMemberSchema)
         .index("by_userId", ["userId"])

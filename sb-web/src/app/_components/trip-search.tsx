@@ -73,69 +73,65 @@ export default function TripSearch() {
 
   if (!trip) return;
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="justify-start [&>span]:hover:text-accent-foreground"
-        >
-          <span className="max-w-[250px] overflow-hidden text-ellipsis text-sm">
-            {trip.name}
-          </span>
-          <ChevronsUpDown className="ml-2 size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80" align="start">
-        <div className="flex flex-col bg-card">
-          <div className="p-2">
-            <Input
-              autoFocus={!isXs}
-              type="search"
-              placeholder="Search..."
-              className="rounded-lg"
-              onChange={onSearchChange}
-            />
-          </div>
-          <DropdownMenuLabel className="font-light">
-            Active trip
-          </DropdownMenuLabel>
-          <div
-            className="relative flex items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
-            onClick={() => setIsOpen(false)}
-          >
-            <TripDropdownItem trip={trip} />
-          </div>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel className="font-light">
-            Other trips
-          </DropdownMenuLabel>
-          {isFetching ? (
-            <CenteredSpinner />
-          ) : tripResults?.length === 0 ? (
-            <div className="w-full text-center text-sm text-muted-foreground">
-              No trips were found
+    <div className="w-full max-w-[180px] sm:max-w-[250px] lg:max-w-[350px]">
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="w-full justify-between">
+            <span className="mr-2 truncate text-sm">{trip.name}</span>
+            <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-80" align="end">
+          <div className="flex flex-col bg-card">
+            <div className="p-2">
+              <Input
+                autoFocus={!isXs}
+                type="search"
+                placeholder="Search..."
+                className="rounded-lg"
+                onChange={onSearchChange}
+              />
             </div>
-          ) : (
-            <ScrollArea className="min-h-8">
-              <DropdownMenuGroup className="max-h-[50dvh] overflow-y-auto">
-                {tripResults
-                  ?.filter((t) => t._id !== trip._id)
-                  .map((t) => (
-                    <Link key={t._id} href={`/trips/${t._id}` as Route}>
-                      <div
-                        className="relative flex items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <TripDropdownItem trip={t} />
-                      </div>
-                    </Link>
-                  ))}
-              </DropdownMenuGroup>
-            </ScrollArea>
-          )}
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <DropdownMenuLabel className="font-light">
+              Active trip
+            </DropdownMenuLabel>
+            <div
+              className="relative flex items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+              onClick={() => setIsOpen(false)}
+            >
+              <TripDropdownItem trip={trip} />
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel className="font-light">
+              Other trips
+            </DropdownMenuLabel>
+            {isFetching ? (
+              <CenteredSpinner />
+            ) : tripResults?.length === 0 ? (
+              <div className="w-full text-center text-sm text-muted-foreground">
+                No trips were found
+              </div>
+            ) : (
+              <ScrollArea className="min-h-8">
+                <DropdownMenuGroup className="max-h-[50dvh] overflow-y-auto">
+                  {tripResults
+                    ?.filter((t) => t._id !== trip._id)
+                    .map((t) => (
+                      <Link key={t._id} href={`/trips/${t._id}` as Route}>
+                        <div
+                          className="relative flex items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <TripDropdownItem trip={t} />
+                        </div>
+                      </Link>
+                    ))}
+                </DropdownMenuGroup>
+              </ScrollArea>
+            )}
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

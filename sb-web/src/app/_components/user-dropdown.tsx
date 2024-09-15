@@ -55,7 +55,7 @@ export function UserDropdown() {
           size="icon"
           className="rounded-full bg-transparent p-0 hover:bg-transparent"
         >
-          <Avatar>
+          <Avatar className="size-8 sm:size-10">
             <AvatarImage
               src={user.imageUrl}
               alt={user.fullName + " profile image"}

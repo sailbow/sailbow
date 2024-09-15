@@ -20,19 +20,19 @@ import { toast } from "@/components/ui/toast";
 import { type Id } from "@convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { type FunctionReturnType } from "convex/server";
+import { useInvite } from "@/lib/invitations";
+import { useMe } from "@/lib/user-queries";
+import { useAcceptInvite, useDeclineInvite } from "@/lib/invitations";
 
 type Invite = FunctionReturnType<typeof api.invitations.queries.byId>;
 export default function AcceptInvitePage() {
   const { inviteId } = useParams<{ inviteId: Id<"invitations"> }>();
   const router = useRouter();
-  const { data: me } = useQuery(convexQuery(api.users.queries.me, {}));
+  const { data: me } = useMe();
 
   const [invite, setInvite] = useState<Invite | undefined>();
 
-  const { isLoading, data } = useQuery({
-    ...convexQuery(api.invitations.queries.byId, { inviteId }),
-    enabled: !invite,
-  });
+  const { isLoading, data } = useInvite(inviteId);
 
   useEffect(() => {
     if (!invite) {
@@ -44,21 +44,20 @@ export default function AcceptInvitePage() {
     isPending: isAcceptingInvite,
     mutate: acceptInvite,
     isSuccess: acceptedInvite,
-  } = useMutation({
-    mutationFn: useConvexMutation(api.invitations.mutations.accept),
+  } = useAcceptInvite({
     onSuccess: () => {
       router.push(`/trips/${invite!.tripId}`);
       toast.success("Invitation accepted!");
     },
   });
 
-  const { isPending: isDecliningInvite, mutate: declineInvite } = useMutation({
-    mutationFn: useConvexMutation(api.invitations.mutations.decline),
-    onSuccess: () => {
-      router.push("/trips");
-      toast.warning(`Invitation to join ${invite!.tripName} declined`);
-    },
-  });
+  const { isPending: isDecliningInvite, mutate: declineInvite } =
+    useDeclineInvite({
+      onSuccess: () => {
+        router.push("/trips");
+        toast.warning(`Invitation to join ${invite!.tripName} declined`);
+      },
+    });
 
   useEffect(() => {
     if (invite?.status === "accepted") {
