@@ -58,7 +58,7 @@ export default function DeleteTripCard() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
-                Are you sure you want to delete this boat?
+                Are you sure you want to delete this trip?
               </DialogTitle>
               <DialogDescription>
                 This action cannot be undone!

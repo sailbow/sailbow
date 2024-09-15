@@ -12,10 +12,88 @@ import { type FunctionReturnType } from "convex/server";
 import { type api } from "@convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDisclosure } from "@/lib/use-disclosure";
+import { useDeleteAnnouncement } from "@/lib/announcements";
+import { toast } from "@/components/ui/toast";
+import { ConvexError } from "convex/values";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 type Announcement = FunctionReturnType<
   typeof api.announcements.queries.get
 >[number];
+
+const DeleteAnnouncementModal = ({
+  announcement,
+}: {
+  announcement: Announcement;
+}) => {
+  const disclosure = useDisclosure();
+  const {
+    mutate: deleteAnnouncement,
+    isPending,
+    isSuccess: wasDeleted,
+  } = useDeleteAnnouncement({
+    onSuccess: () => {
+      disclosure.setClosed();
+      toast.success("Successfully deleted announcement");
+    },
+    onError: (error) => {
+      if (error instanceof ConvexError && error.data.code === "USER_ERROR") {
+        toast.error(error.data.message);
+      } else {
+        console.error(error);
+        toast.error("Something went wrong there, please try again later");
+      }
+    },
+  });
+
+  return (
+    <Dialog {...disclosure}>
+      <DialogTrigger>
+        <Button variant="ghost" size="icon" className="hover:bg-destructive/30">
+          <Trash2 className="h-4 w-4" />
+          <span className="sr-only">Edit</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Are you sure you want to delete this announcement?
+            </DialogTitle>
+            <DialogDescription>This action cannot be undone!</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="secondary">Cancel</Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              onClick={() =>
+                deleteAnnouncement({
+                  tripId: announcement.tripId,
+                  announcementId: announcement._id,
+                })
+              }
+              disabled={isPending || wasDeleted}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default function AnnouncementCard({
   announcement,
@@ -46,37 +124,12 @@ export default function AnnouncementCard({
               </div>
             </div>
           </div>
-          <div className="flex gap-1">
-            <Button variant="ghost" size="icon">
-              <Edit className="h-4 w-4 " />
-              <span className="sr-only">Edit</span>
-            </Button>
-            <Button
-              variant="ghost"
-              className="hover:bg-destructive/30"
-              size="icon"
-            >
-              <Trash2 className="h-4 w-4" />
-              <span className="sr-only">Delete</span>
-            </Button>
-          </div>
+          <DeleteAnnouncementModal announcement={announcement} />
         </div>
       </CardHeader>
       <CardContent>
         <p className="prose dark:prose-invert">{announcement.text}</p>
       </CardContent>
-      <CardFooter className="px-4 pb-4">
-        <div className="flex items-center justify-between">
-          <Button variant="ghost" size="icon">
-            <Heart className="h-5 w-5" />
-            <span className="sr-only">Like</span>
-          </Button>
-          <Button variant="ghost" size="icon">
-            <MessageCircle className="h-5 w-5" />
-            <span className="sr-only">Comment</span>
-          </Button>
-        </div>
-      </CardFooter>
     </Card>
   );
 }
