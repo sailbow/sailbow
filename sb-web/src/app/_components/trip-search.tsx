@@ -30,7 +30,7 @@ const TripDropdownItem = ({ trip }: { trip: Doc<"trips"> }) => {
         {!!trip.banner ? (
           <ImageWithLoader src={trip.banner.thumbnail} alt={trip.banner.alt} />
         ) : (
-          <div className="flex size-full items-center justify-center bg-gradient-to-r from-muted via-primary/30 to-muted">
+          <div className="flex size-full items-center justify-center bg-gradient-to-r from-blue-300 via-accent to-blue-300">
             <Sailboat
               className="size-10 stroke-muted-foreground"
               strokeWidth={1}

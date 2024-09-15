@@ -64,7 +64,7 @@ const Sidebar = () => {
           <Separator />
           <div className="flex flex-col gap-2">
             {trip && (
-              <span className="font-semi-bold px-1 py-1">{trip.name}</span>
+              <span className="px-1 py-1 font-semibold">{trip.name}</span>
             )}
             {trip &&
               links?.map((link, index) => (
