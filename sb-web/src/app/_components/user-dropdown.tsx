@@ -108,11 +108,10 @@ export function UserDropdown() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() =>
-            signOut(() => {
-              router.push("/");
-            })
-          }
+          onClick={async () => {
+            router.push("/");
+            await signOut();
+          }}
         >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
