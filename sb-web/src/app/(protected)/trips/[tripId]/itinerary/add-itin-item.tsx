@@ -129,10 +129,9 @@ export const AddItinItem = () => {
                 return (
                   <FormItem>
                     <FormLabel className="sr-only">Date (optional)</FormLabel>
-
                     <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
+                      <FormControl>
+                        <PopoverTrigger asChild>
                           <Button
                             variant={"outline"}
                             className={cn(
@@ -147,8 +146,8 @@ export const AddItinItem = () => {
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
-                        </FormControl>
-                      </PopoverTrigger>
+                        </PopoverTrigger>
+                      </FormControl>
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
