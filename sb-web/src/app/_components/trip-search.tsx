@@ -81,7 +81,7 @@ export default function TripSearch() {
             <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-80" align="end">
+        <DropdownMenuContent className="w-80" align="start">
           <div className="flex flex-col bg-card">
             <div className="p-2">
               <Input
