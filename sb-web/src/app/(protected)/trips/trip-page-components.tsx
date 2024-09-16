@@ -8,7 +8,7 @@ const TripPageContainer = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "relative flex size-full max-w-full flex-col space-y-2 overflow-auto sm:container",
+      "relative flex size-full max-w-full flex-col overflow-auto sm:container",
       className,
     )}
     {...props}
@@ -24,7 +24,7 @@ const TripPageHeader = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "sticky top-0 z-40 flex min-h-10 w-full max-w-4xl gap-4 bg-background pr-1",
+      "sticky top-0 z-40 flex min-h-10 w-full max-w-4xl gap-4 bg-background py-2 pr-1",
       className,
     )}
     {...props}
@@ -55,7 +55,7 @@ const TripPageContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("relative max-w-4xl grow", className)}
+    className={cn("relative max-w-4xl grow py-2", className)}
     {...props}
   />
 ));
