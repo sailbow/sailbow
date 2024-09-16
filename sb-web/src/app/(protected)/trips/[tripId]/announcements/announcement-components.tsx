@@ -137,23 +137,19 @@ export const AnnouncementList = () => {
   const { data: announcements, isLoading } = useAnnouncements();
   if (isLoading) {
     return (
-      <div className="mt-4 grid w-full grid-cols-1 gap-4">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Card key={i} className="max-w-2xl">
-            <CardHeader className="px-4 pt-4">
-              <div className="flex w-full items-center gap-2">
-                <Avatar>
-                  <Skeleton className="size-full rounded-full" />
-                </Avatar>
-                <Skeleton className="h-10 flex-1" />
-              </div>
-            </CardHeader>
-            <CardContent className="h-32 w-full">
-              <Skeleton className="size-full" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Card className="max-w-2xl">
+        <CardHeader className="px-4 pt-4">
+          <div className="flex w-full items-center gap-2">
+            <Avatar>
+              <Skeleton className="size-full rounded-full bg-gray-300" />
+            </Avatar>
+            <Skeleton className="h-10 flex-1 bg-gray-300" />
+          </div>
+        </CardHeader>
+        <CardContent className="h-32 w-full">
+          <Skeleton className="size-full bg-gray-300" />
+        </CardContent>
+      </Card>
     );
   }
   if (!announcements) return;
