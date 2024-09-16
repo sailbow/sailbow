@@ -3,7 +3,7 @@ import {
   TripPageHeader,
   TripPageTitle,
   TripPageContent,
-} from "../../trip-page-components";
+} from "../trip-page-components";
 import { AddItinItem } from "./add-itin-item";
 import { ItinItemList } from "./itin-item-list";
 

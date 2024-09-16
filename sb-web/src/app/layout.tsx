@@ -64,16 +64,9 @@ export default function RootLayout({
               font.variable,
             )}
           >
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="light"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
-              {children}
-              <Toaster richColors={true} />
-            </ThemeProvider>
+            <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
+            {children}
+            <Toaster richColors={true} />
           </body>
         </ConvexClientProvider>
       </ClerkProvider>

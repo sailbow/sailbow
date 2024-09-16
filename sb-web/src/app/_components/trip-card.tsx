@@ -3,8 +3,6 @@ import { type Doc } from "@convex/_generated/dataModel";
 import { Sailboat, Users } from "lucide-react";
 import Link from "next/link";
 import ImageWithLoader from "./image-with-loader";
-import { useCrewCount } from "@/lib/trip-queries";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const TripCard = ({ trip }: { trip: Doc<"trips"> & { crewCount: number } }) => {
   let banner;

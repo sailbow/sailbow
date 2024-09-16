@@ -4,12 +4,10 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useCrewCount, useUserTrips } from "@/lib/trip-queries";
+import { useUserTrips } from "@/lib/trip-queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
 import { useIsXs } from "@/hooks/use-media-query";
-import { Doc } from "@convex/_generated/dataModel";
-import { useState } from "react";
 
 const CreateTripButton = () => {
   const isXs = useIsXs();

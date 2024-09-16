@@ -3,7 +3,7 @@ import {
   TripPageContent,
   TripPageHeader,
   TripPageTitle,
-} from "../../trip-page-components";
+} from "../trip-page-components";
 import InviteButton from "./invite-button";
 import { CrewTable } from "./crew-table";
 import { PendingAndDeclinedInvitesTable } from "./pending-declined-invites-table";

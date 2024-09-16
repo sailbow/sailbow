@@ -1,4 +1,4 @@
-import { type Doc, type DataModel } from "../_generated/dataModel";
+import { type Doc, type DataModel, type Id } from "../_generated/dataModel";
 import { query } from "../_generated/server";
 import { notFound, success, zodQuery } from "../lib/queryUtils";
 import { withAuth, withUser } from "../authUtils";
@@ -15,6 +15,12 @@ const getMemberships = async ({ user, db }: { user: UserIdentity, db: GenericDat
     .query("crews")
     .withIndex("by_email", q => q.eq("email", user.email!))
     .collect();
+};
+
+const getCrewCount = async (db: GenericDatabaseReader<DataModel>, tripId: Id<"trips">) => {
+  return (await db.query("crews")
+    .withIndex("by_tripId", q => q.eq("tripId", tripId))
+    .collect()).length
 }
 
 export const getById = query({
@@ -23,17 +29,14 @@ export const getById = query({
   },
   handler: async ({ db, auth }, { tripId }) => {
     return await withUser(auth, db, async (user) => {
-      const membership = await db
-        .query("crews")
-        .withIndex("by_tripId", q => q.eq("tripId", tripId))
-        .filter(q => q.or(
-          q.eq(q.field("userId"), user.tokenIdentifier),
-          q.eq(q.field("email"), user.email)
-        ))
-        .first();
-        
-      if (!membership) return null;
-      return await getOneFrom(db, "trips", "by_id", membership.tripId, "_id");
+      await throwIfNotMember(user, tripId, db);
+
+      const trip = await getOneFrom(db, "trips", "by_id", tripId, "_id");
+      if (!trip) return null;
+      return {
+        ...trip,
+        crewCount: await getCrewCount(db, tripId)
+      }
     })
   }
 })
@@ -48,9 +51,7 @@ export const getUserTrips = query({
         if (!trip) return null;
         return {
           ...trip,
-          crewCount: (await db.query("crews")
-            .withIndex("by_tripId", q => q.eq("tripId", trip._id))
-            .collect()).length,
+          crewCount: await getCrewCount(db, trip._id)
         }
       }
     ))
@@ -121,27 +122,11 @@ export const searchTrips = query({
       const trips = pruneNull(await asyncMap(
         memberships,
         async (m) => await db.query("trips")
-        .withSearchIndex("search_trip_name", q => q.search("name", text))
-        .filter(q => q.eq(q.field("_id"), m.tripId))
-        .unique()
+          .withSearchIndex("search_trip_name", q => q.search("name", text))
+          .filter(q => q.eq(q.field("_id"), m.tripId))
+          .unique()
       ));
       return trips;
-    })
-  }
-})
-
-export const getCrewCount = query({
-  args: { tripId: v.id("trips") },
-  handler: async (ctx, args) => {
-    return await withUser(ctx.auth, ctx.db, async (user) => {
-      await throwIfNotMember(user, args.tripId, ctx.db);
-      const crew = await ctx.db
-        .query("crews")
-        .withIndex("by_tripId", q => q
-          .eq("tripId", args.tripId))
-        .collect();
-
-      return { count: crew.length };
     })
   }
 })

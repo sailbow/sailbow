@@ -1,32 +1,23 @@
 "use client";
-import { useActiveTripId, useCrewCount, useTrip } from "@/lib/trip-queries";
+import { useTrip } from "@/lib/trip-queries";
 import {
   TripPageContainer,
-  TripPageContent,
   TripPageHeader,
   TripPageTitle,
 } from "../trip-page-components";
 import TripDetails from "./trip-details";
-import TripBannerModal from "./trip-banner-modal";
+import TripBannerModal from "../trip-banner-modal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  ArrowRight,
-  ListChecks,
-  Megaphone,
-  Settings,
-  User2,
-  Users2,
-} from "lucide-react";
+import { ListChecks, Megaphone, Settings, Users2 } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TripOverviewPage() {
-  const activeTripId = useActiveTripId();
   const { data: trip } = useTrip();
-  const { data: crewCount } = useCrewCount(activeTripId);
+
   if (!trip) return;
+
   return (
     <TripPageContainer>
       <TripPageHeader>
@@ -68,20 +59,16 @@ export default function TripOverviewPage() {
               </CardHeader>
               <CardContent className="flex w-full items-center justify-between p-4">
                 <div className="flex w-full items-center gap-2">
-                  {!crewCount ? (
-                    <Skeleton className="h-8 flex-1" />
-                  ) : (
-                    <Link
-                      href={`/trips/${trip._id}/crew`}
-                      className={buttonVariants({
-                        variant: "outline",
-                        size: "sm",
-                      })}
-                    >
-                      <Users2 className="mr-2 size-5" />
-                      Members: {crewCount.count}
-                    </Link>
-                  )}
+                  <Link
+                    href={`/trips/${trip._id}/crew`}
+                    className={buttonVariants({
+                      variant: "outline",
+                      size: "sm",
+                    })}
+                  >
+                    <Users2 className="mr-2 size-5" />
+                    Members: {trip.crewCount}
+                  </Link>
                 </div>
               </CardContent>
             </Card>

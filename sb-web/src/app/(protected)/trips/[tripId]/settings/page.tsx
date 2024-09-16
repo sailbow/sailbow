@@ -3,7 +3,7 @@ import {
   TripPageHeader,
   TripPageTitle,
   TripPageContent,
-} from "../../trip-page-components";
+} from "../trip-page-components";
 import DeleteTripCard from "./delete-trip-card";
 import UpdateNameCard from "./update-name-card";
 

@@ -2,7 +2,7 @@ import {
   TripPageContainer,
   TripPageContent,
   TripPageHeader,
-} from "../trip-page-components";
+} from "./trip-page-components";
 
 export default function Loading() {
   return (

@@ -13,7 +13,9 @@ export default function TripBannerModal() {
     },
   });
   const { data: trip } = useTrip();
+
   if (!trip) return;
+
   return (
     <BannerModal
       onBannerChange={(banner) => updateBanner({ tripId: trip._id, banner })}
