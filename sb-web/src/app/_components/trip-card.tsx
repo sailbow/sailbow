@@ -6,8 +6,7 @@ import ImageWithLoader from "./image-with-loader";
 import { useCrewCount } from "@/lib/trip-queries";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const TripCard = ({ trip }: { trip: Doc<"trips"> }) => {
-  const { data: crewCount } = useCrewCount(trip._id);
+const TripCard = ({ trip }: { trip: Doc<"trips"> & { crewCount: number } }) => {
   let banner;
   if (!trip.banner) {
     banner = (
@@ -41,15 +40,9 @@ const TripCard = ({ trip }: { trip: Doc<"trips"> }) => {
             <CardTitle className="line-clamp-1 text-lg font-normal">
               {trip.name}
             </CardTitle>
-            <div className="ml-auto inline-flex items-center">
+            <div className="ml-auto inline-flex items-center text-sm text-muted-foreground">
               <Users className="mr-2 size-5 text-muted-foreground" />
-              {!crewCount ? (
-                <Skeleton className="h-8 w-full bg-gray-200" />
-              ) : (
-                <span className="text-sm text-muted-foreground">
-                  {crewCount.count}
-                </span>
-              )}
+              {trip.crewCount}
             </div>
           </div>
         </div>

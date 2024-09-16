@@ -43,7 +43,16 @@ export const getUserTrips = query({
     const memberships = await getMemberships({ user, db });
     const trips = (await asyncMap(
       memberships,
-      (cm) => db.get(cm.tripId)
+      async (cm) => {
+        const trip = await db.get(cm.tripId);
+        if (!trip) return null;
+        return {
+          ...trip,
+          crewCount: (await db.query("crews")
+            .withIndex("by_tripId", q => q.eq("tripId", trip._id))
+            .collect()).length,
+        }
+      }
     ))
 
     return pruneNull(trips);
