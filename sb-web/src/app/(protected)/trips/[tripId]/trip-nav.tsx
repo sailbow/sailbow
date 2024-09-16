@@ -10,7 +10,7 @@ export function TripNav() {
   const path = usePathname();
   const links = useTripLinks();
   return (
-    <nav className="hidden gap-4 sm:flex sm:flex-col">
+    <nav className="hidden gap-4 pt-2 sm:flex sm:flex-col">
       {links.map((link, index) => (
         <Link
           key={index}
