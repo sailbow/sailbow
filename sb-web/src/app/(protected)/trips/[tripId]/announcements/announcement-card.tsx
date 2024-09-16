@@ -1,13 +1,7 @@
 "use client";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit, Heart, MessageCircle, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { type FunctionReturnType } from "convex/server";
 import { type api } from "@convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -47,7 +41,9 @@ const DeleteAnnouncementModal = ({
       toast.success("Successfully deleted announcement");
     },
     onError: (error) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (error instanceof ConvexError && error.data.code === "USER_ERROR") {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         toast.error(error.data.message);
       } else {
         console.error(error);
