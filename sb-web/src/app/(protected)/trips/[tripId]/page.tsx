@@ -1,10 +1,10 @@
 "use client";
-import { useCrewCount, useTrip } from "@/lib/trip-queries";
+import { useActiveTripId, useCrewCount, useTrip } from "@/lib/trip-queries";
 import {
-  BoatPageContainer,
-  BoatPageContent,
-  BoatPageHeader,
-  BoatPageTitle,
+  TripPageContainer,
+  TripPageContent,
+  TripPageHeader,
+  TripPageTitle,
 } from "../trip-page-components";
 import TripDetails from "./trip-details";
 import TripBannerModal from "./trip-banner-modal";
@@ -21,17 +21,17 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 
 export default function TripOverviewPage() {
+  const activeTripId = useActiveTripId();
   const { data: trip } = useTrip();
-  const { data: crewCount, isLoading: isLoadingCrewCount } = useCrewCount();
+  const { data: crewCount } = useCrewCount(activeTripId);
   if (!trip) return;
   return (
-    <BoatPageContainer>
-      <BoatPageHeader>
-        <BoatPageTitle>{trip.name}</BoatPageTitle>
-      </BoatPageHeader>
+    <TripPageContainer>
+      <TripPageHeader>
+        <TripPageTitle>{trip.name}</TripPageTitle>
+      </TripPageHeader>
       <Tabs
         defaultValue="overview"
         className="relative flex size-full max-w-4xl flex-col space-y-2 overflow-auto"
@@ -120,6 +120,6 @@ export default function TripOverviewPage() {
           <TripDetails />
         </TabsContent>
       </Tabs>
-    </BoatPageContainer>
+    </TripPageContainer>
   );
 }

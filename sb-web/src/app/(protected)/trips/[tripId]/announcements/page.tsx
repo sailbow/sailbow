@@ -1,8 +1,8 @@
 import {
-  BoatPageContainer,
-  BoatPageContent,
-  BoatPageHeader,
-  BoatPageTitle,
+  TripPageContainer,
+  TripPageContent,
+  TripPageHeader,
+  TripPageTitle,
 } from "../../trip-page-components";
 import {
   AnnouncementList,
@@ -11,16 +11,16 @@ import {
 
 export default function Page() {
   return (
-    <BoatPageContainer>
-      <BoatPageHeader>
-        <BoatPageTitle>Announcements</BoatPageTitle>
+    <TripPageContainer>
+      <TripPageHeader>
+        <TripPageTitle>Announcements</TripPageTitle>
         <div className="ml-auto">
           <CreateAnnouncementButton />
         </div>
-      </BoatPageHeader>
-      <BoatPageContent>
+      </TripPageHeader>
+      <TripPageContent>
         <AnnouncementList />
-      </BoatPageContent>
-    </BoatPageContainer>
+      </TripPageContent>
+    </TripPageContainer>
   );
 }

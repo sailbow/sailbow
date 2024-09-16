@@ -1,10 +1,13 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { type Doc } from "@convex/_generated/dataModel";
-import { Sailboat } from "lucide-react";
+import { Sailboat, Users } from "lucide-react";
 import Link from "next/link";
 import ImageWithLoader from "./image-with-loader";
+import { useCrewCount } from "@/lib/trip-queries";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TripCard = ({ trip }: { trip: Doc<"trips"> }) => {
+  const { data: crewCount } = useCrewCount(trip._id);
   let banner;
   if (!trip.banner) {
     banner = (
@@ -34,10 +37,20 @@ const TripCard = ({ trip }: { trip: Doc<"trips"> }) => {
           {banner}
         </CardContent>
         <div className="flex basis-1/4 items-center">
-          <div className="flex items-center justify-center p-4">
+          <div className="flex w-full items-center gap-4 p-4">
             <CardTitle className="line-clamp-1 text-lg font-normal">
               {trip.name}
             </CardTitle>
+            <div className="ml-auto inline-flex items-center">
+              <Users className="mr-2 size-5 text-muted-foreground" />
+              {!crewCount ? (
+                <Skeleton className="h-8 w-full bg-gray-200" />
+              ) : (
+                <span className="text-sm text-muted-foreground">
+                  {crewCount.count}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </Link>

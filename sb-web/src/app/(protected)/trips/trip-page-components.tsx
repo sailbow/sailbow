@@ -15,7 +15,7 @@ const TripPageContainer = React.forwardRef<
   />
 ));
 
-TripPageContainer.displayName = "BoatPage";
+TripPageContainer.displayName = "TripPage";
 
 const TripPageHeader = React.forwardRef<
   HTMLDivElement,
@@ -31,7 +31,7 @@ const TripPageHeader = React.forwardRef<
   />
 ));
 
-TripPageHeader.displayName = "BoatPageHeader";
+TripPageHeader.displayName = "TripPageHeader";
 
 const TripPageTitle = React.forwardRef<
   HTMLHeadingElement,
@@ -47,7 +47,7 @@ const TripPageTitle = React.forwardRef<
   />
 ));
 
-TripPageTitle.displayName = "BoatPageTitle";
+TripPageTitle.displayName = "TripPageTitle";
 
 const TripPageContent = React.forwardRef<
   HTMLDivElement,
@@ -60,11 +60,6 @@ const TripPageContent = React.forwardRef<
   />
 ));
 
-TripPageContent.displayName = "BoatPageContent";
+TripPageContent.displayName = "TripPageContent";
 
-export {
-  TripPageContainer as BoatPageContainer,
-  TripPageHeader as BoatPageHeader,
-  TripPageTitle as BoatPageTitle,
-  TripPageContent as BoatPageContent,
-};
+export { TripPageContainer, TripPageHeader, TripPageTitle, TripPageContent };

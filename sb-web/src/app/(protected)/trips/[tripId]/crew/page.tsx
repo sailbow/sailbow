@@ -1,8 +1,8 @@
 import {
-  BoatPageContainer,
-  BoatPageContent,
-  BoatPageHeader,
-  BoatPageTitle,
+  TripPageContainer,
+  TripPageContent,
+  TripPageHeader,
+  TripPageTitle,
 } from "../../trip-page-components";
 import InviteButton from "./invite-button";
 import { CrewTable } from "./crew-table";
@@ -11,15 +11,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function CrewPage() {
   return (
-    <BoatPageContainer>
+    <TripPageContainer>
       <Tabs defaultValue="joined">
-        <BoatPageHeader className="w-full justify-between">
-          <BoatPageTitle>Crew</BoatPageTitle>
+        <TripPageHeader className="w-full justify-between">
+          <TripPageTitle>Crew</TripPageTitle>
           <div className="ml-auto">
             <InviteButton />
           </div>
-        </BoatPageHeader>
-        <BoatPageContent className="pt-4">
+        </TripPageHeader>
+        <TripPageContent className="pt-4">
           <TabsList className="grid grid-cols-2">
             <TabsTrigger value="joined">Joined</TabsTrigger>
             <TabsTrigger value="pending-and-declined">
@@ -32,8 +32,8 @@ export default function CrewPage() {
           <TabsContent value="pending-and-declined">
             <PendingAndDeclinedInvitesTable />
           </TabsContent>
-        </BoatPageContent>
+        </TripPageContent>
       </Tabs>
-    </BoatPageContainer>
+    </TripPageContainer>
   );
 }
