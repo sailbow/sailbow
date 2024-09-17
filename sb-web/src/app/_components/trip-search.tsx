@@ -20,7 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useActiveTripId, useSearchTrips, useTrip } from "@/lib/trip-queries";
 import { type Doc } from "@convex/_generated/dataModel";
 import ImageWithLoader from "./image-with-loader";
-import { useIsXs } from "@/hooks/use-media-query";
+import { useIsXs } from "@/lib/use-media-query";
 
 const TripDropdownItem = ({ trip }: { trip: Doc<"trips"> }) => {
   const activeTripId = useActiveTripId();

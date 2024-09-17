@@ -37,56 +37,10 @@ export const crewMemberSchema = {
     role: roleSchema
 }
 
-const baseModuleSchema = {
-    tripId: v.id("trips"),
-}
-
-export const dateRangeSchema = {
-    ...baseModuleSchema,
-    type: v.literal("date"),
-    startDate: v.string(),
-    startTime: v.optional(v.string()),
-    endDate: v.optional(v.string()),
-    endTime: v.optional(v.string())
-}
-export const moduleSchema = v.union(
-    v.object(dateRangeSchema),
-    v.object({
-        ...baseModuleSchema,
-        type: v.literal("location"),
-        address: v.string()
-    }),
-)
-
-export const commentsSchema = {
-    userId: v.string(),
-    message: v.string(),
-}
-
 export const announcementSchema = {
     tripId: v.id("trips"),
     title: v.optional(v.string()),
     text: v.string(),
-}
-
-export const announcementCommentsSchema = {
-    announcementId: v.id("announcements"),
-    commentId: v.id("comments")
-}
-
-export const pollSchema = {
-    tripId: v.id("trips"),
-    title: v.string(),
-    settings: v.object({
-        allowMultipleVotes: v.boolean(),
-        anonymousVoting: v.boolean()
-    })
-}
-
-export const pollOptionSchema = {
-    pollId: v.id("polls"),
-    votes: v.array(v.string()),
-    option: moduleSchema
 }
 
 export const userSchema = {
@@ -165,17 +119,4 @@ export default defineSchema({
 
     itineraryItems: defineTable(itineraryItemSchema)
         .index("by_tripId", ["tripId"]),
-    announcementComments: defineTable(announcementCommentsSchema)
-        .index("by_announcementId", ["announcementId"]),
-    
-    comments: defineTable(commentsSchema),
-
-    modules: defineTable(moduleSchema)
-        .index("by_tripId", ["tripId"]),
-
-    polls: defineTable(pollSchema)
-        .index("by_tripId", ["tripId"]),
-
-    pollOptions: defineTable(pollOptionSchema)
-        .index("by_pollId", ["pollId"])
 })

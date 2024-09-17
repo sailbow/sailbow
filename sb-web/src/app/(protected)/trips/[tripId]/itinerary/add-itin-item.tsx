@@ -66,6 +66,8 @@ export const AddItinItem = () => {
     },
   });
 
+  const calendarDisclosure = useDisclosure();
+
   const form = useForm<ItinItem>({
     resolver: zodResolver(ItinItemSchema),
     defaultValues: {
@@ -130,9 +132,9 @@ export const AddItinItem = () => {
                 return (
                   <FormItem>
                     <FormLabel className="sr-only">Date</FormLabel>
-                    <Popover>
-                      <FormControl>
-                        <PopoverTrigger asChild>
+                    <Popover {...calendarDisclosure}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
                           <Button
                             variant={"outline"}
                             className={cn(
@@ -148,14 +150,34 @@ export const AddItinItem = () => {
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
-                        </PopoverTrigger>
-                      </FormControl>
+                        </FormControl>
+                      </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
                           selected={field.value}
-                          onSelect={field.onChange}
-                          initialFocus
+                          onSelect={(day) => {
+                            field.onChange(day);
+                            calendarDisclosure.setClosed();
+                          }}
+                          disabled={(date) => {
+                            const today = new Date();
+                            if (date.getFullYear() > today.getFullYear()) {
+                              return true;
+                            } else if (
+                              date.getFullYear() === today.getFullYear() &&
+                              date.getMonth() < date.getMonth()
+                            ) {
+                              return true;
+                            } else if (
+                              date.getFullYear() === today.getFullYear() &&
+                              date.getMonth() === today.getMonth() &&
+                              date.getDate() < today.getDate()
+                            ) {
+                              return true;
+                            }
+                            return false;
+                          }}
                         />
                       </PopoverContent>
                     </Popover>

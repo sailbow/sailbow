@@ -31,8 +31,6 @@ import type * as lib_queryUtils from "../lib/queryUtils.js";
 import type * as lib_resend from "../lib/resend.js";
 import type * as lib_tailwindConfig from "../lib/tailwindConfig.js";
 import type * as lib_utils from "../lib/utils.js";
-import type * as modules_mutations from "../modules/mutations.js";
-import type * as modules_queries from "../modules/queries.js";
 import type * as notifications_mutations from "../notifications/mutations.js";
 import type * as notifications_queries from "../notifications/queries.js";
 import type * as tripUtils from "../tripUtils.js";
@@ -67,8 +65,6 @@ declare const fullApi: ApiFromModules<{
   "lib/resend": typeof lib_resend;
   "lib/tailwindConfig": typeof lib_tailwindConfig;
   "lib/utils": typeof lib_utils;
-  "modules/mutations": typeof modules_mutations;
-  "modules/queries": typeof modules_queries;
   "notifications/mutations": typeof notifications_mutations;
   "notifications/queries": typeof notifications_queries;
   tripUtils: typeof tripUtils;

@@ -1,8 +1,9 @@
 import { v } from "convex/values";
 import { mutation } from "../_generated/server";
-import { itineraryItemSchema } from "../schema";
 import { withUser } from "../authUtils";
 import { throwIfNotMember } from "../tripUtils";
+import { getOneFromOrThrow } from "convex-helpers/server/relationships";
+
 export const upsert = mutation({
   args: {
     _id: v.optional(v.id("itineraryItems")),
@@ -21,6 +22,19 @@ export const upsert = mutation({
       } else {
         await ctx.db.insert("itineraryItems", args);
       }
+    })
+  }
+});
+
+export const deleteItem = mutation({
+  args: {
+    itemId: v.id("itineraryItems"),
+  },
+  handler: async (ctx, args) => {
+    return await withUser(ctx.auth, ctx.db, async (user) => {
+      const item = await getOneFromOrThrow(ctx.db, "itineraryItems", "by_id", args.itemId, "_id");
+      await throwIfNotMember(user, item.tripId, ctx.db);
+      await ctx.db.delete(item._id);
     })
   }
 })

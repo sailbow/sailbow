@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { useUserTrips } from "@/lib/trip-queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
-import { useIsXs } from "@/hooks/use-media-query";
+import { useIsXs } from "@/lib/use-media-query";
 
 const CreateTripButton = () => {
   const isXs = useIsXs();
