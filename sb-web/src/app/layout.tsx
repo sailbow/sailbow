@@ -66,7 +66,6 @@ export default function RootLayout({
           >
             <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
             {children}
-            <Toaster richColors={true} />
           </body>
         </ConvexClientProvider>
       </ClerkProvider>

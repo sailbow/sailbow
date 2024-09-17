@@ -2,6 +2,7 @@ import React from "react";
 import { Navbar } from "@/app/_components/nav-bar";
 import ConvexAuthenticated from "./convex-authenticated";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/toast";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,6 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <ConvexAuthenticated>{children}</ConvexAuthenticated>
         </main>
       </div>
+      <Toaster richColors={true} />
     </ThemeProvider>
   );
 }

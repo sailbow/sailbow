@@ -41,7 +41,7 @@ import { z } from "zod";
 const ItinItemSchema = z.object({
   tripId: z.custom<Id<"trips">>(),
   title: z.string(),
-  date: z.date().optional(),
+  date: z.date(),
   time: z.string().time().nullable(),
   location: z.string().nullable(),
   details: z.string().nullable().default(""),
@@ -79,7 +79,7 @@ export const AddItinItem = () => {
   const onSubmit = (values: ItinItem) => {
     upsertItinItem({
       ...values,
-      date: values.date ? values.date.toDateString() : "",
+      date: values.date.getTime(),
     });
   };
   return (
@@ -125,10 +125,11 @@ export const AddItinItem = () => {
             <FormField
               control={form.control}
               name="date"
-              render={({ field }) => {
+              render={({ field, formState }) => {
+                const error = formState.errors.date;
                 return (
                   <FormItem>
-                    <FormLabel className="sr-only">Date (optional)</FormLabel>
+                    <FormLabel className="sr-only">Date</FormLabel>
                     <Popover>
                       <FormControl>
                         <PopoverTrigger asChild>
@@ -137,6 +138,7 @@ export const AddItinItem = () => {
                             className={cn(
                               "w-[240px] pl-3 text-left font-normal",
                               !field.value && "text-muted-foreground",
+                              error ? "border-destructive" : "",
                             )}
                           >
                             {field.value ? (
