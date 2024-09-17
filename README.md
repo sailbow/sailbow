@@ -15,6 +15,7 @@
   Sailbow is an application that makes group trip and event planning a breeze 😌
 </p>
 
+### **Try it out: [https://sailbow.app](https://sailbow.app)**
 
 ## **Usage Disclaimer**
 We do NOT use your information at this point in time for anything other than development of the site, meaning:
