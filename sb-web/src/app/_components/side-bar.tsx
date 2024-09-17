@@ -18,12 +18,12 @@ import { type Route } from "next";
 import { useTripLinks } from "@/lib/use-trip-links";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
-import { useTrip } from "@/lib/trip-queries";
+import { useActiveTrip } from "@/lib/trip-queries";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const links = useTripLinks();
-  const { data: trip } = useTrip();
+  const { data: trip } = useActiveTrip();
   const path = usePathname();
 
   return (

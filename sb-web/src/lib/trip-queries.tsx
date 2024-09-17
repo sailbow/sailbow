@@ -13,9 +13,13 @@ export const useCrew = () => {
   return useQ({ query: api.trips.queries.getTripCrew, args: { tripId } });
 };
 
-export const useTrip = () => {
-  const tripId = useActiveTripId();
+export const useTrip = (tripId: Id<"trips">) => {
   return useQ({ query: api.trips.queries.getById, args: { tripId } });
+};
+
+export const useActiveTrip = () => {
+  const tripId = useActiveTripId();
+  return useTrip(tripId);
 };
 
 export const useUserTrips = () => {

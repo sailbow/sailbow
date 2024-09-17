@@ -17,7 +17,11 @@ import CenteredSpinner from "./centered-spinner";
 import Link from "next/link";
 import { type Route } from "next";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useActiveTripId, useSearchTrips, useTrip } from "@/lib/trip-queries";
+import {
+  useActiveTripId,
+  useSearchTrips,
+  useActiveTrip,
+} from "@/lib/trip-queries";
 import { type Doc } from "@convex/_generated/dataModel";
 import ImageWithLoader from "./image-with-loader";
 import { useIsXs } from "@/lib/use-media-query";
@@ -49,7 +53,7 @@ const TripDropdownItem = ({ trip }: { trip: Doc<"trips"> }) => {
 };
 
 export default function TripSearch() {
-  const { data: trip } = useTrip();
+  const { data: trip } = useActiveTrip();
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const query = useDebounce(searchTerm, 500);

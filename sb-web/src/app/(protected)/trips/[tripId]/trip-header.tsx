@@ -1,9 +1,9 @@
 "use client";
 import ImageWithLoader from "@/app/_components/image-with-loader";
-import { useTrip } from "@/lib/trip-queries";
+import { useActiveTrip } from "@/lib/trip-queries";
 
 export default function TripHeader() {
-  const { data, isLoading } = useTrip();
+  const { data, isLoading } = useActiveTrip();
 
   if (isLoading || !data?.banner) return;
 

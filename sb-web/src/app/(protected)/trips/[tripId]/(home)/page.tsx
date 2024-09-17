@@ -1,5 +1,5 @@
 "use client";
-import { useTrip } from "@/lib/trip-queries";
+import { useActiveTrip } from "@/lib/trip-queries";
 import {
   TripPageContainer,
   TripPageHeader,
@@ -14,7 +14,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 
 export default function TripOverviewPage() {
-  const { data: trip } = useTrip();
+  const { data: trip } = useActiveTrip();
 
   if (!trip) return;
 

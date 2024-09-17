@@ -10,10 +10,10 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import TripSearch from "./trip-search";
-import { useTrip } from "@/lib/trip-queries";
+import { useActiveTrip } from "@/lib/trip-queries";
 
 export default function Crumbs() {
-  const { data: trip } = useTrip();
+  const { data: trip } = useActiveTrip();
 
   return (
     <Breadcrumb>

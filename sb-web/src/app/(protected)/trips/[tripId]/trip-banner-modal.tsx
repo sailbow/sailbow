@@ -2,7 +2,7 @@
 import BannerModal from "@/app/_components/banner-modal";
 import { toast } from "@/components/ui/toast";
 import { useUpdateBanner } from "@/lib/trip-mutations";
-import { useTrip } from "@/lib/trip-queries";
+import { useActiveTrip } from "@/lib/trip-queries";
 
 export default function TripBannerModal() {
   const { mutate: updateBanner } = useUpdateBanner({
@@ -12,7 +12,7 @@ export default function TripBannerModal() {
       );
     },
   });
-  const { data: trip } = useTrip();
+  const { data: trip } = useActiveTrip();
 
   if (!trip) return;
 

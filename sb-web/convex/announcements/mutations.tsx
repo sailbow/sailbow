@@ -4,13 +4,42 @@ import { withUser } from "../authUtils";
 import { announcementSchema } from "../schema";
 import { throwIfNotMember } from "../tripUtils";
 import { getOneFromOrThrow } from "convex-helpers/server/relationships";
+import { getTripCrew } from "../trips/queries";
 
 export const create = mutation({
   args: announcementSchema,
-  handler: async ({ db, auth }, args) => {
-    return await withUser(auth, db, async (user) => {
-      await throwIfNotMember(user, args.tripId, db);
-      await db.insert("announcements", { ...args, createdBy: user.userId });
+  handler: async (ctx, args) => {
+    return await withUser(ctx.auth, ctx.db, async (user) => {
+      await throwIfNotMember(user, args.tripId, ctx.db);
+      const announcementId = await ctx.db.insert("announcements", {
+        ...args,
+        createdBy: user.userId,
+      });
+      const crew = await getTripCrew(ctx, { tripId: args.tripId });
+      await Promise.all(
+        crew.map(async (cm) => {
+          if (cm.email !== user.email) {
+            const targetUser = await ctx.db
+              .query("users")
+              .withIndex("by_email", (q) =>
+                q.eq("email", cm.email.toLowerCase()),
+              )
+              .first();
+            if (targetUser) {
+              await ctx.db.insert("notifications", {
+                type: "announcement",
+                userId: targetUser._id,
+                dismissed: false,
+                data: {
+                  announcementId,
+                  announcerName: user.givenName!,
+                  tripId: args.tripId,
+                },
+              });
+            }
+          }
+        }),
+      );
     });
   },
 });

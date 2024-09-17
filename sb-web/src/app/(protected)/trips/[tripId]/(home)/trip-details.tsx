@@ -9,12 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { useUpdateDescription } from "@/lib/trip-mutations";
-import { useActiveTripId, useTrip } from "@/lib/trip-queries";
+import { useActiveTripId, useActiveTrip } from "@/lib/trip-queries";
 import { Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function TripDetails() {
-  const { data: trip, isLoading: isTripLoading } = useTrip();
+  const { data: trip, isLoading: isTripLoading } = useActiveTrip();
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [descriptionText, setDescriptionText] = useState<string | undefined>();
   const editor = useTextEditor({

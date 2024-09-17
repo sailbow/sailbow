@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/toast";
 import { useUpdateName } from "@/lib/trip-mutations";
-import { useTrip } from "@/lib/trip-queries";
+import { useActiveTrip } from "@/lib/trip-queries";
 import { type Id } from "@convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ConvexError } from "convex/values";
@@ -24,7 +24,7 @@ const updateNameSchema = z.object({
 });
 
 export default function UpdateNameCard() {
-  const { data: trip } = useTrip();
+  const { data: trip } = useActiveTrip();
 
   const form = useForm<z.infer<typeof updateNameSchema>>({
     resolver: zodResolver(updateNameSchema),

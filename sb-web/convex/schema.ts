@@ -77,7 +77,9 @@ const announcementNotificationSchema = {
     ...baseNotification,
     type: v.literal("announcement"),
     data: v.object({
-        announcementId: v.id("announcements")
+        announcementId: v.id("announcements"),
+        announcerName: v.string(),
+        tripId: v.id("trips")
     })
 }
 
