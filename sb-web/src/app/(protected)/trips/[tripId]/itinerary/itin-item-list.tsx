@@ -62,11 +62,11 @@ export const ItinItemList = () => {
                 <AccordionContent className="space-y-3">
                   {items.map((item, index) => {
                     return (
-                      <div className="flex w-full items-start">
+                      <div className="flex w-full items-start" key={item._id}>
                         <div className="mr-2 max-w-max pt-4 text-base">
                           {index + 1}.
                         </div>
-                        <Card key={item._id} className="flex-1 shadow-lg">
+                        <Card className="flex-1 shadow-lg">
                           <CardHeader className="p-4">
                             <Accordion type="multiple">
                               <AccordionItem
