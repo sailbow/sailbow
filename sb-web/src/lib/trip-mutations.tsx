@@ -65,3 +65,7 @@ export const useUpsertItinItem = (
 export const useCancelInvite = (
   args: UseMutationArgs<typeof api.invitations.mutations.cancel>,
 ) => useMut(api.invitations.mutations.cancel, args);
+
+export const useDeleteItinItem = (
+  args: UseMutationArgs<typeof api.itinerary.mutations.deleteItem>,
+) => useMut(api.itinerary.mutations.deleteItem, args);

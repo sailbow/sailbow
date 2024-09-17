@@ -15,9 +15,9 @@ import {
   useUnreadNotifications,
 } from "@/lib/notifications";
 import CenteredSpinner from "./centered-spinner";
-import { Doc, type Id } from "@convex/_generated/dataModel";
+import { type Doc } from "@convex/_generated/dataModel";
 import { useInvite } from "@/lib/invitations";
-import { PropsWithChildren, useState, useTransition } from "react";
+import { type PropsWithChildren, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
