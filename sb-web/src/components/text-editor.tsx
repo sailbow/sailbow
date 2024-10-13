@@ -111,23 +111,15 @@ const ConfigureLinkDialog = ({
     if (!newUrl.startsWith("https://")) {
       newUrl = "https://" + newUrl;
     }
-    if (
-      !/((?:(https|http)\:\/\/)|(?:www\.))([a-zA-Z0-9]{3,192})((\.[a-zA-Z]{2,3}))?(?:(\.[a-zA-Z]{2,3}))$/gi.test(
-        newUrl,
-      )
-    ) {
-      toast.error("Invalid url!");
-    } else {
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({
-          href: newUrl,
-        })
-        .run();
-      setIsOpen(false);
-    }
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({
+        href: newUrl,
+      })
+      .run();
+    setIsOpen(false);
   };
 
   return (

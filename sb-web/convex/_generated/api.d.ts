@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as admin_queries from "../admin/queries.js";
 import type * as announcements_mutations from "../announcements/mutations.js";
 import type * as announcements_queries from "../announcements/queries.js";
 import type * as authUtils from "../authUtils.js";
@@ -48,6 +49,7 @@ import type * as users_queries from "../users/queries.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  "admin/queries": typeof admin_queries;
   "announcements/mutations": typeof announcements_mutations;
   "announcements/queries": typeof announcements_queries;
   authUtils: typeof authUtils;
