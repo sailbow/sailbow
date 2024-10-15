@@ -111,6 +111,14 @@ export const decline = mutation({
         });
       }
       await ctx.db.patch(invite._id, { status: "declined" });
+      const notification = await ctx.db.query("notifications")
+        .withIndex("by_userId", q => q.eq("userId", user.userId))
+        .filter(q => q.eq(q.field("data.inviteId"), invite._id))
+        .first();
+
+    if(notification) {
+      await ctx.db.patch(notification._id, { dismissed: true });
+    }
     })
   }
 });
