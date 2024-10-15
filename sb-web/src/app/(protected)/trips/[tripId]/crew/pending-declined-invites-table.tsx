@@ -82,7 +82,7 @@ export const PendingAndDeclinedInvitesTable = () => {
   const { data, isLoading } = usePendingAndDeclinedInvites();
 
   return (
-    <Table>
+    <Table className="w-full">
       <TableHeader>
         <TableRow>
           <TableHead>Email</TableHead>

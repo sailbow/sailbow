@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-type Disclosure = {
+export type Disclosure = {
   open: boolean;
   onOpenChange: (isOpen: boolean) => void;
   setOpened: () => void;

@@ -4,8 +4,8 @@ import {
   TripPageTitle,
   TripPageContent,
 } from "../trip-page-components";
-import { AddItinItem } from "./add-itin-item";
 import { ItinItemList } from "./itin-item-list";
+import NewItinItemButton from "./new-itin-item-button";
 
 export default function Page() {
   return (
@@ -13,7 +13,7 @@ export default function Page() {
       <TripPageHeader>
         <TripPageTitle>Itinerary</TripPageTitle>
         <div className="ml-auto">
-          <AddItinItem />
+          <NewItinItemButton />
         </div>
       </TripPageHeader>
       <TripPageContent>

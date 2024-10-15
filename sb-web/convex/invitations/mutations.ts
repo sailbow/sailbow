@@ -13,19 +13,20 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     return await withUser(ctx.auth, ctx.db, async (user) => {
+      const email = args.email.toLowerCase();
       const { db } = ctx;
       const existingInvite = await db.query("invitations")
-        .withIndex("by_email_and_tripId", q => q.eq("email", args.email.toLowerCase()).eq("tripId", args.tripId))
+        .withIndex("by_email_and_tripId", q => q.eq("email", email).eq("tripId", args.tripId))
         .filter(q => q.eq(q.field("status"), "pending"))
         .first();
 
       if (!!existingInvite) throw new ConvexError({
         code: "USER_ERROR",
-        message: `User with email '${args.email}' has already been invited`
+        message: `User with email '${email}' has already been invited`
       });
 
       const existingCrewMember = await db.query("crews")
-        .withIndex("by_email_and_tripId", q => q.eq("email", args.email).eq("tripId", args.tripId))
+        .withIndex("by_email_and_tripId", q => q.eq("email", email).eq("tripId", args.tripId))
         .unique();
 
       if (!!existingCrewMember) throw new ConvexError({
@@ -40,7 +41,7 @@ export const create = mutation({
       });
       
       const userRecord = await db.query("users")
-        .withIndex("by_email", q => q.eq("email", args.email.toLowerCase()))
+        .withIndex("by_email", q => q.eq("email", email))
         .first();
       
       if (!!userRecord) {
@@ -54,7 +55,7 @@ export const create = mutation({
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       await ctx.scheduler.runAfter(0, internal.invitations.actions.sendTripInvite, {
-        email: args.email,
+        email: email,
         inviteId: inviteId,
         invitedByEmail: user.email!,
         invitedByName: user.name!,

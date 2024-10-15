@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, X } from "lucide-react";
+import { Calendar, PlusCircle, X } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/card";
 import { useDeleteItinItem } from "@/lib/trip-mutations";
 import { toast } from "@/components/ui/toast";
@@ -16,10 +16,9 @@ import { Button } from "@/components/ui/button";
 import { Doc } from "@convex/_generated/dataModel";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-// className={cn(
-//   "relative min-h-16 w-full gap-4 p-2 text-sm outline-none transition-all duration-300 ease-in-out",
-//   deleteClicked && "-translate-x-full transform opacity-0",
-// )}
+import { useDisclosure } from "@/lib/use-disclosure";
+import { AddOrEditItinItem } from "./add-edit-itin-item";
+
 const ItinItem = ({
   item,
   index,
@@ -86,9 +85,13 @@ const ItinItem = ({
 };
 export const ItinItemList = () => {
   const { data: groupedItems, isLoading } = useItinItems();
+  const disclosure = useDisclosure();
+  const [editingItem, setEditingItem] = useState<
+    Partial<Doc<"itineraryItems">> | undefined
+  >(undefined);
   if (isLoading) {
     return (
-      <Accordion type="single" className="mt-4 min-h-screen w-full max-w-2xl">
+      <Accordion type="single" className="mt-4 w-full max-w-2xl">
         <Card>
           <CardHeader className="px-6 py-2">
             <AccordionItem value="loading" disabled className="border-b-0">
@@ -107,10 +110,7 @@ export const ItinItemList = () => {
 
   if (!groupedItems) return;
   return (
-    <Accordion
-      type="multiple"
-      className="mt-4 min-h-screen w-full max-w-2xl space-y-4"
-    >
+    <Accordion type="multiple" className="mt-4 w-full max-w-2xl space-y-4">
       {groupedItems.map(({ date, items }) => {
         return (
           <Card key={date.toString()}>
@@ -132,12 +132,27 @@ export const ItinItemList = () => {
                   {items.map((item, index) => (
                     <ItinItem key={item._id} item={item} index={index} />
                   ))}
+                  <Button
+                    variant="ghost"
+                    className="size-4 rounded-full p-0 hover:bg-transparent"
+                    onClick={() => {
+                      setEditingItem({
+                        date,
+                      });
+                      disclosure.setOpened();
+                    }}
+                  >
+                    <PlusCircle className="size-full" />
+                  </Button>
                 </AccordionContent>
               </AccordionItem>
             </CardHeader>
           </Card>
         );
       })}
+      {editingItem && (
+        <AddOrEditItinItem disclosure={disclosure} item={editingItem} />
+      )}
     </Accordion>
   );
 };

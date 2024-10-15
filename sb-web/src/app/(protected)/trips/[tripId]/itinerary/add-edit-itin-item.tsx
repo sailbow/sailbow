@@ -29,16 +29,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useUpsertItinItem } from "@/lib/trip-mutations";
 import { useActiveTripId } from "@/lib/trip-queries";
-import { useDisclosure } from "@/lib/use-disclosure";
+import { Disclosure, useDisclosure } from "@/lib/use-disclosure";
 import { cn } from "@/lib/utils";
-import { type Id } from "@convex/_generated/dataModel";
+import { Doc, type Id } from "@convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ConvexError } from "convex/values";
 import { CalendarIcon, ListPlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useEffect } from "react";
+
+type PartialNullable<T> = { [K in keyof T]: T[K] | null };
 
 const ItinItemSchema = z.object({
+  _id: z.custom<Id<"itineraryItems">>().optional(),
   tripId: z.custom<Id<"trips">>(),
   title: z.string(),
   date: z.date(),
@@ -46,10 +50,19 @@ const ItinItemSchema = z.object({
   location: z.string().nullable(),
   details: z.string().nullable().default(""),
 });
+
 type ItinItem = z.infer<typeof ItinItemSchema>;
-export const AddItinItem = () => {
+type OptionalItinItem = PartialNullable<ItinItem> & {
+  _id?: Id<"itineraryItems">;
+};
+export const AddOrEditItinItem = ({
+  disclosure,
+  item,
+}: {
+  disclosure: Disclosure;
+  item?: OptionalItinItem;
+}) => {
   const activeTripId = useActiveTripId();
-  const disclosure = useDisclosure();
   const { mutate: upsertItinItem, isPending } = useUpsertItinItem({
     onSuccess: () => {
       disclosure.setClosed();
@@ -72,11 +85,18 @@ export const AddItinItem = () => {
     resolver: zodResolver(ItinItemSchema),
     defaultValues: {
       tripId: activeTripId,
-      time: null,
-      location: null,
-      details: "",
+      date: !!item?.date ? new Date(item.date) : new Date(),
+      time: item ? item.time : null,
+      location: item ? item.location : null,
+      details: item ? item.details : "",
     },
   });
+
+  useEffect(() => {
+    if (disclosure.open) {
+      form.reset();
+    }
+  }, [disclosure.open, form]);
 
   const onSubmit = (values: ItinItem) => {
     upsertItinItem({
@@ -84,14 +104,10 @@ export const AddItinItem = () => {
       date: values.date.getTime(),
     });
   };
+
+  const isEditing = !!item;
   return (
     <Dialog {...disclosure}>
-      <DialogTrigger asChild>
-        <Button onClick={() => form.reset()}>
-          <ListPlusIcon className="mr-2 size-6 shrink-0" />
-          Add Itinerary Item
-        </Button>
-      </DialogTrigger>
       <DialogContent>
         <Form {...form}>
           <form
@@ -99,7 +115,9 @@ export const AddItinItem = () => {
             className="flex flex-col space-y-4"
           >
             <DialogHeader>
-              <DialogTitle>New itinerary item</DialogTitle>
+              <DialogTitle>
+                {isEditing ? "Edit itinerary item" : "New itinerary item"}
+              </DialogTitle>
             </DialogHeader>
             <FormField
               control={form.control}
@@ -129,6 +147,7 @@ export const AddItinItem = () => {
               name="date"
               render={({ field, formState }) => {
                 const error = formState.errors.date;
+                if (error) console.error(error);
                 return (
                   <FormItem>
                     <FormLabel className="sr-only">Date</FormLabel>

@@ -1,5 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { migrationsTable } from "convex-helpers/server/migrations";
 
 export const roleSchema = v.union(
     v.literal("captain"),
@@ -89,6 +90,8 @@ export const notificationsSchema = v.union(
 )
 
 export default defineSchema({
+    migrations: migrationsTable,
+
     users: defineTable(userSchema)
         .index("by_externalId", ["externalId"])
         .index("by_email", ["email"]),

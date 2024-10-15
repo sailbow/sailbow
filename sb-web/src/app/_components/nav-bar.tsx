@@ -7,13 +7,15 @@ import Sidebar from "./side-bar";
 import TripSearch from "./trip-search";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-export function Navbar() {
+export function Navbar({ className }: { className?: string }) {
   return (
     <header
-      className="
-  fixed top-0 z-40 flex max-h-navbar-height min-h-navbar-height w-dvw items-center
-  justify-stretch gap-4 border-b-[1px] border-border/40 bg-background/90 px-4"
+      className={cn(
+        "fixed top-0 z-40 flex max-h-navbar-height min-h-navbar-height w-dvw items-center justify-stretch gap-4 border-b-[1px] border-border/40 bg-background/90 px-4",
+        className,
+      )}
     >
       <div className="hidden sm:flex">
         <Link href="/">
