@@ -8,24 +8,30 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, PlusCircle, X } from "lucide-react";
+import { Calendar, Ellipsis, PlusCircle, X } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/card";
 import { useDeleteItinItem } from "@/lib/trip-mutations";
 import { toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Id, type Doc } from "@convex/_generated/dataModel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/use-disclosure";
 import { AddOrEditItinItem } from "./add-edit-itin-item";
-import { OptionalItinItem, PartialNullable } from "./schema";
+import { OptionalItinItem, ItinItem } from "./schema";
 import { WithoutSystemFields } from "convex/server";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-const ItinItem = ({
+const Item = ({
   item,
   index,
 }: {
-  item: Doc<"itineraryItems">;
+  item: ItinItem & { _id: Id<"itineraryItems"> };
   index: number;
 }) => {
   const { mutate: deleteItem } = useDeleteItinItem({
@@ -35,6 +41,8 @@ const ItinItem = ({
     },
   });
   const [deleteClicked, setDeleteClicked] = useState(false);
+  const editDisclosure = useDisclosure();
+  const [editItem] = useState(item);
   return (
     <div
       className={cn(
@@ -59,7 +67,7 @@ const ItinItem = ({
               )}
               {!!item.details && (
                 <AccordionContent className="py-2">
-                  <p className="rounded-md bg-slate-100 p-4 font-normal italic leading-none dark:bg-background">
+                  <p className="max-h-[50dvh] overflow-auto whitespace-pre-line rounded-md bg-slate-100 p-4 font-normal italic leading-none dark:bg-background">
                     {item.details}
                   </p>
                 </AccordionContent>
@@ -69,19 +77,39 @@ const ItinItem = ({
         </CardHeader>
       </Card>
       <div className="pt-1">
-        <Button
-          variant="ghost"
-          onClick={() => {
-            setDeleteClicked(true);
-            setTimeout(() => {
-              deleteItem({ itemId: item._id });
-            }, 300);
-          }}
-          className="size-8 p-0 hover:bg-destructive/30"
-        >
-          <X className="size-4 shrink-0" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+            >
+              <Ellipsis className="h-4 w-4" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-[160px]">
+            <DropdownMenuItem
+              onClick={() => {
+                setEditingItem(item);
+                editDisclosure.setOpened();
+              }}
+            >
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setDeleteClicked(true);
+                setTimeout(() => {
+                  deleteItem({ itemId: item._id });
+                }, 300);
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+      <AddOrEditItinItem disclosure={editDisclosure} item={item} />
     </div>
   );
 };
@@ -133,7 +161,11 @@ export const ItinItemList = () => {
                 </AccordionTrigger>
                 <AccordionContent className="space-y-3">
                   {items.map((item, index) => (
-                    <ItinItem key={item._id} item={item} index={index} />
+                    <Item
+                      key={item._id}
+                      item={{ ...item, date: new Date(item.date) }}
+                      index={index}
+                    />
                   ))}
                   <Button
                     variant="ghost"

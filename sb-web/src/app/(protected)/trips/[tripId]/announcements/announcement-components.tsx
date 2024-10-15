@@ -105,7 +105,7 @@ export const CreateAnnouncementButton = () => {
                     <FormControl>
                       <Textarea
                         className={cn(
-                          "mt-4 max-h-[50dvh] min-h-32",
+                          "mt-4 max-h-[50dvh] min-h-32 whitespace-pre-line",
                           error ? "border-destructive" : "",
                         )}
                         placeholder="What would you like to say?"

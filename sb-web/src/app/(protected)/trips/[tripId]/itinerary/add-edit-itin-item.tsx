@@ -34,7 +34,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ConvexError } from "convex/values";
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { type ItinItem, ItinItemSchema, type OptionalItinItem } from "./schema";
 
 export const AddOrEditItinItem = ({
@@ -46,9 +46,9 @@ export const AddOrEditItinItem = ({
 }) => {
   const activeTripId = useActiveTripId();
   const { mutate: upsertItinItem, isPending } = useUpsertItinItem({
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       disclosure.setClosed();
-      toast.success("Itinerary item added!");
+      toast.success(`Itinerary item ${!!variables._id ? "updated" : "added"}!`);
     },
     onError: (error) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -66,19 +66,31 @@ export const AddOrEditItinItem = ({
   const form = useForm<ItinItem>({
     resolver: zodResolver(ItinItemSchema),
     defaultValues: {
+      _id: item?._id,
       tripId: activeTripId,
+      title: item?.title ?? "",
       date: item?.date ? item.date : undefined,
       time: item ? item.time : null,
       location: item ? item.location : null,
-      details: item ? item.details : "",
+      details: item?.details ?? "",
     },
   });
 
   useEffect(() => {
-    if (disclosure.open) {
+    if (item) {
+      form.reset({
+        _id: item._id,
+        tripId: activeTripId,
+        title: item.title ?? "",
+        date: item.date ? item.date : undefined,
+        time: item.time,
+        location: item.location,
+        details: item.details,
+      });
+    } else {
       form.reset();
     }
-  }, [disclosure.open, form]);
+  }, [disclosure.open, form, item, activeTripId]);
 
   const onSubmit = (values: ItinItem) => {
     upsertItinItem({
@@ -87,7 +99,7 @@ export const AddOrEditItinItem = ({
     });
   };
 
-  const isEditing = !!item;
+  const isEditing = !!item?._id;
   return (
     <Dialog {...disclosure}>
       <DialogContent>
@@ -201,7 +213,7 @@ export const AddOrEditItinItem = ({
                         {...field}
                         value={field.value ?? ""}
                         className={cn(
-                          "mt-4 max-h-[50dvh] min-h-32",
+                          "mt-4 max-h-[50dvh] min-h-32 whitespace-pre",
                           error ? "border-destructive" : "",
                           !field.value && "font-light",
                         )}
