@@ -90,7 +90,6 @@ const Item = ({
           <DropdownMenuContent align="end" className="w-[160px]">
             <DropdownMenuItem
               onClick={() => {
-                setEditingItem(item);
                 editDisclosure.setOpened();
               }}
             >
