@@ -1,6 +1,6 @@
 "use client";
 
-import { useItinItems } from "@/lib/trip-queries";
+import { useActiveTripId, useItinItems } from "@/lib/trip-queries";
 import {
   Accordion,
   AccordionContent,
@@ -13,11 +13,13 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { useDeleteItinItem } from "@/lib/trip-mutations";
 import { toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { Doc } from "@convex/_generated/dataModel";
+import { Id, type Doc } from "@convex/_generated/dataModel";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/use-disclosure";
 import { AddOrEditItinItem } from "./add-edit-itin-item";
+import { OptionalItinItem, PartialNullable } from "./schema";
+import { WithoutSystemFields } from "convex/server";
 
 const ItinItem = ({
   item,
@@ -85,10 +87,11 @@ const ItinItem = ({
 };
 export const ItinItemList = () => {
   const { data: groupedItems, isLoading } = useItinItems();
+  const tripId = useActiveTripId();
   const disclosure = useDisclosure();
-  const [editingItem, setEditingItem] = useState<
-    Partial<Doc<"itineraryItems">> | undefined
-  >(undefined);
+  const [editingItem, setEditingItem] = useState<OptionalItinItem | undefined>(
+    undefined,
+  );
   if (isLoading) {
     return (
       <Accordion type="single" className="mt-4 w-full max-w-2xl">
@@ -137,7 +140,12 @@ export const ItinItemList = () => {
                     className="size-4 rounded-full p-0 hover:bg-transparent"
                     onClick={() => {
                       setEditingItem({
-                        date,
+                        date: new Date(date),
+                        time: null,
+                        tripId,
+                        title: "",
+                        location: null,
+                        details: "",
                       });
                       disclosure.setOpened();
                     }}

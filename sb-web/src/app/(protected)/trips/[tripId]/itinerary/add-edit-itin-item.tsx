@@ -10,7 +10,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -29,32 +28,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useUpsertItinItem } from "@/lib/trip-mutations";
 import { useActiveTripId } from "@/lib/trip-queries";
-import { Disclosure, useDisclosure } from "@/lib/use-disclosure";
+import { type Disclosure, useDisclosure } from "@/lib/use-disclosure";
 import { cn } from "@/lib/utils";
-import { Doc, type Id } from "@convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ConvexError } from "convex/values";
-import { CalendarIcon, ListPlusIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { useEffect } from "react";
+import { type ItinItem, ItinItemSchema, type OptionalItinItem } from "./schema";
 
-type PartialNullable<T> = { [K in keyof T]: T[K] | null };
-
-const ItinItemSchema = z.object({
-  _id: z.custom<Id<"itineraryItems">>().optional(),
-  tripId: z.custom<Id<"trips">>(),
-  title: z.string(),
-  date: z.date(),
-  time: z.string().time().nullable(),
-  location: z.string().nullable(),
-  details: z.string().nullable().default(""),
-});
-
-type ItinItem = z.infer<typeof ItinItemSchema>;
-type OptionalItinItem = PartialNullable<ItinItem> & {
-  _id?: Id<"itineraryItems">;
-};
 export const AddOrEditItinItem = ({
   disclosure,
   item,
@@ -85,7 +67,7 @@ export const AddOrEditItinItem = ({
     resolver: zodResolver(ItinItemSchema),
     defaultValues: {
       tripId: activeTripId,
-      date: !!item?.date ? new Date(item.date) : new Date(),
+      date: item?.date ? item.date : undefined,
       time: item ? item.time : null,
       location: item ? item.location : null,
       details: item ? item.details : "",
