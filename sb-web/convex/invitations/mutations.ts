@@ -79,6 +79,7 @@ export const accept = mutation({
         });
       }
       await ctx.db.insert("crews", {
+        userId: user.userId,
         email: invite.email,
         role: invite.role,
         tripId: invite.tripId

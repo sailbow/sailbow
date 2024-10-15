@@ -11,7 +11,7 @@ export const create = mutation({
       const tripId = await db.insert("trips", args);
       await db.insert("crews", {
         tripId,
-        userId: user.tokenIdentifier,
+        userId: user.userId,
         role: "captain",
         email: user.email!
       })
@@ -41,32 +41,6 @@ export const updateTripBanner = mutation({
   handler: async ({ auth, db }, { tripId, banner }) => {
     await withUser(auth, db, async () => {
       await db.patch(tripId, { banner });
-    });
-  }
-});
-
-export const inviteCrewMember = mutation({
-  args: {
-    tripId: v.id("trips"),
-    email: v.string(),
-    role: v.union(v.literal("crewMember"), v.literal("firstMate"))
-  },
-  handler: async ({ db, auth }, args) => {
-    await withUser(auth, db, async () => {
-      const existingCm = await db
-      .query("crews")
-      .filter(q => q.and(
-        q.eq(q.field("tripId"), args.tripId),
-        q.eq(q.field("email"), args.email)
-      ))
-      .first();
-
-      if (existingCm) throw new ConvexError({
-        code: "USER_ERROR",
-        message: `User with email '${args.email}' has already been invited`
-      });
-
-      await db.insert("crews", args);
     });
   }
 });

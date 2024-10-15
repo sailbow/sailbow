@@ -15,17 +15,17 @@ import Typewriter from "@/components/typewriter";
 import dockIllustration from "../../../images/dock-illustration.png";
 export default function Home() {
   return (
-    <div className="fixed h-dvh w-dvw overflow-hidden">
+    <div className="relative h-dvh w-dvw overflow-hidden">
       <Image
         className="-z-10"
         alt="Dock"
         src={dockIllustration}
-        quality={100}
-        fill
         sizes="100vw"
         style={{
           objectFit: "cover",
         }}
+        priority
+        fill
       />
       <Navbar className="border-none bg-transparent" />
       <div className="relative isolate px-6 pt-14 lg:px-8">

@@ -10,10 +10,10 @@ import { type GenericDatabaseReader, type UserIdentity } from "convex/server";
 import { v } from "convex/values";
 import { throwIfNotMember } from "../tripUtils";
 
-const getMemberships = async ({ user, db }: { user: UserIdentity, db: GenericDatabaseReader<DataModel>}) => {
+const getMemberships = async ({ user, db }: { user: { userId: Id<"users">}, db: GenericDatabaseReader<DataModel>}) => {
   return await db
     .query("crews")
-    .withIndex("by_email", q => q.eq("email", user.email!))
+    .withIndex("by_userId", q => q.eq("userId", user.userId))
     .collect();
 };
 
@@ -42,22 +42,24 @@ export const getById = query({
 })
 
 export const getUserTrips = query({
-  handler: withAuth(async ({ db, user, }) => {
-    const memberships = await getMemberships({ user, db });
-    const trips = (await asyncMap(
-      memberships,
-      async (cm) => {
-        const trip = await db.get(cm.tripId);
-        if (!trip) return null;
-        return {
-          ...trip,
-          crewCount: await getCrewCount(db, trip._id)
+  handler: async ({ db, auth }) => {
+    return await withUser(auth, db, async (user) => {
+      const memberships = await getMemberships({ user, db });
+      const trips = (await asyncMap(
+        memberships,
+        async (cm) => {
+          const trip = await db.get(cm.tripId);
+          if (!trip) return null;
+          return {
+            ...trip,
+            crewCount: await getCrewCount(db, trip._id)
+          }
         }
-      }
-    ))
-
-    return pruneNull(trips);
-  })
+      ))
+  
+      return pruneNull(trips);
+    });
+  }
 });
 
 export const getTripCrew = query({
@@ -113,7 +115,7 @@ export const searchTrips = query({
         return pruneNull(await asyncMap(
           membs,
           async (membership) => {
-            return db.query("trips")
+            return await db.query("trips")
               .withIndex("by_id", q => q.eq("_id", membership.tripId))
               .unique()
           }

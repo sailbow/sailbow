@@ -33,7 +33,7 @@ export const inviteSchema = {
 
 export const crewMemberSchema = {
     tripId: v.id("trips"),
-    userId: v.optional(v.string()),
+    userId: v.string(),
     email: v.string(),
     role: roleSchema
 }
