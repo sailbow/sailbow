@@ -23,6 +23,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTrip } from "@/lib/trip-queries";
 import { useDisclosure } from "@/lib/use-disclosure";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Notification = Doc<"notifications">;
 type InferNotificationType<TType extends Notification["type"]> = Extract<
@@ -189,6 +190,7 @@ function InviteNotification({
 export default function NotificationsDropdown() {
   const { data, isLoading } = useUnreadNotifications();
   const disclosure = useDisclosure();
+  const isMobile = useIsMobile();
   return (
     <DropdownMenu {...disclosure}>
       <DropdownMenuTrigger asChild>
@@ -206,7 +208,8 @@ export default function NotificationsDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="relative h-[90dvh] w-[300px] overflow-auto p-0 sm:w-[450px]"
-        align="end"
+        side={isMobile ? "bottom" : "right"}
+        align={isMobile ? "end" : "start"}
       >
         <div className="sticky top-0 z-10 bg-popover p-1">
           <DropdownMenuLabel className="font-medium">

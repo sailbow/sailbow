@@ -17,7 +17,3 @@ export function useMediaQuery(query: string) {
 
   return value;
 }
-
-export function useIsXs() {
-  return useMediaQuery("(max-width: 475px)");
-}

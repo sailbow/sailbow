@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +23,8 @@ import {
 } from "@/lib/trip-queries";
 import { type Doc } from "@convex/_generated/dataModel";
 import ImageWithLoader from "./image-with-loader";
-import { useIsXs } from "@/lib/use-media-query";
+import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const TripDropdownItem = ({ trip }: { trip: Doc<"trips"> }) => {
   const activeTripId = useActiveTripId();
@@ -58,7 +58,7 @@ export default function TripSearch() {
   const [searchTerm, setSearchTerm] = useState("");
   const query = useDebounce(searchTerm, 500);
   const { isFetching, data: trips } = useSearchTrips(query);
-  const isXs = useIsXs();
+  const isMobile = useIsMobile();
 
   const tripResults = useMemo(() => {
     return trips?.filter((t) => t._id !== trip?._id);
@@ -77,19 +77,19 @@ export default function TripSearch() {
 
   if (!trip) return;
   return (
-    <div className="max-w-[180px] sm:max-w-[250px] lg:max-w-[350px]">
+    <SidebarMenuItem>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="w-full justify-between">
-            <span className="mr-2 truncate text-sm">{trip.name}</span>
-            <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
-          </Button>
+          <SidebarMenuButton size="lg" className="gap-4" variant="outline">
+            <span className="mr-2 truncate font-semibold">{trip.name}</span>
+            <ChevronsUpDown className="ml-auto" />
+          </SidebarMenuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-80" align="start">
           <div className="flex flex-col bg-card">
             <div className="p-2">
               <Input
-                autoFocus={!isXs}
+                autoFocus={!isMobile}
                 type="search"
                 placeholder="Search..."
                 className="rounded-lg"
@@ -136,6 +136,6 @@ export default function TripSearch() {
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
-    </div>
+    </SidebarMenuItem>
   );
 }

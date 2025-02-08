@@ -173,24 +173,6 @@ export const AddOrEditItinItem = ({
                             field.onChange(day);
                             calendarDisclosure.setClosed();
                           }}
-                          disabled={(date) => {
-                            const today = new Date();
-                            if (date.getFullYear() > today.getFullYear()) {
-                              return true;
-                            } else if (
-                              date.getFullYear() === today.getFullYear() &&
-                              date.getMonth() < date.getMonth()
-                            ) {
-                              return true;
-                            } else if (
-                              date.getFullYear() === today.getFullYear() &&
-                              date.getMonth() === today.getMonth() &&
-                              date.getDate() < today.getDate()
-                            ) {
-                              return true;
-                            }
-                            return false;
-                          }}
                         />
                       </PopoverContent>
                     </Popover>

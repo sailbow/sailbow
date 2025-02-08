@@ -3,22 +3,17 @@ import { Navbar } from "@/app/_components/nav-bar";
 import ConvexAuthenticated from "./convex-authenticated";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toast";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="light"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <div className="h-dvh w-dvw overflow-hidden bg-inherit">
-        <Navbar />
-        <main className="fixed top-navbar-height h-main-height w-full overflow-auto">
-          <ConvexAuthenticated>{children}</ConvexAuthenticated>
-        </main>
-      </div>
+    <ConvexAuthenticated>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>{children}</SidebarInset>
+      </SidebarProvider>
       <Toaster richColors={true} />
-    </ThemeProvider>
+    </ConvexAuthenticated>
   );
 }

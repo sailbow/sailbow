@@ -7,15 +7,15 @@ import { cn } from "@/lib/utils";
 import { useUserTrips } from "@/lib/trip-queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
-import { useIsXs } from "@/lib/use-media-query";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const CreateTripButton = () => {
-  const isXs = useIsXs();
+  const isMobile = useIsMobile();
   return (
     <Link
       href="/trips/new"
       className={cn(
-        buttonVariants({ size: isXs ? "sm" : "default" }),
+        buttonVariants({ size: isMobile ? "sm" : "default" }),
         "max-xs:size-10 max-xs:rounded-full",
       )}
     >

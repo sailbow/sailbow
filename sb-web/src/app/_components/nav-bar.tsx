@@ -1,12 +1,11 @@
-import { UserDropdown } from "./user-dropdown";
-import NotificationsDropdown from "./notifications";
-import Crumbs from "./crumbs";
-import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
-import Image from "next/image";
-import Sidebar from "./side-bar";
-import TripSearch from "./trip-search";
+"use client";
+import {
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  ClerkLoaded,
+} from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export function Navbar({ className }: { className?: string }) {
@@ -17,65 +16,20 @@ export function Navbar({ className }: { className?: string }) {
         className,
       )}
     >
-      <div className="hidden sm:flex">
-        <Link href="/">
-          <Image width={24} height={24} src="/icon.svg" alt="Sailbow Icon" />
-        </Link>
-      </div>
-      <div className="flex-1">
-        <SignedIn>
-          <div className="hidden sm:flex">
-            <Crumbs />
-          </div>
-        </SignedIn>
-        <div className="flex max-w-full items-center gap-2 sm:hidden">
-          <Sidebar />
-          <TripSearch />
-        </div>
-      </div>
       <div className="flex-none gap-2">
         <div className="flex items-center gap-2">
-          <SignedIn>
-            <NotificationsDropdown />
-            <UserDropdown />
-          </SignedIn>
-          <SignedOut>
-            <SignUpButton mode="modal" signInFallbackRedirectUrl={"/trips"}>
-              <Button variant="secondary">Sign Up</Button>
-            </SignUpButton>
-            <SignInButton mode="modal" signUpFallbackRedirectUrl={"/trips"}>
-              <Button>Sign In</Button>
-            </SignInButton>
-          </SignedOut>
+          <ClerkLoaded>
+            <SignedOut>
+              <SignUpButton mode="modal" signInFallbackRedirectUrl={"/trips"}>
+                <Button variant="secondary">Sign Up</Button>
+              </SignUpButton>
+              <SignInButton mode="modal" signUpFallbackRedirectUrl={"/trips"}>
+                <Button>Sign In</Button>
+              </SignInButton>
+            </SignedOut>
+          </ClerkLoaded>
         </div>
       </div>
-      {/* <div className="flex-none">
-
-      </div>
-      <div className="flex max-w-full grow items-center gap-2">
-        <SignedIn>
-          <div className="hidden sm:flex">
-            <Crumbs />
-          </div>
-          <div className="flex shrink items-center gap-2 sm:hidden">
-            <Sidebar />
-            <TripSearch />
-          </div>
-        </SignedIn>
-      </div>
-      <div className="flex-1">
-        <div className="flex items-center gap-2">
-          <SignedIn>
-            <NotificationsDropdown />
-            <UserDropdown />
-          </SignedIn>
-          <SignedOut>
-            <SignInButton mode="modal" signUpFallbackRedirectUrl={"/trips"}>
-              <Button>Sign In</Button>
-            </SignInButton>
-          </SignedOut>
-        </div>
-      </div> */}
     </header>
   );
 }

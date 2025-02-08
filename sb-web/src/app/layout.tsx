@@ -36,39 +36,46 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <ClerkProvider
-        publishableKey={env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-        signInUrl={env.NEXT_PUBLIC_CLERK_SIGN_IN_URL}
-        signUpUrl={env.NEXT_PUBLIC_CLERK_SIGN_UP_URL}
-        signInFallbackRedirectUrl={
-          env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
-        }
-        signUpFallbackRedirectUrl={
-          env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
-        }
-        appearance={{
-          layout: {
-            shimmer: true,
-          },
-          userButton: {
-            elements: {
-              avatarImage: "border-primary border-3",
-            },
-          },
-        }}
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem
+        disableTransitionOnChange
       >
-        <ConvexClientProvider>
-          <body
-            className={cn(
-              "h-screen w-screen bg-background font-sans antialiased",
-              font.variable,
-            )}
-          >
-            <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
-            {children}
-          </body>
-        </ConvexClientProvider>
-      </ClerkProvider>
+        <ClerkProvider
+          publishableKey={env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          signInUrl={env.NEXT_PUBLIC_CLERK_SIGN_IN_URL}
+          signUpUrl={env.NEXT_PUBLIC_CLERK_SIGN_UP_URL}
+          signInFallbackRedirectUrl={
+            env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
+          }
+          signUpFallbackRedirectUrl={
+            env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
+          }
+          appearance={{
+            layout: {
+              shimmer: true,
+            },
+            userButton: {
+              elements: {
+                avatarImage: "border-primary border-3",
+              },
+            },
+          }}
+        >
+          <ConvexClientProvider>
+            <body
+              className={cn(
+                "h-screen w-screen bg-background font-sans antialiased",
+                font.variable,
+              )}
+            >
+              <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
+              {children}
+            </body>
+          </ConvexClientProvider>
+        </ClerkProvider>
+      </ThemeProvider>
     </html>
   );
 }
