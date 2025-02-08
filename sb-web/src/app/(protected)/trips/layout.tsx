@@ -1,7 +1,5 @@
 import React from "react";
-import { Navbar } from "@/app/_components/nav-bar";
 import ConvexAuthenticated from "./convex-authenticated";
-import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toast";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
