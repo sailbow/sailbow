@@ -83,7 +83,7 @@ const TextEditorContent = ({
   className?: string | undefined;
 }) => {
   return (
-    <Card className="flex max-h-[500px] min-h-[300px] flex-col overflow-auto">
+    <Card className="flex min-h-[300px] flex-col">
       <EditorContent editor={editor} className="size-full rounded-lg" />
     </Card>
   );

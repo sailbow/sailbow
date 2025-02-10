@@ -7,10 +7,7 @@ const TripPageContainer = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "relative flex size-full max-w-full flex-col overflow-auto sm:container",
-      className,
-    )}
+    className={cn("flex min-h-screen flex-col", className)}
     {...props}
   />
 ));
@@ -18,17 +15,18 @@ const TripPageContainer = React.forwardRef<
 TripPageContainer.displayName = "TripPage";
 
 const TripPageHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  HTMLHeadElement,
+  React.HTMLAttributes<HTMLHeadElement>
 >(({ className, ...props }, ref) => (
-  <div
+  <header
     ref={ref}
     className={cn(
-      "sticky top-0 z-40 flex min-h-10 w-full max-w-4xl gap-4 bg-background py-2 pr-1",
+      "container sticky top-0 z-40 mx-auto min-h-10 bg-background py-4",
       className,
     )}
-    {...props}
-  />
+  >
+    <div className="flex h-full items-center justify-between" {...props} />
+  </header>
 ));
 
 TripPageHeader.displayName = "TripPageHeader";
@@ -53,11 +51,9 @@ const TripPageContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("relative max-w-4xl grow py-2", className)}
-    {...props}
-  />
+  <div ref={ref} className={cn("flex-grow overflow-auto", className)}>
+    <div className="container mx-auto" {...props} />
+  </div>
 ));
 
 TripPageContent.displayName = "TripPageContent";

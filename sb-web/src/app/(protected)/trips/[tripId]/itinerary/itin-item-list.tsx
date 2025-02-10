@@ -121,19 +121,21 @@ export const ItinItemList = () => {
   );
   if (isLoading) {
     return (
-      <Accordion type="single" className="mt-4 w-full max-w-2xl">
-        <Card>
-          <CardHeader className="px-6 py-2">
-            <AccordionItem value="loading" disabled className="border-b-0">
-              <AccordionTrigger>
-                <div className="flex w-full items-center">
-                  <Calendar className="mr-2 size-4" />
-                  <Skeleton className="mr-2 h-8 flex-1" />
-                </div>
-              </AccordionTrigger>
-            </AccordionItem>
-          </CardHeader>
-        </Card>
+      <Accordion type="single" className="mt-4 w-full max-w-2xl space-y-4">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <Card key={index}>
+            <CardHeader className="px-6 py-2">
+              <AccordionItem value="loading" disabled className="border-b-0">
+                <AccordionTrigger>
+                  <div className="flex w-full items-center">
+                    <Calendar className="mr-2 size-4" />
+                    <Skeleton className="mr-2 h-8 max-w-[50%] flex-1" />
+                  </div>
+                </AccordionTrigger>
+              </AccordionItem>
+            </CardHeader>
+          </Card>
+        ))}
       </Accordion>
     );
   }

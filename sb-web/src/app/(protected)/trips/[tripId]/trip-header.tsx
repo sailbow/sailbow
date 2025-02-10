@@ -8,12 +8,8 @@ export default function TripHeader() {
   if (isLoading || !data?.banner) return;
 
   return (
-    <div className="relative h-40 w-full">
-      <ImageWithLoader
-        className="rounded-none"
-        src={data.banner.full}
-        alt={data.banner.alt}
-      />
+    <div className="relative mx-auto aspect-[16/5] w-full max-w-3xl px-8 pt-4">
+      <ImageWithLoader src={data.banner.full} alt={data.banner.alt} />
     </div>
   );
 }
