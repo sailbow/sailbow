@@ -80,7 +80,7 @@ export default function TripSearch() {
     <SidebarMenuItem>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <SidebarMenuButton size="lg" className="gap-4" variant="outline">
+          <SidebarMenuButton size="lg" className="gap-4">
             <span className="mr-2 truncate font-semibold">{trip.name}</span>
             <ChevronsUpDown className="ml-auto" />
           </SidebarMenuButton>

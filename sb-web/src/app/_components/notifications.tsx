@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { useTrip } from "@/lib/trip-queries";
 import { useDisclosure } from "@/lib/use-disclosure";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SidebarMenuButton } from "@/components/ui/sidebar";
 
 type Notification = Doc<"notifications">;
 type InferNotificationType<TType extends Notification["type"]> = Extract<
@@ -194,17 +195,15 @@ export default function NotificationsDropdown() {
   return (
     <DropdownMenu {...disclosure}>
       <DropdownMenuTrigger asChild>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="relative"
-          aria-label="Toggle notifications menu"
-        >
-          {data && data.length > 0 && (
-            <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-destructive" />
-          )}
-          <Bell className="size-5 sm:size-6" />
-        </Button>
+        <SidebarMenuButton aria-label="Toggle notifications menu">
+          <div className="relative mr-2 size-4">
+            <Bell className="h-4 w-4" />
+            {data && data.length > 0 && (
+              <span className="absolute -right-1 -top-1 size-2 rounded-full bg-destructive" />
+            )}
+          </div>
+          Notifications
+        </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="relative h-[90dvh] w-[300px] overflow-auto p-0 sm:w-[450px]"

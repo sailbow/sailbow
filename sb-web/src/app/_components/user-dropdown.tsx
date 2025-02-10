@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUser, useClerk, SignInButton } from "@clerk/nextjs";
 import {
+  ChevronsUpDown,
   FileText,
   HelpCircle,
   LogOut,
@@ -31,6 +32,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Spinner } from "./spinner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SidebarMenuButton } from "@/components/ui/sidebar";
 
 export function UserDropdown() {
   const { user, isLoaded } = useUser();
@@ -55,22 +57,21 @@ export function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Toggle user dropdown" asChild>
-        <Button
-          size="icon"
-          className="rounded-full bg-transparent p-0 hover:bg-transparent"
-        >
-          <Avatar className="size-8 sm:size-10">
+        <SidebarMenuButton size="lg">
+          <Avatar className="mr-2 size-8 rounded-lg">
             <AvatarImage
               src={user.imageUrl}
               alt={user.fullName + " profile image"}
             />
             <AvatarFallback>
-              <Skeleton className="size-full rounded-full" />
+              <Skeleton className="size-full rounded-lg" />
             </AvatarFallback>
           </Avatar>
-        </Button>
+          {user?.fullName}
+          <ChevronsUpDown className="ml-auto size-4" />
+        </SidebarMenuButton>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
+      <DropdownMenuContent className="w-56" side="top">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="font-medium leading-none">{user?.fullName}</p>

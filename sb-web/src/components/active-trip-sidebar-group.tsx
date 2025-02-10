@@ -11,6 +11,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
+  SidebarSeparator,
 } from "./ui/sidebar";
 import { useActiveTrip } from "@/lib/trip-queries";
 import Link from "next/link";
@@ -19,26 +20,29 @@ const ActiveTripGroup = () => {
   const links = useTripLinks();
   const pathname = usePathname();
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Current Trip</SidebarGroupLabel>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          <TripSearch />
-          <SidebarMenuSub>
-            {links.map((l, i) => (
-              <SidebarMenuSubItem key={i}>
-                <Link href={l.href}>
-                  <SidebarMenuSubButton isActive={pathname === l.href}>
-                    <l.icon className="mr-2 h-4 w-4" />
-                    {l.title}
-                  </SidebarMenuSubButton>
-                </Link>
-              </SidebarMenuSubItem>
-            ))}
-          </SidebarMenuSub>
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
+    <>
+      <SidebarGroup>
+        {/* <SidebarGroupLabel>Current Trip</SidebarGroupLabel> */}
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <TripSearch />
+            <SidebarMenuSub>
+              {links.map((l, i) => (
+                <SidebarMenuSubItem key={i}>
+                  <Link href={l.href}>
+                    <SidebarMenuSubButton isActive={pathname === l.href}>
+                      <l.icon className="mr-2 h-4 w-4" />
+                      {l.title}
+                    </SidebarMenuSubButton>
+                  </Link>
+                </SidebarMenuSubItem>
+              ))}
+            </SidebarMenuSub>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+      <SidebarSeparator />
+    </>
   );
 };
 
