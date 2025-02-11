@@ -12,6 +12,7 @@ import {
   SidebarMenuSubItem,
   SidebarMenuSubButton,
   SidebarSeparator,
+  useSidebar,
 } from "./ui/sidebar";
 import { useActiveTrip } from "@/lib/trip-queries";
 import Link from "next/link";
@@ -19,6 +20,7 @@ import Link from "next/link";
 const ActiveTripGroup = () => {
   const links = useTripLinks();
   const pathname = usePathname();
+  const { isMobile, toggleSidebar } = useSidebar();
   return (
     <>
       <SidebarGroup>
@@ -28,7 +30,14 @@ const ActiveTripGroup = () => {
             <TripSearch />
             <SidebarMenuSub>
               {links.map((l, i) => (
-                <SidebarMenuSubItem key={i}>
+                <SidebarMenuSubItem
+                  key={i}
+                  onClick={() => {
+                    if (isMobile) {
+                      toggleSidebar();
+                    }
+                  }}
+                >
                   <Link href={l.href}>
                     <SidebarMenuSubButton isActive={pathname === l.href}>
                       <l.icon className="mr-2 h-4 w-4" />

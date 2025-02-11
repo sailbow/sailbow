@@ -206,7 +206,7 @@ export default function NotificationsDropdown() {
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="relative h-[90dvh] w-[300px] overflow-auto p-0 sm:w-[450px]"
+        className="relative z-[100] h-[100dvh] w-[300px] overflow-auto p-0 sm:w-[450px]"
         side={isMobile ? "bottom" : "right"}
         align={isMobile ? "end" : "start"}
       >

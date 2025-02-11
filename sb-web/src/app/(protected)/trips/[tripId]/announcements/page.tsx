@@ -15,9 +15,7 @@ export default function Page() {
     <TripPageContainer>
       <TripPageHeader>
         <TripPageTitle>Announcements</TripPageTitle>
-        <div className="ml-auto">
-          <CreateAnnouncementButton />
-        </div>
+        <CreateAnnouncementButton />
       </TripPageHeader>
       <TripPageContent>
         <AnnouncementList />

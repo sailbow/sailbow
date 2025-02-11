@@ -14,11 +14,9 @@ export default function CrewPage() {
   return (
     <TripPageContainer>
       <Tabs defaultValue="joined">
-        <TripPageHeader className="w-full justify-between">
+        <TripPageHeader>
           <TripPageTitle>Crew</TripPageTitle>
-          <div className="ml-auto">
-            <InviteButton />
-          </div>
+          <InviteButton />
         </TripPageHeader>
         <TripPageContent className="pt-4">
           <TabsList className="grid grid-cols-2">

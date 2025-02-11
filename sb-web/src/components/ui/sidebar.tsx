@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
-import { PanelLeft } from "lucide-react";
+import { ChevronsLeft, ChevronsRight, PanelLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -270,7 +270,7 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, open, openMobile, isMobile } = useSidebar();
 
   return (
     <Button
@@ -285,7 +285,11 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <PanelLeft />
+      {(!isMobile && open) || (isMobile && openMobile) ? (
+        <ChevronsLeft />
+      ) : (
+        <ChevronsRight />
+      )}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
@@ -742,6 +746,25 @@ const SidebarMenuSubButton = React.forwardRef<
 });
 SidebarMenuSubButton.displayName = "SidebarMenuSubButton";
 
+const SidebarMenuItemWithDismiss = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const { isMobile, toggleSidebar } = useSidebar();
+
+  return (
+    <SidebarMenuItem
+      onClick={() => {
+        if (isMobile) {
+          toggleSidebar();
+        }
+      }}
+    >
+      {children}
+    </SidebarMenuItem>
+  );
+};
 export {
   Sidebar,
   SidebarContent,
@@ -758,6 +781,7 @@ export {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuItemWithDismiss,
   SidebarMenuSkeleton,
   SidebarMenuSub,
   SidebarMenuSubButton,

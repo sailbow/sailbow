@@ -8,10 +8,13 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuItemWithDismiss,
   SidebarRail,
   SidebarSeparator,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { Anchor } from "lucide-react";
@@ -23,27 +26,29 @@ import ActiveTripSidebarGroup from "./active-trip-sidebar-group";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
-      <SidebarHeader>
-        <div className="flex h-12 w-full items-center gap-4 p-2">
-          <div className="flex aspect-square size-8 items-center justify-center">
-            <ImageWithLoader src="/icon.svg" alt="Sailbow Logo" />
-          </div>
-          <span className="font-semibold">sailbow</span>
-        </div>
+      <SidebarHeader className="relative">
+        <SidebarMenu>
+          <SidebarMenuItem className="flex items-center gap-4 p-2">
+            <div className="flex aspect-square size-6 items-center justify-center">
+              <ImageWithLoader src="/icon.svg" alt="Sailbow Logo" />
+            </div>
+            <div className="font-semibold">sailbow</div>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <ActiveTripSidebarGroup />
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
+              <SidebarMenuItemWithDismiss>
                 <Link href="/trips">
                   <SidebarMenuButton>
                     <Anchor className="mr-2 h-4 w-4" />
                     Trips
                   </SidebarMenuButton>
                 </Link>
-              </SidebarMenuItem>
+              </SidebarMenuItemWithDismiss>
               <SidebarMenuItem>
                 <NotificationsDropdown />
               </SidebarMenuItem>
@@ -54,7 +59,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <UserDropdown />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }
