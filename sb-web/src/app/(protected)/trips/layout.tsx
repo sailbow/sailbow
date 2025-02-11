@@ -12,9 +12,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <ConvexAuthenticated>
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar className="z-[100]" />
         <SidebarInset>
-          <div className="sticky top-0 z-[100] flex pl-2 pt-3">
+          <div className="sticky top-0 z-[75] flex pl-2 pt-3">
             <SidebarTrigger />
           </div>
           <div className="flex-grow">{children}</div>

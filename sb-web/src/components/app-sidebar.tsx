@@ -26,7 +26,7 @@ import ActiveTripSidebarGroup from "./active-trip-sidebar-group";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="relative">
+      <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-4 p-2">
             <div className="flex aspect-square size-6 items-center justify-center">
