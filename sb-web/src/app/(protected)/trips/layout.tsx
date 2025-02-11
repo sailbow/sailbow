@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <ConvexAuthenticated>
       <SidebarProvider>
-        <AppSidebar className="z-[100]" />
+        <AppSidebar className="z-40" />
         <SidebarInset>
           <div className="sticky top-0 z-[75] flex pl-2 pt-3">
             <SidebarTrigger />
