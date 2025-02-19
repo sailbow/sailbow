@@ -4,7 +4,7 @@ import {
   TripPageHeader,
   TripPageTitle,
   TripPageContent,
-} from "../trip-page-components";
+} from "../_components/trip-page-components";
 import { ItinItemList } from "./itin-item-list";
 import NewItinItemButton from "./new-itin-item-button";
 

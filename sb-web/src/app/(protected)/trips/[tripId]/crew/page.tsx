@@ -4,7 +4,7 @@ import {
   TripPageContent,
   TripPageHeader,
   TripPageTitle,
-} from "../trip-page-components";
+} from "../_components/trip-page-components";
 import InviteButton from "./invite-button";
 import { CrewTable } from "./crew-table";
 import { PendingAndDeclinedInvitesTable } from "./pending-declined-invites-table";
@@ -13,12 +13,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export default function CrewPage() {
   return (
     <TripPageContainer>
-      <Tabs defaultValue="joined">
-        <TripPageHeader>
-          <TripPageTitle>Crew</TripPageTitle>
-          <InviteButton />
-        </TripPageHeader>
-        <TripPageContent className="pt-4">
+      <TripPageHeader>
+        <TripPageTitle>Crew</TripPageTitle>
+        <InviteButton />
+      </TripPageHeader>
+      <TripPageContent className="pt-4">
+        <Tabs defaultValue="joined">
           <TabsList className="grid grid-cols-2">
             <TabsTrigger value="joined">Joined</TabsTrigger>
             <TabsTrigger value="pending-and-declined">
@@ -31,8 +31,8 @@ export default function CrewPage() {
           <TabsContent value="pending-and-declined">
             <PendingAndDeclinedInvitesTable />
           </TabsContent>
-        </TripPageContent>
-      </Tabs>
+        </Tabs>
+      </TripPageContent>
     </TripPageContainer>
   );
 }

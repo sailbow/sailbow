@@ -33,6 +33,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <ImageWithLoader src="/icon.svg" alt="Sailbow Logo" />
             </div>
             <div className="font-semibold">sailbow</div>
+            <SidebarTrigger className="ml-auto" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

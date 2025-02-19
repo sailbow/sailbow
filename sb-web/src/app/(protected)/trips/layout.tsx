@@ -7,6 +7,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import TripSidebarTrigger from "./[tripId]/_components/trip-sidebar-trigger";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -14,9 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <SidebarProvider>
         <AppSidebar className="z-40" />
         <SidebarInset className="bg-background">
-          <div className="sticky top-0 z-[75] flex max-w-max pl-2 pt-3">
-            <SidebarTrigger />
-          </div>
+          <TripSidebarTrigger />
           <div className="flex-grow">{children}</div>
         </SidebarInset>
       </SidebarProvider>

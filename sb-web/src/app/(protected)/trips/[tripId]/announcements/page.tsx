@@ -4,7 +4,7 @@ import {
   TripPageContent,
   TripPageHeader,
   TripPageTitle,
-} from "../trip-page-components";
+} from "../_components/trip-page-components";
 import {
   AnnouncementList,
   CreateAnnouncementButton,

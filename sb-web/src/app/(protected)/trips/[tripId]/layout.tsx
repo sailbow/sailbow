@@ -1,6 +1,6 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
-import TripHeader from "./trip-header";
-import NotFoundWrapper from "./not-found-wrapper";
+import TripHeader from "./_components/trip-header";
+import NotFoundWrapper from "./_components/not-found-wrapper";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

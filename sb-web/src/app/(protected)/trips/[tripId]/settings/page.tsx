@@ -5,7 +5,7 @@ import {
   TripPageHeader,
   TripPageTitle,
   TripPageContent,
-} from "../trip-page-components";
+} from "../_components/trip-page-components";
 import DeleteTripCard from "./delete-trip-card";
 import UpdateNameCard from "./update-name-card";
 

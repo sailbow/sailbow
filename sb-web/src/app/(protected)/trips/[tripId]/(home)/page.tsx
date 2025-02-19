@@ -5,9 +5,9 @@ import {
   TripPageContent,
   TripPageHeader,
   TripPageTitle,
-} from "../trip-page-components";
+} from "../_components/trip-page-components";
 import TripDetails from "./trip-details";
-import TripBannerModal from "../trip-banner-modal";
+import TripBannerModal from "../_components/trip-banner-modal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListChecks, Megaphone, Settings, Users2 } from "lucide-react";
