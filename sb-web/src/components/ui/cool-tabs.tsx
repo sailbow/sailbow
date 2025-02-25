@@ -3,6 +3,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 interface CoolTab {
   id: string;
@@ -46,19 +47,20 @@ export function CoolTabs({
       className={cn("relative inline-flex h-10 items-center gap-3", className)}
     >
       {tabs.map((tab) => (
-        <button
+        <Button
           key={tab.id}
           ref={(el) => {
             if (el) buttonRefs.set(tab.id, el);
           }}
           onClick={() => onChange(tab.id)}
+          variant="ghost"
           className={cn(
             "relative py-2 text-sm font-medium transition-colors",
-            tab.id === activeTab ? "text-foreground" : "text-muted-foreground",
+            tab.id !== activeTab && "text-muted-foreground",
           )}
         >
           {tab.label}
-        </button>
+        </Button>
       ))}
 
       {/* Animated underline */}
