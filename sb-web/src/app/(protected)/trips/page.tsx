@@ -29,9 +29,9 @@ export default function TripsPage() {
   const { data: trips, isPending } = useUserTrips();
 
   return (
-    <div className="relative mx-auto h-full max-w-6xl overflow-y-auto xs:container">
-      <div className="container sticky top-0 z-10 flex items-center justify-between bg-background p-4">
-        <div className="text-xl font-medium leading-none tracking-tight">
+    <div className="container relative mx-auto min-h-dvh">
+      <div className="container sticky top-0 z-50 mx-auto flex min-h-12 items-center justify-between bg-background py-3">
+        <div className="inline-flex break-normal text-2xl font-semibold leading-none tracking-tight sm:text-3xl">
           Trips
         </div>
         <CreateTripButton />

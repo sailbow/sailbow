@@ -16,12 +16,9 @@ export default function CrewPage() {
   const [activeTab, setActiveTab] = useState("joined");
   return (
     <TripPageContainer>
-      <TripPageHeader>
-        <TripPageTitle>Crew</TripPageTitle>
-        <InviteButton />
-      </TripPageHeader>
-      <TripPageContent className="pt-4">
-        <div className="flex w-full items-center justify-center">
+      <TripPageHeader className="items-start">
+        <div className="flex w-full flex-col gap-3">
+          <TripPageTitle>Crew</TripPageTitle>
           <CoolTabs
             tabs={[
               { id: "joined", label: "Joined" },
@@ -32,6 +29,9 @@ export default function CrewPage() {
           />
         </div>
 
+        <InviteButton />
+      </TripPageHeader>
+      <TripPageContent className="pt-4">
         {activeTab === "joined" && <CrewTable />}
         {activeTab === "pending-and-declined" && (
           <PendingAndDeclinedInvitesTable />

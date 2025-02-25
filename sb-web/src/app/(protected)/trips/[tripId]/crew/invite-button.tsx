@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { type Doc } from "@convex/_generated/dataModel";
 import { useDisclosure } from "@/lib/use-disclosure";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const roleValueToDisplay = (
   value: Doc<"crews">["role"],
@@ -21,10 +22,11 @@ export const roleValueToDisplay = (
 
 export default function InviteButton() {
   const disclosure = useDisclosure();
+  const isMobile = useIsMobile();
   return (
     <Dialog {...disclosure}>
       <DialogTrigger asChild>
-        <Button>
+        <Button size={isMobile ? "sm" : "default"}>
           <Send className="mr-2 size-4" />
           Invite
         </Button>

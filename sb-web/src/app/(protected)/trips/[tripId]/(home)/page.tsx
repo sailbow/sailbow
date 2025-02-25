@@ -9,7 +9,6 @@ import {
 import TripDetails from "./trip-details";
 import TripBannerModal from "../_components/trip-banner-modal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListChecks, Megaphone, Settings, Users2 } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
@@ -26,18 +25,20 @@ export default function TripOverviewPage() {
   return (
     <TripPageContainer>
       <TripPageHeader>
-        <TripPageTitle>{trip.name}</TripPageTitle>
+        <div className="flex flex-col gap-2">
+          <TripPageTitle>{trip.name}</TripPageTitle>
+          <CoolTabs
+            tabs={[
+              { id: "overview", label: "Overview" },
+              { id: "details", label: "Details" },
+            ]}
+            activeTab={activeTab}
+            onChange={setActiveTab}
+            className="mb-2"
+          />
+        </div>
       </TripPageHeader>
       <TripPageContent>
-        <CoolTabs
-          tabs={[
-            { id: "overview", label: "Overview" },
-            { id: "details", label: "Details" },
-          ]}
-          activeTab={activeTab}
-          onChange={setActiveTab}
-          className="mb-2"
-        />
         {activeTab === "overview" && (
           <div className="grid grid-cols-4 gap-4">
             <Card className="col-span-4 lg:col-span-2">

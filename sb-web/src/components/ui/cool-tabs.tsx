@@ -44,7 +44,7 @@ export function CoolTabs({
 
   return (
     <div
-      className={cn("relative inline-flex h-10 items-center gap-3", className)}
+      className={cn("relative inline-flex h-10 items-center pb-1", className)}
     >
       {tabs.map((tab) => (
         <Button
@@ -54,6 +54,7 @@ export function CoolTabs({
           }}
           onClick={() => onChange(tab.id)}
           variant="ghost"
+          size="sm"
           className={cn(
             "relative py-2 text-sm font-medium transition-colors",
             tab.id !== activeTab && "text-muted-foreground",
