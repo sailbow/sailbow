@@ -2,11 +2,7 @@ import React from "react";
 import ConvexAuthenticated from "./convex-authenticated";
 import { Toaster } from "@/components/ui/toast";
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import TripSidebarTrigger from "./[tripId]/_components/trip-sidebar-trigger";
 
 export default function Layout({ children }: { children: React.ReactNode }) {

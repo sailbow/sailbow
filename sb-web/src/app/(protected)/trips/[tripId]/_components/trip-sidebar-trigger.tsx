@@ -8,6 +8,5 @@ export default function TripSidebarTrigger() {
   if (isMobile && openMobile) return;
   if (open) return;
 
-  // return <SidebarTrigger />;
   return <SidebarTrigger className="fixed left-1.5 top-4 z-[75]" />;
 }
