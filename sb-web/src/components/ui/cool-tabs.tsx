@@ -43,9 +43,7 @@ export function CoolTabs({
   }, [activeTab, buttonRefs]);
 
   return (
-    <div
-      className={cn("relative inline-flex h-10 items-center pb-1", className)}
-    >
+    <div className={cn("relative inline-flex h-10 items-center", className)}>
       {tabs.map((tab) => (
         <Button
           key={tab.id}
@@ -67,7 +65,7 @@ export function CoolTabs({
       {/* Animated underline */}
       {activeRect && (
         <motion.div
-          className="absolute bottom-0 h-[2px] bg-primary"
+          className="absolute bottom-0 h-0.5 bg-primary"
           initial={false}
           animate={{
             width: activeRect.width,

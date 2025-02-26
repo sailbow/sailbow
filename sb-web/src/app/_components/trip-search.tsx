@@ -23,7 +23,11 @@ import {
 } from "@/lib/trip-queries";
 import { type Doc } from "@convex/_generated/dataModel";
 import ImageWithLoader from "./image-with-loader";
-import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import {
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const TripDropdownItem = ({ trip }: { trip: Doc<"trips"> }) => {
@@ -59,6 +63,7 @@ export default function TripSearch() {
   const query = useDebounce(searchTerm, 500);
   const { isFetching, data: trips } = useSearchTrips(query);
   const isMobile = useIsMobile();
+  const { toggleSidebar } = useSidebar();
 
   const tripResults = useMemo(() => {
     return trips?.filter((t) => t._id !== trip?._id);
@@ -121,7 +126,15 @@ export default function TripSearch() {
                   {tripResults
                     ?.filter((t) => t._id !== trip._id)
                     .map((t) => (
-                      <Link key={t._id} href={`/trips/${t._id}` as Route}>
+                      <Link
+                        key={t._id}
+                        href={`/trips/${t._id}` as Route}
+                        onClick={() => {
+                          if (isMobile) {
+                            toggleSidebar();
+                          }
+                        }}
+                      >
                         <div
                           className="relative flex items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                           onClick={() => setIsOpen(false)}

@@ -22,18 +22,17 @@ import { UserDropdown } from "@/app/_components/user-dropdown";
 import NotificationsDropdown from "@/app/_components/notifications";
 import ImageWithLoader from "@/app/_components/image-with-loader";
 import ActiveTripSidebarGroup from "./active-trip-sidebar-group";
+import SidebarTriggerButton from "./sidebar-trigger-button";
+import Image from "next/image";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem className="flex items-center gap-4 p-2">
-            <div className="flex aspect-square size-6 items-center justify-center">
-              <ImageWithLoader src="/icon.svg" alt="Sailbow Logo" />
-            </div>
+          <SidebarMenuItem className="flex items-center gap-4 pl-2 pt-2">
+            <Image width={24} height={24} src="/icon.svg" alt="Sailbow Logo" />
             <div className="font-semibold">sailbow</div>
-            <SidebarTrigger className="ml-auto" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -43,7 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItemWithDismiss>
-                <Link href="/trips">
+                <Link href="/trips" prefetch={false}>
                   <SidebarMenuButton>
                     <Anchor className="mr-2 h-4 w-4" />
                     Trips
@@ -58,7 +57,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <UserDropdown />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <UserDropdown />
+          </SidebarMenuItem>
+          <SidebarTriggerButton />
+        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );

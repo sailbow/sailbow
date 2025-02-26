@@ -25,7 +25,7 @@ export default function TripOverviewPage() {
   return (
     <TripPageContainer>
       <TripPageHeader>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           <TripPageTitle>{trip.name}</TripPageTitle>
           <CoolTabs
             tabs={[
@@ -34,7 +34,6 @@ export default function TripOverviewPage() {
             ]}
             activeTab={activeTab}
             onChange={setActiveTab}
-            className="mb-2"
           />
         </div>
       </TripPageHeader>

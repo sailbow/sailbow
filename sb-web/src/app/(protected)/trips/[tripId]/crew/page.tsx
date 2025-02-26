@@ -31,7 +31,7 @@ export default function CrewPage() {
 
         <InviteButton />
       </TripPageHeader>
-      <TripPageContent className="pt-4">
+      <TripPageContent>
         {activeTab === "joined" && <CrewTable />}
         {activeTab === "pending-and-declined" && (
           <PendingAndDeclinedInvitesTable />

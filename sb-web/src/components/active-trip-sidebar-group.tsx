@@ -2,7 +2,7 @@
 
 import TripSearch from "@/app/_components/trip-search";
 import { useTripLinks } from "@/lib/use-trip-links";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,11 +16,14 @@ import {
 } from "./ui/sidebar";
 import { useActiveTrip } from "@/lib/trip-queries";
 import Link from "next/link";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ActiveTripGroup = () => {
   const links = useTripLinks();
   const pathname = usePathname();
-  const { isMobile, toggleSidebar } = useSidebar();
+  const { toggleSidebar } = useSidebar();
+  const isMobile = useIsMobile();
+  const router = useRouter();
   return (
     <>
       <SidebarGroup>
@@ -31,19 +34,19 @@ const ActiveTripGroup = () => {
             <SidebarMenuSub>
               {links.map((l, i) => (
                 <SidebarMenuSubItem
+                  className="hover:cursor-pointer"
                   key={i}
                   onClick={() => {
                     if (isMobile) {
                       toggleSidebar();
                     }
+                    router.push(l.href);
                   }}
                 >
-                  <Link href={l.href}>
-                    <SidebarMenuSubButton isActive={pathname === l.href}>
-                      <l.icon className="mr-2 h-4 w-4" />
-                      {l.title}
-                    </SidebarMenuSubButton>
-                  </Link>
+                  <SidebarMenuSubButton isActive={pathname === l.href}>
+                    <l.icon className="mr-2 h-4 w-4" />
+                    {l.title}
+                  </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
               ))}
             </SidebarMenuSub>
