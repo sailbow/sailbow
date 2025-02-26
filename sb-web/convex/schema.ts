@@ -21,6 +21,12 @@ export const tripSchema = {
             full: v.string(),
         })
     ),
+    dates: v.optional(
+        v.object({
+            start: v.number(),
+            end: v.optional(v.number()),
+        })
+    )
 }
 
 export const inviteSchema = {
