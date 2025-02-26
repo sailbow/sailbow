@@ -42,7 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItemWithDismiss>
-                <Link href="/trips" prefetch={false}>
+                <Link href="/trips">
                   <SidebarMenuButton>
                     <Anchor className="mr-2 h-4 w-4" />
                     Trips

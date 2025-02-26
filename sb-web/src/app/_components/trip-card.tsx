@@ -29,11 +29,7 @@ const TripCard = ({ trip }: { trip: Doc<"trips"> & { crewCount: number } }) => {
       ease-in-out focus-within:scale-105 focus-within:transform
       focus-within:border-ring hover:scale-105 hover:transform hover:border-2 hover:border-ring"
     >
-      <Link
-        className="flex size-full flex-col"
-        href={`/trips/${trip._id}`}
-        prefetch={false}
-      >
+      <Link className="flex size-full flex-col" href={`/trips/${trip._id}`}>
         <CardContent className="relative flex basis-3/4 p-0">
           {banner}
         </CardContent>
