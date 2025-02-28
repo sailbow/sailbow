@@ -16,25 +16,30 @@ export const list = query({
         .withIndex("by_tripId", q => q.eq("tripId", args.tripId))
         .collect();
 
-      const grouped = items.reduce((result, current) => {
-        const existing = result.get(current.date);
-        if (existing) {
-          result.set(current.date, [...existing, current]);
-        } else {
-          result.set(current.date,[current]);
-        }
-        return result;
-      },  new Map<number, Doc<"itineraryItems">[]>());
-      console.log(grouped);
-      const results: { date: number, items: Doc<"itineraryItems">[] }[] = [];
-      for (const group of grouped) {
-        results.push({
-          date: group[0],
-          items: group[1]
-        })
-      }
+      return items;
+      // const grouped = items.reduce((result, current) => {
+      //   if (current.start) {
+      //     const startDate = new Date(current.start)
+          
+      //   }
+      //   const existing = result.get(current.start);
+      //   if (existing) {
+      //     result.set(current.date, [...existing, current]);
+      //   } else {
+      //     result.set(current.date,[current]);
+      //   }
+      //   return result;
+      // },  new Map<number, Doc<"itineraryItems">[]>());
+      // console.log(grouped);
+      // const results: { date: number, items: Doc<"itineraryItems">[] }[] = [];
+      // for (const group of grouped) {
+      //   results.push({
+      //     date: group[0],
+      //     items: group[1]
+      //   })
+      // }
 
-      return results.sort((a, b) => a.date - b.date);
+      // return results.sort((a, b) => a.date - b.date);
     })
   }
 })

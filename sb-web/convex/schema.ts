@@ -55,8 +55,10 @@ export const userSchema = {
 export const itineraryItemSchema = v.object({
     tripId: v.id("trips"),
     title: v.string(),
-    date: v.number(),
-    time: v.union(v.null(), v.string()),
+    date: v.optional(v.number()),
+    time: v.optional(v.union(v.null(), v.string())),
+    start: v.optional(v.string()),
+    end: v.optional(v.string()),
     location: v.union(v.null(), v.string()),
     details: v.union(v.null(), v.string())
 });

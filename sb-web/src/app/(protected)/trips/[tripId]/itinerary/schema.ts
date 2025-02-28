@@ -6,8 +6,8 @@ export const ItinItemSchema = z.object({
   _id: z.custom<Id<"itineraryItems">>().optional(),
   tripId: z.custom<Id<"trips">>(),
   title: z.string(),
-  date: z.date(),
-  time: z.string().time().nullable(),
+  start: z.string().datetime().optional(),
+  end: z.string().datetime().optional(),
   location: z.string().nullable(),
   details: z.string().nullable().default(""),
 });

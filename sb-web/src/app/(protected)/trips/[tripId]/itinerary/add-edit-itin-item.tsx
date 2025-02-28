@@ -36,6 +36,8 @@ import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { type ItinItem, ItinItemSchema, type OptionalItinItem } from "./schema";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
+import { enUS } from "date-fns/locale";
 
 export const AddOrEditItinItem = ({
   disclosure,
@@ -69,8 +71,8 @@ export const AddOrEditItinItem = ({
       _id: item?._id,
       tripId: activeTripId,
       title: item?.title ?? "",
-      date: item?.date ? item.date : undefined,
-      time: item ? item.time : null,
+      start: item?.start ? item.start : undefined,
+      end: item?.end ? item.end : undefined,
       location: item ? item.location : null,
       details: item?.details ?? "",
     },
@@ -82,8 +84,6 @@ export const AddOrEditItinItem = ({
         _id: item._id,
         tripId: activeTripId,
         title: item.title ?? "",
-        date: item.date ? item.date : undefined,
-        time: item.time,
         location: item.location,
         details: item.details,
       });
@@ -93,10 +93,8 @@ export const AddOrEditItinItem = ({
   }, [disclosure.open, form, item, activeTripId]);
 
   const onSubmit = (values: ItinItem) => {
-    upsertItinItem({
-      ...values,
-      date: values.date.getTime(),
-    });
+    console.log("helloooo");
+    upsertItinItem(values);
   };
 
   const isEditing = !!item?._id;
@@ -138,44 +136,22 @@ export const AddOrEditItinItem = ({
             />
             <FormField
               control={form.control}
-              name="date"
+              name="start"
               render={({ field, formState }) => {
-                const error = formState.errors.date;
+                const error = formState.errors.start;
                 if (error) console.error(error);
                 return (
                   <FormItem>
-                    <FormLabel className="sr-only">Date</FormLabel>
-                    <Popover {...calendarDisclosure}>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-[240px] pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground",
-                              error ? "border-destructive" : "",
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={(day) => {
-                            field.onChange(day);
-                            calendarDisclosure.setClosed();
-                          }}
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <FormLabel className="sr-only">Start</FormLabel>
+                    <FormControl>
+                      <DateTimePicker
+                        onChange={(date) => field.onChange(date?.toISOString())}
+                        value={field.value ? new Date(field.value) : undefined}
+                        hourCycle={12}
+                        granularity="minute"
+                        locale={enUS}
+                      />
+                    </FormControl>
                   </FormItem>
                 );
               }}
