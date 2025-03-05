@@ -12,11 +12,11 @@ export default function SidebarTriggerButton() {
     <SidebarMenuItem>
       <SidebarMenuButton
         onClick={toggleSidebar}
-        className="fill-sidebar-accent-foreground"
-        size="lg"
+        className="text-sidebar-accent-foreground"
+        // className="justify-center"
       >
-        Collapse
-        <ChevronsLeft className="ml-auto min-h-6 min-w-6" />
+        <ChevronsLeft className="min-h-6 min-w-6" />
+        Collapse menu
       </SidebarMenuButton>
     </SidebarMenuItem>
   );
