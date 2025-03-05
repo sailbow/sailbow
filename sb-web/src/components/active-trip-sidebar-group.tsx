@@ -34,7 +34,7 @@ const ActiveTripGroup = () => {
             <SidebarMenuSub>
               {links.map((l, i) => (
                 <SidebarMenuSubItem
-                  className="hover:cursor-pointer"
+                  className="hover:cursor-pointer hover:font-semibold"
                   key={i}
                   onClick={() => {
                     if (isMobile) {
