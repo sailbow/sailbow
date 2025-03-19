@@ -63,7 +63,7 @@ export const AddOrEditItinItem = ({
     },
   });
 
-  const calendarDisclosure = useDisclosure();
+  console.log(item);
 
   const form = useForm<ItinItem>({
     resolver: zodResolver(ItinItemSchema),
@@ -71,8 +71,8 @@ export const AddOrEditItinItem = ({
       _id: item?._id,
       tripId: activeTripId,
       title: item?.title ?? "",
-      start: item?.start ? item.start : undefined,
-      end: item?.end ? item.end : undefined,
+      start: item?.start ?? undefined,
+      end: item?.end ?? undefined,
       location: item ? item.location : null,
       details: item?.details ?? "",
     },
@@ -86,6 +86,8 @@ export const AddOrEditItinItem = ({
         title: item.title ?? "",
         location: item.location,
         details: item.details,
+        start: item.start ?? undefined,
+        end: item.end ?? undefined,
       });
     } else {
       form.reset();
@@ -93,18 +95,17 @@ export const AddOrEditItinItem = ({
   }, [disclosure.open, form, item, activeTripId]);
 
   const onSubmit = (values: ItinItem) => {
-    console.log("helloooo");
     upsertItinItem(values);
   };
 
   const isEditing = !!item?._id;
   return (
     <Dialog {...disclosure}>
-      <DialogContent>
+      <DialogContent className="h-[75dvh] overflow-y-auto">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col space-y-4"
+            className="flex w-full flex-col space-y-4"
           >
             <DialogHeader>
               <DialogTitle>
@@ -134,28 +135,68 @@ export const AddOrEditItinItem = ({
                 );
               }}
             />
-            <FormField
-              control={form.control}
-              name="start"
-              render={({ field, formState }) => {
-                const error = formState.errors.start;
-                if (error) console.error(error);
-                return (
-                  <FormItem>
-                    <FormLabel className="sr-only">Start</FormLabel>
-                    <FormControl>
-                      <DateTimePicker
-                        onChange={(date) => field.onChange(date?.toISOString())}
-                        value={field.value ? new Date(field.value) : undefined}
-                        hourCycle={12}
-                        granularity="minute"
-                        locale={enUS}
-                      />
-                    </FormControl>
-                  </FormItem>
-                );
-              }}
-            />
+            <div className="flex w-full items-center gap-2">
+              <FormField
+                control={form.control}
+                name="start"
+                render={({ field, formState }) => {
+                  const error = formState.errors.start;
+                  if (error) console.error(error);
+                  return (
+                    <FormItem className="flex-1">
+                      <FormLabel className="sr-only">Start Date</FormLabel>
+                      <FormControl>
+                        <DateTimePicker
+                          onChange={(date) =>
+                            field.onChange(date?.toISOString())
+                          }
+                          value={
+                            field.value ? new Date(field.value) : undefined
+                          }
+                          hourCycle={12}
+                          granularity="minute"
+                          locale={enUS}
+                          placeholder="Start date"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  );
+                }}
+              />
+              <FormField
+                control={form.control}
+                name="start"
+                render={({ field, formState }) => {
+                  const error = formState.errors.end;
+                  if (error) console.error(error);
+                  return (
+                    <FormItem className="flex-1">
+                      <FormLabel className="sr-only">End Date</FormLabel>
+                      <FormControl>
+                        <DateTimePicker
+                          className={cn(
+                            "shrink-0",
+                            error && "border-destructive",
+                          )}
+                          onChange={(date) =>
+                            field.onChange(date?.toISOString())
+                          }
+                          value={
+                            field.value ? new Date(field.value) : undefined
+                          }
+                          hourCycle={12}
+                          granularity="minute"
+                          locale={enUS}
+                          placeholder="End date"
+                          displayFormat={{ hour12: "" }}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  );
+                }}
+              />
+            </div>
+
             <FormField
               control={form.control}
               name="details"
@@ -182,7 +223,7 @@ export const AddOrEditItinItem = ({
                 );
               }}
             />
-            <DialogFooter className="mt-4">
+            <DialogFooter className="mt-auto">
               <DialogClose>
                 <Button type="button" variant="secondary" disabled={isPending}>
                   Cancel

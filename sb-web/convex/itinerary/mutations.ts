@@ -10,8 +10,8 @@ export const upsert = mutation({
     tripId: v.id("trips"),
     title: v.string(),
     date: v.optional(v.number()),
-    start: v.optional(v.string()),
-    end: v.optional(v.string()),
+    start: v.optional(v.union(v.null(), v.string())),
+    end: v.optional(v.union(v.null(), v.string())),
     time: v.optional(v.union(v.null(), v.string())),
     location: v.union(v.null(), v.string()),
     details: v.union(v.null(), v.string())

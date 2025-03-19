@@ -57,8 +57,8 @@ export const itineraryItemSchema = v.object({
     title: v.string(),
     date: v.optional(v.number()),
     time: v.optional(v.union(v.null(), v.string())),
-    start: v.optional(v.string()),
-    end: v.optional(v.string()),
+    start: v.optional(v.union(v.null(), v.string())),
+    end: v.optional(v.union(v.null(), v.string())),
     location: v.union(v.null(), v.string()),
     details: v.union(v.null(), v.string())
 });

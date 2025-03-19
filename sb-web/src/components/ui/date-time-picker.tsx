@@ -326,7 +326,7 @@ function Calendar({
         range_end: "day-range-end",
         selected:
           "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-l-md rounded-r-md",
-        today: "bg-accent text-accent-foreground",
+        today: "bg-accent text-accent-foreground rounded-md",
         outside:
           "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
         disabled: "text-muted-foreground opacity-50",
@@ -807,9 +807,7 @@ const DateTimePicker = React.forwardRef<
       hour24:
         displayFormat?.hour24 ??
         `PPP HH:mm${!granularity || granularity === "second" ? ":ss" : ""}`,
-      hour12:
-        displayFormat?.hour12 ??
-        `PP hh:mm${!granularity || granularity === "second" ? ":ss" : ""} b`,
+      hour12: displayFormat?.hour12 ?? `PP pp`,
     };
 
     let loc = enUS;
@@ -829,7 +827,7 @@ const DateTimePicker = React.forwardRef<
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal",
+              "w-full max-w-full justify-start text-left font-normal",
               !displayDate && "text-muted-foreground",
               className,
             )}
@@ -851,7 +849,7 @@ const DateTimePicker = React.forwardRef<
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
+        <PopoverContent className="w-fit p-0">
           <Calendar
             mode="single"
             selected={displayDate}
