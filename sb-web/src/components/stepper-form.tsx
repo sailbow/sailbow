@@ -19,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Form } from "./ui/form";
 
 // Types
 interface FormProps<T extends FieldValues> {
@@ -52,6 +53,10 @@ function StepperForm<T extends FieldValues>({
 }: StepperFormProps<T>) {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState(defaultValues);
+  const form = useForm<T>({
+    defaultValues: defaultValues,
+  });
+
   const {
     register,
     handleSubmit,
@@ -60,9 +65,7 @@ function StepperForm<T extends FieldValues>({
     setValue,
     getValues,
     control,
-  } = useForm<T>({
-    defaultValues: defaultValues,
-  });
+  } = form;
 
   const stepKeys = Object.keys(steps);
   const currentStepKey = stepKeys[currentStep];
@@ -90,17 +93,17 @@ function StepperForm<T extends FieldValues>({
             <div
               className={`flex h-8 w-8 items-center justify-center rounded-full ${
                 index === currentStep
-                  ? "bg-blue-600 text-white"
+                  ? "bg-sky-500 text-white"
                   : index < currentStep
-                    ? "bg-green-500 text-white"
-                    : "bg-gray-200 text-gray-600"
+                    ? "bg-primary text-white"
+                    : "bg-muted text-muted-foreground"
               }`}
             >
               {index < currentStep ? "✓" : index + 1}
             </div>
             {index < stepKeys.length - 1 && (
               <div
-                className={`h-1 w-12 ${index < currentStep ? "bg-green-500" : "bg-gray-200"}`}
+                className={`h-1 w-12 ${index < currentStep ? "bg-primary" : "bg-muted"}`}
               ></div>
             )}
           </div>
@@ -127,9 +130,11 @@ function StepperForm<T extends FieldValues>({
         </CardHeader>
         <CardContent>
           <StepIndicator />
-          <form onSubmit={handleSubmit(handleFormSubmit)}>
-            {currentStepConfig.render(formProps)}
-          </form>
+          <Form {...form}>
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
+              {currentStepConfig.render(formProps)}
+            </form>
+          </Form>
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button

@@ -22,10 +22,14 @@ import { useDisclosure } from "@/lib/use-disclosure";
 import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 
 type NewTrip = {
   name: string;
+  dates: {
+    from: Date | undefined;
+    to: Date | undefined;
+  };
   startDate: number;
   endDate: number;
 };
@@ -45,52 +49,70 @@ const steps: Record<string, StepConfig<NewTrip>> = {
     },
   },
   dates: {
-    title: "Set dates",
-    render: ({ register, errors, formData, control }) => {
-      const startDateRegistration = register("startDate");
+    title: "Set a date range (optional)",
+    render: ({ formData, control }) => {
       return (
-        <div>
-          <FormField
-            control={control}
-            name="startDate"
-            render={({ field, formState }) => {
-              const error = formState.errors.startDate;
-              if (error) console.error(error);
-              return (
-                <div>
-                  <Popover>
+        <FormField
+          control={control}
+          name="dates"
+          render={({ field, formState }) => {
+            return (
+              <Popover>
+                <FormControl>
+                  <div className="flex w-full items-center gap-4">
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground",
-                          error ? "border-destructive" : "",
+                          "relative w-full justify-start pl-3 text-left font-normal",
+                          !field.value.from && "text-muted-foreground",
+                          formState.errors.dates ? "border-destructive" : "",
                         )}
                       >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
+                        <CalendarIcon className="mr-4 h-4 w-4 opacity-50" />
+                        {field.value.from && (
+                          <span>
+                            {format(field.value.from, "PPP")}
+                            {" -"}
+                          </span>
                         )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        {field.value.to && (
+                          <span className="pl-1">
+                            {format(field.value.to, "PPP")}
+                          </span>
+                        )}
+                        {!field.value.from && !field.value.to && (
+                          <span>Set a date range</span>
+                        )}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={new Date(field.value)}
-                        onSelect={(day) => {
-                          field.onChange(day?.getTime());
-                        }}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              );
-            }}
-          />
-        </div>
+                    <div className="ml-auto h-8 w-8">
+                      {!!field.value.from && !!field.value.to && (
+                        <Button
+                          className="size-full text-foreground"
+                          size="icon"
+                          variant="ghost"
+                          onClick={() =>
+                            field.onChange({ from: undefined, to: undefined })
+                          }
+                        >
+                          <X className="size-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </FormControl>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="range"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                  />
+                </PopoverContent>
+              </Popover>
+            );
+          }}
+        ></FormField>
       );
     },
   },
@@ -99,7 +121,11 @@ const steps: Record<string, StepConfig<NewTrip>> = {
 export default function NewTripPage() {
   return (
     <div className="container mx-auto h-full max-w-2xl py-4">
-      <StepperForm steps={steps} onSubmit={(data) => console.log(data)} />
+      <StepperForm
+        steps={steps}
+        defaultValues={{ name: "", dates: {} }}
+        onSubmit={(data) => console.log(data)}
+      />
       {/* <CreateTripForm /> */}
     </div>
   );
