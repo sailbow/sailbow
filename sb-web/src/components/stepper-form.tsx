@@ -1,109 +1,112 @@
-import React, { useState } from "react";
-import {
-  useForm,
-  type UseFormRegister,
-  type FieldErrors,
-  type UseFormWatch,
-  type UseFormSetValue,
-  type UseFormGetValues,
-  type Control,
-  type FieldValues,
-  type DefaultValues,
-} from "react-hook-form";
+"use client";
+
+import type React from "react";
+
+import { useEffect, useMemo, useState } from "react";
+import { z } from "zod";
+import { FieldValues, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, ChevronRight, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Form, FormField } from "./ui/form";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Form } from "./ui/form";
+} from "./ui/card";
 
-// Types
-interface FormProps<T extends FieldValues> {
-  register: UseFormRegister<T>;
-  errors: FieldErrors<T>;
-  watch: UseFormWatch<T>;
-  setValue: UseFormSetValue<T>;
-  getValues: UseFormGetValues<T>;
-  control: Control<T>;
-  formData: Partial<T>;
-}
+export type StepSchema = z.AnyZodObject;
 
-export interface StepConfig<T extends FieldValues> {
+export type StepRender<T extends StepSchema = StepSchema> = (
+  form: ReturnType<typeof useForm<z.infer<T>>>,
+) => React.ReactNode;
+
+export type StepComponent<T extends StepSchema = StepSchema> = React.FC<{
+  form: ReturnType<typeof useForm<z.infer<T>>>;
+}>;
+
+export interface Step<T extends StepSchema = StepSchema> {
   title: string;
-  render: (formProps: FormProps<T>) => React.ReactNode;
+  description?: string;
+  schema: T;
+  defaultValues?: Partial<z.infer<T>>;
+  component: StepComponent<T>;
 }
 
-export interface StepperFormProps<T extends FieldValues> {
-  steps: Record<string, StepConfig<T>>;
-  onSubmit: (data: T) => void;
-  defaultValues?: DefaultValues<T>;
+export interface StepperFormProps {
+  steps: readonly Step[];
+  onSubmit: (values: Record<string, unknown>) => void;
   submitButtonText?: string;
+  nextButtonText?: string;
+  backButtonText?: string;
+  className?: string;
 }
 
-// Generic StepperForm component
-function StepperForm<T extends FieldValues>({
+export function StepperForm({
   steps,
   onSubmit,
-  defaultValues = {} as DefaultValues<T>,
   submitButtonText = "Submit",
-}: StepperFormProps<T>) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState(defaultValues);
-  const form = useForm<T>({
-    defaultValues: defaultValues,
+  nextButtonText = "Next",
+  backButtonText = "Back",
+  className,
+}: StepperFormProps) {
+  const [activeStep, setActiveStep] = useState(0);
+  const [formData, setFormData] = useState<Record<string, unknown>>({});
+  const currentStep = steps[activeStep];
+  // Create form with the current step's schema
+  const form = useForm<z.infer<typeof currentStep.schema>>({
+    resolver: zodResolver(currentStep.schema),
+    defaultValues: currentStep.schema ?? {},
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    setValue,
-    getValues,
-    control,
-  } = form;
+  // Handle next step
+  const handleStepSubmit = async () => {
+    const isValid = await form.trigger();
 
-  const stepKeys = Object.keys(steps);
-  const currentStepKey = stepKeys[currentStep];
-  const currentStepConfig = steps[currentStepKey];
+    if (!isValid) return;
 
-  const handleFormSubmit = (data: T) => {
-    onSubmit(data);
+    // Save current step data
+    const currentValues = form.getValues();
+
+    if (activeStep < steps.length - 1) {
+      setFormData((prev) => ({ ...prev, ...currentValues }));
+      setActiveStep((prev) => prev + 1);
+    } else {
+      onSubmit({ ...formData, ...currentValues });
+    }
   };
 
-  const nextStep = () => {
-    const values = getValues();
-    setFormData((prev) => ({ ...prev, ...values }));
-    setCurrentStep((prev) => prev + 1);
+  // Handle back
+  const handleBack = () => {
+    if (activeStep > 0) {
+      setActiveStep((prev) => prev - 1);
+    }
   };
 
-  const prevStep = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
+  useEffect(() => console.log(formData), [formData]);
 
   const StepIndicator = () => {
     return (
       <div className="mb-6 flex justify-center">
-        {stepKeys.map((key, index) => (
-          <div key={key} className="flex items-center">
+        {steps.map((_, index) => (
+          <div key={`step-${index}`} className="flex items-center">
             <div
               className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                index === currentStep
+                index === activeStep
                   ? "bg-sky-500 text-white"
-                  : index < currentStep
+                  : index < activeStep
                     ? "bg-primary text-white"
                     : "bg-muted text-muted-foreground"
               }`}
             >
-              {index < currentStep ? "✓" : index + 1}
+              {index < activeStep ? "✓" : index + 1}
             </div>
-            {index < stepKeys.length - 1 && (
+            {index < steps.length - 1 && (
               <div
-                className={`h-1 w-12 ${index < currentStep ? "bg-primary" : "bg-muted"}`}
+                className={`h-1 w-12 ${index < activeStep ? "bg-primary" : "bg-muted"}`}
               ></div>
             )}
           </div>
@@ -112,52 +115,35 @@ function StepperForm<T extends FieldValues>({
     );
   };
 
-  const formProps: FormProps<T> = {
-    register,
-    errors,
-    watch,
-    setValue,
-    getValues,
-    control,
-    formData,
-  };
-
   return (
-    <div className="mx-auto max-w-2xl p-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>{currentStepConfig.title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <StepIndicator />
-          <Form {...form}>
-            <form onSubmit={handleSubmit(handleFormSubmit)}>
-              {currentStepConfig.render(formProps)}
-            </form>
-          </Form>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={prevStep}
-            disabled={currentStep === 0}
-          >
-            Previous
-          </Button>
-          {currentStep < stepKeys.length - 1 ? (
-            <Button type="button" onClick={handleSubmit(nextStep)}>
-              Next
+    <Card className={cn("mx-auto w-full max-w-lg", className)}>
+      <CardHeader>
+        <StepIndicator />
+        <CardTitle>{steps[activeStep].title}</CardTitle>
+      </CardHeader>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleStepSubmit)}>
+          <CardContent>
+            <currentStep.component form={form} />
+          </CardContent>
+
+          <CardFooter className="flex justify-between">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleBack}
+              disabled={activeStep === 0}
+            >
+              {backButtonText}
             </Button>
-          ) : (
-            <Button type="button" onClick={handleSubmit(handleFormSubmit)}>
-              {submitButtonText}
+            <Button type="submit">
+              {activeStep === steps.length - 1
+                ? submitButtonText
+                : nextButtonText}
             </Button>
-          )}
-        </CardFooter>
-      </Card>
-    </div>
+          </CardFooter>
+        </form>
+      </Form>
+    </Card>
   );
 }
-
-export default StepperForm;
