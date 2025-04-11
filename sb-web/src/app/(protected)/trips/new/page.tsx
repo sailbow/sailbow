@@ -18,27 +18,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { toast } from "@/components/ui/toast";
+import { useCreateTrip } from "@/lib/trip-mutations";
 import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
 import { CalendarIcon, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 
 const NameSchema = z.object({
   name: z
     .string({ message: "Name is required" })
     .min(1, { message: "Name is required" }),
-});
-
-const DateRangeSchema = z.object({
-  dates: z
-    .object({
-      from: z.date().nullable(),
-      to: z.date().nullable(),
-    })
-    .optional(),
-  startDate: z.number().optional(),
-  endDate: z.number().optional(),
+  description: z.string().default(""),
 });
 
 const NameStep: Step<typeof NameSchema> = {
@@ -71,6 +64,17 @@ const NameStep: Step<typeof NameSchema> = {
     );
   },
 };
+
+const DateRangeSchema = z.object({
+  dates: z
+    .object({
+      from: z.date().nullable(),
+      to: z.date().nullable(),
+    })
+    .optional(),
+  startDate: z.number().optional(),
+  endDate: z.number().optional(),
+});
 
 const DateRangeStep: Step<typeof DateRangeSchema> = {
   title: "Set a date range (optional)",
@@ -160,12 +164,55 @@ const DateRangeStep: Step<typeof DateRangeSchema> = {
   },
 };
 
+const CoverPhotoSchema = z.object({
+  banner: z
+    .object({
+      alt: z.string(),
+      small: z.string().url(),
+      regular: z.string().url(),
+      full: z.string().url(),
+      thumbnail: z.string().url(),
+    })
+    .nullable()
+    .default(null),
+});
+
 const steps = [NameStep, DateRangeStep] as const as Array<Step>;
 
+const newTripSchema = NameSchema.merge(DateRangeSchema).merge(CoverPhotoSchema);
+
 export default function NewTripPage() {
+  const router = useRouter();
+  const { mutate: createTrip } = useCreateTrip({
+    onSuccess: (data) => {
+      toast.success("New trip created");
+      router.push(`/trips/${data.tripId}`);
+    },
+    onError: (error) => {
+      toast.error("Something went wrong there");
+      console.error(error);
+    },
+  });
   return (
     <div className="container mx-auto h-full max-w-2xl py-4">
-      <StepperForm steps={steps} onSubmit={(values) => console.log(values)} />
+      <StepperForm
+        steps={steps}
+        onSubmit={(values) => {
+          const data = newTripSchema.parse(values);
+          const dates =
+            !!data.dates?.from && !!data.dates?.to
+              ? {
+                  start: data.dates.from.getTime(),
+                  end: data.dates.to.getTime(),
+                }
+              : undefined;
+
+          createTrip({
+            ...data,
+            dates,
+          });
+        }}
+      />
       {/* <CreateTripForm /> */}
     </div>
   );

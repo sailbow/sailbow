@@ -2,21 +2,14 @@
 
 import type React from "react";
 
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronRight, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
-import { Form, FormField } from "./ui/form";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Form } from "./ui/form";
+import { Spinner } from "@/app/_components/spinner";
 
 export type StepSchema = z.AnyZodObject;
 
@@ -38,7 +31,7 @@ export interface Step<T extends StepSchema = StepSchema> {
 
 export interface StepperFormProps {
   steps: readonly Step[];
-  onSubmit: (values: Record<string, unknown>) => void;
+  onSubmit: (values: Record<string, unknown>) => Promise<void>;
   submitButtonText?: string;
   nextButtonText?: string;
   backButtonText?: string;
@@ -55,6 +48,7 @@ export function StepperForm({
 }: StepperFormProps) {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<Record<string, unknown>>({});
+  const [isLoading, setIsLoading] = useState(false);
   const currentStep = steps[activeStep];
   // Create form with the current step's schema
   const form = useForm<z.infer<typeof currentStep.schema>>({
@@ -75,7 +69,10 @@ export function StepperForm({
       setFormData((prev) => ({ ...prev, ...currentValues }));
       setActiveStep((prev) => prev + 1);
     } else {
-      onSubmit({ ...formData, ...currentValues });
+      setIsLoading(true);
+      onSubmit({ ...formData, ...currentValues }).finally(() =>
+        setIsLoading(false),
+      );
     }
   };
 
@@ -85,8 +82,6 @@ export function StepperForm({
       setActiveStep((prev) => prev - 1);
     }
   };
-
-  useEffect(() => console.log(formData), [formData]);
 
   const StepIndicator = () => {
     return (
@@ -116,18 +111,25 @@ export function StepperForm({
   };
 
   return (
-    <Card className={cn("mx-auto w-full max-w-lg", className)}>
-      <CardHeader>
+    <div className="w-full max-w-lg">
+      <div className="flex flex-col space-y-1.5 py-6">
         <StepIndicator />
-        <CardTitle>{steps[activeStep].title}</CardTitle>
-      </CardHeader>
+        <h3 className="text-2xl font-normal leading-none tracking-tight">
+          {steps[activeStep].title}
+        </h3>
+      </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleStepSubmit)}>
-          <CardContent>
-            <currentStep.component form={form} />
-          </CardContent>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit(handleStepSubmit);
+          }}
+          className="space-y-4"
+        >
+          <currentStep.component form={form} />
 
-          <CardFooter className="flex justify-between">
+          <div className="flex items-center justify-between">
             <Button
               type="button"
               variant="outline"
@@ -136,14 +138,18 @@ export function StepperForm({
             >
               {backButtonText}
             </Button>
-            <Button type="submit">
-              {activeStep === steps.length - 1
-                ? submitButtonText
-                : nextButtonText}
+            <Button type="submit" className="min-w-max">
+              {isLoading ? (
+                <Spinner />
+              ) : activeStep === steps.length - 1 ? (
+                submitButtonText
+              ) : (
+                nextButtonText
+              )}
             </Button>
-          </CardFooter>
+          </div>
         </form>
       </Form>
-    </Card>
+    </div>
   );
 }
