@@ -29,6 +29,9 @@ import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useCreateTrip } from "@/lib/trip-mutations";
 import { toast } from "@/components/ui/toast";
+import BannerModal from "@/app/_components/banner-modal";
+import ImageWithLoader from "@/app/_components/image-with-loader";
+import { ImageIcon } from "lucide-react";
 
 const NameSchema = z.object({
   name: z
@@ -184,7 +187,59 @@ const CoverPhotoSchema = z.object({
     .default(null),
 });
 
-const steps = [NameStep, DateRangeStep] as const as Array<Step>;
+const CoverPhotoStep: Step<typeof CoverPhotoSchema> = {
+  title: "Add a cover photo (optional)",
+  schema: CoverPhotoSchema,
+  component: ({ form }) => {
+    return (
+      <div className="space-y-4">
+        <FormField
+          control={form.control}
+          name="banner"
+          render={({ field }) => {
+            const banner = field.value;
+            return (
+              <FormItem>
+                <FormControl>
+                  <div className="flex flex-col space-y-4">
+                    <div className="self-start">
+                      <BannerModal
+                        variant={!!banner ? "edit" : "add"}
+                        onBannerChange={(b) => {
+                          field.onChange(b);
+                        }}
+                      />
+                    </div>
+                    <div className="relative h-40 w-full rounded-md border bg-background">
+                      {banner ? (
+                        <ImageWithLoader
+                          src={banner.regular}
+                          alt={banner.alt}
+                        />
+                      ) : (
+                        <ImageIcon
+                          className="size-full stroke-gray-300"
+                          strokeWidth={0.75}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+      </div>
+    );
+  },
+};
+
+const steps = [
+  NameStep,
+  DateRangeStep,
+  CoverPhotoStep,
+] as const as readonly Step[];
 
 const newTripSchema = NameSchema.merge(DateRangeSchema).merge(CoverPhotoSchema);
 
