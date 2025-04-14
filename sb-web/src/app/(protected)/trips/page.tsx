@@ -1,29 +1,9 @@
 "use client";
 import TripCard from "@/app/_components/trip-card";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useUserTrips } from "@/lib/trip-queries";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
-import { useIsMobile } from "@/hooks/use-mobile";
-
-const CreateTripButton = () => {
-  const isMobile = useIsMobile();
-  return (
-    <Link
-      href="/trips/new"
-      className={cn(
-        buttonVariants({ size: isMobile ? "sm" : "default" }),
-        "max-xs:size-10 max-xs:rounded-full",
-      )}
-    >
-      <Plus className="h-6 w-6 xs:mr-2" />
-      <span className="hidden xs:inline-flex">Create a trip</span>
-    </Link>
-  );
-};
+import { Skeleton } from "@/components/ui/skeleton";
+import { useUserTrips } from "@/lib/trip-queries";
+import { CreateTripButton } from "./create-trip-button";
 
 export default function TripsPage() {
   const { data: trips, isPending } = useUserTrips();
