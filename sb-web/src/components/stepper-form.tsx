@@ -70,9 +70,11 @@ export function StepperForm({
       setActiveStep((prev) => prev + 1);
     } else {
       setIsLoading(true);
-      onSubmit({ ...formData, ...currentValues }).finally(() =>
-        setIsLoading(false),
-      );
+      try {
+        await onSubmit({ ...formData, ...currentValues });
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -120,11 +122,7 @@ export function StepperForm({
       </div>
       <Form {...form}>
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit(handleStepSubmit);
-          }}
+          onSubmit={form.handleSubmit(handleStepSubmit)}
           className="space-y-4"
         >
           <currentStep.component form={form} />

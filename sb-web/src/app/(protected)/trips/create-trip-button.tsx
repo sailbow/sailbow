@@ -1,31 +1,34 @@
 "use client";
-// import { CreateTripForm } from "@/app/_components/create-trip-form";
-// import StepperForm, { type StepConfig } from "@/components/stepper-form";
-import { Step, StepperForm, StepSchema } from "@/components/stepper-form";
 import { Button } from "@/components/ui/button";
+import { CalendarIcon, Plus, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarPopover } from "@/components/ui/calendar-popover";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useDisclosure } from "@/lib/use-disclosure";
 import {
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormControl,
-  FormField,
-} from "@/components/ui/form";
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { z } from "zod";
+import { Step, StepperForm } from "@/components/stepper-form";
+import {
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Popover,
-  PopoverContent,
   PopoverTrigger,
+  PopoverContent,
 } from "@/components/ui/popover";
-import { toast } from "@/components/ui/toast";
-import { useCreateTrip } from "@/lib/trip-mutations";
-import { cn } from "@/lib/utils";
-
 import { format } from "date-fns";
-import { CalendarIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
+import { useCreateTrip } from "@/lib/trip-mutations";
+import { toast } from "@/components/ui/toast";
 
 const NameSchema = z.object({
   name: z
@@ -38,6 +41,7 @@ const NameStep: Step<typeof NameSchema> = {
   title: "Enter a name",
   schema: NameSchema,
   component: ({ form }) => {
+    console.log(form.formState.errors);
     return (
       <FormField
         name="name"
@@ -48,9 +52,12 @@ const NameStep: Step<typeof NameSchema> = {
               <FormControl>
                 <Input
                   {...field}
+                  className={
+                    form.formState.errors.name ? "border-destructive" : ""
+                  }
                   autoFocus
                   value={field.value ?? ""}
-                  onChange={(e) => field.onChange(e.target.value)}
+                  onChange={field.onChange}
                   placeholder="e.g. Summer Vacation"
                 />
               </FormControl>
@@ -181,9 +188,11 @@ const steps = [NameStep, DateRangeStep] as const as Array<Step>;
 
 const newTripSchema = NameSchema.merge(DateRangeSchema).merge(CoverPhotoSchema);
 
-export default function NewTripPage() {
+export const CreateTripButton = () => {
+  const isMobile = useIsMobile();
+  const disclosure = useDisclosure();
   const router = useRouter();
-  const { mutate: createTrip } = useCreateTrip({
+  const { mutateAsync: createTrip } = useCreateTrip({
     onSuccess: (data) => {
       toast.success("New trip created");
       router.push(`/trips/${data.tripId}`);
@@ -194,26 +203,37 @@ export default function NewTripPage() {
     },
   });
   return (
-    <div className="container mx-auto h-full max-w-2xl py-4">
-      <StepperForm
-        steps={steps}
-        onSubmit={(values) => {
-          const data = newTripSchema.parse(values);
-          const dates =
-            !!data.dates?.from && !!data.dates?.to
-              ? {
-                  start: data.dates.from.getTime(),
-                  end: data.dates.to.getTime(),
-                }
-              : undefined;
+    <Dialog {...disclosure}>
+      <DialogTrigger asChild>
+        <Button
+          size={isMobile ? "sm" : "default"}
+          className="max-xs:size-10 max-xs:rounded-full"
+        >
+          <Plus className="h-6 w-6 xs:mr-2" />
+          <span className="hidden xs:inline-flex">Create a trip</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogTitle className="sr-only">Create a trip</DialogTitle>
+        <StepperForm
+          steps={steps}
+          onSubmit={async (values) => {
+            const data = newTripSchema.parse(values);
+            const dates =
+              !!data.dates?.from && !!data.dates?.to
+                ? {
+                    start: data.dates.from.getTime(),
+                    end: data.dates.to.getTime(),
+                  }
+                : undefined;
 
-          createTrip({
-            ...data,
-            dates,
-          });
-        }}
-      />
-      {/* <CreateTripForm /> */}
-    </div>
+            await createTrip({
+              ...data,
+              dates,
+            });
+          }}
+        />
+      </DialogContent>
+    </Dialog>
   );
-}
+};
