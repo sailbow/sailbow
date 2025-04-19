@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
-import { Step, StepperForm } from "@/components/stepper-form";
+import { Step, StepComponent, StepperForm } from "@/components/stepper-form";
 import {
   FormField,
   FormItem,
@@ -44,7 +44,6 @@ const NameStep: Step<typeof NameSchema> = {
   title: "Enter a name",
   schema: NameSchema,
   component: ({ form }) => {
-    console.log(form.formState.errors);
     return (
       <FormField
         name="name"
@@ -55,10 +54,10 @@ const NameStep: Step<typeof NameSchema> = {
               <FormControl>
                 <Input
                   {...field}
+                  autoFocus={false}
                   className={
                     form.formState.errors.name ? "border-destructive" : ""
                   }
-                  autoFocus
                   value={field.value ?? ""}
                   onChange={field.onChange}
                   placeholder="e.g. Summer Vacation"
@@ -86,6 +85,87 @@ const DateRangeSchema = z.object({
   endDate: z.number().optional(),
 });
 
+const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
+  form,
+}) => {
+  const isMobile = useIsMobile();
+  return (
+    <FormField
+      control={form.control}
+      name="dates"
+      render={({ field, formState }) => {
+        return (
+          <Popover>
+            <FormItem>
+              <FormControl>
+                <div className="flex w-full items-center gap-4">
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "relative w-full justify-start pl-3 text-left font-normal",
+                        !field.value?.from && "text-muted-foreground",
+                      )}
+                    >
+                      <CalendarIcon className="mr-4 h-4 w-4 opacity-50" />
+                      {field.value?.from && (
+                        <span>
+                          {format(field.value.from, "PPP")}
+                          {" -"}
+                        </span>
+                      )}
+                      {field.value?.to && (
+                        <span className="pl-1">
+                          {format(field.value.to, "PPP")}
+                        </span>
+                      )}
+                      {!field.value?.from && !field.value?.to && (
+                        <span>Set a date range</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <div className="ml-auto h-8 w-8">
+                    {!!field.value?.from && !!field.value?.to && (
+                      <Button
+                        className="size-full text-foreground"
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => field.onChange({ from: null, to: null })}
+                      >
+                        <X className="size-4" />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </FormControl>
+              <div className="relative min-h-4">
+                {formState?.errors.dates && (
+                  <div className="absolute left-0 top-0 inline-flex text-xs font-medium italic text-destructive">
+                    Must provide a start and end date
+                  </div>
+                )}
+              </div>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  {...field}
+                  numberOfMonths={isMobile ? 1 : 2}
+                  showOutsideDays={isMobile}
+                  mode="range"
+                  selected={{
+                    from: field.value?.from ?? undefined,
+                    to: field.value?.to ?? undefined,
+                  }}
+                  onSelect={field.onChange}
+                />
+              </PopoverContent>
+            </FormItem>
+          </Popover>
+        );
+      }}
+    />
+  );
+};
+
 const DateRangeStep: Step<typeof DateRangeSchema> = {
   title: "Set a date range (optional)",
   schema: DateRangeSchema,
@@ -95,83 +175,7 @@ const DateRangeStep: Step<typeof DateRangeSchema> = {
       to: null,
     },
   },
-  component: ({ form }) => {
-    return (
-      <FormField
-        control={form.control}
-        name="dates"
-        render={({ field, formState }) => {
-          return (
-            <Popover>
-              <FormItem>
-                <FormControl>
-                  <div className="flex w-full items-center gap-4">
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "relative w-full justify-start pl-3 text-left font-normal",
-                          !field.value?.from && "text-muted-foreground",
-                        )}
-                      >
-                        <CalendarIcon className="mr-4 h-4 w-4 opacity-50" />
-                        {field.value?.from && (
-                          <span>
-                            {format(field.value.from, "PPP")}
-                            {" -"}
-                          </span>
-                        )}
-                        {field.value?.to && (
-                          <span className="pl-1">
-                            {format(field.value.to, "PPP")}
-                          </span>
-                        )}
-                        {!field.value?.from && !field.value?.to && (
-                          <span>Set a date range</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <div className="ml-auto h-8 w-8">
-                      {!!field.value?.from && !!field.value?.to && (
-                        <Button
-                          className="size-full text-foreground"
-                          size="icon"
-                          variant="ghost"
-                          onClick={() =>
-                            field.onChange({ from: null, to: null })
-                          }
-                        >
-                          <X className="size-4" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </FormControl>
-                <div className="relative min-h-4">
-                  {formState?.errors.dates && (
-                    <div className="absolute left-0 top-0 inline-flex text-xs font-medium italic text-destructive">
-                      Must provide a start and end date
-                    </div>
-                  )}
-                </div>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    {...field}
-                    mode="range"
-                    selected={{
-                      from: field.value?.from ?? undefined,
-                      to: field.value?.to ?? undefined,
-                    }}
-                    onSelect={field.onChange}
-                  />
-                </PopoverContent>
-              </FormItem>
-            </Popover>
-          );
-        }}
-      ></FormField>
-    );
-  },
+  component: DateRangeComponent,
 };
 
 const CoverPhotoSchema = z.object({
