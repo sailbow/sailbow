@@ -14,12 +14,11 @@
     "email:dev": "email dev"
   },
   "dependencies": {
-    "@auth/core": "^0.34.1",
     "@clerk/backend": "^1.6.2",
     "@clerk/clerk-react": "^5.2.7",
     "@clerk/elements": "^0.10.4",
     "@clerk/nextjs": "^6.12.0",
-    "@convex-dev/auth": "^0.0.36",
+    "@convex-dev/auth": "^0.0.81",
     "@convex-dev/react-query": "^0.0.0-alpha.5",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-accordion": "^1.2.0",
@@ -40,7 +39,7 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-toggle": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@react-email/components": "0.0.21",
+    "@react-email/components": "^0.0.36",
     "@t3-oss/env-nextjs": "^0.9.2",
     "@tailwindcss/typography": "^0.5.13",
     "@tiptap/extension-link": "^2.5.5",
@@ -62,7 +61,7 @@
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
-    "react-email": "^3.0.1",
+    "react-email": "^4.0.7",
     "react-hook-form": "^7.54.2",
     "resend": "^3.2.0",
     "server-only": "^0.0.1",
@@ -91,5 +90,5 @@
   "ct3aMetadata": {
     "initVersion": "7.28.0"
   },
-  "packageManager": "npm@10.2.5"
+  "packageManager": "npm@10.9.2"
 }

@@ -4,7 +4,6 @@ import { withUser } from "../authUtils";
 import { announcementSchema } from "../schema";
 import { throwIfNotMember } from "../tripUtils";
 import { getOneFromOrThrow } from "convex-helpers/server/relationships";
-import { getTripCrew } from "../trips/queries";
 
 export const create = mutation({
   args: announcementSchema,
@@ -15,7 +14,10 @@ export const create = mutation({
         ...args,
         createdBy: user.userId,
       });
-      const crew = await getTripCrew(ctx, { tripId: args.tripId });
+      const crew = await ctx.db
+        .query("crews")
+        .withIndex("by_tripId", (q) => q.eq("tripId", args.tripId))
+        .collect();
       await Promise.all(
         crew.map(async (cm) => {
           if (cm.email !== user.email) {
