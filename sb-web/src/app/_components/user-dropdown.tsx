@@ -16,19 +16,8 @@ import {
   DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 import { useUser, useClerk, SignInButton } from "@clerk/nextjs";
-import {
-  ChevronsUpDown,
-  FileText,
-  HelpCircle,
-  LogOut,
-  MessageSquareWarning,
-  Moon,
-  Settings,
-  Sun,
-  User,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Spinner } from "./spinner";
 import { Skeleton } from "@/components/ui/skeleton";

@@ -101,12 +101,7 @@ const NotificationComponents = ({
 }) => {
   switch (notification.type) {
     case "invite":
-      return (
-        <InviteNotification
-          notification={notification}
-          closeNotifications={closeNotifications}
-        />
-      );
+      return <InviteNotification notification={notification} />;
     case "announcement":
       return (
         <AnnouncementNotification
@@ -157,12 +152,10 @@ const AnnouncementNotification = ({
 
 function InviteNotification({
   notification,
-  closeNotifications,
 }: {
   notification: InviteNotification;
-  closeNotifications: () => void;
 }) {
-  const { data, isLoading } = useInvite(notification.data.inviteId);
+  const { data } = useInvite(notification.data.inviteId);
   return (
     <NotificationItem key={notification._id} notification={notification}>
       <div className="flex w-full gap-6">

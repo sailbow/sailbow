@@ -8,7 +8,6 @@ import {
 import InviteButton from "./invite-button";
 import { CrewTable } from "./crew-table";
 import { PendingAndDeclinedInvitesTable } from "./pending-declined-invites-table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CoolTabs } from "@/components/ui/cool-tabs";
 import { useState } from "react";
 

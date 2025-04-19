@@ -34,7 +34,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ConvexError } from "convex/values";
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { type ItinItem, ItinItemSchema, type OptionalItinItem } from "./schema";
 
 export const AddOrEditItinItem = ({

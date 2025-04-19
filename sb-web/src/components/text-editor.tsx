@@ -11,7 +11,6 @@ import { Dialog, DialogClose, DialogContent, DialogFooter } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { toast } from "./ui/toast";
 import { useState } from "react";
 
 interface TextEditorProps {

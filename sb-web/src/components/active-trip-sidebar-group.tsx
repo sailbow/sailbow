@@ -5,7 +5,6 @@ import { useTripLinks } from "@/lib/use-trip-links";
 import { usePathname, useRouter } from "next/navigation";
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuSub,
@@ -15,7 +14,6 @@ import {
   useSidebar,
 } from "./ui/sidebar";
 import { useActiveTrip } from "@/lib/trip-queries";
-import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const ActiveTripGroup = () => {

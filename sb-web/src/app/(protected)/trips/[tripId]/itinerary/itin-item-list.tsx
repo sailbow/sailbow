@@ -8,18 +8,17 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, Ellipsis, PlusCircle, X } from "lucide-react";
+import { Calendar, Ellipsis, PlusCircle } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/card";
 import { useDeleteItinItem } from "@/lib/trip-mutations";
 import { toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { Id, type Doc } from "@convex/_generated/dataModel";
-import { useEffect, useState } from "react";
+import { Id } from "@convex/_generated/dataModel";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/use-disclosure";
 import { AddOrEditItinItem } from "./add-edit-itin-item";
 import { OptionalItinItem, ItinItem } from "./schema";
-import { WithoutSystemFields } from "convex/server";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,7 +41,7 @@ const Item = ({
   });
   const [deleteClicked, setDeleteClicked] = useState(false);
   const editDisclosure = useDisclosure();
-  const [editItem] = useState(item);
+
   return (
     <div
       className={cn(

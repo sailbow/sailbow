@@ -1,4 +1,3 @@
-import { TooltipProvider } from "@/components/ui/tooltip";
 import TripHeader from "./_components/trip-header";
 import NotFoundWrapper from "./_components/not-found-wrapper";
 

@@ -1,5 +1,5 @@
 import { api } from "@convex/_generated/api";
-import { useMut, UseMutationArgs, useQ } from "./convex-client-helpers";
+import { UseMutationArgs, useQ } from "./convex-client-helpers";
 import { useMutation } from "@tanstack/react-query";
 import { useConvexMutation } from "@convex-dev/react-query";
 

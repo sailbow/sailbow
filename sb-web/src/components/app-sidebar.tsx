@@ -5,22 +5,16 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuItemWithDismiss,
-  SidebarRail,
-  SidebarSeparator,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { Anchor } from "lucide-react";
 import { UserDropdown } from "@/app/_components/user-dropdown";
 import NotificationsDropdown from "@/app/_components/notifications";
-import ImageWithLoader from "@/app/_components/image-with-loader";
 import ActiveTripSidebarGroup from "./active-trip-sidebar-group";
 import SidebarTriggerButton from "./sidebar-trigger-button";
 import Image from "next/image";

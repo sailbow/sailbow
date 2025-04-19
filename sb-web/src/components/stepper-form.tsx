@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "./ui/form";
 import { Spinner } from "@/app/_components/spinner";
+import { cn } from "@/lib/utils";
 
 export type StepSchema = z.AnyZodObject;
 
@@ -87,7 +88,7 @@ export function StepperForm({
 
   const StepIndicator = () => {
     return (
-      <div className="mb-6 flex justify-center">
+      <div className={cn("mb-6 flex justify-center", className)}>
         {steps.map((_, index) => (
           <div key={`step-${index}`} className="flex items-center">
             <div
