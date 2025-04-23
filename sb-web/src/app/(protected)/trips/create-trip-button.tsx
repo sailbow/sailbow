@@ -95,11 +95,11 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
       name="dates"
       render={({ field, formState }) => {
         return (
-          <Popover>
+          <Dialog>
             <FormItem>
               <FormControl>
                 <div className="flex w-full items-center gap-4">
-                  <PopoverTrigger asChild>
+                  <DialogTrigger asChild>
                     <Button
                       variant={"outline"}
                       className={cn(
@@ -123,7 +123,7 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
                         <span>Set a date range</span>
                       )}
                     </Button>
-                  </PopoverTrigger>
+                  </DialogTrigger>
                   <div className="ml-auto h-8 w-8">
                     {!!field.value?.from && !!field.value?.to && (
                       <Button
@@ -145,7 +145,7 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
                   </div>
                 )}
               </div>
-              <PopoverContent className="w-auto p-0" align="start">
+              <DialogContent className="min-w-fit">
                 <Calendar
                   {...field}
                   numberOfMonths={isMobile ? 1 : 2}
@@ -157,9 +157,9 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
                   }}
                   onSelect={field.onChange}
                 />
-              </PopoverContent>
+              </DialogContent>
             </FormItem>
-          </Popover>
+          </Dialog>
         );
       }}
     />
