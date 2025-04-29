@@ -12,8 +12,8 @@ export const upsert = mutation({
     date: v.number(),
     time: v.union(v.null(), v.string()),
     location: v.union(v.null(), v.string()),
-    details: v.union(v.null(), v.string())
-},
+    details: v.union(v.null(), v.string()),
+  },
   handler: async (ctx, args) => {
     return await withUser(ctx.auth, ctx.db, async (user) => {
       await throwIfNotMember(user, args.tripId, ctx.db);
@@ -22,8 +22,8 @@ export const upsert = mutation({
       } else {
         await ctx.db.insert("itineraryItems", args);
       }
-    })
-  }
+    });
+  },
 });
 
 export const deleteItem = mutation({
@@ -32,9 +32,15 @@ export const deleteItem = mutation({
   },
   handler: async (ctx, args) => {
     return await withUser(ctx.auth, ctx.db, async (user) => {
-      const item = await getOneFromOrThrow(ctx.db, "itineraryItems", "by_id", args.itemId, "_id");
+      const item = await getOneFromOrThrow(
+        ctx.db,
+        "itineraryItems",
+        "by_id",
+        args.itemId,
+        "_id",
+      );
       await throwIfNotMember(user, item.tripId, ctx.db);
       await ctx.db.delete(item._id);
-    })
-  }
-})
+    });
+  },
+});

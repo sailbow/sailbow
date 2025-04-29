@@ -1,4 +1,5 @@
 "use client";
+import { useActiveTripId } from "@/lib/trip-queries";
 import {
   TripPageContainer,
   TripPageHeader,
@@ -7,8 +8,14 @@ import {
 } from "../_components/trip-page-components";
 import { ItinItemList } from "./itin-item-list";
 import NewItinItemButton from "./new-itin-item-button";
+import { useQuery } from "convex/react";
+import { api } from "@convex/_generated/api";
+import { Itinerary } from "./itin-v2";
+import CenteredSpinner from "@/app/_components/centered-spinner";
 
 export default function Page() {
+  const tripId = useActiveTripId();
+  const itinerary = useQuery(api.itinerary.v2.list, { tripId });
   return (
     <TripPageContainer>
       <TripPageHeader>
@@ -18,9 +25,7 @@ export default function Page() {
         </div>
       </TripPageHeader>
       <TripPageContent>
-        <div className="flex flex-col space-y-4">
-          <ItinItemList />
-        </div>
+        {itinerary ? <Itinerary items={itinerary} /> : <CenteredSpinner />}
       </TripPageContent>
     </TripPageContainer>
   );
