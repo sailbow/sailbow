@@ -6,7 +6,7 @@ import {
   TripPageTitle,
   TripPageContent,
 } from "../_components/trip-page-components";
-import { ItinItemList } from "./itin-item-list";
+// import { ItinItemList } from "./itin-item-list";
 import NewItinItemButton from "./new-itin-item-button";
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";

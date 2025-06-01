@@ -23,10 +23,8 @@ export const upsert = mutation({
     _id: v.optional(v.id("itineraryItemsV2")),
     tripId: v.id("trips"),
     title: v.string(),
-    dates: v.object({
-      start: v.number(),
-      end: v.number(),
-    }),
+    startDate: v.number(),
+    endDate: v.union(v.number(), v.null()),
     type: v.union(v.null(), v.string()),
     location: v.union(v.null(), v.string()),
     details: v.union(v.null(), v.string()),

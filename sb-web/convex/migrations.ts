@@ -37,10 +37,8 @@ export const itineraryV2Migration = migration({
     await ctx.db.insert("itineraryItemsV2", {
       tripId: doc.tripId,
       title: doc.title,
-      dates: {
-        start: doc.date,
-        end: doc.date,
-      },
+      startDate: doc.date,
+      endDate: null,
       type: null,
       location: doc.location,
       details: doc.details,

@@ -7,29 +7,33 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
-export function CalendarPopover({
+import { Dialog, DialogContent, DialogTrigger } from "./dialog";
+import { useDisclosure } from "@/lib/use-disclosure";
+
+export function CalendarDialog({
   triggerText,
   selectedDate,
   onSelect,
+  disabled,
+  isInvalid = false,
 }: {
   triggerText: string;
   selectedDate?: Date | undefined;
+  disabled?: (date: Date) => boolean;
   onSelect: (date: Date | undefined) => void;
+  isInvalid: boolean;
 }) {
+  const disclosure = useDisclosure();
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <Dialog {...disclosure}>
+      <DialogTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
-            "w-[280px] justify-start text-left font-normal",
+            "w-full justify-start text-left font-normal",
             !selectedDate && "text-muted-foreground",
+            isInvalid && "border-destructive",
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
@@ -39,15 +43,19 @@ export function CalendarPopover({
             <span>{triggerText}</span>
           )}
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      </DialogTrigger>
+      <DialogContent className="h-[60vh] w-fit">
         <Calendar
+          disabled={disabled}
           captionLayout="dropdown"
           mode="single"
           selected={selectedDate}
-          onSelect={onSelect}
+          onSelect={(day) => {
+            onSelect(day);
+            disclosure.setClosed();
+          }}
         />
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
   );
 }
