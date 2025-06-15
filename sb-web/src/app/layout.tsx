@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";

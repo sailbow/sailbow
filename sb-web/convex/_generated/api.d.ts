@@ -26,6 +26,7 @@ import type * as invitations_mutations from "../invitations/mutations.js";
 import type * as invitations_queries from "../invitations/queries.js";
 import type * as itinerary_mutations from "../itinerary/mutations.js";
 import type * as itinerary_queries from "../itinerary/queries.js";
+import type * as itinerary_v2 from "../itinerary/v2.js";
 import type * as lib_clerk from "../lib/clerk.js";
 import type * as lib_queryUtils from "../lib/queryUtils.js";
 import type * as lib_resend from "../lib/resend.js";
@@ -62,6 +63,7 @@ declare const fullApi: ApiFromModules<{
   "invitations/queries": typeof invitations_queries;
   "itinerary/mutations": typeof itinerary_mutations;
   "itinerary/queries": typeof itinerary_queries;
+  "itinerary/v2": typeof itinerary_v2;
   "lib/clerk": typeof lib_clerk;
   "lib/queryUtils": typeof lib_queryUtils;
   "lib/resend": typeof lib_resend;

@@ -73,6 +73,16 @@ export const itineraryItemSchema = v.object({
   details: v.union(v.null(), v.string()),
 });
 
+export const itineraryItemSchemaV2 = v.object({
+  tripId: v.id("trips"),
+  title: v.string(),
+  startDate: v.number(),
+  endDate: v.union(v.number(), v.null()),
+  type: v.union(v.null(), v.string()),
+  location: v.union(v.null(), v.string()),
+  details: v.union(v.null(), v.string()),
+});
+
 const baseNotification = {
   userId: v.id("users"),
   dismissed: v.boolean(),
@@ -134,6 +144,9 @@ export default defineSchema({
   }).index("by_tripId", ["tripId"]),
 
   itineraryItems: defineTable(itineraryItemSchema).index("by_tripId", [
+    "tripId",
+  ]),
+  itineraryItemsV2: defineTable(itineraryItemSchemaV2).index("by_tripId", [
     "tripId",
   ]),
 });

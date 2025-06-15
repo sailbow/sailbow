@@ -24,7 +24,7 @@ export default function TripOverviewPage() {
 
   return (
     <TripPageContainer>
-      <TripPageHeader>
+      <TripPageHeader className="pb-0">
         <div className="flex flex-col gap-3">
           <TripPageTitle>{trip.name}</TripPageTitle>
           <CoolTabs
