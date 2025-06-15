@@ -2,6 +2,10 @@ import { FunctionReference } from "convex/server";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
 import useDebounce from "./use-debounce";
+import { makeUseQueryWithStatus } from "convex-helpers/react";
+import { useQueries } from "convex/react";
+
+export const useQueryWithStatus = makeUseQueryWithStatus(useQueries);
 
 export type QArgs<TQuery extends FunctionReference<"query", "public">> = {
   query: TQuery;
