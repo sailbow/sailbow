@@ -51,7 +51,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "convex": "^1.19.2",
-    "convex-helpers": "^0.1.60",
+    "convex-helpers": "^0.1.94",
     "date-fns": "^3.6.0",
     "framer-motion": "^12.4.4",
     "lucide-react": "^0.503.0",

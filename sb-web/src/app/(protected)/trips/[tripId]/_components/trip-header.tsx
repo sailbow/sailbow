@@ -8,7 +8,7 @@ export default function TripHeader() {
   if (isLoading || !data?.banner) return;
 
   return (
-    <div className="relative z-[50] aspect-[3/1] w-full sm:aspect-[21/5]">
+    <div className="relative z-[50] aspect-[3/1] w-full lg:aspect-[21/3]">
       <ImageWithLoader
         src={data.banner.full}
         alt={data.banner.alt}

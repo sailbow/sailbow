@@ -40,3 +40,17 @@ export const upsert = mutation({
     });
   },
 });
+
+export const deleteItem = mutation({
+  args: {
+    _id: v.id("itineraryItemsV2"),
+  },
+  handler: async (ctx, args) => {
+    return await withUser(ctx.auth, ctx.db, async (user) => {
+      const item = await ctx.db.get(args._id);
+      if (!item) throw new Error("Cannot delete item that does not exist");
+      await throwIfNotMember(user, item.tripId, ctx.db);
+      await ctx.db.delete(args._id);
+    });
+  },
+});

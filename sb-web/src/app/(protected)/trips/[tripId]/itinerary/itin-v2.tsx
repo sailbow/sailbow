@@ -2,6 +2,7 @@
 
 import { Doc, Id } from "@convex/_generated/dataModel";
 import { api } from "@convex/_generated/api";
+import { useMut, useQueryWithStatus } from "@/lib/convex-client-helpers";
 import { useEffect, useLayoutEffect, useState } from "react";
 import {
   Plane,
@@ -28,7 +29,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { format } from "date-fns";
+import {
+  compareAsc,
+  format,
+  differenceInCalendarYears,
+  setHours,
+  setMinutes,
+} from "date-fns";
 import { useActiveTripId } from "@/lib/trip-queries";
 import { useMutation } from "convex/react";
 import { set, z } from "zod";
@@ -44,13 +51,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
 import { CalendarDialog } from "@/components/ui/calendar-dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -61,9 +61,8 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
 import { TimePicker } from "@/components/ui/time-picker";
-import { AddOrEditItinItem } from "./add-edit-itin-item";
+import { Spinner } from "@/app/_components/spinner";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -93,7 +92,26 @@ const ItinItem = ({
 }) => {
   const itemStart = new Date(item.startDate);
   const itemEnd = item.endDate ? new Date(item.endDate) : null;
-  const disclosure = useDisclosure();
+  const editDisclosure = useDisclosure();
+  const actionMenuDisclosure = useDisclosure();
+  const {
+    mutate: deleteItem,
+    isPending: isDeletingItem,
+    isSuccess: deletedItem,
+    reset,
+  } = useMut(api.itinerary.v2.deleteItem, {
+    onSuccess: () => {
+      actionMenuDisclosure.setClosed();
+      toast.success("Deleted itinerary item");
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+    onSettled: () => {
+      reset();
+    },
+  });
+
   return (
     <div key={item._id} className="relative flex">
       <div className="mr-4 flex basis-1/6 flex-col">
@@ -113,13 +131,13 @@ const ItinItem = ({
           </div>
         </div>
       </div>
-      <Card className="mb-8 w-full">
+      <Card className="mb-8 w-full max-w-2xl">
         <CardHeader className="space-y-0">
           <div className="flex justify-between">
             <CardTitle>{item.title}</CardTitle>
             <div className="flex items-center gap-2">
-              <Dialog {...disclosure}>
-                <DropdownMenu>
+              <Dialog {...editDisclosure}>
+                <DropdownMenu {...actionMenuDisclosure}>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                       <MoreHorizontal className="h-5 w-5" />
@@ -127,22 +145,28 @@ const ItinItem = ({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DialogTrigger asChild>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem disabled={isDeletingItem}>
                         <Edit className="mr-2 size-4" /> Edit details
                       </DropdownMenuItem>
                     </DialogTrigger>
                     <DropdownMenuItem>
                       <ChartNoAxesColumn className="mr-2 size-4" /> Start a poll
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => deleteItem({ _id: item._id })}
+                    >
                       <Trash className="mr-2 size-4" /> Delete item
+                      <Spinner
+                        isVisible={isDeletingItem || deletedItem}
+                        className="ml-2 size-4"
+                      />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <DialogContent>
                   <AddOrEditItinItemForm
                     item={item}
-                    onSaveSuccess={disclosure.setClosed}
+                    onSaveSuccess={editDisclosure.setClosed}
                   />
                 </DialogContent>
               </Dialog>
@@ -161,34 +185,44 @@ const ItinItem = ({
 
 export const Itinerary = ({ items }: { items: ItinItemV2[] }) => {
   const itemsByDate = items.reduce((acc, current) => {
-    const dateStr = format(current.startDate, "cccc, MMMM do");
-    const currentItems = acc.get(dateStr);
+    const start = new Date(current.startDate);
+    start.setHours(0, 0, 0, 0);
+    const currentItems = acc.get(start.getTime());
     if (currentItems) {
-      acc.set(dateStr, [...currentItems, current]);
+      acc.set(start.getTime(), [...currentItems, current]);
     } else {
-      acc.set(dateStr, [current]);
+      acc.set(start.getTime(), [current]);
     }
     return acc;
-  }, new Map<string, ItinItemV2[]>());
+  }, new Map<number, ItinItemV2[]>());
 
   return (
     <div className="flex w-full flex-col">
       {itemsByDate
         .keys()
         .toArray()
-        .sort()
-        .map((dateStr, ind) => {
-          const items = itemsByDate
-            .get(dateStr)
-            ?.sort((a, b) => a.startDate - b.startDate)
-            .map((item, index) => {
-              const showRail =
-                index < (itemsByDate.get(dateStr)?.length ?? 0) - 1;
-              return <ItinItem key={index} item={item} showRail={showRail} />;
-            });
+        .sort((aStr, bStr) => compareAsc(aStr, bStr))
+        .map((date, ind, dates) => {
+          const items =
+            itemsByDate
+              .get(date)
+              ?.sort((a, b) => compareAsc(a.startDate, b.startDate))
+              .map((item, index) => {
+                const numItemsInDate = itemsByDate.get(date)?.length ?? 0;
+                const showRail = index < numItemsInDate - 1;
+                return <ItinItem key={index} item={item} showRail={showRail} />;
+              }) ?? [];
+          if (items.length < 1) return;
+          const showYear =
+            ind > 0 && differenceInCalendarYears(dates[ind - 1], date) !== 0;
+
           return (
             <div key={ind}>
-              <h1 className="mb-6 text-2xl font-light">{dateStr}</h1>
+              <h1 className="mb-6 text-2xl font-light">
+                {showYear
+                  ? format(new Date(date), "cccc, MMMM do, y")
+                  : format(new Date(date), "cccc, MMMM do")}
+              </h1>
               {items}
             </div>
           );
