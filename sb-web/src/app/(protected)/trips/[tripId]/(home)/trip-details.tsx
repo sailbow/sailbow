@@ -1,6 +1,8 @@
 "use client";
 
+import CenteredSpinner from "@/app/_components/centered-spinner";
 import {
+  CompactTextEditor,
   TextEditorContent,
   TextEditorToolbar,
   useTextEditor,
@@ -11,85 +13,73 @@ import { toast } from "@/components/ui/toast";
 import { useUpdateDescription } from "@/lib/trip-mutations";
 import { useActiveTripId, useActiveTrip } from "@/lib/trip-queries";
 import { Edit } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function TripDetails() {
   const { data: trip, isLoading: isTripLoading } = useActiveTrip();
-  const [isEditingDescription, setIsEditingDescription] = useState(false);
-  const [descriptionText, setDescriptionText] = useState<string | undefined>();
-  const editor = useTextEditor({
-    isEditing: isEditingDescription,
-    text: descriptionText ?? "",
-    onTextChange: setDescriptionText,
-  });
+  const [descriptionText, setDescriptionText] = useState<string | null>(null);
   const tripId = useActiveTripId();
+
+  const [isEditing, setIsEditing] = useState(false);
 
   const { mutate: updateTripDescription, isPending: isUpdatingDescription } =
     useUpdateDescription({
       onSuccess: () => {
+        setIsEditing(false);
         toast.success("Updated trip description");
-        setIsEditingDescription(false);
       },
     });
 
   useEffect(() => {
-    if (!!trip?.description && !!editor && !editor.isEditable) {
-      editor.chain().setContent(trip.description).run();
+    if (trip) {
       setDescriptionText(trip.description);
     }
-  }, [trip?.description, editor, descriptionText]);
+  }, [trip]);
 
-  if (!editor || isTripLoading) {
-    return <Skeleton className="h-[300px] w-full bg-slate-300" />;
+  if (isTripLoading) {
+    return <CenteredSpinner />;
   }
 
   if (!trip) return;
 
   return (
-    <div className="relative flex flex-col gap-2">
-      {isEditingDescription ? (
-        <div className="sticky top-0 z-30 flex w-full gap-2 bg-inherit">
-          <TextEditorToolbar editor={editor} />
-          <div className="ml-auto flex gap-2">
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => {
-                setDescriptionText(trip.description);
-                setIsEditingDescription(false);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              size="sm"
-              disabled={isUpdatingDescription}
-              onClick={() =>
-                updateTripDescription({
-                  description: descriptionText ?? "",
-                  tripId,
-                })
-              }
-            >
-              Save
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex w-full gap-2">
+    <div className="flex max-h-full w-full flex-col gap-4 overflow-auto">
+      <CompactTextEditor
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+        isEditable={true}
+        content={descriptionText}
+        onTextChange={(newText) => {
+          setDescriptionText(newText);
+        }}
+        placeholder={"Trip details, extra info, etc."}
+      />
+      {isEditing && (
+        <div className="flex items-center gap-2">
           <Button
-            variant="outline"
             size="sm"
+            variant="secondary"
             onClick={() => {
-              setIsEditingDescription(true);
+              setIsEditing(false);
+              setDescriptionText(trip.description);
             }}
           >
-            <Edit className="size- mr-2" />
-            Edit details
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            disabled={isUpdatingDescription}
+            onClick={() =>
+              updateTripDescription({
+                description: descriptionText ?? "",
+                tripId,
+              })
+            }
+          >
+            Save
           </Button>
         </div>
       )}
-      <TextEditorContent editor={editor} />
     </div>
   );
 }
