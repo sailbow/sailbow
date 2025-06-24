@@ -220,8 +220,8 @@ export const Itinerary = ({ items }: { items: ItinItemV2[] }) => {
             <div key={ind}>
               <h1 className="mb-6 text-2xl font-light">
                 {showYear
-                  ? format(new Date(date), "cccc, MMMM do, y")
-                  : format(new Date(date), "cccc, MMMM do")}
+                  ? format(new Date(date), "cccc MMMM do, y")
+                  : format(new Date(date), "cccc MMMM do")}
               </h1>
               {items}
             </div>
