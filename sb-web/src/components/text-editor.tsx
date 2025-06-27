@@ -6,86 +6,92 @@ import StarterKit from "@tiptap/starter-kit";
 import LinkExtension from "@tiptap/extension-link";
 import { Toggle } from "./ui/toggle";
 import { Bold, Italic, List, ListOrdered, Heading, Link } from "lucide-react";
-import { Card } from "./ui/card";
 import { Dialog, DialogClose, DialogContent, DialogFooter } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import {
+  FocusEventHandler,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { cn } from "@/lib/utils";
 
 interface TextEditorProps {
-  text: string | null;
-  isEditing: boolean;
+  content: string | null;
+  isEditable: boolean;
   onTextChange: (newText: string) => void;
+  placeholder?: string;
 }
-const useTextEditor = ({ text, isEditing, onTextChange }: TextEditorProps) => {
-  return useEditor(
-    {
-      extensions: [
-        StarterKit.configure({
-          listItem: {
-            HTMLAttributes: {
-              class: "list-item",
-            },
-          },
-          orderedList: {
-            HTMLAttributes: {
-              class: "list-decimal pl-6",
-            },
-          },
-          bulletList: {
-            HTMLAttributes: {
-              class: "list-disc pl-6",
-            },
-          },
-          heading: {
-            HTMLAttributes: {
-              class: "text-xl font-medium",
-            },
-          },
-        }),
-        Placeholder.configure({
-          placeholder: "Trip details, contact info, etc...",
-          emptyEditorClass:
-            "cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-0 before:left-0 before:text-mauve-11 before:opacity-50 before-pointer-events-none",
-          showOnlyWhenEditable: false,
-        }),
-        LinkExtension.configure({
+
+const useTextEditor = ({
+  content,
+  isEditable,
+  onTextChange,
+  placeholder,
+}: TextEditorProps) => {
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        listItem: {
           HTMLAttributes: {
-            class: "text-primary underline font-semibold",
-            target: "_blank",
-            rel: "noreferrer",
+            class: "list-item",
           },
-          openOnClick: "whenNotEditable",
-        }).extend({ inclusive: false }),
-      ],
-      content: text,
-      onUpdate: ({ editor }) => {
-        onTextChange(editor.getHTML());
-      },
-      editable: isEditing,
-      editorProps: {
-        attributes: {
-          class:
-            "prose max-w-5xl m-4 prose-p:my-0 focus:outline-none dark:prose-invert",
         },
+        orderedList: {
+          HTMLAttributes: {
+            class: "list-decimal pl-6",
+          },
+        },
+        bulletList: {
+          HTMLAttributes: {
+            class: "list-disc pl-6 my-1",
+          },
+        },
+        heading: {
+          HTMLAttributes: {
+            class: "text-xl font-medium",
+          },
+        },
+      }),
+      Placeholder.configure({
+        placeholder: placeholder ?? "Click to edit",
+        emptyEditorClass:
+          "cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-0 before:left-0 before:text-mauve-11 before:opacity-50 before-pointer-events-none before:text-md",
+        showOnlyWhenEditable: true,
+      }),
+      LinkExtension.configure({
+        HTMLAttributes: {
+          class: "text-primary underline font-semibold",
+          target: "_blank",
+          rel: "noreferrer",
+        },
+        openOnClick: "whenNotEditable",
+      }).extend({ inclusive: false }),
+    ],
+    content: content,
+    onUpdate: ({ editor }) => {
+      onTextChange(editor.getHTML());
+    },
+    editable: isEditable,
+    editorProps: {
+      attributes: {
+        class:
+          "prose max-w-5xl prose-p:my-0  dark:prose-invert focus-visible:outline-none text-md prose-li:my-0 prose-ol:my-0",
       },
     },
-    [isEditing],
-  );
-};
+  });
 
-const TextEditorContent = ({
-  editor,
-}: {
-  editor: Editor | null;
-  className?: string | undefined;
-}) => {
-  return (
-    <Card className="flex min-h-[300px] flex-col">
-      <EditorContent editor={editor} className="size-full rounded-lg" />
-    </Card>
-  );
+  useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content);
+    }
+  }, [content, editor]);
+
+  return editor;
 };
 
 const ConfigureLinkDialog = ({
@@ -151,78 +157,137 @@ const ConfigureLinkDialog = ({
   );
 };
 
-const TextEditorToolbar = ({ editor }: { editor: Editor | null }) => {
+const TextEditorToolbar = ({
+  editor,
+  isEditing,
+}: {
+  editor: Editor | null;
+  isEditing: boolean;
+}) => {
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
-  if (!editor?.isEditable) {
-    return null;
-  }
 
-  const isCursorOverLink = !!editor.getAttributes("link").href;
+  const isCursorOverLink = !!editor?.getAttributes("link").href;
 
   const handleToggleLink = () => {
     setIsLinkDialogOpen(true);
   };
   return (
-    <div className="sticky top-0 z-30 flex flex-row flex-wrap items-center gap-1 bg-background">
-      <Toggle
-        size="sm"
-        pressed={editor.isActive("heading")}
-        onPressedChange={() => {
-          editor.chain().focus().toggleHeading({ level: 1 }).run();
-        }}
-      >
-        <Heading className="size-4" />
-      </Toggle>
-      <Toggle
-        size="sm"
-        pressed={editor.isActive("bold")}
-        onPressedChange={() => {
-          editor.chain().focus().toggleBold().run();
-        }}
-      >
-        <Bold className="size-4" />
-      </Toggle>
-      <Toggle
-        size="sm"
-        pressed={editor.isActive("italic")}
-        onPressedChange={() => {
-          editor.chain().focus().toggleItalic().run();
-        }}
-      >
-        <Italic className="size-4" />
-      </Toggle>
-      <Toggle
-        size="sm"
-        pressed={editor.isActive("bulletList")}
-        onPressedChange={() => {
-          editor.chain().focus().toggleBulletList().run();
-        }}
-      >
-        <List className="size-4" />
-      </Toggle>
-      <Toggle
-        size="sm"
-        pressed={editor.isActive("orderedList")}
-        onPressedChange={() => {
-          editor.chain().focus().toggleOrderedList().run();
-        }}
-      >
-        <ListOrdered className="size-4" />
-      </Toggle>
-      <Toggle
-        size="sm"
-        pressed={isCursorOverLink}
-        onPressedChange={handleToggleLink}
-      >
-        <Link className="size-4" />
-      </Toggle>
-      <ConfigureLinkDialog
-        editor={editor}
-        isOpen={isLinkDialogOpen}
-        setIsOpen={setIsLinkDialogOpen}
-      />
+    <div className="mt-auto flex min-h-12 flex-wrap items-center gap-1 rounded-b-md px-1">
+      {editor?.isEditable && isEditing && (
+        <>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("heading")}
+            onPressedChange={() => {
+              editor.chain().focus().toggleHeading({ level: 1 }).run();
+            }}
+            className="hover:text-foreground"
+          >
+            <Heading className="size-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("bold")}
+            onPressedChange={() => {
+              editor?.chain().focus().toggleBold().run();
+            }}
+            className="hover:text-foreground"
+          >
+            <Bold className="size-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("italic")}
+            onPressedChange={() => {
+              editor.chain().focus().toggleItalic().run();
+            }}
+            className="hover:text-foreground"
+          >
+            <Italic className="size-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("bulletList")}
+            onPressedChange={() => {
+              editor.chain().focus().toggleBulletList().run();
+            }}
+            className="hover:text-foreground"
+          >
+            <List className="size-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("orderedList")}
+            onPressedChange={() => {
+              editor.chain().focus().toggleOrderedList().run();
+            }}
+            className="hover:text-foreground"
+          >
+            <ListOrdered className="size-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={isCursorOverLink}
+            onPressedChange={handleToggleLink}
+            className="hover:text-foreground"
+          >
+            <Link className="size-4" />
+          </Toggle>
+        </>
+      )}
+      {editor && (
+        <ConfigureLinkDialog
+          editor={editor}
+          isOpen={isLinkDialogOpen}
+          setIsOpen={setIsLinkDialogOpen}
+        />
+      )}
     </div>
   );
 };
 
-export { useTextEditor, TextEditorContent, TextEditorToolbar };
+const CompactTextEditor = ({
+  content,
+  onTextChange,
+  isEditable,
+  placeholder,
+  className,
+}: TextEditorProps & { className?: string }) => {
+  const editor = useTextEditor({
+    content,
+    onTextChange,
+    isEditable,
+    placeholder,
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const handleFocusIn: FocusEventHandler = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsEditing(true);
+    }
+  };
+
+  const handleFocusOut: FocusEventHandler = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsEditing(false);
+    }
+  };
+  return (
+    <div
+      onFocus={handleFocusIn}
+      onBlur={handleFocusOut}
+      className={cn(
+        "flex max-h-56 min-h-24 w-full resize-y flex-col overflow-hidden rounded-md bg-background focus-within:ring-1 focus-within:ring-ring disabled:cursor-not-allowed",
+        isEditable && "border border-input",
+        className,
+      )}
+    >
+      <EditorContent
+        editor={editor}
+        className="flex-1 overflow-auto px-3 py-2 focus-visible:outline-none disabled:opacity-50"
+      />
+      <TextEditorToolbar editor={editor} isEditing={isEditing} />
+    </div>
+  );
+};
+
+export { useTextEditor, TextEditorToolbar, CompactTextEditor };

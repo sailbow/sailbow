@@ -63,6 +63,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { TimePicker } from "@/components/ui/time-picker";
 import { Spinner } from "@/app/_components/spinner";
+import { CompactTextEditor, useTextEditor } from "@/components/text-editor";
+import { EditorContent } from "@tiptap/react";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { AccordionContent } from "@radix-ui/react-accordion";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -94,6 +102,11 @@ const ItinItem = ({
   const itemEnd = item.endDate ? new Date(item.endDate) : null;
   const editDisclosure = useDisclosure();
   const actionMenuDisclosure = useDisclosure();
+  const editor = useTextEditor({
+    content: item.details,
+    isEditable: false,
+    onTextChange: () => {},
+  });
   const {
     mutate: deleteItem,
     isPending: isDeletingItem,
@@ -113,26 +126,22 @@ const ItinItem = ({
   });
 
   return (
-    <div key={item._id} className="relative flex">
-      <div className="mr-4 flex basis-1/6 flex-col">
-        <div className="flex items-center justify-between gap-2">
-          <div className="min-w-16 text-nowrap text-sm font-light">
+    <div key={item._id} className="relative flex h-full items-stretch">
+      <div className="relative mr-4 basis-1/6">
+        <div className="flex min-w-16 items-center justify-between gap-2">
+          <div className="text-nowrap text-sm font-light">
             {format(itemStart, "p")}
           </div>
-          <div className="relative flex items-center justify-center">
-            <div
-              className={`z-10 mt-2 flex h-12 w-12 items-center justify-center rounded-full bg-muted text-foreground`}
-            >
-              {getIcon(item.type)}
-            </div>
-            {showRail && (
-              <div className="absolute top-14 z-0 h-[200%] w-0.5 bg-accent" />
-            )}
+          <div className="z-10 flex size-11 items-center justify-center rounded-full bg-muted text-foreground">
+            {getIcon(item.type)}
           </div>
         </div>
+        {showRail && (
+          <div className="absolute right-5 top-5  h-full w-0.5 bg-accent" />
+        )}
       </div>
-      <Card className="mb-8 w-full max-w-2xl">
-        <CardHeader className="space-y-0">
+      <Card className="mb-8 w-full max-w-2xl pb-6">
+        <CardHeader className="space-y-0 pb-0">
           <div className="flex justify-between">
             <CardTitle>{item.title}</CardTitle>
             <div className="flex items-center gap-2">
@@ -174,8 +183,17 @@ const ItinItem = ({
           </div>
         </CardHeader>
         {!!item.details && (
-          <CardContent>
-            <p className="text-sm leading-none">{item.details}</p>
+          <CardContent className="py-0">
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1" className="border-b-0">
+                <AccordionTrigger className="justify-start gap-2 pb-1 text-sm text-muted-foreground">
+                  Details
+                </AccordionTrigger>
+                <AccordionContent>
+                  <EditorContent editor={editor} className="border-none p-2" />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </CardContent>
         )}
       </Card>
@@ -439,6 +457,24 @@ export const AddOrEditItinItemForm = ({
               End date
             </Button>
           )}
+          <FormField
+            control={form.control}
+            name="details"
+            render={({ field }) => {
+              return (
+                <FormItem className="mt-2 space-y-0">
+                  <FormControl>
+                    <CompactTextEditor
+                      placeholder="Details, links, phone numbers, etc."
+                      isEditable={true}
+                      content={field.value}
+                      onTextChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              );
+            }}
+          />
         </div>
 
         <DialogFooter>
