@@ -54,7 +54,7 @@ export function CoolTabs({
           variant="ghost"
           size="sm"
           className={cn(
-            "relative py-2 text-sm font-medium transition-colors hover:bg-transparent hover:text-primary-foreground",
+            "relative py-2 text-sm font-medium transition-colors hover:bg-transparent",
             tab.id !== activeTab && "text-muted-foreground",
           )}
         >
