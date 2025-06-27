@@ -1,12 +1,7 @@
 "use client";
 
 import CenteredSpinner from "@/app/_components/centered-spinner";
-import {
-  CompactTextEditor,
-  TextEditorContent,
-  TextEditorToolbar,
-  useTextEditor,
-} from "@/components/text-editor";
+import { CompactTextEditor } from "@/components/text-editor";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
@@ -43,24 +38,22 @@ export default function TripDetails() {
   if (!trip) return;
 
   return (
-    <div className="flex max-h-full w-full flex-col gap-4 overflow-auto">
+    <div className="flex w-full flex-col gap-4">
       <CompactTextEditor
-        isEditing={isEditing}
-        setIsEditing={setIsEditing}
         isEditable={true}
         content={descriptionText}
         onTextChange={(newText) => {
           setDescriptionText(newText);
         }}
         placeholder={"Trip details, extra info, etc."}
+        className="border-0 focus-within:ring-0"
       />
-      {isEditing && (
+      {descriptionText !== trip.description && (
         <div className="flex items-center gap-2">
           <Button
             size="sm"
             variant="secondary"
             onClick={() => {
-              setIsEditing(false);
               setDescriptionText(trip.description);
             }}
           >
