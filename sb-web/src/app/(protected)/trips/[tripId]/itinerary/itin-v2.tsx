@@ -65,6 +65,12 @@ import { TimePicker } from "@/components/ui/time-picker";
 import { Spinner } from "@/app/_components/spinner";
 import { CompactTextEditor, useTextEditor } from "@/components/text-editor";
 import { EditorContent } from "@tiptap/react";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { AccordionContent } from "@radix-ui/react-accordion";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -134,8 +140,8 @@ const ItinItem = ({
           <div className="absolute right-5 top-5  h-full w-0.5 bg-accent" />
         )}
       </div>
-      <Card className="mb-8 w-full max-w-2xl">
-        <CardHeader className="space-y-0">
+      <Card className="mb-8 w-full max-w-2xl pb-6">
+        <CardHeader className="space-y-0 pb-0">
           <div className="flex justify-between">
             <CardTitle>{item.title}</CardTitle>
             <div className="flex items-center gap-2">
@@ -177,8 +183,17 @@ const ItinItem = ({
           </div>
         </CardHeader>
         {!!item.details && (
-          <CardContent>
-            <EditorContent editor={editor} className="border-none" />
+          <CardContent className="py-0">
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1" className="border-b-0">
+                <AccordionTrigger className="justify-start gap-2 pb-1 text-sm text-muted-foreground">
+                  Details
+                </AccordionTrigger>
+                <AccordionContent>
+                  <EditorContent editor={editor} className="border-none p-2" />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </CardContent>
         )}
       </Card>
