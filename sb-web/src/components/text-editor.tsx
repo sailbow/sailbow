@@ -94,6 +94,27 @@ const useTextEditor = ({
   return editor;
 };
 
+const useIsEditing = () => {
+  const [isEditing, setIsEditing] = useState(false);
+  const onFocus: FocusEventHandler = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsEditing(true);
+    }
+  };
+
+  const onBlur: FocusEventHandler = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsEditing(false);
+    }
+  };
+
+  return {
+    isEditing,
+    onFocus,
+    onBlur,
+  };
+};
+
 const ConfigureLinkDialog = ({
   editor,
   isOpen,
@@ -160,9 +181,11 @@ const ConfigureLinkDialog = ({
 const TextEditorToolbar = ({
   editor,
   isEditing,
+  className,
 }: {
   editor: Editor | null;
   isEditing: boolean;
+  className?: string;
 }) => {
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
 
@@ -172,7 +195,12 @@ const TextEditorToolbar = ({
     setIsLinkDialogOpen(true);
   };
   return (
-    <div className="mt-auto flex min-h-12 flex-wrap items-center gap-1 rounded-b-md px-1">
+    <div
+      className={cn(
+        "flex min-h-12 flex-wrap items-center gap-1 px-1",
+        className,
+      )}
+    >
       {editor?.isEditable && isEditing && (
         <>
           <Toggle
@@ -285,9 +313,41 @@ const CompactTextEditor = ({
         editor={editor}
         className="flex-1 overflow-auto px-3 py-2 focus-visible:outline-none disabled:opacity-50"
       />
-      <TextEditorToolbar editor={editor} isEditing={isEditing} />
+      <TextEditorToolbar
+        editor={editor}
+        isEditing={isEditing}
+        className="mt-auto rounded-b-md"
+      />
     </div>
   );
 };
 
-export { useTextEditor, TextEditorToolbar, CompactTextEditor };
+const TextEditor = (props: TextEditorProps & { className?: string }) => {
+  const editor = useTextEditor(props);
+  const { isEditing, onBlur, onFocus } = useIsEditing();
+  return (
+    <div
+      onBlur={onBlur}
+      onFocus={onFocus}
+      className={cn(
+        "relative flex size-full max-h-full flex-col rounded-sm disabled:cursor-not-allowed",
+        isEditing && "ring-1 ring-ring",
+        props.className,
+      )}
+    >
+      {isEditing && (
+        <TextEditorToolbar
+          editor={editor}
+          isEditing={isEditing}
+          className="sticky left-0 top-0 w-full rounded-t-sm border-b border-b-accent"
+        />
+      )}
+      <EditorContent
+        editor={editor}
+        className="flex-1 overflow-auto px-3 py-2 focus-visible:outline-none"
+      />
+    </div>
+  );
+};
+
+export { useTextEditor, TextEditorToolbar, CompactTextEditor, TextEditor };

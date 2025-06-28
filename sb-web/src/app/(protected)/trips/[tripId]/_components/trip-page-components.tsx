@@ -5,7 +5,11 @@ const TripPageContainer = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex w-full flex-col", className)} {...props} />
+  <div
+    ref={ref}
+    className={cn("flex size-full flex-col", className)}
+    {...props}
+  />
 ));
 
 TripPageContainer.displayName = "TripPage";
@@ -46,8 +50,11 @@ const TripPageContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("min-h-dvh flex-grow", className)}>
-    <div className="container mx-auto pt-4" {...props} />
+  <div ref={ref} className={cn("relative flex-1", className)}>
+    <div
+      className="container absolute left-0 top-4  mx-auto size-full pb-4"
+      {...props}
+    />
   </div>
 ));
 
