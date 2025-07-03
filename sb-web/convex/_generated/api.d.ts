@@ -35,7 +35,7 @@ import type * as lib_utils from "../lib/utils.js";
 import type * as migrations from "../migrations.js";
 import type * as notifications_mutations from "../notifications/mutations.js";
 import type * as notifications_queries from "../notifications/queries.js";
-import type * as polls_index from "../polls/index.js";
+import type * as polls from "../polls.js";
 import type * as tripUtils from "../tripUtils.js";
 import type * as trips_mutations from "../trips/mutations.js";
 import type * as trips_queries from "../trips/queries.js";
@@ -73,7 +73,7 @@ declare const fullApi: ApiFromModules<{
   migrations: typeof migrations;
   "notifications/mutations": typeof notifications_mutations;
   "notifications/queries": typeof notifications_queries;
-  "polls/index": typeof polls_index;
+  polls: typeof polls;
   tripUtils: typeof tripUtils;
   "trips/mutations": typeof trips_mutations;
   "trips/queries": typeof trips_queries;

@@ -169,12 +169,14 @@ export default defineSchema({
     "tripId",
   ]),
   polls: defineTable(pollSchema),
-  pollOptions: defineTable(pollOptionsSchema),
-  pollResponses: defineTable(pollResponseSchema),
+  pollOptions: defineTable(pollOptionsSchema).index("by_pollId", ["pollId"]),
+  pollResponses: defineTable(pollResponseSchema)
+    .index("by_optionId", ["optionId"])
+    .index("by_userAndOption", ["userId", "optionId"]),
   tripPolls: defineTable({
     tripId: v.id("trips"),
     pollId: v.id("polls"),
-  }),
+  }).index("by_tripId", ["tripId"]),
   itineraryItemPolls: defineTable({
     itineraryItemId: v.id("itineraryItemsV2"),
     pollId: v.id("polls"),

@@ -12,7 +12,7 @@ import { useMutation } from "convex/react";
 export const CreateTripPollDialog = () => {
   const disclosure = useDisclosure();
   const activeTripId = useActiveTripId();
-  const { mutateAsync, isPending } = useMut(api.polls.index.createTripPoll, {
+  const { mutateAsync, isPending } = useMut(api.polls.createTripPoll, {
     onSuccess: () => {
       disclosure.setClosed();
       toast.success("Success!");

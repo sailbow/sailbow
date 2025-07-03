@@ -71,6 +71,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { AccordionContent } from "@radix-ui/react-accordion";
+import { PollDialog } from "@/components/poll-dialog";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -99,9 +100,9 @@ const ItinItem = ({
   showRail: boolean;
 }) => {
   const itemStart = new Date(item.startDate);
-  const itemEnd = item.endDate ? new Date(item.endDate) : null;
   const editDisclosure = useDisclosure();
   const actionMenuDisclosure = useDisclosure();
+  const pollDisclosure = useDisclosure();
   const editor = useTextEditor({
     content: item.details,
     isEditable: false,
@@ -160,7 +161,9 @@ const ItinItem = ({
                         <Edit className="mr-2 size-4" /> Edit details
                       </DropdownMenuItem>
                     </DialogTrigger>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => pollDisclosure.setOpened()}
+                    >
                       <ChartNoAxesColumn className="mr-2 size-4" /> Start a poll
                     </DropdownMenuItem>
                     <DropdownMenuItem
@@ -199,7 +202,50 @@ const ItinItem = ({
           </CardContent>
         )}
       </Card>
+      <AddItinPollDialog {...pollDisclosure} itemId={item._id} />
     </div>
+  );
+};
+
+const AddItinPollDialog = ({
+  open,
+  onOpenChange,
+  itemId,
+}: {
+  itemId: Id<"itineraryItemsV2">;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) => {
+  const { mutateAsync, isPending } = useMut(api.polls.createItineraryItemPoll, {
+    onSuccess: () => {
+      onOpenChange(false);
+      toast.success("Success!");
+    },
+    onError: () => {
+      toast.error("Something went wrong there", { position: "top-center" });
+    },
+  });
+
+  return (
+    <>
+      <PollDialog
+        open={open}
+        onOpenChange={onOpenChange}
+        title="New itinerary poll"
+        isLoading={isPending}
+        onSave={(data) =>
+          mutateAsync({
+            itineraryItemId: itemId,
+            title: data.title,
+            settings: {
+              allowMultiple: data.settings.allowMultipleVotes,
+              incognitoResponses: data.settings.incognitoResponses,
+            },
+            options: data.options.map((o) => o.value),
+          })
+        }
+      />
+    </>
   );
 };
 
