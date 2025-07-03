@@ -11,9 +11,11 @@ import TripBannerModal from "../_components/trip-banner-modal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ListChecks, Megaphone, Settings, Users2 } from "lucide-react";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useState } from "react";
 import { CoolTabs } from "@/components/ui/cool-tabs";
+import { useDisclosure } from "@/lib/use-disclosure";
+import { CreateTripPollDialog } from "./create-trip-poll-dialog";
 
 export default function TripOverviewPage() {
   const { data: trip } = useActiveTrip();
@@ -24,7 +26,7 @@ export default function TripOverviewPage() {
 
   return (
     <TripPageContainer>
-      <TripPageHeader className="pb-0">
+      <TripPageHeader className="items-start pb-0">
         <div className="flex flex-col gap-3">
           <TripPageTitle>{trip.name}</TripPageTitle>
           <CoolTabs
@@ -36,6 +38,7 @@ export default function TripOverviewPage() {
             onChange={setActiveTab}
           />
         </div>
+        <CreateTripPollDialog />
       </TripPageHeader>
       <TripPageContent>
         {activeTab === "overview" && (

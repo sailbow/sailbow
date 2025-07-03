@@ -111,6 +111,25 @@ export const notificationsSchema = v.union(
   v.object(announcementNotificationSchema),
 );
 
+export const pollSchema = v.object({
+  title: v.string(),
+  settings: v.object({
+    allowMultiple: v.boolean(),
+    incognitoResponses: v.boolean(),
+  }),
+  owner: v.id("users"),
+});
+
+export const pollOptionsSchema = v.object({
+  pollId: v.id("polls"),
+  value: v.string(),
+});
+
+export const pollResponseSchema = v.object({
+  optionId: v.id("pollOptions"),
+  userId: v.id("users"),
+});
+
 export default defineSchema({
   migrations: migrationsTable,
 
@@ -149,4 +168,15 @@ export default defineSchema({
   itineraryItemsV2: defineTable(itineraryItemSchemaV2).index("by_tripId", [
     "tripId",
   ]),
+  polls: defineTable(pollSchema),
+  pollOptions: defineTable(pollOptionsSchema),
+  pollResponses: defineTable(pollResponseSchema),
+  tripPolls: defineTable({
+    tripId: v.id("trips"),
+    pollId: v.id("polls"),
+  }),
+  itineraryItemPolls: defineTable({
+    itineraryItemId: v.id("itineraryItemsV2"),
+    pollId: v.id("polls"),
+  }),
 });
