@@ -8,11 +8,6 @@ import { Loader2 } from "lucide-react";
 export default function LoadingButton({
   isLoading,
   children,
-  onClick,
-  disabled,
-  variant = "default",
-  size = "default",
-  className,
   ...props
 }: ButtonProps & { isLoading: boolean }) {
   return (

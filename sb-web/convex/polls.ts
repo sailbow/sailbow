@@ -1,5 +1,5 @@
 import { Infer, v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { withUser } from "./authUtils";
 import { GenericDatabaseReader, GenericDatabaseWriter } from "convex/server";
 import { DataModel, Id } from "./_generated/dataModel";
@@ -128,6 +128,32 @@ export const respondToItineraryItemPoll = mutation({
         user.userId,
         args.selectedOptions,
       );
+    });
+  },
+});
+
+export const getTripPolls = query({
+  args: {
+    tripId: v.id("trips"),
+  },
+  handler: async (ctx, args) => {
+    return withUser(ctx.auth, ctx.db, async (user) => {
+      await throwIfNotMember(user, args.tripId, ctx.db);
+      return pruneNull(
+        await asyncMap(
+          getManyFrom(ctx.db, "tripPolls", "by_tripId", args.tripId),
+          async (tripPoll) => {
+            const { _id, ...poll } = await getDetailedPoll(
+              ctx.db,
+              tripPoll.pollId,
+            );
+            return {
+              tripPollId: tripPoll._id,
+              ...poll,
+            };
+          },
+        ),
+      ).sort((a, b) => b._creationTime - a._creationTime);
     });
   },
 });
