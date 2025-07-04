@@ -43,7 +43,9 @@ export const TripPolls = () => {
       },
     },
   );
-  const [selectedPoll, setSelectedPoll] = useState<any>();
+  const [selectedPoll, setSelectedPoll] = useState<
+    Id<"tripPolls"> | undefined
+  >();
 
   if (isError) throw error;
   if (getMeError) throw meError;
@@ -65,7 +67,7 @@ export const TripPolls = () => {
                   <Button
                     size="sm"
                     variant="secondary"
-                    onClick={() => setSelectedPoll(poll)}
+                    onClick={() => setSelectedPoll(poll.tripPollId)}
                   >
                     Add response
                   </Button>
@@ -76,7 +78,7 @@ export const TripPolls = () => {
               </CardDescription>
             </CardHeader>
             <AnswerPollDialog
-              open={selectedPoll?.tripPollId === poll.tripPollId}
+              open={selectedPoll === poll.tripPollId}
               onOpenChange={() => setSelectedPoll(undefined)}
               isLoading={isRespondingToPoll}
               poll={poll}
