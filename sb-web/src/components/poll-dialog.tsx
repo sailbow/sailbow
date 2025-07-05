@@ -182,8 +182,8 @@ export function PollDialog({
 
               <div className="max-h-72 space-y-2 overflow-y-auto p-1">
                 {optionsArray.fields.map((opt, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <div className="flex flex-col">
+                  <div key={opt.id} className="flex items-center gap-2">
+                    {/* <div className="flex flex-col">
                       <Button
                         type="button"
                         variant="ghost"
@@ -204,7 +204,7 @@ export function PollDialog({
                       >
                         <ChevronDown className="h-3 w-3" />
                       </Button>
-                    </div>
+                    </div> */}
                     <FormField
                       control={form.control}
                       name={`options.${index}.value`}
