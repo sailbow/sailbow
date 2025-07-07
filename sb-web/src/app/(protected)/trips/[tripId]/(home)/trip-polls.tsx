@@ -1,6 +1,6 @@
 "use client";
 
-import { useActiveTripId } from "@/lib/trip-queries";
+import { useActiveTripId, useCrew } from "@/lib/trip-queries";
 import { useMut, useQueryWithStatus } from "@/lib/convex-client-helpers";
 import { api } from "@convex/_generated/api";
 import CenteredSpinner from "@/app/_components/centered-spinner";
@@ -17,6 +17,16 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { AnswerPollDialog } from "@/components/answer-poll-dialog";
+import { CircleAlertIcon, Edit, Eye } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { PollResultsChart } from "@/components/poll-results-chart";
 
 export const TripPolls = () => {
   const activeTripId = useActiveTripId();
@@ -31,6 +41,13 @@ export const TripPolls = () => {
     error: meError,
   } = useQueryWithStatus(api.users.queries.me);
 
+  const {
+    data: crew,
+    isLoading: isCrewLoading,
+    isError: isCrewError,
+    error: crewError,
+  } = useCrew();
+
   const { mutateAsync: respondToPoll, isPending: isRespondingToPoll } = useMut(
     api.polls.respondToTripPoll,
     {
@@ -43,13 +60,18 @@ export const TripPolls = () => {
       },
     },
   );
+
+  // const { data: responses } = useQueryWithStatus(api.polls.)
   const [selectedPoll, setSelectedPoll] = useState<
     Id<"tripPolls"> | undefined
   >();
 
   if (isError) throw error;
   if (getMeError) throw meError;
-  if (isPending || isMePending || !me) return <CenteredSpinner />;
+  if (isCrewError) throw crewError;
+  if (isPending || isMePending || !me || isCrewLoading || !crew)
+    return <CenteredSpinner />;
+
   return (
     <div className="flex w-full flex-col gap-4">
       {data.map((poll, index) => {
@@ -63,29 +85,59 @@ export const TripPolls = () => {
             <CardHeader>
               <div className="flex w-full justify-between gap-4">
                 <CardTitle>{poll.title}</CardTitle>
-                {!usersWhoHaveResponded.has(me._id) && (
+                {!usersWhoHaveResponded.has(me._id) ? (
                   <Button
                     size="sm"
                     variant="secondary"
                     onClick={() => setSelectedPoll(poll.tripPollId)}
                   >
-                    Add response
+                    Respond
+                    <CircleAlertIcon className="ml-2 text-secondary-foreground" />
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setSelectedPoll(poll.tripPollId)}
+                  >
+                    Edit response
+                    <Edit className="ml-2 size-4" />
                   </Button>
                 )}
               </div>
               <CardDescription>
-                {usersWhoHaveResponded.size} responses
+                {`(${usersWhoHaveResponded.size}/${crew.length})`} responses
               </CardDescription>
             </CardHeader>
+            {usersWhoHaveResponded.size > 0 && (
+              <CardContent>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <Eye className="mr-2 size-4" />
+                      View results
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-h-[80vh] max-w-4xl overflow-auto">
+                    <DialogHeader>
+                      <DialogTitle>Poll results</DialogTitle>
+                      <DialogDescription>{poll.title}</DialogDescription>
+                    </DialogHeader>
+                    <PollResultsChart poll={poll} />
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            )}
             <AnswerPollDialog
               open={selectedPoll === poll.tripPollId}
               onOpenChange={() => setSelectedPoll(undefined)}
               isLoading={isRespondingToPoll}
               poll={poll}
+              userId={me._id}
               handleSubmit={(choices) => {
                 return respondToPoll({
                   tripPollId: poll.tripPollId,
-                  selectedOptions: choices,
+                  choices,
                 });
               }}
             />

@@ -126,8 +126,9 @@ export const pollOptionsSchema = v.object({
 });
 
 export const pollResponseSchema = v.object({
-  optionId: v.id("pollOptions"),
+  pollId: v.id("polls"),
   userId: v.id("users"),
+  choices: v.array(v.id("pollOptions")),
 });
 
 export default defineSchema({
@@ -171,8 +172,8 @@ export default defineSchema({
   polls: defineTable(pollSchema),
   pollOptions: defineTable(pollOptionsSchema).index("by_pollId", ["pollId"]),
   pollResponses: defineTable(pollResponseSchema)
-    .index("by_optionId", ["optionId"])
-    .index("by_userAndOption", ["userId", "optionId"]),
+    .index("by_pollId", ["pollId"])
+    .index("by_userId_pollId", ["userId", "pollId"]),
   tripPolls: defineTable({
     tripId: v.id("trips"),
     pollId: v.id("polls"),

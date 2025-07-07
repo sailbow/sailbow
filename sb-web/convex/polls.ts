@@ -8,6 +8,7 @@ import {
   getManyFrom,
   getManyVia,
   getOneFromOrThrow,
+  getOrThrow,
 } from "convex-helpers/server/relationships";
 import { asyncMap } from "convex-helpers";
 import { pruneNull } from "convex-helpers";
@@ -46,6 +47,29 @@ export const createTripPoll = mutation({
   },
 });
 
+export const getTripPoll = query({
+  args: {
+    tripPollId: v.id("tripPolls"),
+  },
+  handler: async (ctx, args) => {
+    return withUser(ctx.auth, ctx.db, async (user) => {
+      const tripPoll = await getOneFromOrThrow(
+        ctx.db,
+        "tripPolls",
+        "by_id",
+        args.tripPollId,
+        "_id",
+      );
+      await throwIfNotMember(user, tripPoll.tripId, ctx.db);
+      const poll = await getDetailedPoll(ctx.db, tripPoll.pollId);
+      return {
+        ...poll,
+        tripPollId: tripPoll._id,
+      };
+    });
+  },
+});
+
 export const createItineraryItemPoll = mutation({
   args: {
     itineraryItemId: v.id("itineraryItemsV2"),
@@ -78,7 +102,7 @@ export const createItineraryItemPoll = mutation({
 export const respondToTripPoll = mutation({
   args: {
     tripPollId: v.id("tripPolls"),
-    selectedOptions: v.array(v.id("pollOptions")),
+    choices: v.array(v.id("pollOptions")),
   },
   handler: (ctx, args) => {
     return withUser(ctx.auth, ctx.db, async (user) => {
@@ -90,12 +114,11 @@ export const respondToTripPoll = mutation({
         "_id",
       );
       await throwIfNotMember(user, tripPoll.tripId, ctx.db);
-      await respondToPoll(
-        ctx.db,
-        tripPoll.pollId,
-        user.userId,
-        args.selectedOptions,
-      );
+      await respondToPoll(ctx.db, {
+        pollId: tripPoll.pollId,
+        userId: user.userId,
+        choices: args.choices,
+      });
     });
   },
 });
@@ -103,7 +126,7 @@ export const respondToTripPoll = mutation({
 export const respondToItineraryItemPoll = mutation({
   args: {
     itineraryItemPollId: v.id("itineraryItemPolls"),
-    selectedOptions: v.array(v.id("pollOptions")),
+    choices: v.array(v.id("pollOptions")),
   },
   handler: (ctx, args) => {
     return withUser(ctx.auth, ctx.db, async (user) => {
@@ -122,12 +145,11 @@ export const respondToItineraryItemPoll = mutation({
         "_id",
       );
       await throwIfNotMember(user, itinItem.tripId, ctx.db);
-      await respondToPoll(
-        ctx.db,
-        itemPoll.pollId,
-        user.userId,
-        args.selectedOptions,
-      );
+      await respondToPoll(ctx.db, {
+        pollId: itemPoll.pollId,
+        userId: user.userId,
+        choices: args.choices,
+      });
     });
   },
 });
@@ -164,11 +186,7 @@ const getDetailedPoll = async (
 ) => {
   const poll = await getOneFromOrThrow(db, "polls", "by_id", pollId, "_id");
   const options = await getManyFrom(db, "pollOptions", "by_pollId", pollId);
-  const allResponses = pruneNull(
-    await asyncMap(options, (o) =>
-      getManyFrom(db, "pollResponses", "by_optionId", o._id),
-    ),
-  ).flatMap((v) => v);
+  const responses = await getManyFrom(db, "pollResponses", "by_pollId", pollId);
   // const groupedResponses = allResponses.reduce((acc, val) => {
   //   const current = acc[val.optionId] ?? [];
   //   acc[val.optionId] = [...current, val.userId];
@@ -177,28 +195,32 @@ const getDetailedPoll = async (
   return {
     ...poll,
     options,
-    responses: allResponses,
+    responses,
   };
+};
+
+type PollResponse = {
+  pollId: Id<"polls">;
+  userId: Id<"users">;
+  choices: Id<"pollOptions">[];
 };
 
 const respondToPoll = async (
   db: GenericDatabaseWriter<DataModel>,
-  pollId: Id<"polls">,
-  userId: Id<"users">,
-  selectedOptions: Id<"pollOptions">[],
+  response: PollResponse,
 ) => {
+  const { pollId, choices, userId } = response;
   const poll = await getDetailedPoll(db, pollId);
-  const currentChoices = poll.responses.filter((r) => r.userId === userId);
-  await asyncMap(
-    currentChoices.filter((co) => !selectedOptions.includes(co.optionId)),
-    (c) => db.delete(c._id),
-  );
-  await asyncMap(
-    selectedOptions.filter(
-      (so) => !currentChoices.some((c) => c.optionId === so),
-    ),
-    (o) => db.insert("pollResponses", { userId: userId, optionId: o }),
-  );
+  const existingResponse = poll.responses.find((r) => r.userId === userId);
+  if (existingResponse) {
+    await db.patch(existingResponse._id, { choices });
+  } else {
+    await db.insert("pollResponses", {
+      userId,
+      pollId,
+      choices,
+    });
+  }
 };
 
 const createPoll = async (

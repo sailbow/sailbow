@@ -8,16 +8,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "./ui/button";
 import LoadingButton from "./loading-button";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
-
-type Poll = Omit<Doc<"polls">, "_creationTime" | "_id"> & {
-  options: Omit<Doc<"pollOptions">, "_creationTime" | "pollId">[];
-};
+import { Poll } from "./types";
 
 export const AnswerPollDialog = ({
   poll,
@@ -25,19 +22,25 @@ export const AnswerPollDialog = ({
   onOpenChange,
   isLoading,
   handleSubmit,
+  userId,
 }: {
   poll: Poll;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   isLoading: boolean;
   handleSubmit: (choices: Id<"pollOptions">[]) => void | Promise<unknown>;
+  userId: Id<"users">;
 }) => {
-  const [choices, setChoices] = useState([] as Id<"pollOptions">[]);
+  const initialChoices = useMemo(
+    () => poll.responses.find((r) => r.userId === userId)?.choices ?? [],
+    [userId, poll.responses],
+  );
+  const [choices, setChoices] = useState(initialChoices);
   useEffect(() => {
     if (!open) {
-      setChoices([]);
+      setChoices(initialChoices);
     }
-  }, [open]);
+  }, [open, initialChoices]);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[80dvh] sm:max-w-[500px]">
