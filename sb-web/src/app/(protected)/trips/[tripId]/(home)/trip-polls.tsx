@@ -123,7 +123,13 @@ export const TripPolls = () => {
                       <DialogTitle>Poll results</DialogTitle>
                       <DialogDescription>{poll.title}</DialogDescription>
                     </DialogHeader>
-                    <PollResultsChart poll={poll} />
+                    <PollResultsChart
+                      poll={poll}
+                      users={crew?.map((cm) => ({
+                        ...cm,
+                        _id: cm.userId as Id<"users">,
+                      }))}
+                    />
                   </DialogContent>
                 </Dialog>
               </CardContent>

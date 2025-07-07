@@ -69,7 +69,7 @@ export function PollDialog({
       title: "",
       settings: {
         allowMultipleVotes: false,
-        incognitoResponses: false,
+        incognitoResponses: true,
       },
       options: [{ value: "" }, { value: "" }],
     },
@@ -151,8 +151,10 @@ export function PollDialog({
                         <Switch
                           name={field.name}
                           ref={field.ref}
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
+                          checked={!field.value}
+                          onCheckedChange={(checked) =>
+                            field.onChange(!checked)
+                          }
                           onBlur={field.onBlur}
                           disabled={field.disabled}
                         />
@@ -183,28 +185,6 @@ export function PollDialog({
               <div className="max-h-72 space-y-2 overflow-y-auto p-1">
                 {optionsArray.fields.map((opt, index) => (
                   <div key={opt.id} className="flex items-center gap-2">
-                    {/* <div className="flex flex-col">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0"
-                        onClick={() => moveOption(index, "up")}
-                        disabled={index === 0}
-                      >
-                        <ChevronUp className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0"
-                        onClick={() => moveOption(index, "down")}
-                        disabled={index === optionsArray.fields.length - 1}
-                      >
-                        <ChevronDown className="h-3 w-3" />
-                      </Button>
-                    </div> */}
                     <FormField
                       control={form.control}
                       name={`options.${index}.value`}
