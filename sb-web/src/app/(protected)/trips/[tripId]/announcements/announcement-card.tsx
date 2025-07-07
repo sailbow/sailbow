@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { TextEditor } from "@/components/text-editor";
 
 type Announcement = FunctionReturnType<
   typeof api.announcements.queries.get
@@ -124,7 +125,7 @@ export default function AnnouncementCard({
         </div>
       </CardHeader>
       <CardContent>
-        <p className="prose dark:prose-invert">{announcement.text}</p>
+        <TextEditor isEditable={false} content={announcement.text} />
       </CardContent>
     </Card>
   );

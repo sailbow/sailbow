@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,12 +10,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { X, Plus, ChevronUp, ChevronDown, Trash } from "lucide-react";
+import { Plus, Trash } from "lucide-react";
 import { z } from "zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +26,6 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { Spinner } from "@/app/_components/spinner";
 import LoadingButton from "./loading-button";
 
 const formSchema = z.object({
@@ -78,20 +75,11 @@ export function PollDialog({
     control: form.control,
     name: "options",
   });
-  const moveOption = (index: number, direction: "up" | "down") => {
-    if (
-      (direction === "up" && index === 0) ||
-      (direction === "down" && index === optionsArray.fields.length - 1)
-    ) {
-      return;
-    }
-
-    optionsArray.move(index, direction === "up" ? index - 1 : index + 1);
-  };
 
   useEffect(() => {
     form.reset();
-  }, [open]);
+  }, [open, form]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[80vh] sm:max-w-[500px]">
@@ -122,7 +110,7 @@ export function PollDialog({
               <FormField
                 control={form.control}
                 name="settings.allowMultipleVotes"
-                render={({ field, formState }) => (
+                render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center space-x-2">
                       <FormLabel>Allow multiple votes</FormLabel>
@@ -143,7 +131,7 @@ export function PollDialog({
               <FormField
                 control={form.control}
                 name="settings.incognitoResponses"
-                render={({ field, formState }) => (
+                render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center space-x-2">
                       <FormLabel>Votes visible to others</FormLabel>
@@ -182,7 +170,7 @@ export function PollDialog({
                 </Button>
               </div>
 
-              <div className="max-h-72 space-y-2 overflow-y-auto p-1">
+              <div className="max-h-72 space-y-2 overflow-y-scroll p-1">
                 {optionsArray.fields.map((opt, index) => (
                   <div key={opt.id} className="flex items-center gap-2">
                     <FormField

@@ -200,9 +200,7 @@ const TripPollActions = ({ tripPollId }: { tripPollId: Id<"tripPolls"> }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-          // disabled={isDeletingItem}
-          >
+          <DropdownMenuItem>
             <Edit className="mr-2 size-4" /> Edit poll
           </DropdownMenuItem>
           <DropdownMenuItem

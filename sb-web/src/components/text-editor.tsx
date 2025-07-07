@@ -20,19 +20,20 @@ import {
 } from "react";
 import { cn } from "@/lib/utils";
 
-interface TextEditorProps {
+type TextEditorProps = EditableTextEditorProps | ReadOnlyTextEditorProps;
+
+interface EditableTextEditorProps {
   content: string | null;
-  isEditable: boolean;
+  isEditable: true;
   onTextChange: (newText: string) => void;
   placeholder?: string;
 }
+interface ReadOnlyTextEditorProps {
+  content: string | null;
+  isEditable: false;
+}
 
-const useTextEditor = ({
-  content,
-  isEditable,
-  onTextChange,
-  placeholder,
-}: TextEditorProps) => {
+const useTextEditor = (props: TextEditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -58,7 +59,9 @@ const useTextEditor = ({
         },
       }),
       Placeholder.configure({
-        placeholder: placeholder ?? "Click to edit",
+        placeholder: props.isEditable
+          ? (props.placeholder ?? "Click to edit")
+          : undefined,
         emptyEditorClass:
           "cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-0 before:left-0 before:text-mauve-11 before:opacity-50 before-pointer-events-none before:text-md",
         showOnlyWhenEditable: true,
@@ -72,11 +75,13 @@ const useTextEditor = ({
         openOnClick: "whenNotEditable",
       }).extend({ inclusive: false }),
     ],
-    content: content,
-    onUpdate: ({ editor }) => {
-      onTextChange(editor.getHTML());
-    },
-    editable: isEditable,
+    content: props.content,
+    ...(props.isEditable && {
+      onUpdate: ({ editor }) => {
+        props.onTextChange(editor.getHTML());
+      },
+    }),
+    editable: props.isEditable,
     editorProps: {
       attributes: {
         class:
@@ -86,10 +91,10 @@ const useTextEditor = ({
   });
 
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content);
+    if (editor && props.content !== editor.getHTML()) {
+      editor.commands.setContent(props.content);
     }
-  }, [content, editor]);
+  }, [props.content, editor]);
 
   return editor;
 };
@@ -274,19 +279,8 @@ const TextEditorToolbar = ({
   );
 };
 
-const CompactTextEditor = ({
-  content,
-  onTextChange,
-  isEditable,
-  placeholder,
-  className,
-}: TextEditorProps & { className?: string }) => {
-  const editor = useTextEditor({
-    content,
-    onTextChange,
-    isEditable,
-    placeholder,
-  });
+const CompactTextEditor = (props: TextEditorProps & { className?: string }) => {
+  const editor = useTextEditor(props);
   const [isEditing, setIsEditing] = useState(false);
   const handleFocusIn: FocusEventHandler = (e) => {
     if (!e.currentTarget.contains(e.relatedTarget)) {
@@ -304,9 +298,9 @@ const CompactTextEditor = ({
       onFocus={handleFocusIn}
       onBlur={handleFocusOut}
       className={cn(
-        "flex max-h-56 min-h-24 w-full resize-y flex-col overflow-hidden rounded-md bg-background focus-within:ring-1 focus-within:ring-ring disabled:cursor-not-allowed",
-        isEditable && "border border-input",
-        className,
+        "flex max-h-96 min-h-24 w-full resize-y flex-col overflow-hidden rounded-md bg-background focus-within:ring-1 focus-within:ring-ring disabled:cursor-not-allowed",
+        props.isEditable && "border border-input",
+        props.className,
       )}
     >
       <EditorContent

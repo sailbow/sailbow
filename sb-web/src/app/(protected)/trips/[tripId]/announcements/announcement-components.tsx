@@ -34,6 +34,7 @@ import { Megaphone } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AnnouncementCard from "./announcement-card";
+import { CompactTextEditor } from "@/components/text-editor";
 
 const createAnnouncementSchema = z.object({
   tripId: z.custom<Id<"trips">>(),
@@ -103,13 +104,15 @@ export const CreateAnnouncementButton = () => {
                       <FormMessage />
                     </div>
                     <FormControl>
-                      <Textarea
-                        className={cn(
-                          "mt-4 max-h-[50dvh] min-h-32 whitespace-pre-line",
-                          error ? "border-destructive" : "",
-                        )}
+                      <CompactTextEditor
+                        content={field.value}
+                        onTextChange={field.onChange}
+                        isEditable={true}
                         placeholder="What would you like to say?"
-                        {...field}
+                        className={cn(
+                          "mt-3 min-h-40",
+                          error && "border-destructive",
+                        )}
                       />
                     </FormControl>
                   </FormItem>

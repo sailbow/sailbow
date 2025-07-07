@@ -106,9 +106,6 @@ const ItinItem = ({
   const editor = useTextEditor({
     content: item.details,
     isEditable: false,
-    onTextChange: (text) => {
-      console.log(text);
-    },
   });
   const {
     mutate: deleteItem,
