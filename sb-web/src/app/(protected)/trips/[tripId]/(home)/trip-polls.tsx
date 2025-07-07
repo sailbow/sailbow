@@ -12,21 +12,36 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Id } from "@convex/_generated/dataModel";
-import { useMe } from "@/lib/user-queries";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { AnswerPollDialog } from "@/components/answer-poll-dialog";
-import { CircleAlertIcon, Edit, Eye } from "lucide-react";
+import {
+  CircleAlertIcon,
+  Edit,
+  Eye,
+  MoreHorizontal,
+  Trash,
+} from "lucide-react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PollResultsChart } from "@/components/poll-results-chart";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useDisclosure } from "@/lib/use-disclosure";
+import LoadingButton from "@/components/loading-button";
 
 export const TripPolls = () => {
   const activeTripId = useActiveTripId();
@@ -61,7 +76,6 @@ export const TripPolls = () => {
     },
   );
 
-  // const { data: responses } = useQueryWithStatus(api.polls.)
   const [selectedPoll, setSelectedPoll] = useState<
     Id<"tripPolls"> | undefined
   >();
@@ -83,27 +97,30 @@ export const TripPolls = () => {
         return (
           <Card key={index} className="max-w-3xl">
             <CardHeader>
-              <div className="flex w-full justify-between gap-4">
+              <div className="flex w-full gap-4">
                 <CardTitle>{poll.title}</CardTitle>
-                {!usersWhoHaveResponded.has(me._id) ? (
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => setSelectedPoll(poll.tripPollId)}
-                  >
-                    Respond
-                    <CircleAlertIcon className="ml-2 text-secondary-foreground" />
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setSelectedPoll(poll.tripPollId)}
-                  >
-                    Edit response
-                    <Edit className="ml-2 size-4" />
-                  </Button>
-                )}
+                <div className="ml-auto flex items-center gap-2">
+                  {!usersWhoHaveResponded.has(me._id) ? (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => setSelectedPoll(poll.tripPollId)}
+                    >
+                      Respond
+                      <CircleAlertIcon className="ml-2 text-secondary-foreground" />
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setSelectedPoll(poll.tripPollId)}
+                    >
+                      Edit response
+                      <Edit className="ml-2 size-4" />
+                    </Button>
+                  )}
+                  <TripPollActions tripPollId={poll.tripPollId} />
+                </div>
               </div>
               <CardDescription>
                 {`(${usersWhoHaveResponded.size}/${crew.length})`} responses
@@ -151,5 +168,73 @@ export const TripPolls = () => {
         );
       })}
     </div>
+  );
+};
+
+const TripPollActions = ({ tripPollId }: { tripPollId: Id<"tripPolls"> }) => {
+  const deletePollDialogDisclosure = useDisclosure();
+  const {
+    mutate: deletePoll,
+    isPending: isDeleting,
+    isSuccess: didDelete,
+    reset,
+  } = useMut(api.polls.deleteTripPoll, {
+    onSuccess: () => {
+      deletePollDialogDisclosure.setClosed();
+    },
+    onError: () => {
+      toast.error("Something went wrong there");
+    },
+  });
+  useEffect(() => {
+    if (!deletePollDialogDisclosure.open) {
+      reset();
+    }
+  }, [deletePollDialogDisclosure.open, reset]);
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <MoreHorizontal className="h-5 w-5" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+          // disabled={isDeletingItem}
+          >
+            <Edit className="mr-2 size-4" /> Edit poll
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => deletePollDialogDisclosure.setOpened()}
+          >
+            <Trash className="mr-2 size-4" /> Delete poll
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      {/* <Dialog {...editPollDialogDisclosure}></Dialog> */}
+      <Dialog {...deletePollDialogDisclosure}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Are you sure you want to delete this poll?
+            </DialogTitle>
+            <DialogDescription>This action cannot be undone!</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="secondary">Cancel</Button>
+            </DialogClose>
+            <LoadingButton
+              variant="destructive"
+              isLoading={isDeleting || didDelete}
+              onClick={() => deletePoll({ tripPollId })}
+            >
+              Yes, delete
+            </LoadingButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

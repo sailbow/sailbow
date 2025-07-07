@@ -180,6 +180,36 @@ export const getTripPolls = query({
   },
 });
 
+export const deleteTripPoll = mutation({
+  args: {
+    tripPollId: v.id("tripPolls"),
+  },
+  handler: async ({ auth, db }, { tripPollId }) => {
+    return withUser(auth, db, async (user) => {
+      const tripPoll = await getOneFromOrThrow(
+        db,
+        "tripPolls",
+        "by_id",
+        tripPollId,
+        "_id",
+      );
+      const poll = await getDetailedPoll(db, tripPoll.pollId);
+      const membership = await throwIfNotMember(user, tripPoll.tripId, db);
+      if (
+        !["captain", "firstMate"].includes(membership.role) ||
+        poll.owner !== user.userId
+      )
+        throw new Error("You are not allowed to delete this poll!");
+      await db.delete(tripPoll._id);
+      await Promise.all([
+        Promise.all(poll.responses.map((r) => db.delete(r._id))),
+        Promise.all(poll.options.map((o) => db.delete(o._id))),
+        db.delete(poll._id),
+      ]);
+    });
+  },
+});
+
 const getDetailedPoll = async (
   db: GenericDatabaseReader<DataModel>,
   pollId: Id<"polls">,
