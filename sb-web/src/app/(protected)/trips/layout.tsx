@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <ConvexAuthenticated>
       <SidebarProvider>
         <AppSidebar className="z-40" />
-        <SidebarInset className="bg-background">
+        <SidebarInset>
           <TripSidebarTrigger />
           <div className="flex-grow">{children}</div>
         </SidebarInset>

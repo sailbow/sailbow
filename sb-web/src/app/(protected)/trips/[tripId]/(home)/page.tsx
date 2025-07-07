@@ -17,11 +17,14 @@ import { CoolTabs } from "@/components/ui/cool-tabs";
 import { useDisclosure } from "@/lib/use-disclosure";
 import { CreateTripPollDialog } from "./create-trip-poll-dialog";
 import { TripPolls } from "./trip-polls";
+import { useQueryState } from "nuqs";
 
 export default function TripOverviewPage() {
   const { data: trip } = useActiveTrip();
 
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useQueryState("tab", {
+    defaultValue: "overview",
+  });
 
   if (!trip) return;
 

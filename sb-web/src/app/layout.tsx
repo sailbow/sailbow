@@ -8,7 +8,7 @@ import NextTopLoader from "nextjs-toploader";
 import { ConvexClientProvider } from "@/ConvexProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { env } from "@/env";
-
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 const font = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -70,8 +70,13 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
-              {children}
+              <NuqsAdapter>
+                <NextTopLoader
+                  color="hsl(var(--primary))"
+                  showSpinner={false}
+                />
+                {children}
+              </NuqsAdapter>
             </ThemeProvider>
           </body>
         </ConvexClientProvider>
