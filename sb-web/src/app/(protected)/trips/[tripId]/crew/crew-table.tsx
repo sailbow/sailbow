@@ -42,16 +42,13 @@ export function CrewTable() {
             <TableRow>
               {Array.from({ length: 4 }).map((_, i) => (
                 <TableCell key={i}>
-                  <Skeleton key={i} className="h-10 bg-slate-200"></Skeleton>
+                  <Skeleton key={i} className="h-10" />
                 </TableCell>
               ))}
             </TableRow>
           ) : (
             crew!.map((member) => (
-              <TableRow
-                key={member._id}
-                className="text-xs xs:text-sm lg:text-base"
-              >
+              <TableRow key={member._id}>
                 <TableCell>
                   <Avatar>
                     <AvatarImage

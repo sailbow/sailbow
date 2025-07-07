@@ -33,6 +33,7 @@ type InferNotificationType<TType extends Notification["type"]> = Extract<
 >;
 type InviteNotification = InferNotificationType<"invite">;
 type AnnouncementNotification = InferNotificationType<"announcement">;
+type TripPollNotificationData = InferNotificationType<"tripPoll">;
 
 const NotificationItem = ({
   children,
@@ -84,7 +85,7 @@ const NotificationsList = ({
     return <p className="mt-2 w-full text-center font-light">All caught up!</p>;
   }
   return (
-    <div className="grid grid-cols-1 space-y-2 divide-y divide-slate-200">
+    <div className="grid grid-cols-1 space-y-2 divide-y divide-secondary">
       {notifications.map((notification) =>
         NotificationComponents({ notification, closeNotifications }),
       )}
@@ -109,7 +110,51 @@ const NotificationComponents = ({
           closeNotifications={closeNotifications}
         />
       );
+    case "tripPoll":
+      return (
+        <TripPollNotification
+          notification={notification}
+          closeNotifications={closeNotifications}
+        />
+      );
   }
+};
+
+const TripPollNotification = ({
+  notification,
+  closeNotifications,
+}: {
+  notification: TripPollNotificationData;
+  closeNotifications: () => void;
+}) => {
+  const { data: trip } = useTrip(notification.data.tripId);
+  const { mutate: dismissNotification } = useDismissNotification({});
+  return (
+    <NotificationItem notification={notification}>
+      <div className="flex w-full gap-6">
+        {trip ? (
+          <p>
+            {notification.data.postedByName} has created a new poll in <br />
+            <span className="font-semibold"> {trip.name}</span>
+          </p>
+        ) : (
+          <Skeleton className="h-9 flex-1" />
+        )}
+        <Link
+          href={`/trips/${notification.data.tripId}?tab=polls`}
+          className={buttonVariants({
+            className: "ml-auto h-8 hover:underline",
+          })}
+          onClick={() => {
+            closeNotifications();
+            dismissNotification({ notificationId: notification._id });
+          }}
+        >
+          View
+        </Link>
+      </div>
+    </NotificationItem>
+  );
 };
 
 const AnnouncementNotification = ({
@@ -199,7 +244,7 @@ export default function NotificationsDropdown() {
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="relative z-50 h-[100dvh] w-[300px] overflow-auto p-0 sm:w-[450px]"
+        className="relative z-50 h-[75dvh] w-[300px] overflow-auto p-0 sm:w-[450px]"
         side={isMobile ? "bottom" : "right"}
         align={isMobile ? "end" : "start"}
       >
@@ -208,7 +253,7 @@ export default function NotificationsDropdown() {
             Notifications
           </DropdownMenuLabel>
         </div>
-        <DropdownMenuSeparator className="bg-slate-200" />
+        <DropdownMenuSeparator className="bg-secondary" />
         <DropdownMenuGroup className="p-1 pt-0">
           {isLoading || !data ? (
             <CenteredSpinner />

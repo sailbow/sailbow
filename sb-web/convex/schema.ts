@@ -106,9 +106,20 @@ const announcementNotificationSchema = {
   }),
 };
 
+const tripPollNotificationSchema = {
+  ...baseNotification,
+  type: v.literal("tripPoll"),
+  data: v.object({
+    tripId: v.id("trips"),
+    tripPollId: v.id("tripPolls"),
+    postedByName: v.string(),
+  }),
+};
+
 export const notificationsSchema = v.union(
   v.object(invitationNotificationSchema),
   v.object(announcementNotificationSchema),
+  v.object(tripPollNotificationSchema),
 );
 
 export const pollSchema = v.object({

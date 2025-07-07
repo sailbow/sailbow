@@ -68,9 +68,7 @@ const CancelInviteModal = ({ invite }: { invite: Doc<"invitations"> }) => {
             onClick={() => cancel({ inviteId: invite._id })}
             disabled={isPending || isSuccess}
           >
-            {isPending && (
-              <Spinner className="mr-2 size-4 stroke-primary-foreground" />
-            )}
+            {isPending && <Spinner className="mr-2 size-4" />}
             Yes, cancel it
           </Button>
         </DialogFooter>
@@ -100,7 +98,7 @@ export const PendingAndDeclinedInvitesTable = () => {
           <TableRow>
             {Array.from({ length: 4 }).map((_, i) => (
               <TableCell key={i}>
-                <Skeleton key={i} className="h-10 bg-slate-200"></Skeleton>
+                <Skeleton key={i} className="h-10" />
               </TableCell>
             ))}
           </TableRow>

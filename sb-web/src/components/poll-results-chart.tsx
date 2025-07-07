@@ -9,11 +9,7 @@ import {
   YAxis,
 } from "recharts";
 
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { Poll } from "./types";
 import { Doc, Id } from "@convex/_generated/dataModel";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -75,14 +71,12 @@ export function PollResultsChart({
             color: "hsl(var(--chart-1))",
           },
         }}
-        className="w-full"
       >
         <BarChart
           accessibilityLayer
           data={flatResponseData}
           layout="vertical"
           margin={{
-            left: 60,
             right: 80,
             top: 20,
             bottom: 20,
@@ -101,10 +95,8 @@ export function PollResultsChart({
             dataKey="label"
             type="category"
             tickLine={false}
-            tickMargin={10}
-            className="text-base"
             axisLine={false}
-            width={70}
+            width={200}
           />
           {!poll.settings.incognitoResponses && users && (
             <ChartTooltip content={CustomTooltipContent} />
@@ -119,7 +111,7 @@ export function PollResultsChart({
               dataKey="count"
               position="right"
               offset={8}
-              className="fill-foreground text-base"
+              className="fill-foreground"
             />
           </Bar>
         </BarChart>

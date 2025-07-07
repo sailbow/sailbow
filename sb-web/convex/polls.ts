@@ -13,6 +13,7 @@ import {
 import { asyncMap } from "convex-helpers";
 import { pruneNull } from "convex-helpers";
 import { throwIfNotMember } from "./tripUtils";
+import { getTripCrew } from "./trips/queries";
 
 const basePollInput = v.object({
   title: v.string(),
@@ -39,6 +40,31 @@ export const createTripPoll = mutation({
         tripId: args.tripId,
         pollId: poll.pollId,
       });
+
+      const crew = await ctx.db
+        .query("crews")
+        .withIndex("by_tripId", (q) => q.eq("tripId", args.tripId))
+        .collect();
+
+      await Promise.all(
+        crew.map(async (cm) => {
+          if (true) {
+            const targetUser = await ctx.db.get(cm.userId as Id<"users">);
+            if (targetUser) {
+              await ctx.db.insert("notifications", {
+                type: "tripPoll",
+                userId: targetUser._id,
+                dismissed: false,
+                data: {
+                  tripId: args.tripId,
+                  tripPollId: tripPollId,
+                  postedByName: user.fullName,
+                },
+              });
+            }
+          }
+        }),
+      );
       return {
         tripPollId,
         ...poll,
