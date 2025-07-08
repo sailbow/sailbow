@@ -98,8 +98,8 @@ export const TripPolls = () => {
           <Card key={index} className="max-w-3xl">
             <CardHeader>
               <div className="flex w-full gap-4">
-                <CardTitle>{poll.title}</CardTitle>
-                <div className="ml-auto flex items-center gap-2">
+                <CardTitle className="flex-1">{poll.title}</CardTitle>
+                <div className="ml-auto flex gap-2">
                   {!usersWhoHaveResponded.has(me._id) ? (
                     <Button
                       size="sm"
