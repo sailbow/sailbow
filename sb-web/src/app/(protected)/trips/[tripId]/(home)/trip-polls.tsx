@@ -135,7 +135,7 @@ export const TripPolls = () => {
                       View results
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-h-[80vh] max-w-4xl overflow-auto">
+                  <DialogContent>
                     <DialogHeader>
                       <DialogTitle>Poll results</DialogTitle>
                       <DialogDescription>{poll.title}</DialogDescription>

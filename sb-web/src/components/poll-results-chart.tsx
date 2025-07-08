@@ -63,7 +63,7 @@ export function PollResultsChart({
   const maxCount = Math.max(...flatResponseData.map((item) => item.count));
   const domain = maxCount === 0 ? [0, 1] : [0, maxCount];
   return (
-    <div className="w-full">
+    <div className="container mx-auto p-0 px-1">
       <ChartContainer
         config={{
           count: {
@@ -77,9 +77,7 @@ export function PollResultsChart({
           data={flatResponseData}
           layout="vertical"
           margin={{
-            right: 80,
-            top: 20,
-            bottom: 20,
+            right: 50,
           }}
         >
           <CartesianGrid horizontal={false} vertical={false} />
@@ -96,7 +94,7 @@ export function PollResultsChart({
             type="category"
             tickLine={false}
             axisLine={false}
-            width={200}
+            width={150}
           />
           {!poll.settings.incognitoResponses && users && (
             <ChartTooltip content={CustomTooltipContent} />
