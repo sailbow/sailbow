@@ -11,14 +11,11 @@ import TripBannerModal from "../_components/trip-banner-modal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ListChecks, Megaphone, Settings, Users2 } from "lucide-react";
 import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { useState } from "react";
+import { buttonVariants } from "@/components/ui/button";
 import { CoolTabs } from "@/components/ui/cool-tabs";
-import { useDisclosure } from "@/lib/use-disclosure";
 import { CreateTripPollDialog } from "./create-trip-poll-dialog";
 import { TripPolls } from "./trip-polls";
 import { useQueryState } from "nuqs";
-import { GooglePlacesSearch } from "@/components/google-places-search";
 
 export default function TripOverviewPage() {
   const { data: trip } = useActiveTrip();
@@ -47,7 +44,6 @@ export default function TripOverviewPage() {
         <CreateTripPollDialog />
       </TripPageHeader>
       <TripPageContent>
-        <GooglePlacesSearch />
         {activeTab === "overview" && (
           <div className="grid grid-cols-4 gap-4">
             <Card className="col-span-4 lg:col-span-2">

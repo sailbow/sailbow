@@ -1,8 +1,1 @@
-{
-  "node": {
-    "externalPackages": [
-      "@react-email/components",
-      "resend"
-    ]
-  }
-}
+{}
