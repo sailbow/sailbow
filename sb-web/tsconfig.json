@@ -30,6 +30,6 @@
     "**/*.cjs",
     "**/*.js",
     ".next/types/**/*.ts"
-  ],
+, "convex/emails/tripInvite.jsx"  ],
   "exclude": ["node_modules"]
 }

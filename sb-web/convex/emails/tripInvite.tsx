@@ -1,4 +1,6 @@
-import * as React from "react";
+"use node";
+
+import React from "react";
 import { z } from "zod";
 import {
   Body,
@@ -28,7 +30,8 @@ type TripInvite = z.infer<typeof tripInviteSchema>;
 
 const baseUrl = getBaseUrl();
 
-const TripInviteTemplate = (invite: TripInvite) => {
+const TripInviteTemplate = (props: TripInvite): React.ReactNode => {
+  const invite = tripInviteSchema.parse(props);
   return (
     <Html lang="en">
       <Tailwind config={TwConfig}>
@@ -49,14 +52,16 @@ const TripInviteTemplate = (invite: TripInvite) => {
             </Heading>
             <Text>Hello,</Text>
             <Text>
-              <strong>{invite.invitedByName}</strong> (
+              <strong>{invite.invitedByName}</strong>
+              {" ("}
               <Link
                 href={`mailto:${invite.invitedByEmail}`}
-                className="text- no-underline"
+                className="text-no-underline"
               >
                 {invite.invitedByEmail}
               </Link>
-              ) has invited you to the group trip{" "}
+              {") "}
+              has invited you to the group trip{" "}
               <strong>{invite.tripName}</strong> on <strong>Sailbow</strong>.
             </Text>
             <Section className="mb-[32px] mt-[32px] text-center">
@@ -94,7 +99,7 @@ const TripInviteTemplate = (invite: TripInvite) => {
 };
 
 TripInviteTemplate.PreviewProps = {
-  inviteId: 1,
+  inviteId: "1",
   tripName: "Test Trip Name",
   inviteeEmail: "test@example.com",
   invitedByName: "Jane Doe",
