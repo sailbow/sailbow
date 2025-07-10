@@ -22,7 +22,7 @@ import { Button } from "./ui/button";
 import { LocationEdit } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export const GooglePlacesSearch = ({}: {}) => {
+export const GooglePlacesSearch = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
