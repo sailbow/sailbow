@@ -28,6 +28,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: z.string().default("/trips"),
     NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: z.string().default("/trips"),
     NEXT_PUBLIC_CLERK_ISSUER_DOMAIN: z.string().default("https://saving-doberman-58.clerk.accounts.dev"),
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().min(1),
   },
 
   /**
@@ -45,7 +46,8 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL,
     NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
     NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL,
-    NEXT_PUBLIC_CLERK_ISSUER_DOMAIN: process.env.NEXT_PUBLIC_CLERK_ISSUER_DOMAIN
+    NEXT_PUBLIC_CLERK_ISSUER_DOMAIN: process.env.NEXT_PUBLIC_CLERK_ISSUER_DOMAIN,
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

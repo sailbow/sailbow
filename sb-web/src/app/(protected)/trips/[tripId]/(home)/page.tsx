@@ -18,6 +18,7 @@ import { useDisclosure } from "@/lib/use-disclosure";
 import { CreateTripPollDialog } from "./create-trip-poll-dialog";
 import { TripPolls } from "./trip-polls";
 import { useQueryState } from "nuqs";
+import { GooglePlacesSearch } from "@/components/google-places-search";
 
 export default function TripOverviewPage() {
   const { data: trip } = useActiveTrip();
@@ -46,6 +47,7 @@ export default function TripOverviewPage() {
         <CreateTripPollDialog />
       </TripPageHeader>
       <TripPageContent>
+        <GooglePlacesSearch />
         {activeTab === "overview" && (
           <div className="grid grid-cols-4 gap-4">
             <Card className="col-span-4 lg:col-span-2">
