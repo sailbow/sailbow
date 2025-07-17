@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
 import { withUser } from "../authUtils";
 import { throwIfNotMember } from "../tripUtils";
+import { locationValidator } from "../schema";
 
 export const list = query({
   args: {
@@ -26,7 +27,7 @@ export const upsert = mutation({
     startDate: v.number(),
     endDate: v.union(v.number(), v.null()),
     type: v.union(v.null(), v.string()),
-    location: v.union(v.null(), v.string()),
+    location: v.optional(locationValidator),
     details: v.union(v.null(), v.string()),
   },
   handler: async (ctx, args) => {

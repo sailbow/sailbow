@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, Plus, X } from "lucide-react";
+import { CalendarIcon, LocationEdit, Plus, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -20,11 +20,6 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useCreateTrip } from "@/lib/trip-mutations";
@@ -32,6 +27,10 @@ import { toast } from "@/components/ui/toast";
 import BannerModal from "@/app/_components/banner-modal";
 import ImageWithLoader from "@/app/_components/image-with-loader";
 import { ImageIcon } from "lucide-react";
+import {
+  GooglePlaceResultSchema,
+  GooglePlacesSearchPopover,
+} from "@/components/google-places-search-popover";
 
 const NameSchema = z.object({
   name: z
@@ -74,6 +73,75 @@ const NameStep: Step<typeof NameSchema> = {
   },
 };
 
+const LocationSchema = z.object({
+  location: GooglePlaceResultSchema.optional(),
+});
+
+const LocationStep: Step<typeof LocationSchema> = {
+  title: "Choose a location (optional)",
+  schema: LocationSchema,
+  component: ({ form }) => {
+    return (
+      <FormField
+        name="location"
+        control={form.control}
+        render={({ field }) => {
+          const trigger = (
+            <Button
+              ref={field.ref}
+              name={field.name}
+              onBlur={field.onBlur}
+              variant="outline"
+              className="w-full justify-start pl-3"
+              disabled={field.disabled}
+            >
+              <Search className="mr-2 size-4 opacity-50" />
+              <span
+                className={cn(
+                  "w-full text-wrap text-left",
+                  !field.value && "text-muted-foreground",
+                )}
+              >
+                {field.value ? field.value.primaryText : "Search"}
+              </span>
+            </Button>
+          );
+          return (
+            <FormItem>
+              <FormControl>
+                <div className="flex w-full items-center gap-2">
+                  <GooglePlacesSearchPopover
+                    trigger={trigger}
+                    onSelect={field.onChange}
+                  />
+                  <div className="ml-auto h-8 w-8">
+                    {field.value && (
+                      <Button
+                        className="size-full text-foreground"
+                        size="icon"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          field.onChange(undefined);
+                        }}
+                      >
+                        <X className="size-4" />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </FormControl>
+              <div className="relative min-h-4">
+                <FormMessage className="absolute left-0 top-0" />
+              </div>
+            </FormItem>
+          );
+        }}
+      />
+    );
+  },
+};
+
 const DateRangeSchema = z.object({
   dates: z
     .object({
@@ -89,16 +157,17 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
   form,
 }) => {
   const isMobile = useIsMobile();
+  const disclosure = useDisclosure();
   return (
     <FormField
       control={form.control}
       name="dates"
       render={({ field, formState }) => {
         return (
-          <Dialog>
+          <Dialog {...disclosure}>
             <FormItem>
               <FormControl>
-                <div className="flex w-full items-center gap-4">
+                <div className="flex w-full items-center gap-2">
                   <DialogTrigger asChild>
                     <Button
                       variant={"outline"}
@@ -107,7 +176,7 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
                         !field.value?.from && "text-muted-foreground",
                       )}
                     >
-                      <CalendarIcon className="mr-4 h-4 w-4 opacity-50" />
+                      <CalendarIcon className="mr-2 h-4 w-4 opacity-50" />
                       {field.value?.from && (
                         <span>
                           {format(field.value.from, "PPP")}
@@ -155,7 +224,12 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
                     from: field.value?.from ?? undefined,
                     to: field.value?.to ?? undefined,
                   }}
-                  onSelect={field.onChange}
+                  onSelect={(range) => {
+                    field.onChange(range);
+                    if (range?.from && range?.to) {
+                      disclosure.setClosed();
+                    }
+                  }}
                 />
               </DialogContent>
             </FormItem>
@@ -241,11 +315,14 @@ const CoverPhotoStep: Step<typeof CoverPhotoSchema> = {
 
 const steps = [
   NameStep,
+  LocationStep,
   DateRangeStep,
   CoverPhotoStep,
 ] as const as readonly Step[];
 
-const newTripSchema = NameSchema.merge(DateRangeSchema).merge(CoverPhotoSchema);
+const newTripSchema = NameSchema.merge(LocationSchema)
+  .merge(DateRangeSchema)
+  .merge(CoverPhotoSchema);
 
 export const CreateTripButton = () => {
   const isMobile = useIsMobile();

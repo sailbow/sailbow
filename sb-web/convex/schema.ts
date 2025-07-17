@@ -7,6 +7,27 @@ export const roleSchema = v.union(
   v.literal("firstMate"),
   v.literal("crewMember"),
 );
+
+export const locationValidator = v.object({
+  placeId: v.optional(v.string()),
+  primaryText: v.string(),
+  secondaryText: v.optional(v.string()),
+  icon: v.optional(
+    v.object({
+      url: v.string(),
+      background: v.string(),
+    }),
+  ),
+  geo: v.optional(
+    v.object({
+      lat: v.number(),
+      lng: v.number(),
+    }),
+  ),
+  photo: v.optional(v.string()),
+  website: v.optional(v.string()),
+});
+
 export const tripSchema = {
   name: v.string(),
   slug: v.optional(v.string()),
@@ -27,6 +48,7 @@ export const tripSchema = {
       full: v.string(),
     }),
   ),
+  location: v.optional(locationValidator),
 };
 
 export const inviteSchema = {
@@ -79,7 +101,7 @@ export const itineraryItemSchemaV2 = v.object({
   startDate: v.number(),
   endDate: v.union(v.number(), v.null()),
   type: v.union(v.null(), v.string()),
-  location: v.union(v.null(), v.string()),
+  location: v.optional(v.union(locationValidator, v.null(), v.string())),
   details: v.union(v.null(), v.string()),
 });
 

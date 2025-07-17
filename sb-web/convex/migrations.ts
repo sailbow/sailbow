@@ -40,9 +40,17 @@ export const itineraryV2Migration = migration({
       startDate: doc.date,
       endDate: null,
       type: null,
-      location: doc.location,
+      location: undefined,
       details: doc.details,
     });
+  },
+});
+
+export const itineraryItemLocationSupportMigration = migration({
+  table: "itineraryItemsV2",
+  migrateOne: async (ctx, doc) => {
+    const { location, ...rest } = doc;
+    await ctx.db.replace(doc._id, rest);
   },
 });
 
@@ -50,5 +58,6 @@ export default internalMutation(async (ctx) => {
   await startMigrationsSerially(ctx, [
     internal.migrations.crewUserIdRequireMigration,
     internal.migrations.itineraryV2Migration,
+    internal.migrations.itineraryItemLocationSupportMigration,
   ]);
 });
