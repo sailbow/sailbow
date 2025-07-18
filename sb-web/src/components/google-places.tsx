@@ -168,6 +168,7 @@ const GooglePlaceSearch = ({
         "icon_background_color",
         "photos",
         "geometry",
+        "formatted_address",
       ],
     })
       .then((details) => {
@@ -176,7 +177,7 @@ const GooglePlaceSearch = ({
         const result: GooglePlaceResult = {
           placeId: value.place_id,
           primaryText: value.structured_formatting.main_text,
-          secondaryText: value.structured_formatting.secondary_text,
+          secondaryText: details.formatted_address,
           website: details.website,
           photo: details.photos?.at(0)?.getUrl(),
           ...(details.icon &&

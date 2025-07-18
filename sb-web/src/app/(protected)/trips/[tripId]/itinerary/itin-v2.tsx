@@ -14,6 +14,9 @@ import {
   Edit,
   Trash,
   Plus,
+  MapPin,
+  CornerUpRight,
+  Globe,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -21,7 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -72,7 +75,12 @@ import {
 } from "@/components/ui/accordion";
 import { AccordionContent } from "@radix-ui/react-accordion";
 import { PollDialog } from "@/components/poll-dialog";
-import { GooglePlaceResultSchema } from "@/components/google-places";
+import {
+  GooglePlaceResultSchema,
+  GooglePlaceSearchPopover,
+} from "@/components/google-places";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -146,8 +154,8 @@ const ItinItem = ({
           <div className="absolute right-5 top-5  h-full w-0.5 bg-accent" />
         )}
       </div>
-      <Card className="mb-8 w-full max-w-2xl pb-6">
-        <CardHeader className="space-y-0 pb-0">
+      <Card className="mb-8 w-full max-w-2xl">
+        <CardHeader>
           <div className="flex justify-between">
             <CardTitle>{item.title}</CardTitle>
             <div className="flex items-center gap-2">
@@ -189,21 +197,67 @@ const ItinItem = ({
               </Dialog>
             </div>
           </div>
+          {item?.location?.primaryText && (
+            <CardDescription className="text-base">
+              {item.location.primaryText}
+            </CardDescription>
+          )}
+          {item?.location?.secondaryText && (
+            <CardDescription>{item.location.secondaryText}</CardDescription>
+          )}
         </CardHeader>
-        {!!item.details && (
-          <CardContent className="py-0">
-            <Accordion type="single" collapsible>
-              <AccordionItem value="item-1" className="border-b-0">
-                <AccordionTrigger className="justify-start gap-2 pb-1 text-sm text-muted-foreground">
-                  Details
-                </AccordionTrigger>
-                <AccordionContent>
-                  <EditorContent editor={editor} className="border-none p-2" />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </CardContent>
-        )}
+        {!!item.details ||
+          (!!item.location && (
+            <CardContent>
+              {item.location && (
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${item.location.geo ? `${item.location.geo.lat}%2C${item.location.geo.lng}` : item.location.primaryText}&destination_place_id=${item.location.placeId}`}
+                    className={buttonVariants({
+                      size: "sm",
+                      variant: "secondary",
+                      className: "underline-offset-2 hover:underline",
+                    })}
+                  >
+                    <CornerUpRight className="mr-1 h-4 w-4" />
+                    Get Directions
+                  </Link>
+                  {item.location.website && (
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={item.location.website}
+                      className={buttonVariants({
+                        size: "sm",
+                        variant: "secondary",
+                        className: "underline-offset-2 hover:underline",
+                      })}
+                    >
+                      <Globe className="mr-1 h-4 w-4" />
+                      Website
+                    </Link>
+                  )}
+                </div>
+              )}
+              {item.details && (
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="item-1" className="border-b-0">
+                    <AccordionTrigger className="justify-start gap-2 pb-1 text-sm text-muted-foreground">
+                      Details
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EditorContent
+                        editor={editor}
+                        className="border-none p-2"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              )}
+            </CardContent>
+          ))}
       </Card>
       <AddItinPollDialog {...pollDisclosure} itemId={item._id} />
     </div>
@@ -319,8 +373,7 @@ export const AddOrEditItinItemForm = ({
           .string({ message: "Required" })
           .min(1, { message: "Required" }),
         details: z.string(),
-        location: GooglePlaceResultSchema.nullish(),
-        // location: z.string(),
+        location: GooglePlaceResultSchema.optional(),
         type: z.string().nullable(),
         startDate: z.number().min(0, { message: "Required" }),
         endDate: z.number().nullable(),
@@ -331,6 +384,7 @@ export const AddOrEditItinItemForm = ({
         _id: item._id,
       }),
       tripId: activeTripId,
+      location: item?.location,
       title: item?.title ?? "",
       details: item?.details ?? "",
       type: item?.type ?? null,
@@ -346,6 +400,7 @@ export const AddOrEditItinItemForm = ({
       }),
       tripId: activeTripId,
       title: item?.title ?? "",
+      location: item?.location,
       details: item?.details ?? "",
       type: item?.type ?? null,
       startDate: item?.startDate ? item.startDate : -1,
@@ -507,6 +562,43 @@ export const AddOrEditItinItemForm = ({
               End date
             </Button>
           )}
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => {
+              const { value, ...props } = field;
+              const trigger = (
+                <Button
+                  {...props}
+                  variant="outline"
+                  className="w-full justify-start pl-3"
+                >
+                  <MapPin className="mr-2 size-4 opacity-50" />
+                  <span
+                    className={cn(
+                      "w-full text-wrap text-left",
+                      !field.value && "text-muted-foreground",
+                    )}
+                  >
+                    {field.value ? field.value.primaryText : "Search"}
+                  </span>
+                </Button>
+              );
+              return (
+                <FormItem>
+                  <FormLabel>
+                    Location <span className="font-light">(optional)</span>
+                  </FormLabel>
+                  <FormControl>
+                    <GooglePlaceSearchPopover
+                      trigger={trigger}
+                      onSelect={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              );
+            }}
+          />
           <FormField
             control={form.control}
             name="details"

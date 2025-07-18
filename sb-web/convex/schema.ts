@@ -101,7 +101,7 @@ export const itineraryItemSchemaV2 = v.object({
   startDate: v.number(),
   endDate: v.union(v.number(), v.null()),
   type: v.union(v.null(), v.string()),
-  location: v.optional(v.union(locationValidator, v.null(), v.string())),
+  location: v.optional(locationValidator),
   details: v.union(v.null(), v.string()),
 });
 
