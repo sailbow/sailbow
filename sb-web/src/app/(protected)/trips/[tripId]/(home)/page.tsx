@@ -375,7 +375,7 @@ const SetLocationBadge = () => {
         className="gap-5 rounded-sm bg-cyan-700 py-2 text-lg text-white hover:bg-cyan-700 dark:bg-cyan-950 hover:dark:bg-cyan-950"
       >
         <AlertCircle />A location has not been specified
-        <Button className="ml-auto" onClick={() => disclosure.setOpened()}>
+        <Button className="ml-auto w-32" onClick={() => disclosure.setOpened()}>
           Set a location
         </Button>
         <SetLocationDialog {...disclosure} />
@@ -391,7 +391,11 @@ const SetDateRangeBadge = () => {
       variant="secondary"
       className="gap-5 rounded-sm bg-cyan-700 py-2 text-lg text-white hover:bg-cyan-700 dark:bg-cyan-950 hover:dark:bg-cyan-950"
     >
-      <AlertCircle />A date range has not been specified
+      <AlertCircle />
+      Dates have not been selected
+      <Button className="ml-auto w-32" onClick={() => disclosure.setOpened()}>
+        Set dates
+      </Button>
       <SetDateRangeDialog {...disclosure} />
     </Badge>
   );
