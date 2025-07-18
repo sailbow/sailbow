@@ -1,6 +1,6 @@
 import { mutation } from "../_generated/server";
 import { withUser } from "../authUtils";
-import { tripSchema } from "../schema";
+import { locationValidator, tripSchema } from "../schema";
 import { ConvexError, v } from "convex/values";
 
 export const create = mutation({
@@ -28,6 +28,33 @@ export const updateDescription = mutation({
   handler: async ({ auth, db }, args) => {
     await withUser(auth, db, async () => {
       await db.patch(args.tripId, { description: args.description });
+    });
+  },
+});
+
+export const updateDates = mutation({
+  args: {
+    tripId: v.id("trips"),
+    dates: v.object({
+      start: v.number(),
+      end: v.number(),
+    }),
+  },
+  handler: async ({ auth, db }, args) => {
+    return withUser(auth, db, async () => {
+      return db.patch(args.tripId, { dates: args.dates });
+    });
+  },
+});
+
+export const updateLocation = mutation({
+  args: {
+    tripId: v.id("trips"),
+    location: locationValidator,
+  },
+  handler: async ({ auth, db }, args) => {
+    return withUser(auth, db, async () => {
+      return db.patch(args.tripId, { location: args.location });
     });
   },
 });

@@ -29,8 +29,8 @@ import ImageWithLoader from "@/app/_components/image-with-loader";
 import { ImageIcon } from "lucide-react";
 import {
   GooglePlaceResultSchema,
-  GooglePlacesSearchPopover,
-} from "@/components/google-places-search-popover";
+  GooglePlaceSearchPopover,
+} from "@/components/google-places";
 
 const NameSchema = z.object({
   name: z
@@ -110,7 +110,7 @@ const LocationStep: Step<typeof LocationSchema> = {
             <FormItem>
               <FormControl>
                 <div className="flex w-full items-center gap-2">
-                  <GooglePlacesSearchPopover
+                  <GooglePlaceSearchPopover
                     trigger={trigger}
                     onSelect={field.onChange}
                   />

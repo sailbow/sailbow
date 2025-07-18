@@ -14,6 +14,12 @@ const config = {
                 port: '',
                 pathname: '/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'maps.googleapis.com',
+                port: '',
+                pathname: '/**',
+            }
         ],
     },
 };

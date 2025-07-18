@@ -9,7 +9,7 @@ export const roleSchema = v.union(
 );
 
 export const locationValidator = v.object({
-  placeId: v.optional(v.string()),
+  placeId: v.string(),
   primaryText: v.string(),
   secondaryText: v.optional(v.string()),
   icon: v.optional(

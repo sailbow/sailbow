@@ -72,12 +72,18 @@ import {
 } from "@/components/ui/accordion";
 import { AccordionContent } from "@radix-ui/react-accordion";
 import { PollDialog } from "@/components/poll-dialog";
+import { GooglePlaceResultSchema } from "@/components/google-places";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-type UpsertItinItemV2 = MakeOptional<Omit<ItinItemV2, "_creationTime">, "_id">;
+type UpsertItinItemV2 = MakeOptional<
+  Omit<ItinItemV2, "_creationTime">,
+  "_id" | "location"
+> & {
+  location?: Exclude<ItinItemV2["location"], string | null>;
+};
 
 const getIcon = (itemType: string | undefined | null) => {
   switch (itemType) {
@@ -313,7 +319,8 @@ export const AddOrEditItinItemForm = ({
           .string({ message: "Required" })
           .min(1, { message: "Required" }),
         details: z.string(),
-        location: z.string(),
+        location: GooglePlaceResultSchema.nullish(),
+        // location: z.string(),
         type: z.string().nullable(),
         startDate: z.number().min(0, { message: "Required" }),
         endDate: z.number().nullable(),
@@ -326,8 +333,7 @@ export const AddOrEditItinItemForm = ({
       tripId: activeTripId,
       title: item?.title ?? "",
       details: item?.details ?? "",
-      location: item?.location ?? "",
-      type: item?.location ?? null,
+      type: item?.type ?? null,
       startDate: item?.startDate ? item.startDate : -1,
       endDate: item?.endDate ?? null,
     },
@@ -341,8 +347,7 @@ export const AddOrEditItinItemForm = ({
       tripId: activeTripId,
       title: item?.title ?? "",
       details: item?.details ?? "",
-      location: item?.location ?? "",
-      type: item?.location ?? null,
+      type: item?.type ?? null,
       startDate: item?.startDate ? item.startDate : -1,
       endDate: item?.endDate ?? null,
     });
