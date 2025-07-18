@@ -156,46 +156,42 @@ const ItinItem = ({
       </div>
       <Card className="mb-8 w-full max-w-2xl">
         <CardHeader>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <CardTitle>{item.title}</CardTitle>
-            <div className="flex items-center gap-2">
-              <Dialog {...editDisclosure}>
-                <DropdownMenu {...actionMenuDisclosure}>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="h-5 w-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DialogTrigger asChild>
-                      <DropdownMenuItem disabled={isDeletingItem}>
-                        <Edit className="mr-2 size-4" /> Edit details
-                      </DropdownMenuItem>
-                    </DialogTrigger>
-                    <DropdownMenuItem
-                      onClick={() => pollDisclosure.setOpened()}
-                    >
-                      <ChartNoAxesColumn className="mr-2 size-4" /> Start a poll
+            <Dialog {...editDisclosure}>
+              <DropdownMenu {...actionMenuDisclosure}>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <MoreHorizontal className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DialogTrigger asChild>
+                    <DropdownMenuItem disabled={isDeletingItem}>
+                      <Edit className="mr-2 size-4" /> Edit details
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => deleteItem({ _id: item._id })}
-                    >
-                      <Trash className="mr-2 size-4" /> Delete item
-                      <Spinner
-                        isVisible={isDeletingItem || deletedItem}
-                        className="ml-2 size-4"
-                      />
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <DialogContent>
-                  <AddOrEditItinItemForm
-                    item={item}
-                    onSaveSuccess={editDisclosure.setClosed}
-                  />
-                </DialogContent>
-              </Dialog>
-            </div>
+                  </DialogTrigger>
+                  <DropdownMenuItem onClick={() => pollDisclosure.setOpened()}>
+                    <ChartNoAxesColumn className="mr-2 size-4" /> Start a poll
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => deleteItem({ _id: item._id })}
+                  >
+                    <Trash className="mr-2 size-4" /> Delete item
+                    <Spinner
+                      isVisible={isDeletingItem || deletedItem}
+                      className="ml-2 size-4"
+                    />
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DialogContent>
+                <AddOrEditItinItemForm
+                  item={item}
+                  onSaveSuccess={editDisclosure.setClosed}
+                />
+              </DialogContent>
+            </Dialog>
           </div>
           {item?.location && (
             <>
