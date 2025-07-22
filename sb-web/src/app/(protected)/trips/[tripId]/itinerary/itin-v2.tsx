@@ -88,6 +88,7 @@ import { useMe } from "@/lib/user-queries";
 import { AnswerPollDialog } from "@/components/answer-poll-dialog";
 import { PollResultsChart } from "@/components/poll-results-chart";
 import { DateTimePicker } from "@/components/ui/datetime-calendar";
+import LoadingButton from "@/components/loading-button";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -541,8 +542,6 @@ export const AddOrEditItinItemForm = ({
     onSaveSuccess();
   };
 
-  const endDate = form.watch("endDate");
-
   return (
     <Form {...form}>
       <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -691,9 +690,9 @@ export const AddOrEditItinItemForm = ({
         </div>
 
         <DialogFooter>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
+          <LoadingButton isLoading={form.formState.isSubmitting} type="submit">
             Save
-          </Button>
+          </LoadingButton>
         </DialogFooter>
       </form>
     </Form>

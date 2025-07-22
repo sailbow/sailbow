@@ -21,6 +21,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { TextEditor } from "@/components/text-editor";
+import LoadingButton from "@/components/loading-button";
 
 type Announcement = FunctionReturnType<
   typeof api.announcements.queries.get
@@ -73,8 +74,9 @@ const DeleteAnnouncementModal = ({
             <DialogClose asChild>
               <Button variant="secondary">Cancel</Button>
             </DialogClose>
-            <Button
+            <LoadingButton
               variant="destructive"
+              isLoading={isPending}
               onClick={() =>
                 deleteAnnouncement({
                   tripId: announcement.tripId,
@@ -84,7 +86,7 @@ const DeleteAnnouncementModal = ({
               disabled={isPending || wasDeleted}
             >
               Delete
-            </Button>
+            </LoadingButton>
           </DialogFooter>
         </DialogContent>
       </DialogContent>

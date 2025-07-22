@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "./ui/form";
 import { Spinner } from "@/app/_components/spinner";
 import { cn } from "@/lib/utils";
+import LoadingButton from "./loading-button";
 
 export type StepSchema = z.AnyZodObject;
 
@@ -137,15 +138,11 @@ export function StepperForm({
             >
               {backButtonText}
             </Button>
-            <Button type="submit" className="min-w-max">
-              {isLoading ? (
-                <Spinner />
-              ) : activeStep === steps.length - 1 ? (
-                submitButtonText
-              ) : (
-                nextButtonText
-              )}
-            </Button>
+            <LoadingButton isLoading={isLoading} type="submit">
+              {activeStep === steps.length - 1
+                ? submitButtonText
+                : nextButtonText}
+            </LoadingButton>
           </div>
         </form>
       </Form>
