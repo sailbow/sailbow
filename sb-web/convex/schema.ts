@@ -214,5 +214,5 @@ export default defineSchema({
   itineraryItemPolls: defineTable({
     itineraryItemId: v.id("itineraryItemsV2"),
     pollId: v.id("polls"),
-  }),
+  }).index("byItineraryItemId", ["itineraryItemId"]),
 });

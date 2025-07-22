@@ -7,6 +7,7 @@ import {
   getAll,
   getManyFrom,
   getManyVia,
+  getOneFrom,
   getOneFromOrThrow,
   getOrThrow,
 } from "convex-helpers/server/relationships";
@@ -232,6 +233,63 @@ export const deleteTripPoll = mutation({
         Promise.all(poll.options.map((o) => db.delete(o._id))),
         db.delete(poll._id),
       ]);
+    });
+  },
+});
+
+export const getItinItemPoll = query({
+  args: {
+    itineraryItemId: v.id("itineraryItemsV2"),
+  },
+  handler: async (ctx, args) => {
+    return withUser(ctx.auth, ctx.db, async (user) => {
+      const item = await ctx.db.get(args.itineraryItemId);
+      if (!item) throw new Error("Cannot delete item that does not exist");
+      await throwIfNotMember(user, item.tripId, ctx.db);
+      const itemPoll = await getOneFrom(
+        ctx.db,
+        "itineraryItemPolls",
+        "byItineraryItemId",
+        args.itineraryItemId,
+        "itineraryItemId",
+      );
+      if (!itemPoll) return null;
+      const poll = await getDetailedPoll(ctx.db, itemPoll.pollId);
+      return {
+        ...poll,
+        itineraryItemPollId: itemPoll._id,
+      };
+    });
+  },
+});
+
+export const respondToItinItemPoll = mutation({
+  args: {
+    itineraryItemPollId: v.id("itineraryItemPolls"),
+    choices: v.array(v.id("pollOptions")),
+  },
+  handler: (ctx, args) => {
+    return withUser(ctx.auth, ctx.db, async (user) => {
+      const itemPoll = await getOneFromOrThrow(
+        ctx.db,
+        "itineraryItemPolls",
+        "by_id",
+        args.itineraryItemPollId,
+        "_id",
+      );
+      const item = await getOneFromOrThrow(
+        ctx.db,
+        "itineraryItemsV2",
+        "by_id",
+        itemPoll.itineraryItemId,
+        "_id",
+      );
+      await throwIfNotMember(user, item.tripId, ctx.db);
+      await respondToPoll(ctx.db, {
+        pollId: itemPoll.pollId,
+        userId: user.userId,
+        choices: args.choices,
+      });
     });
   },
 });

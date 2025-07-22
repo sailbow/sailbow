@@ -17,6 +17,10 @@ import {
   MapPin,
   CornerUpRight,
   Globe,
+  CircleAlertIcon,
+  BarChart,
+  Info,
+  Eye,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -39,13 +43,14 @@ import {
   setHours,
   setMinutes,
 } from "date-fns";
-import { useActiveTripId } from "@/lib/trip-queries";
+import { useActiveTripId, useCrew } from "@/lib/trip-queries";
 import { useMutation } from "convex/react";
 import { set, z } from "zod";
 import { useDisclosure } from "@/lib/use-disclosure";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -81,6 +86,15 @@ import {
 } from "@/components/google-places";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { useMe } from "@/lib/user-queries";
+import { Poll } from "@/components/types";
+import { AnswerPollDialog } from "@/components/answer-poll-dialog";
+import { PollResultsChart } from "@/components/poll-results-chart";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -113,10 +127,17 @@ const ItinItem = ({
   item: ItinItemV2;
   showRail: boolean;
 }) => {
+  const { data: me } = useMe();
   const itemStart = new Date(item.startDate);
   const editDisclosure = useDisclosure();
   const actionMenuDisclosure = useDisclosure();
   const pollDisclosure = useDisclosure();
+  const answerPollDisclosure = useDisclosure();
+  const pollResultsDisclosure = useDisclosure();
+  const { data: poll } = useQueryWithStatus(api.polls.getItinItemPoll, {
+    itineraryItemId: item._id,
+  });
+  const { data: crew } = useCrew();
   const editor = useTextEditor({
     content: item.details,
     isEditable: false,
@@ -139,6 +160,22 @@ const ItinItem = ({
     },
   });
 
+  const { mutateAsync: respondToPoll, isPending: isRespondingToPoll } = useMut(
+    api.polls.respondToItinItemPoll,
+    {
+      onSuccess: () => {
+        answerPollDisclosure.setClosed();
+        toast.success("Success!", { position: "top-center" });
+      },
+      onError: () => {
+        toast.error("Something went wrong there");
+      },
+    },
+  );
+
+  const hasRespondedToPoll =
+    me && poll?.responses.some((v) => v.userId === me._id);
+
   return (
     <div key={item._id} className="relative flex h-full items-stretch">
       <div className="relative mr-4 basis-1/6">
@@ -156,56 +193,58 @@ const ItinItem = ({
       </div>
       <Card className="mb-8 w-full max-w-2xl">
         <CardHeader>
-          <div className="flex justify-between gap-2">
+          <div className="flex gap-2">
             <CardTitle>{item.title}</CardTitle>
-            <Dialog {...editDisclosure}>
-              <DropdownMenu {...actionMenuDisclosure}>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <MoreHorizontal className="h-5 w-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DialogTrigger asChild>
-                    <DropdownMenuItem disabled={isDeletingItem}>
-                      <Edit className="mr-2 size-4" /> Edit details
+            <div className="ml-auto flex gap-2">
+              <Dialog {...editDisclosure}>
+                <DropdownMenu {...actionMenuDisclosure}>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <MoreHorizontal className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DialogTrigger asChild>
+                      <DropdownMenuItem disabled={isDeletingItem}>
+                        <Edit className="mr-2 size-4" /> Edit details
+                      </DropdownMenuItem>
+                    </DialogTrigger>
+                    {!poll && (
+                      <DropdownMenuItem
+                        onClick={() => pollDisclosure.setOpened()}
+                      >
+                        <ChartNoAxesColumn className="mr-2 size-4" /> Start a
+                        poll
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem
+                      onClick={() => deleteItem({ _id: item._id })}
+                    >
+                      <Trash className="mr-2 size-4" /> Delete item
+                      <Spinner
+                        isVisible={isDeletingItem || deletedItem}
+                        className="ml-2 size-4"
+                      />
                     </DropdownMenuItem>
-                  </DialogTrigger>
-                  <DropdownMenuItem onClick={() => pollDisclosure.setOpened()}>
-                    <ChartNoAxesColumn className="mr-2 size-4" /> Start a poll
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => deleteItem({ _id: item._id })}
-                  >
-                    <Trash className="mr-2 size-4" /> Delete item
-                    <Spinner
-                      isVisible={isDeletingItem || deletedItem}
-                      className="ml-2 size-4"
-                    />
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DialogContent>
-                <AddOrEditItinItemForm
-                  item={item}
-                  onSaveSuccess={editDisclosure.setClosed}
-                />
-              </DialogContent>
-            </Dialog>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <DialogContent>
+                  <AddOrEditItinItemForm
+                    item={item}
+                    onSaveSuccess={editDisclosure.setClosed}
+                  />
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
           {item?.location && (
             <>
-              <CardDescription className="text-base">
-                {item.location.primaryText}
-              </CardDescription>
-              {item?.location?.secondaryText && (
-                <CardDescription>{item.location.secondaryText}</CardDescription>
-              )}
+              <CardDescription>{item.location.primaryText}</CardDescription>
               <div className="flex flex-wrap gap-2">
                 <Link
                   target="_blank"
                   rel="noopener noreferrer"
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${item.location.geo ? `${item.location.geo.lat}%2C${item.location.geo.lng}` : item.location.primaryText}&destination_place_id=${item.location.placeId}`}
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${item.location.primaryText}&destination_place_id=${item.location.placeId}`}
                   className={buttonVariants({
                     size: "sm",
                     variant: "secondary",
@@ -234,8 +273,74 @@ const ItinItem = ({
             </>
           )}
         </CardHeader>
-        {!!item.details && (
+        {(Boolean(item.details) || Boolean(poll)) && (
           <CardContent>
+            {poll && (
+              <Accordion type="single" collapsible>
+                <AccordionItem value="item-1" className="w-full border-b-0">
+                  <AccordionTrigger className="gap-2 pb-1 text-muted-foreground">
+                    <div className="inline-flex items-center [&>span]:text-card-foreground">
+                      <BarChart className="mr-1" />
+                      Active Poll:&nbsp;
+                      <span>{poll.title}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="flex flex-col items-start gap-2 px-4 py-2">
+                    {hasRespondedToPoll && (
+                      <div className="text-sm text-muted-foreground">
+                        You responded:{" "}
+                        <span className="text-card-foreground">
+                          {poll.responses
+                            .find((r) => r.userId === me?._id)
+                            ?.choices.reduce((acc, current) => {
+                              const curValue = poll.options.find(
+                                (o) => o._id === current,
+                              )?.value;
+                              if (Boolean(acc)) {
+                                acc += ", " + curValue;
+                              } else {
+                                acc = curValue ?? "";
+                              }
+                              return acc;
+                            }, "")}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex gap-2">
+                      {hasRespondedToPoll ? (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => answerPollDisclosure.setOpened()}
+                        >
+                          <Edit className="mr-2 size-4" />
+                          Edit response
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => answerPollDisclosure.setOpened()}
+                        >
+                          <Plus className="mr-2 size-4 text-secondary-foreground" />
+                          Respond
+                        </Button>
+                      )}
+                      {poll.responses.length > 0 && (
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => pollResultsDisclosure.setOpened()}
+                        >
+                          <Eye className="mr-2 size-4" />
+                          View results
+                        </Button>
+                      )}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            )}
             {item.details && (
               <Accordion type="single" collapsible>
                 <AccordionItem value="item-1" className="border-b-0">
@@ -255,6 +360,37 @@ const ItinItem = ({
         )}
       </Card>
       <AddItinPollDialog {...pollDisclosure} itemId={item._id} />
+      {me && poll && (
+        <AnswerPollDialog
+          {...answerPollDisclosure}
+          isLoading={isRespondingToPoll}
+          poll={poll}
+          userId={me._id}
+          handleSubmit={(choices) => {
+            return respondToPoll({
+              itineraryItemPollId: poll.itineraryItemPollId,
+              choices,
+            });
+          }}
+        />
+      )}
+      {poll && poll.responses.length > 0 && (
+        <Dialog {...pollResultsDisclosure}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Poll results</DialogTitle>
+              <DialogDescription>{poll.title}</DialogDescription>
+            </DialogHeader>
+            <PollResultsChart
+              poll={poll}
+              users={crew?.map((cm) => ({
+                ...cm,
+                _id: cm.userId as Id<"users">,
+              }))}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };

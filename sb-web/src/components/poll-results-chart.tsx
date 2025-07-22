@@ -77,7 +77,7 @@ export function PollResultsChart({
           data={flatResponseData}
           layout="vertical"
           margin={{
-            right: 50,
+            right: 80,
           }}
         >
           <CartesianGrid horizontal={false} vertical={false} />
@@ -94,7 +94,7 @@ export function PollResultsChart({
             type="category"
             tickLine={false}
             axisLine={false}
-            width={150}
+            width={100}
           />
           {!poll.settings.incognitoResponses && users && (
             <ChartTooltip content={CustomTooltipContent} />

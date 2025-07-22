@@ -3,6 +3,7 @@ import { mutation, query } from "../_generated/server";
 import { withUser } from "../authUtils";
 import { throwIfNotMember } from "../tripUtils";
 import { locationValidator } from "../schema";
+import { getOneFrom } from "convex-helpers/server/relationships";
 
 export const list = query({
   args: {
