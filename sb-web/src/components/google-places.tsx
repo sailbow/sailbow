@@ -34,6 +34,7 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import LoadingButton from "./loading-button";
 import { Check } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const GooglePlaceResultSchema = z.object({
   placeId: z.string(),
@@ -65,7 +66,7 @@ export const GooglePlaceSearchPopover = ({
   trigger: React.ReactElement;
 }) => {
   const popoverDisclosure = useDisclosure();
-
+  const isMobile = useIsMobile();
   const onSelectPlace = (place: GooglePlaceResult) => {
     onSelect(place);
     popoverDisclosure.setClosed();
@@ -74,8 +75,15 @@ export const GooglePlaceSearchPopover = ({
   return (
     <Popover {...popoverDisclosure}>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent className="w-md p-0">
-        <GooglePlaceSearch onSelect={onSelectPlace} />
+      <PopoverContent
+        className="w-md p-0"
+        align="start"
+        avoidCollisions={isMobile}
+      >
+        <GooglePlaceSearch
+          className="max-h-80 min-h-80"
+          onSelect={onSelectPlace}
+        />
       </PopoverContent>
     </Popover>
   );

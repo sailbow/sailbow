@@ -59,7 +59,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
-import { useForm } from "react-hook-form";
+import { DefaultValues, useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -481,6 +481,16 @@ export const Itinerary = ({ items }: { items: ItinItemV2[] }) => {
   );
 };
 
+const addOrEditSchema = z.object({
+  _id: z.string().min(1).optional(),
+  tripId: z.string().min(1),
+  title: z.string({ message: "Required" }).min(1, { message: "Required" }),
+  details: z.string(),
+  location: GooglePlaceResultSchema.optional(),
+  type: z.string().nullable(),
+  startDate: z.number().min(0, { message: "Required" }),
+  endDate: z.number().nullable(),
+});
 export const AddOrEditItinItemForm = ({
   onSaveSuccess,
   item,
@@ -491,33 +501,21 @@ export const AddOrEditItinItemForm = ({
   const activeTripId = useActiveTripId();
   const [showEnd, setShowEnd] = useState(!!item?.endDate);
   const upsertItem = useMutation(api.itinerary.v2.upsert);
+  const defaultValues = {
+    ...(item?._id && {
+      _id: item._id,
+    }),
+    tripId: activeTripId,
+    location: item?.location,
+    title: item?.title ?? "",
+    details: item?.details ?? "",
+    type: item?.type ?? null,
+    startDate: item?.startDate,
+    endDate: item?.endDate ?? null,
+  };
   const form = useForm({
-    resolver: zodResolver(
-      z.object({
-        _id: z.custom<Id<"trips">>().optional(),
-        tripId: z.custom<Id<"trips">>(),
-        title: z
-          .string({ message: "Required" })
-          .min(1, { message: "Required" }),
-        details: z.string(),
-        location: GooglePlaceResultSchema.optional(),
-        type: z.string().nullable(),
-        startDate: z.number().min(0, { message: "Required" }),
-        endDate: z.number().nullable(),
-      }),
-    ),
-    defaultValues: {
-      ...(item?._id && {
-        _id: item._id,
-      }),
-      tripId: activeTripId,
-      location: item?.location,
-      title: item?.title ?? "",
-      details: item?.details ?? "",
-      type: item?.type ?? null,
-      startDate: item?.startDate ? item.startDate : -1,
-      endDate: item?.endDate ?? null,
-    },
+    resolver: zodResolver(addOrEditSchema),
+    defaultValues,
   });
 
   useEffect(() => {
@@ -530,7 +528,7 @@ export const AddOrEditItinItemForm = ({
       location: item?.location,
       details: item?.details ?? "",
       type: item?.type ?? null,
-      startDate: item?.startDate ? item.startDate : -1,
+      startDate: item?.startDate,
       endDate: item?.endDate ?? null,
     });
     setShowEnd(!!item?.endDate);
@@ -544,7 +542,12 @@ export const AddOrEditItinItemForm = ({
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="space-y-4"
+        onSubmit={form.handleSubmit((values) =>
+          onSubmit({ ...values, startDate: values.startDate! }),
+        )}
+      >
         <DialogHeader>
           <DialogTitle>{item ? "Edit" : "New"} itinerary item</DialogTitle>
         </DialogHeader>
@@ -574,7 +577,7 @@ export const AddOrEditItinItemForm = ({
           <FormField
             control={form.control}
             name="startDate"
-            render={({ field, formState }) => {
+            render={({ field }) => {
               return (
                 <FormItem>
                   <FormLabel>Start date</FormLabel>
@@ -582,13 +585,13 @@ export const AddOrEditItinItemForm = ({
                     <DateTimePicker
                       hourCycle={12}
                       value={field.value ? new Date(field.value) : undefined}
-                      {...(field.value && {
-                        defaultPopupValue: new Date(field.value),
-                      })}
+                      // {...(field.value && {
+                      //   defaultPopupValue: new Date(field.value),
+                      // })}
                       onChange={(date) => field.onChange(date?.getTime())}
                       granularity="minute"
                       displayFormat={{
-                        hour12: "ccc MMMM do p",
+                        hour12: "ccc, MMMM do, yyyy @p",
                       }}
                     />
                   </FormControl>
@@ -600,7 +603,7 @@ export const AddOrEditItinItemForm = ({
             <FormField
               control={form.control}
               name="endDate"
-              render={({ field, formState }) => {
+              render={({ field }) => {
                 return (
                   <FormItem>
                     <FormLabel>End Date</FormLabel>
@@ -608,13 +611,10 @@ export const AddOrEditItinItemForm = ({
                       <DateTimePicker
                         hourCycle={12}
                         value={field.value ? new Date(field.value) : undefined}
-                        {...(field.value && {
-                          defaultPopupValue: new Date(field.value),
-                        })}
                         onChange={(date) => field.onChange(date?.getTime())}
                         granularity="minute"
                         displayFormat={{
-                          hour12: "ccc MMMM do p",
+                          hour12: "ccc, MMMM do, yyyy @p",
                         }}
                       />
                     </FormControl>
