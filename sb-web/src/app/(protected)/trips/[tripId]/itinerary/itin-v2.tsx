@@ -22,6 +22,7 @@ import {
   Info,
   Eye,
   BarChart2,
+  NotepadText,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -89,6 +90,7 @@ import { AnswerPollDialog } from "@/components/answer-poll-dialog";
 import { PollResultsChart } from "@/components/poll-results-chart";
 import { DateTimePicker } from "@/components/ui/datetime-calendar";
 import LoadingButton from "@/components/loading-button";
+import { Separator } from "@/components/ui/separator";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -186,7 +188,7 @@ const ItinItem = ({
         )}
       </div>
       <Card className="mb-8 w-full max-w-2xl">
-        <CardHeader>
+        <CardHeader className="p-0 px-6 pb-4 pt-6">
           <div className="flex gap-2">
             <CardTitle>{item.title}</CardTitle>
             <div className="ml-auto flex gap-2">
@@ -268,20 +270,18 @@ const ItinItem = ({
           )}
         </CardHeader>
         {(Boolean(item.details) || Boolean(poll)) && (
-          <CardContent>
+          <CardContent className="space-y-4">
             {poll && (
-              <Accordion type="single" collapsible>
+              <Accordion type="single" collapsible defaultValue={"item-1"}>
                 <AccordionItem value="item-1" className="w-full border-b-0">
-                  <AccordionTrigger className="max-w-full gap-2 pb-1 text-muted-foreground">
-                    <div className="inline-flex items-center fill-card-foreground text-muted-foreground [&>span]:text-card-foreground">
-                      <BarChart2 className="mr-1" />
-                      <span>{poll.title}</span>&nbsp;
+                  <AccordionTrigger className="max-w-full gap-2 p-0">
+                    <div className="inline-flex items-center">
+                      <BarChart2 className="mr-2 text-muted-foreground" />
+                      <span className="text-card-foreground">{poll.title}</span>
+                      &nbsp;
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="flex flex-col items-start gap-2 px-4 py-2">
-                    {crew && (
-                      <div className="text-sm text-muted-foreground">{`(${poll.responses.length}/${crew.length}) responded`}</div>
-                    )}
+                  <AccordionContent className="flex flex-col items-start gap-2 px-4 pt-2">
                     {hasRespondedToPoll && (
                       <div className="text-sm text-muted-foreground">
                         You responded:{" "}
@@ -340,10 +340,13 @@ const ItinItem = ({
             {item.details && (
               <Accordion type="single" collapsible>
                 <AccordionItem value="item-1" className="border-b-0">
-                  <AccordionTrigger className="justify-start gap-2 pb-1 text-sm text-muted-foreground">
-                    Details
+                  <AccordionTrigger className="gap-2 p-0">
+                    <div className="inline-flex w-full items-center justify-start text-sm text-card-foreground">
+                      <NotepadText className="mr-2 text-muted-foreground" />
+                      Details
+                    </div>
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent className="flex flex-col items-start gap-2 px-4">
                     <EditorContent
                       editor={editor}
                       className="border-none p-2"
