@@ -1,6 +1,7 @@
 "use client";
 
 import CenteredSpinner from "@/app/_components/centered-spinner";
+import LoadingButton from "@/components/loading-button";
 import { CompactTextEditor, TextEditor } from "@/components/text-editor";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -38,38 +39,54 @@ export default function TripDetails() {
   if (!trip) return;
 
   return (
-    <div className="relative flex size-full max-h-full pb-4">
+    <div className="relative flex size-full max-h-full max-w-5xl pb-4">
+      {!isEditing && (
+        <Button
+          className="absolute right-1 top-1 z-10"
+          size="icon"
+          variant="ghost"
+          onClick={() => setIsEditing(true)}
+        >
+          <Edit />
+        </Button>
+      )}
       <TextEditor
-        isEditable={true}
+        isEditable={isEditing}
         content={descriptionText}
         onTextChange={(newText) => {
           setDescriptionText(newText);
         }}
         placeholder={"Trip details, extra info, etc."}
       />
-      {descriptionText !== trip.description && (
+      {isEditing && (
         <div className="absolute right-2 top-1.5 flex items-center gap-2">
           <Button
             size="sm"
             variant="secondary"
+            disabled={isUpdatingDescription}
             onClick={() => {
               setDescriptionText(trip.description);
+              setIsEditing(false);
             }}
           >
             Cancel
           </Button>
-          <Button
+          <LoadingButton
             size="sm"
-            disabled={isUpdatingDescription}
-            onClick={() =>
-              updateTripDescription({
-                description: descriptionText ?? "",
-                tripId,
-              })
-            }
+            isLoading={isUpdatingDescription}
+            onClick={() => {
+              if (descriptionText !== trip.description) {
+                updateTripDescription({
+                  description: descriptionText ?? "",
+                  tripId,
+                });
+              } else {
+                setIsEditing(false);
+              }
+            }}
           >
             Save
-          </Button>
+          </LoadingButton>
         </div>
       )}
     </div>

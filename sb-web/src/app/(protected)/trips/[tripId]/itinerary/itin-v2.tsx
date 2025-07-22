@@ -21,6 +21,7 @@ import {
   BarChart,
   Info,
   Eye,
+  BarChart2,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -270,14 +271,16 @@ const ItinItem = ({
             {poll && (
               <Accordion type="single" collapsible>
                 <AccordionItem value="item-1" className="w-full border-b-0">
-                  <AccordionTrigger className="gap-2 pb-1 text-muted-foreground">
-                    <div className="inline-flex items-center [&>span]:text-card-foreground">
-                      <BarChart className="mr-1" />
-                      Active Poll:&nbsp;
-                      <span>{poll.title}</span>
+                  <AccordionTrigger className="max-w-full gap-2 pb-1 text-muted-foreground">
+                    <div className="inline-flex items-center fill-card-foreground text-muted-foreground [&>span]:text-card-foreground">
+                      <BarChart2 className="mr-1" />
+                      <span>{poll.title}</span>&nbsp;
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="flex flex-col items-start gap-2 px-4 py-2">
+                    {crew && (
+                      <div className="text-sm text-muted-foreground">{`(${poll.responses.length}/${crew.length}) responded`}</div>
+                    )}
                     {hasRespondedToPoll && (
                       <div className="text-sm text-muted-foreground">
                         You responded:{" "}

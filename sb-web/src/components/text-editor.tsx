@@ -34,61 +34,64 @@ interface ReadOnlyTextEditorProps {
 }
 
 const useTextEditor = (props: TextEditorProps) => {
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        listItem: {
-          HTMLAttributes: {
-            class: "list-item",
+  const editor = useEditor(
+    {
+      extensions: [
+        StarterKit.configure({
+          listItem: {
+            HTMLAttributes: {
+              class: "list-item",
+            },
           },
-        },
-        orderedList: {
-          HTMLAttributes: {
-            class: "list-decimal pl-6",
+          orderedList: {
+            HTMLAttributes: {
+              class: "list-decimal pl-6",
+            },
           },
-        },
-        bulletList: {
-          HTMLAttributes: {
-            class: "list-disc pl-6 my-1",
+          bulletList: {
+            HTMLAttributes: {
+              class: "list-disc pl-6 my-1",
+            },
           },
-        },
-        heading: {
-          HTMLAttributes: {
-            class: "text-xl font-medium",
+          heading: {
+            HTMLAttributes: {
+              class: "text-xl font-medium",
+            },
           },
+        }),
+        Placeholder.configure({
+          placeholder: props.isEditable
+            ? (props.placeholder ?? "Click to edit")
+            : undefined,
+          emptyEditorClass:
+            "cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-0 before:left-0 before:text-mauve-11 before:opacity-50 before-pointer-events-none before:text-md",
+          showOnlyWhenEditable: true,
+        }),
+        LinkExtension.configure({
+          HTMLAttributes: {
+            class: "text-primary underline font-semibold",
+            target: "_blank",
+            rel: "noreferrer",
+          },
+          openOnClick: "whenNotEditable",
+        }).extend({ inclusive: false }),
+      ],
+      content: props.content,
+      ...(props.isEditable && {
+        onUpdate: ({ editor }) => {
+          props.onTextChange(editor.getHTML());
         },
       }),
-      Placeholder.configure({
-        placeholder: props.isEditable
-          ? (props.placeholder ?? "Click to edit")
-          : undefined,
-        emptyEditorClass:
-          "cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-0 before:left-0 before:text-mauve-11 before:opacity-50 before-pointer-events-none before:text-md",
-        showOnlyWhenEditable: true,
-      }),
-      LinkExtension.configure({
-        HTMLAttributes: {
-          class: "text-primary underline font-semibold",
-          target: "_blank",
-          rel: "noreferrer",
+      editable: props.isEditable,
+      editorProps: {
+        attributes: {
+          class:
+            "prose max-w-5xl prose-p:my-0  dark:prose-invert focus-visible:outline-none text-md prose-li:my-0 prose-ol:my-0",
         },
-        openOnClick: "whenNotEditable",
-      }).extend({ inclusive: false }),
-    ],
-    content: props.content,
-    ...(props.isEditable && {
-      onUpdate: ({ editor }) => {
-        props.onTextChange(editor.getHTML());
-      },
-    }),
-    editable: props.isEditable,
-    editorProps: {
-      attributes: {
-        class:
-          "prose max-w-5xl prose-p:my-0  dark:prose-invert focus-visible:outline-none text-md prose-li:my-0 prose-ol:my-0",
       },
     },
-  });
+    [props.isEditable],
+  );
 
   useEffect(() => {
     if (editor && props.content !== editor.getHTML()) {
@@ -97,27 +100,6 @@ const useTextEditor = (props: TextEditorProps) => {
   }, [props.content, editor]);
 
   return editor;
-};
-
-const useIsEditing = () => {
-  const [isEditing, setIsEditing] = useState(false);
-  const onFocus: FocusEventHandler = (e) => {
-    if (!e.currentTarget.contains(e.relatedTarget)) {
-      setIsEditing(true);
-    }
-  };
-
-  const onBlur: FocusEventHandler = (e) => {
-    if (!e.currentTarget.contains(e.relatedTarget)) {
-      setIsEditing(false);
-    }
-  };
-
-  return {
-    isEditing,
-    onFocus,
-    onBlur,
-  };
 };
 
 const ConfigureLinkDialog = ({
@@ -318,21 +300,18 @@ const CompactTextEditor = (props: TextEditorProps & { className?: string }) => {
 
 const TextEditor = (props: TextEditorProps & { className?: string }) => {
   const editor = useTextEditor(props);
-  const { isEditing, onBlur, onFocus } = useIsEditing();
   return (
     <div
-      onBlur={onBlur}
-      onFocus={onFocus}
       className={cn(
         "relative flex size-full max-h-full flex-col rounded-sm disabled:cursor-not-allowed",
-        isEditing && "ring-1 ring-ring",
+        editor?.isEditable && "ring-1 ring-ring",
         props.className,
       )}
     >
-      {isEditing && (
+      {editor?.isEditable && (
         <TextEditorToolbar
           editor={editor}
-          isEditing={isEditing}
+          isEditing={editor.isEditable}
           className="sticky left-0 top-0 w-full rounded-t-sm border-b border-b-accent"
         />
       )}
