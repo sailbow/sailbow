@@ -95,6 +95,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { DateTimePicker } from "@/components/ui/datetime-calendar";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -585,38 +586,18 @@ export const AddOrEditItinItemForm = ({
                 <FormItem>
                   <FormLabel>Start date</FormLabel>
                   <FormControl>
-                    <div className={cn("flex items-center gap-2")}>
-                      <CalendarDialog
-                        triggerText="Start date"
-                        isInvalid={!!formState.errors.startDate}
-                        selectedDate={
-                          field.value >= 0 ? new Date(field.value) : undefined
-                        }
-                        onSelect={(date) => {
-                          if (!date) field.onChange(-1);
-                          else if (field.value === -1)
-                            field.onChange(date.getTime());
-                          else {
-                            const current = new Date(field.value);
-                            const newDate = new Date(
-                              date.getFullYear(),
-                              date.getMonth(),
-                              date.getDate(),
-                              current.getHours(),
-                              current.getMinutes(),
-                            ).getTime();
-                            if (endDate && newDate > endDate) {
-                              form.setValue("endDate", -1);
-                            }
-                          }
-                        }}
-                      />
-                      <TimePicker
-                        disabled={field.value === -1}
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </div>
+                    <DateTimePicker
+                      hourCycle={12}
+                      value={field.value ? new Date(field.value) : undefined}
+                      {...(field.value && {
+                        defaultPopupValue: new Date(field.value),
+                      })}
+                      onChange={(date) => field.onChange(date?.getTime())}
+                      granularity="minute"
+                      displayFormat={{
+                        hour12: "ccc MMMM do p",
+                      }}
+                    />
                   </FormControl>
                 </FormItem>
               );
@@ -631,53 +612,18 @@ export const AddOrEditItinItemForm = ({
                   <FormItem>
                     <FormLabel>End Date</FormLabel>
                     <FormControl>
-                      <div className={cn("flex items-center gap-2")}>
-                        <CalendarDialog
-                          triggerText="End date"
-                          // disabled={(date) => {
-                          //   if (startDate === -1) return true;
-                          //   const start = new Date(startDate);
-                          //   start.setHours(0, 0);
-                          //   return (
-                          //     new Date(
-                          //       date.getFullYear(),
-                          //       date.getMonth(),
-                          //       date.getDate(),
-                          //     ).getTime() < start.getTime()
-                          //   );
-                          // }}
-                          isInvalid={!!formState.errors.endDate}
-                          selectedDate={
-                            field.value && field.value >= 0
-                              ? new Date(field.value)
-                              : undefined
-                          }
-                          onSelect={(date) => {
-                            if (!date) field.onChange(null);
-                            else if (!field.value)
-                              field.onChange(date.getTime());
-                            else if (field.value) {
-                              const current = new Date(field.value);
-                              field.onChange(
-                                new Date(
-                                  date.getFullYear(),
-                                  date.getMonth(),
-                                  date.getDate(),
-                                  current.getHours(),
-                                  current.getMinutes(),
-                                ).getTime(),
-                              );
-                            } else {
-                              field.onChange(null);
-                            }
-                          }}
-                        />
-                        <TimePicker
-                          disabled={!field.value}
-                          value={field.value ?? null}
-                          onChange={field.onChange}
-                        />
-                      </div>
+                      <DateTimePicker
+                        hourCycle={12}
+                        value={field.value ? new Date(field.value) : undefined}
+                        {...(field.value && {
+                          defaultPopupValue: new Date(field.value),
+                        })}
+                        onChange={(date) => field.onChange(date?.getTime())}
+                        granularity="minute"
+                        displayFormat={{
+                          hour12: "ccc MMMM do p",
+                        }}
+                      />
                     </FormControl>
                   </FormItem>
                 );
