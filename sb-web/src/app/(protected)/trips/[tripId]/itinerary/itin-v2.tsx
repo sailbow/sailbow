@@ -58,7 +58,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
-import { CalendarDialog } from "@/components/ui/calendar-dialog";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -69,7 +68,6 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
-import { TimePicker } from "@/components/ui/time-picker";
 import { Spinner } from "@/app/_components/spinner";
 import { CompactTextEditor, useTextEditor } from "@/components/text-editor";
 import { EditorContent } from "@tiptap/react";
@@ -84,17 +82,10 @@ import {
   GooglePlaceResultSchema,
   GooglePlaceSearchPopover,
 } from "@/components/google-places";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useMe } from "@/lib/user-queries";
-import { Poll } from "@/components/types";
 import { AnswerPollDialog } from "@/components/answer-poll-dialog";
 import { PollResultsChart } from "@/components/poll-results-chart";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { DateTimePicker } from "@/components/ui/datetime-calendar";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
