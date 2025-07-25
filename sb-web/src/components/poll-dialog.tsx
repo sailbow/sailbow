@@ -216,7 +216,6 @@ export function PollDialog({
               <LoadingButton
                 isLoading={form.formState.isSubmitting || isLoading}
                 type="submit"
-                disabled={form.formState.isSubmitting || isLoading}
               >
                 Create Poll
               </LoadingButton>

@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import LoadingButton from "@/components/loading-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
@@ -9,12 +9,13 @@ import {
   FormItem,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/toast";
-import { useUpdateName } from "@/lib/trip-mutations";
-import { useActiveTrip } from "@/lib/trip-queries";
+import { useActiveTrip, useActiveTripId } from "@/lib/trip-queries";
+import { api } from "@convex/_generated/api";
 import { type Id } from "@convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "convex/react";
 import { ConvexError } from "convex/values";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -24,6 +25,7 @@ const updateNameSchema = z.object({
 });
 
 export default function UpdateNameCard() {
+  const tripId = useActiveTripId();
   const { data: trip } = useActiveTrip();
 
   const form = useForm<z.infer<typeof updateNameSchema>>({
@@ -31,27 +33,48 @@ export default function UpdateNameCard() {
   });
 
   useEffect(() => {
-    if (!!trip && !form.control.getFieldState("name").isTouched) {
-      form.setValue("tripId", trip._id);
-      form.setValue("name", trip.name);
+    if (!!trip) {
+      form.reset({
+        tripId: trip._id,
+        name: trip.name,
+      });
     }
   }, [trip, form]);
 
-  const { isPending: isLoading, mutate } = useUpdateName({
-    onSuccess: () => {
-      toast.success("Successfully updated the trip name!");
-    },
-    onError: (err) => {
-      const msg = err instanceof ConvexError ? err.message : undefined;
-
-      toast.error("Something went wrong there, please try again later", {
-        description: msg,
-      });
-    },
+  const [isLoading, setIsLoading] = useState(false);
+  const updateName = useMutation(
+    api.trips.mutations.updateName,
+  ).withOptimisticUpdate((updater, args) => {
+    const existing = updater.getQuery(api.trips.queries.getById, { tripId });
+    if (existing) {
+      updater.setQuery(
+        api.trips.queries.getById,
+        { tripId },
+        {
+          ...existing,
+          name: args.name!,
+        },
+      );
+    }
   });
 
   const onSubmit = (values: z.infer<typeof updateNameSchema>) => {
-    mutate(values);
+    setIsLoading(true);
+    updateName(values)
+      .then(() => {
+        toast.success("Successfully updated the trip name!");
+        form.reset();
+      })
+      .catch((err) => {
+        const msg = err instanceof ConvexError ? err.message : undefined;
+
+        toast.error("Something went wrong there, please try again later", {
+          description: msg,
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -63,22 +86,26 @@ export default function UpdateNameCard() {
         <CardContent>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex items-center gap-4"
+            className="flex w-full items-center gap-4"
           >
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex-1">
                   <FormControl>
                     <FormInput {...field} />
                   </FormControl>
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isLoading}>
+            <LoadingButton
+              className="ml-auto"
+              isLoading={isLoading}
+              disabled={!!trip && form.getValues().name === trip.name}
+            >
               Update
-            </Button>
+            </LoadingButton>
           </form>
         </CardContent>
       </Card>

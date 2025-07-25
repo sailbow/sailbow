@@ -3,7 +3,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ImageWithLoaderProps {
   src: string;
@@ -12,6 +12,9 @@ interface ImageWithLoaderProps {
 }
 export default function ImageWithLoader(props: ImageWithLoaderProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    setIsLoaded(false);
+  }, [props.src]);
   return (
     <div
       className={cn(

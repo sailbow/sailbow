@@ -11,7 +11,10 @@ export default function LoadingButton({
   ...props
 }: ButtonProps & { isLoading: boolean }) {
   return (
-    <Button {...props} disabled={props.disabled ?? isLoading}>
+    <Button
+      {...props}
+      disabled={props.disabled ? props.disabled || isLoading : isLoading}
+    >
       <div className="relative flex items-center justify-center">
         <span
           className={`transition-opacity duration-200 ${isLoading ? "opacity-0" : "opacity-100"}`}

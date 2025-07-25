@@ -35,6 +35,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AnnouncementCard from "./announcement-card";
 import { CompactTextEditor } from "@/components/text-editor";
+import LoadingButton from "@/components/loading-button";
 
 const createAnnouncementSchema = z.object({
   tripId: z.custom<Id<"trips">>(),
@@ -121,13 +122,17 @@ export const CreateAnnouncementButton = () => {
             />
             <DialogFooter className="mt-4">
               <DialogClose>
-                <Button type="button" variant="secondary" disabled={isPending}>
+                <Button type="button" variant="outline" disabled={isPending}>
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={isPending}>
+              <LoadingButton
+                isLoading={isPending}
+                type="submit"
+                disabled={isPending}
+              >
                 Post
-              </Button>
+              </LoadingButton>
             </DialogFooter>
           </form>
         </Form>

@@ -154,7 +154,7 @@ const ConfigureLinkDialog = ({
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary" onClick={() => setUrl(initialUrl)}>
+            <Button variant="outline" onClick={() => setUrl(initialUrl)}>
               Cancel
             </Button>
           </DialogClose>

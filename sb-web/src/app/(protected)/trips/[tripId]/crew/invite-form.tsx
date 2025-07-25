@@ -27,6 +27,7 @@ import { type Id } from "@convex/_generated/dataModel";
 import { ConvexError } from "convex/values";
 import { useInviteCrewMember } from "@/lib/trip-mutations";
 import { useActiveTripId } from "@/lib/trip-queries";
+import LoadingButton from "@/components/loading-button";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -120,15 +121,19 @@ export default function InviteForm({ onSuccess, onCancel }: InviteFormProps) {
         <div className="flex w-full items-center justify-end space-x-2">
           <Button
             type="button"
-            variant="secondary"
+            variant="outline"
             onClick={onCancel}
             disabled={isPending}
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isPending}>
+          <LoadingButton
+            isLoading={isPending}
+            type="submit"
+            disabled={isPending}
+          >
             Send
-          </Button>
+          </LoadingButton>
         </div>
       </form>
     </Form>
