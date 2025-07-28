@@ -29,9 +29,7 @@ export default function ImageWithLoader(props: ImageWithLoaderProps) {
         className={cn("object-cover", props.className)}
         onLoad={() => setIsLoaded(true)}
       />
-      {!isLoaded && (
-        <Skeleton className={cn("size-full bg-slate-300", props.className)} />
-      )}
+      {!isLoaded && <Skeleton className={cn("size-full", props.className)} />}
     </div>
   );
 }
