@@ -309,7 +309,7 @@ const ItinItem = ({
                           variant="outline"
                           onClick={() => answerPollDisclosure.setOpened()}
                         >
-                          <Edit className="mr-2 size-4" />
+                          <Edit className="size-4" />
                           Edit response
                         </Button>
                       ) : (
@@ -318,7 +318,7 @@ const ItinItem = ({
                           variant="outline"
                           onClick={() => answerPollDisclosure.setOpened()}
                         >
-                          <Plus className="mr-2 size-4 text-secondary-foreground" />
+                          <Plus className="size-4 text-secondary-foreground" />
                           Respond
                         </Button>
                       )}

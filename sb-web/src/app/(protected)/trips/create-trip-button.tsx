@@ -227,7 +227,6 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
                   required
                   min={1}
                   onSelect={(range) => {
-                    console.log(range);
                     if (!field.value) {
                       field.onChange({ from: range.from });
                     } else if (range.from === range.to) {
@@ -351,7 +350,7 @@ export const CreateTripButton = () => {
           size={isMobile ? "sm" : "default"}
           className="max-xs:size-10 max-xs:rounded-full"
         >
-          <Plus className="h-6 w-6 xs:mr-2" />
+          <Plus className="h-6 w-6" />
           <span className="hidden xs:inline-flex">Create a trip</span>
         </Button>
       </DialogTrigger>
