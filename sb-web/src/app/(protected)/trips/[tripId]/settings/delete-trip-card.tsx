@@ -22,6 +22,7 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import { useState } from "react";
 import { useActiveTripId } from "@/lib/trip-queries";
 import { useDeleteTrip } from "@/lib/trip-mutations";
+import LoadingButton from "@/components/loading-button";
 
 export default function DeleteTripCard() {
   const tripId = useActiveTripId();
@@ -66,15 +67,18 @@ export default function DeleteTripCard() {
             </DialogHeader>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="secondary">Cancel</Button>
+                <Button variant="outline" disabled={isPending || wasDeleted}>
+                  Cancel
+                </Button>
               </DialogClose>
-              <Button
+              <LoadingButton
+                isLoading={isPending || wasDeleted}
                 variant="destructive"
                 onClick={deleteTrip}
                 disabled={isPending || wasDeleted}
               >
                 Delete
-              </Button>
+              </LoadingButton>
             </DialogFooter>
           </DialogContent>
         </Dialog>

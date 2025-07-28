@@ -70,14 +70,14 @@ export default function BannerModal(props: BannerModalProps) {
       case "add":
         return (
           <Button size="sm">
-            <ImagePlus className="mr-2 size-5" />
+            <ImagePlus className="size-5" />
             Add a cover image
           </Button>
         );
       case "edit":
         return (
           <Button variant="outline" size="sm">
-            <ImageIcon className="mr-2 size-5" />
+            <ImageIcon className="size-5" />
             Edit cover image
           </Button>
         );
@@ -116,7 +116,7 @@ export default function BannerModal(props: BannerModalProps) {
             </div>
             <DialogClose asChild>
               <Button
-                variant="secondary"
+                variant="outline"
                 className="max-w-[80px] text-wrap text-xs sm:max-w-none sm:text-sm"
                 onClick={() => props.onBannerChange(null)}
               >

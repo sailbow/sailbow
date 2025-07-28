@@ -3,13 +3,14 @@ import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { type Metadata, type Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Poppins } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { ConvexClientProvider } from "@/ConvexProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { env } from "@/env";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-const font = Plus_Jakarta_Sans({
+const font = Poppins({
+  weight: "500",
   subsets: ["latin"],
   variable: "--font-sans",
 });

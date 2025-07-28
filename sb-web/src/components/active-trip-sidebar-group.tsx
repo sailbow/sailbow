@@ -25,7 +25,6 @@ const ActiveTripGroup = () => {
   return (
     <>
       <SidebarGroup>
-        {/* <SidebarGroupLabel>Current Trip</SidebarGroupLabel> */}
         <SidebarGroupContent>
           <SidebarMenu>
             <TripSearch />

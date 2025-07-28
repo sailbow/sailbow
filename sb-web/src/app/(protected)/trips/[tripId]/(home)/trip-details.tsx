@@ -62,7 +62,7 @@ export default function TripDetails() {
         <div className="absolute right-2 top-1.5 flex items-center gap-2">
           <Button
             size="sm"
-            variant="secondary"
+            variant="outline"
             disabled={isUpdatingDescription}
             onClick={() => {
               setDescriptionText(trip.description);

@@ -871,8 +871,8 @@ const DateTimePicker = React.forwardRef<
                   month?.getMinutes() ?? 0,
                   month?.getSeconds() ?? 0,
                 );
+                onSelect(newDate);
               }
-              onSelect(newDate);
             }}
             onMonthChange={handleMonthChange}
             yearRange={yearRange}

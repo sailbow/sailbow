@@ -73,7 +73,7 @@ const KickMemberModal = ({
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary" disabled={isPending}>
+            <Button variant="outline" disabled={isPending}>
               Cancel
             </Button>
           </DialogClose>
@@ -147,7 +147,7 @@ const ChangeMemberRoleModal = ({
         </Select>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary" disabled={isPending}>
+            <Button variant="outline" disabled={isPending}>
               Cancel
             </Button>
           </DialogClose>

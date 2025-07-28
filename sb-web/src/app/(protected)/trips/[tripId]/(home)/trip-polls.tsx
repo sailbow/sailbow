@@ -103,7 +103,7 @@ export const TripPolls = () => {
                   {!usersWhoHaveResponded.has(me._id) ? (
                     <Button
                       size="sm"
-                      variant="secondary"
+                      variant="outline"
                       onClick={() => setSelectedPoll(poll.tripPollId)}
                     >
                       Respond
@@ -131,11 +131,11 @@ export const TripPolls = () => {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" size="sm">
-                      <Eye className="mr-2 size-4" />
+                      <Eye className="size-4" />
                       View results
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="h-fit">
                     <DialogHeader>
                       <DialogTitle>Poll results</DialogTitle>
                       <DialogDescription>{poll.title}</DialogDescription>
@@ -221,7 +221,7 @@ const TripPollActions = ({ tripPollId }: { tripPollId: Id<"tripPolls"> }) => {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="secondary">Cancel</Button>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
             <LoadingButton
               variant="destructive"

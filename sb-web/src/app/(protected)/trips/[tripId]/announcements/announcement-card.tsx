@@ -72,7 +72,7 @@ const DeleteAnnouncementModal = ({
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="secondary">Cancel</Button>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
             <LoadingButton
               variant="destructive"

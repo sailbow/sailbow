@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import {
   Sidebar,
@@ -8,16 +9,42 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
+  sidebarMenuButtonVariants,
   SidebarMenuItem,
   SidebarMenuItemWithDismiss,
+  SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
+import Link, { LinkProps } from "next/link";
 import { Anchor } from "lucide-react";
 import { UserDropdown } from "@/app/_components/user-dropdown";
 import NotificationsDropdown from "@/app/_components/notifications";
 import ActiveTripSidebarGroup from "./active-trip-sidebar-group";
 import SidebarTriggerButton from "./sidebar-trigger-button";
 import Image from "next/image";
+
+const SidebarLinkWithDismiss = React.forwardRef<
+  HTMLAnchorElement,
+  React.ComponentProps<typeof Link>
+>((props, ref) => {
+  const { isMobile, toggleSidebar } = useSidebar();
+  return (
+    <Link
+      ref={ref}
+      href={props.href}
+      className={sidebarMenuButtonVariants()}
+      onClick={() => {
+        if (isMobile) {
+          toggleSidebar();
+        }
+      }}
+    >
+      {props.children}
+    </Link>
+  );
+});
+
+SidebarLinkWithDismiss.displayName = "SidebarLinkWithDismiss";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -35,14 +62,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItemWithDismiss>
-                <Link href="/trips">
-                  <SidebarMenuButton>
-                    <Anchor className="mr-2 h-4 w-4" />
-                    Trips
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItemWithDismiss>
+              <SidebarLinkWithDismiss href="/trips">
+                <Anchor className="mr-2 h-4 w-4" />
+                Trips
+              </SidebarLinkWithDismiss>
               <SidebarMenuItem>
                 <NotificationsDropdown />
               </SidebarMenuItem>
@@ -58,6 +81,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarTriggerButton />
         </SidebarMenu>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }

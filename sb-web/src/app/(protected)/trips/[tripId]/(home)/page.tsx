@@ -117,8 +117,8 @@ const LocationCard = ({ trip }: { trip: Doc<"trips"> }) => {
       <Card className="flex-1">
         <CardHeader className="items-start">
           <div className="flex w-full">
-            <div className="flex size-10 items-center justify-center rounded-full bg-secondary p-2">
-              <MapPin className="h-5 w-5 text-secondary-foreground" />
+            <div className="flex size-10 items-center justify-center rounded-full bg-background p-2">
+              <MapPin className="h-5 w-5" />
             </div>
             <div className="ml-2 flex flex-col items-start space-y-1.5">
               <CardTitle>{location.primaryText}</CardTitle>
@@ -149,11 +149,11 @@ const LocationCard = ({ trip }: { trip: Doc<"trips"> }) => {
                 href={`https://www.google.com/maps/dir/?api=1&destination=${location.geo ? `${location.geo.lat}%2C${location.geo.lng}` : location.primaryText}&destination_place_id=${location.placeId}`}
                 className={buttonVariants({
                   size: "sm",
-                  variant: "secondary",
+                  variant: "outline",
                   className: "underline-offset-2 hover:underline",
                 })}
               >
-                <CornerUpRight className="mr-1 h-4 w-4" />
+                <CornerUpRight className="h-4 w-4" />
                 Get Directions
               </Link>
               {location.website && (
@@ -163,11 +163,11 @@ const LocationCard = ({ trip }: { trip: Doc<"trips"> }) => {
                   href={location.website}
                   className={buttonVariants({
                     size: "sm",
-                    variant: "secondary",
+                    variant: "outline",
                     className: "underline-offset-2 hover:underline",
                   })}
                 >
-                  <Globe className="mr-1 h-4 w-4" />
+                  <Globe className="h-4 w-4" />
                   Website
                 </Link>
               )}
@@ -191,8 +191,8 @@ const DateCard = ({
       <Card>
         <CardHeader>
           <div className="flex w-full items-center gap-2">
-            <div className="flex size-10 items-center justify-center rounded-full bg-secondary p-2">
-              <CalendarIcon className="h-5 w-5 text-secondary-foreground" />
+            <div className="flex size-10 items-center justify-center rounded-full bg-background p-2">
+              <CalendarIcon className="h-5 w-5" />
             </div>
             <CardTitle className="text-wrap text-left">
               {formatDateRange(new Date(dates.start), new Date(dates.end))}
@@ -342,7 +342,7 @@ const SetDateRangeDialog = ({
         <DialogFooter>
           <DialogClose asChild>
             <Button
-              variant="secondary"
+              variant="outline"
               disabled={isSaving}
               className="w-20"
               onClick={() => {

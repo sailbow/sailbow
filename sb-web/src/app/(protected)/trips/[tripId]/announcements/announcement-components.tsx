@@ -35,6 +35,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AnnouncementCard from "./announcement-card";
 import { CompactTextEditor } from "@/components/text-editor";
+import LoadingButton from "@/components/loading-button";
+import CenteredSpinner from "@/app/_components/centered-spinner";
 
 const createAnnouncementSchema = z.object({
   tripId: z.custom<Id<"trips">>(),
@@ -76,7 +78,7 @@ export const CreateAnnouncementButton = () => {
     <Dialog {...disclosure}>
       <DialogTrigger asChild>
         <Button onClick={() => form.reset()}>
-          <Megaphone className="size-6 xs:mr-2" />
+          <Megaphone className="size-6" />
           <span className="hidden xs:inline-flex">Create announcement</span>
         </Button>
       </DialogTrigger>
@@ -121,13 +123,17 @@ export const CreateAnnouncementButton = () => {
             />
             <DialogFooter className="mt-4">
               <DialogClose>
-                <Button type="button" variant="secondary" disabled={isPending}>
+                <Button type="button" variant="outline" disabled={isPending}>
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={isPending}>
+              <LoadingButton
+                isLoading={isPending}
+                type="submit"
+                disabled={isPending}
+              >
                 Post
-              </Button>
+              </LoadingButton>
             </DialogFooter>
           </form>
         </Form>
@@ -138,23 +144,7 @@ export const CreateAnnouncementButton = () => {
 
 export const AnnouncementList = () => {
   const { data: announcements, isLoading } = useAnnouncements();
-  if (isLoading) {
-    return (
-      <Card className="max-w-2xl">
-        <CardHeader className="px-4 pt-4">
-          <div className="flex w-full items-center gap-2">
-            <Avatar>
-              <Skeleton className="size-full rounded-full bg-gray-300" />
-            </Avatar>
-            <Skeleton className="h-10 flex-1 bg-gray-300" />
-          </div>
-        </CardHeader>
-        <CardContent className="h-32 w-full">
-          <Skeleton className="size-full bg-gray-300" />
-        </CardContent>
-      </Card>
-    );
-  }
+  if (isLoading) return <CenteredSpinner />;
   if (!announcements) return;
 
   return (

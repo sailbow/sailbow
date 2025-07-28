@@ -36,6 +36,7 @@ import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { type ItinItem, ItinItemSchema, type OptionalItinItem } from "./schema";
+import LoadingButton from "@/components/loading-button";
 
 export const AddOrEditItinItem = ({
   disclosure,
@@ -208,13 +209,17 @@ export const AddOrEditItinItem = ({
             />
             <DialogFooter className="mt-4">
               <DialogClose>
-                <Button type="button" variant="secondary" disabled={isPending}>
+                <Button type="button" variant="outline" disabled={isPending}>
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={isPending}>
+              <LoadingButton
+                isLoading={isPending}
+                type="submit"
+                disabled={isPending}
+              >
                 Save
-              </Button>
+              </LoadingButton>
             </DialogFooter>
           </form>
         </Form>

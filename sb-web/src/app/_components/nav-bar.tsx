@@ -19,7 +19,9 @@ export function Navbar({ className }: { className?: string }) {
           )}
         >
           <SignUpButton mode="modal" signInFallbackRedirectUrl={"/trips"}>
-            <Button variant="secondary">Sign Up</Button>
+            <Button variant="outline" className="bg-transparent text-black">
+              Sign Up
+            </Button>
           </SignUpButton>
           <SignInButton mode="modal" signUpFallbackRedirectUrl={"/trips"}>
             <Button>Sign In</Button>

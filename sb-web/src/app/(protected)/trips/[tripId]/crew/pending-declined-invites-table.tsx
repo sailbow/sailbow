@@ -29,6 +29,7 @@ import { useDisclosure } from "@/lib/use-disclosure";
 import { toast } from "@/components/ui/toast";
 import { ConvexError } from "convex/values";
 import { Spinner } from "@/app/_components/spinner";
+import LoadingButton from "@/components/loading-button";
 
 const CancelInviteModal = ({ invite }: { invite: Doc<"invitations"> }) => {
   const disclosure = useDisclosure();
@@ -52,7 +53,7 @@ const CancelInviteModal = ({ invite }: { invite: Doc<"invitations"> }) => {
   return (
     <Dialog {...disclosure}>
       <DialogTrigger>
-        <Button size="sm" variant="secondary">
+        <Button size="sm" variant="outline">
           Cancel
         </Button>
       </DialogTrigger>
@@ -62,15 +63,15 @@ const CancelInviteModal = ({ invite }: { invite: Doc<"invitations"> }) => {
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">No, leave it</Button>
+            <Button variant="outline">No, leave it</Button>
           </DialogClose>
-          <Button
+          <LoadingButton
+            isLoading={isPending || isSuccess}
             onClick={() => cancel({ inviteId: invite._id })}
-            disabled={isPending || isSuccess}
           >
             {isPending && <Spinner className="mr-2 size-4" />}
             Yes, cancel it
-          </Button>
+          </LoadingButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

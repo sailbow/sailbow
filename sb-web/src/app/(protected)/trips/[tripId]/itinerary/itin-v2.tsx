@@ -187,7 +187,7 @@ const ItinItem = ({
           <div className="absolute right-5 top-5  h-full w-0.5 bg-accent" />
         )}
       </div>
-      <Card className="mb-8 w-full max-w-2xl">
+      <Card className="mb-8 w-full max-w-4xl">
         <CardHeader className="p-0 px-6 pb-4 pt-6">
           <div className="flex gap-2">
             <CardTitle>{item.title}</CardTitle>
@@ -243,7 +243,7 @@ const ItinItem = ({
                   href={`https://www.google.com/maps/dir/?api=1&destination=${item.location.primaryText}&destination_place_id=${item.location.placeId}`}
                   className={buttonVariants({
                     size: "sm",
-                    variant: "secondary",
+                    variant: "outline",
                     className: "underline-offset-2 hover:underline",
                   })}
                 >
@@ -257,7 +257,7 @@ const ItinItem = ({
                     href={item.location.website}
                     className={buttonVariants({
                       size: "sm",
-                      variant: "secondary",
+                      variant: "outline",
                       className: "underline-offset-2 hover:underline",
                     })}
                   >
@@ -281,7 +281,7 @@ const ItinItem = ({
                       &nbsp;
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="flex flex-col items-start gap-2 px-4 pt-2">
+                  <AccordionContent className="ml-8 flex flex-col items-start gap-2 border-t pt-2">
                     {hasRespondedToPoll && (
                       <div className="text-sm text-muted-foreground">
                         You responded:{" "}
@@ -306,7 +306,7 @@ const ItinItem = ({
                       {hasRespondedToPoll ? (
                         <Button
                           size="sm"
-                          variant="secondary"
+                          variant="outline"
                           onClick={() => answerPollDisclosure.setOpened()}
                         >
                           <Edit className="mr-2 size-4" />
@@ -315,7 +315,7 @@ const ItinItem = ({
                       ) : (
                         <Button
                           size="sm"
-                          variant="secondary"
+                          variant="outline"
                           onClick={() => answerPollDisclosure.setOpened()}
                         >
                           <Plus className="mr-2 size-4 text-secondary-foreground" />
@@ -324,11 +324,11 @@ const ItinItem = ({
                       )}
                       {poll.responses.length > 0 && (
                         <Button
-                          variant="secondary"
+                          variant="outline"
                           size="sm"
                           onClick={() => pollResultsDisclosure.setOpened()}
                         >
-                          <Eye className="mr-2 size-4" />
+                          <Eye className="size-4" />
                           View results
                         </Button>
                       )}
@@ -346,7 +346,7 @@ const ItinItem = ({
                       Details
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="flex flex-col items-start gap-2 px-4">
+                  <AccordionContent className="ml-8 flex flex-col items-start gap-2 rounded-b-sm border-t bg-background">
                     <EditorContent
                       editor={editor}
                       className="border-none p-2"
@@ -561,7 +561,7 @@ export const AddOrEditItinItemForm = ({
             render={({ field, formState }) => {
               const error = formState.errors.title;
               return (
-                <FormItem className="mt-2 space-y-0">
+                <FormItem>
                   <FormControl>
                     <Input
                       {...field}
@@ -577,39 +577,14 @@ export const AddOrEditItinItemForm = ({
               );
             }}
           />
-          <FormField
-            control={form.control}
-            name="startDate"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Start date</FormLabel>
-                  <FormControl>
-                    <DateTimePicker
-                      hourCycle={12}
-                      value={field.value ? new Date(field.value) : undefined}
-                      // {...(field.value && {
-                      //   defaultPopupValue: new Date(field.value),
-                      // })}
-                      onChange={(date) => field.onChange(date?.getTime())}
-                      granularity="minute"
-                      displayFormat={{
-                        hour12: "ccc, MMMM do, yyyy @p",
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              );
-            }}
-          />
-          {showEnd ? (
+          <div className="grid grid-cols-2 gap-2">
             <FormField
               control={form.control}
-              name="endDate"
-              render={({ field }) => {
+              name="startDate"
+              render={({ field, formState }) => {
                 return (
                   <FormItem>
-                    <FormLabel>End Date</FormLabel>
+                    <FormLabel>Start date</FormLabel>
                     <FormControl>
                       <DateTimePicker
                         hourCycle={12}
@@ -617,7 +592,35 @@ export const AddOrEditItinItemForm = ({
                         onChange={(date) => field.onChange(date?.getTime())}
                         granularity="minute"
                         displayFormat={{
-                          hour12: "ccc, MMMM do, yyyy @p",
+                          hour12: "MM/dd/yy @p",
+                        }}
+                        className={
+                          formState.errors.startDate && "border-destructive"
+                        }
+                      />
+                    </FormControl>
+                  </FormItem>
+                );
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="endDate"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>
+                      End Date{" "}
+                      <span className="text-muted-foreground">(optional)</span>
+                    </FormLabel>
+                    <FormControl>
+                      <DateTimePicker
+                        hourCycle={12}
+                        value={field.value ? new Date(field.value) : undefined}
+                        onChange={(date) => field.onChange(date?.getTime())}
+                        granularity="minute"
+                        displayFormat={{
+                          hour12: "MM/dd/yy @p",
                         }}
                       />
                     </FormControl>
@@ -625,16 +628,7 @@ export const AddOrEditItinItemForm = ({
                 );
               }}
             />
-          ) : (
-            <Button
-              className="flex h-8 w-fit items-center justify-start text-xs"
-              variant="ghost"
-              onClick={() => setShowEnd(true)}
-            >
-              <Plus className="mr-2 size-4" />
-              End date
-            </Button>
-          )}
+          </div>
           <FormField
             control={form.control}
             name="location"
@@ -660,7 +654,8 @@ export const AddOrEditItinItemForm = ({
               return (
                 <FormItem>
                   <FormLabel>
-                    Location <span className="font-light">(optional)</span>
+                    Location{" "}
+                    <span className="text-muted-foreground">(optional)</span>
                   </FormLabel>
                   <FormControl>
                     <GooglePlaceSearchPopover

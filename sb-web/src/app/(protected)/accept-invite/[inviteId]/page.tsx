@@ -21,6 +21,7 @@ import { type FunctionReturnType } from "convex/server";
 import { useInvite } from "@/lib/invitations";
 import { useMe } from "@/lib/user-queries";
 import { useAcceptInvite, useDeclineInvite } from "@/lib/invitations";
+import LoadingButton from "@/components/loading-button";
 
 type Invite = FunctionReturnType<typeof api.invitations.queries.byId>;
 export default function AcceptInvitePage() {
@@ -86,24 +87,26 @@ export default function AcceptInvitePage() {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button
-                variant="secondary"
+              <LoadingButton
+                isLoading={isDecliningInvite}
+                variant="outline"
                 onClick={() => declineInvite({ inviteId })}
                 disabled={
                   isAcceptingInvite || isDecliningInvite || acceptedInvite
                 }
               >
                 Decline
-              </Button>
+              </LoadingButton>
             </DialogClose>
-            <Button
+            <LoadingButton
+              isLoading={isAcceptingInvite || acceptedInvite}
               disabled={
                 isAcceptingInvite || isDecliningInvite || acceptedInvite
               }
               onClick={() => acceptInvite({ inviteId })}
             >
               Accept
-            </Button>
+            </LoadingButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

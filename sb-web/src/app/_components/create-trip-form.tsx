@@ -28,6 +28,7 @@ import {
 import Link from "next/link";
 import { z } from "zod";
 import { useCreateTrip } from "@/lib/trip-mutations";
+import LoadingButton from "@/components/loading-button";
 
 const createTripSchema = z.object({
   name: z.string().min(1, "Name cannot be empty"),
@@ -123,13 +124,17 @@ export function CreateTripForm() {
             </div>
           </CardContent>
           <CardFooter className="space-x-4">
-            <Button type="submit" size="lg" disabled={isLoading || tripCreated}>
+            <LoadingButton
+              isLoading={isLoading || tripCreated}
+              type="submit"
+              size="lg"
+            >
               Create
-            </Button>
+            </LoadingButton>
             <Button
               type="button"
               size="lg"
-              variant="secondary"
+              variant="outline"
               disabled={isLoading || tripCreated}
               asChild
             >
