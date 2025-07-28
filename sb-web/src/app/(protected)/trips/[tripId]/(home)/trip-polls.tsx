@@ -107,7 +107,7 @@ export const TripPolls = () => {
                       onClick={() => setSelectedPoll(poll.tripPollId)}
                     >
                       Respond
-                      <CircleAlertIcon className="ml-2 text-secondary-foreground" />
+                      <CircleAlertIcon className="text-secondary-foreground" />
                     </Button>
                   ) : (
                     <Button
@@ -116,7 +116,7 @@ export const TripPolls = () => {
                       onClick={() => setSelectedPoll(poll.tripPollId)}
                     >
                       Edit response
-                      <Edit className="ml-2 size-4" />
+                      <Edit className="size-4" />
                     </Button>
                   )}
                   <TripPollActions tripPollId={poll.tripPollId} />

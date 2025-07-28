@@ -224,10 +224,16 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
                     from: field.value?.from ?? undefined,
                     to: field.value?.to ?? undefined,
                   }}
+                  required
+                  min={1}
                   onSelect={(range) => {
-                    field.onChange(range);
-                    if (range?.from && range?.to) {
-                      disclosure.setClosed();
+                    console.log(range);
+                    if (!field.value) {
+                      field.onChange({ from: range.from });
+                    } else if (range.from === range.to) {
+                      field.onChange({ from: range.from });
+                    } else {
+                      field.onChange(range);
                     }
                   }}
                 />

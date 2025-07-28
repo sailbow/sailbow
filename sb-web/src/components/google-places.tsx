@@ -63,7 +63,7 @@ export const GooglePlaceSearchPopover = ({
   trigger,
 }: {
   onSelect: (place: GooglePlaceResult) => void;
-  trigger: React.ReactElement;
+  trigger: React.ReactElement<any>;
 }) => {
   const popoverDisclosure = useDisclosure();
   const isMobile = useIsMobile();

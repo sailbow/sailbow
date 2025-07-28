@@ -47,7 +47,6 @@ export function CalendarDialog({
       <DialogContent className="h-[60vh] w-fit">
         <Calendar
           disabled={disabled}
-          captionLayout="dropdown"
           mode="single"
           selected={selectedDate}
           onSelect={(day) => {
