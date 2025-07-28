@@ -12,7 +12,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
-import { Input, type InputProps } from "./input";
+import { Input } from "./input";
 
 const Form = FormProvider;
 
@@ -169,12 +169,13 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = "FormMessage";
 
-const FormInput = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ ...props }) => {
-    const { error } = useFormField();
-    return <Input className={error ? "border-destructive" : ""} {...props} />;
-  },
-);
+const FormInput = React.forwardRef<
+  HTMLInputElement,
+  React.ComponentProps<typeof Input>
+>(({ ...props }) => {
+  const { error } = useFormField();
+  return <Input className={error ? "border-destructive" : ""} {...props} />;
+});
 FormInput.displayName = "Input";
 
 export {
