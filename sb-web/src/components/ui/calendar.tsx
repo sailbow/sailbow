@@ -54,7 +54,7 @@ function Calendar({
         selected: cn(
           props.mode === "range"
             ? "bg-primary hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground"
-            : "[&>button]:focus:bg-primary [&>button]:focus:text-primary-foreground",
+            : "[&>button]:hover:text-primary-foreground text-primary-foreground [&>button]:!bg-primary [&>button]:!text-primary-foreground !rounded-md",
         ),
         today: "bg-accent text-accent-foreground !rounded-md",
         outside:

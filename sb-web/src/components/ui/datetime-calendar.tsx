@@ -268,28 +268,6 @@ function DateTimeCalendar({
   }, []);
 
   const YEARS = React.useMemo(() => genYears(yearRange), []);
-  const disableLeftNavigation = () => {
-    const today = new Date();
-    const startDate = new Date(today.getFullYear() - yearRange, 0, 1);
-    if (props.month) {
-      return (
-        props.month.getMonth() === startDate.getMonth() &&
-        props.month.getFullYear() === startDate.getFullYear()
-      );
-    }
-    return false;
-  };
-  const disableRightNavigation = () => {
-    const today = new Date();
-    const endDate = new Date(today.getFullYear() + yearRange, 11, 31);
-    if (props.month) {
-      return (
-        props.month.getMonth() === endDate.getMonth() &&
-        props.month.getFullYear() === endDate.getFullYear()
-      );
-    }
-    return false;
-  };
 
   return (
     <DayPicker
@@ -320,7 +298,7 @@ function DateTimeCalendar({
         day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 rounded-none first:aria-selected:rounded-l-md last:aria-selected:rounded-r-md",
         day_button: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
+          "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20 aria-selected:hover:bg-primary aria-selected:hover:bg-primary-foreground",
         ),
         range_start:
           "day-range-start !bg-accent rounded-l-md [&>button]:bg-primary [&>button]:text-primary-foreground [&>button]:hover:bg-primary [&>button]:hover:text-primary-foreground",
@@ -331,7 +309,7 @@ function DateTimeCalendar({
         selected: cn(
           props.mode === "range"
             ? "bg-primary hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground"
-            : "[&>button]:focus:bg-primary [&>button]:focus:text-primary-foreground",
+            : "[&>button]:hover:text-primary-foreground text-primary-foreground [&>button]:!bg-primary [&>button]:!text-primary-foreground !rounded-md",
         ),
         today: "bg-accent text-accent-foreground !rounded-md",
         outside:
@@ -868,18 +846,9 @@ const DateTimePicker = React.forwardRef<
         <PopoverContent className="w-auto p-0">
           <DateTimeCalendar
             mode="single"
-            selected={displayDate}
+            selected={value}
             month={month}
-            onSelect={(newDate) => {
-              if (newDate) {
-                newDate.setHours(
-                  month?.getHours() ?? 0,
-                  month?.getMinutes() ?? 0,
-                  month?.getSeconds() ?? 0,
-                );
-                onSelect(newDate);
-              }
-            }}
+            onSelect={onSelect}
             onMonthChange={handleMonthChange}
             yearRange={yearRange}
             locale={locale}
