@@ -14,7 +14,7 @@ export default function ImageWithLoader(props: ImageWithLoaderProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     setIsLoaded(false);
-  }, [props.src]);
+  }, [props.src, props.alt]);
   return (
     <div
       className={cn(
