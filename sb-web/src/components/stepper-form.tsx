@@ -98,14 +98,14 @@ export function StepperForm({
                   ? "bg-sky-500 text-white"
                   : index < activeStep
                     ? "bg-primary text-white"
-                    : "bg-muted text-muted-foreground"
+                    : "bg-accent text-accent-foreground"
               }`}
             >
               {index < activeStep ? "✓" : index + 1}
             </div>
             {index < steps.length - 1 && (
               <div
-                className={`h-1 w-12 ${index < activeStep ? "bg-primary" : "bg-muted"}`}
+                className={`h-1 w-12 ${index < activeStep ? "bg-primary" : "bg-accent"}`}
               ></div>
             )}
           </div>

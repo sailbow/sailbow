@@ -827,7 +827,7 @@ const DateTimePicker = React.forwardRef<
             )}
             ref={buttonRef}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon className="h-4 w-4" />
             {displayDate ? (
               format(
                 displayDate,

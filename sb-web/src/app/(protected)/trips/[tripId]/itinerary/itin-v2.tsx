@@ -247,7 +247,7 @@ const ItinItem = ({
                     className: "underline-offset-2 hover:underline",
                   })}
                 >
-                  <CornerUpRight className="mr-1 h-4 w-4" />
+                  <CornerUpRight className="h-4 w-4" />
                   Get Directions
                 </Link>
                 {item.location.website && (
@@ -261,7 +261,7 @@ const ItinItem = ({
                       className: "underline-offset-2 hover:underline",
                     })}
                   >
-                    <Globe className="mr-1 h-4 w-4" />
+                    <Globe className="h-4 w-4" />
                     Website
                   </Link>
                 )}

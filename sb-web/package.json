@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm-run-all --parallel fe be",
-    "fe": "next dev",
+    "fe": "next dev --turbopack",
     "be": "convex dev",
     "predev": "convex dev --until-success",
     "build": "next build",
