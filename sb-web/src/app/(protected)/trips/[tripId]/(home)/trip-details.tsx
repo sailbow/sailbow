@@ -40,18 +40,10 @@ export default function TripDetails() {
 
   return (
     <div className="relative flex size-full max-h-full max-w-5xl pb-4">
-      {!isEditing && (
-        <Button
-          className="absolute right-1 top-1 z-10"
-          size="icon"
-          variant="ghost"
-          onClick={() => setIsEditing(true)}
-        >
-          <Edit />
-        </Button>
-      )}
       <TextEditor
-        isEditable={isEditing}
+        isEditing={isEditing}
+        isEditable={true}
+        setIsEditing={setIsEditing}
         content={descriptionText}
         onTextChange={(newText) => {
           setDescriptionText(newText);

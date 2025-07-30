@@ -19,18 +19,13 @@ import {
   useState,
 } from "react";
 import { cn } from "@/lib/utils";
-
-type TextEditorProps = EditableTextEditorProps | ReadOnlyTextEditorProps;
-
-interface EditableTextEditorProps {
+interface TextEditorProps {
   content: string | null;
-  isEditable: true;
+  isEditable: boolean;
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
   onTextChange: (newText: string) => void;
   placeholder?: string;
-}
-interface ReadOnlyTextEditorProps {
-  content: string | null;
-  isEditable: false;
 }
 
 const useTextEditor = (props: TextEditorProps) => {
@@ -60,12 +55,10 @@ const useTextEditor = (props: TextEditorProps) => {
           },
         }),
         Placeholder.configure({
-          placeholder: props.isEditable
-            ? (props.placeholder ?? "Click to edit")
-            : undefined,
+          placeholder: props.placeholder,
           emptyEditorClass:
             "cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-0 before:left-0 before:text-mauve-11 before:opacity-50 before-pointer-events-none before:text-md",
-          showOnlyWhenEditable: true,
+          showOnlyWhenEditable: false,
         }),
         LinkExtension.configure({
           HTMLAttributes: {
@@ -298,25 +291,47 @@ const CompactTextEditor = (props: TextEditorProps & { className?: string }) => {
   );
 };
 
-const TextEditor = (props: TextEditorProps & { className?: string }) => {
+const TextEditor = (
+  props: TextEditorProps & {
+    className?: string;
+    setIsEditing: (isEditable: boolean) => void;
+  },
+) => {
   const editor = useTextEditor(props);
+  const editorRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (props.isEditing && editor && !editor.isFocused) {
+      editor?.chain().focus().run();
+    }
+  }, [props.isEditing, editor]);
   return (
     <div
       className={cn(
-        "relative flex size-full max-h-full flex-col rounded-sm disabled:cursor-not-allowed",
-        editor?.isEditable && "ring-1 ring-ring",
+        "relative flex size-full max-h-full flex-col rounded-sm",
+        editor &&
+          !props.isEditing &&
+          editor.isEditable &&
+          "cursor-text hover:bg-muted hover:text-muted-foreground",
         props.className,
       )}
+      {...(props.isEditable && {
+        onClick: () => {
+          props.setIsEditing(true);
+          editor?.chain().focus().run();
+        },
+      })}
     >
-      {editor?.isEditable && (
+      {props.isEditing && editor?.isEditable && (
         <TextEditorToolbar
           editor={editor}
           isEditing={editor.isEditable}
-          className="sticky left-0 top-0 w-full rounded-t-sm border-b border-b-accent"
+          className="sticky left-0 top-0 w-full rounded-sm bg-muted text-muted-foreground shadow-md"
         />
       )}
+
       <EditorContent
         editor={editor}
+        ref={editorRef}
         className="flex-1 overflow-auto px-3 py-2 focus-visible:outline-none"
       />
     </div>
