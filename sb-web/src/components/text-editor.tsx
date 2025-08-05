@@ -19,14 +19,26 @@ import {
   useState,
 } from "react";
 import { cn } from "@/lib/utils";
-interface TextEditorProps {
+
+interface BaseTextEditorProps {
   content: string | null;
   isEditable: boolean;
+  placeholder?: string;
+  className?: string;
+}
+
+interface EditableTextEditorProps extends BaseTextEditorProps {
+  isEditable: true;
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
   onTextChange: (newText: string) => void;
-  placeholder?: string;
 }
+
+interface ReadOnlyTextEditorProps extends BaseTextEditorProps {
+  isEditable: false;
+}
+
+type TextEditorProps = ReadOnlyTextEditorProps | EditableTextEditorProps;
 
 const useTextEditor = (props: TextEditorProps) => {
   const editor = useEditor(
@@ -291,25 +303,25 @@ const CompactTextEditor = (props: TextEditorProps & { className?: string }) => {
   );
 };
 
-const TextEditor = (
-  props: TextEditorProps & {
-    className?: string;
-    setIsEditing: (isEditable: boolean) => void;
-  },
-) => {
+const TextEditor = (props: TextEditorProps) => {
   const editor = useTextEditor(props);
   const editorRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (props.isEditing && editor && !editor.isFocused) {
+    if (props.isEditable && props.isEditing && editor && !editor.isFocused) {
       editor?.chain().focus().run();
     }
-  }, [props.isEditing, editor]);
+  }, [
+    props.isEditable,
+    props.isEditable ? props.isEditing : undefined,
+    editor,
+  ]);
   return (
     <div
       className={cn(
         "relative flex size-full max-h-full flex-col rounded-sm",
-        editor &&
-          !props.isEditing &&
+        props.isEditable &&
+          props.isEditing &&
+          editor &&
           editor.isEditable &&
           "cursor-text hover:bg-muted hover:text-muted-foreground",
         props.className,
@@ -321,7 +333,7 @@ const TextEditor = (
         },
       })}
     >
-      {props.isEditing && editor?.isEditable && (
+      {props.isEditable && props.isEditing && editor?.isEditable && (
         <TextEditorToolbar
           editor={editor}
           isEditing={editor.isEditable}
