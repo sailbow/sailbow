@@ -99,7 +99,7 @@ const useTextEditor = (props: TextEditorProps) => {
         },
       },
     },
-    [props.isEditable],
+    [props.isEditable, props.placeholder],
   );
 
   useEffect(() => {
@@ -321,7 +321,7 @@ const TextEditor = (props: TextEditorProps) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (props.isEditable && props.isEditing && editor && !editor.isFocused) {
-      editor?.chain().focus().run();
+      editor?.chain().focus("end").run();
     }
   }, [
     props.isEditable,
@@ -350,7 +350,7 @@ const TextEditor = (props: TextEditorProps) => {
         <TextEditorToolbar
           editor={editor}
           isEditing={editor.isEditable}
-          className="sticky left-0 top-0 w-full rounded-sm bg-muted text-muted-foreground shadow-md"
+          className="sticky left-0 top-0 z-50 w-full rounded-sm bg-muted text-muted-foreground shadow-md"
         />
       )}
 

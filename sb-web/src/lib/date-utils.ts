@@ -1,24 +1,15 @@
 import { format, isSameDay, isSameYear } from "date-fns";
 
+const appendIfSameYear = (target: Date, formatStr: string) => {
+  return isSameYear(target, new Date())
+    ? format(target, formatStr)
+    : format(target, `${formatStr}/yyyy`);
+};
 export function formatDateRange(start: Date, end?: Date): string {
-  if (!end) {
-    return format(start, "eeee, MMM d, yyyy -");
-  }
-  // If both dates are on the same day
-  if (isSameDay(start, end)) {
-    return format(start, "eeee, MMM d, yyyy");
+  if (!end || isSameDay(start, end)) {
+    return appendIfSameYear(start, "eee MM/d");
   }
 
-  // If both dates are in the same year
-  if (isSameYear(start, end)) {
-    const startFormatted = format(start, "eeee, MMM d");
-    const endFormatted = format(end, "eeee, MMM d");
-    const year = format(start, "yyyy");
-    return `${startFormatted} - ${endFormatted}, ${year}`;
-  }
-
-  // If dates are in different years
-  const startFormatted = format(start, "eeee, MMM d, yyyy");
-  const endFormatted = format(end, "eeee, MMM d, yyyy");
-  return `${startFormatted} - ${endFormatted}`;
+  const startFormatted = format(start, "eee MM/d");
+  return `${startFormatted} - ${appendIfSameYear(end, "eee MM/d")}`;
 }

@@ -25,6 +25,7 @@ import {
   ListChecks,
   MapPin,
   Megaphone,
+  NotepadText,
   Settings,
   Users2,
 } from "lucide-react";
@@ -62,6 +63,11 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import LoadingButton from "@/components/loading-button";
 import { z } from "zod";
 import { formatDateRange } from "@/lib/date-utils";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 export default function TripOverviewPage() {
   const { data: trip } = useActiveTrip();
@@ -91,11 +97,44 @@ export default function TripOverviewPage() {
       </TripPageHeader>
       <TripPageContent>
         {activeTab === "overview" && (
-          <div className="flex w-full max-w-4xl flex-col gap-4">
+          <div className="grid w-full max-w-5xl gap-4">
             {!trip.location && <SetLocationBadge />}
             {!trip.dates && <SetDateRangeBadge />}
             {trip.location && <LocationCard trip={trip} />}
             {trip.dates && <DateCard dates={trip.dates} />}
+            <Card className="bg-background text-foreground">
+              <CardHeader className="items-start p-4">
+                <div className="flex w-full items-center">
+                  <NotepadText className="size-7 shrink-0 text-primary" />
+                  <div className="ml-2 flex flex-col items-start gap-1.5">
+                    <CardTitle className="inline-flex items-center text-nowrap text-lg xs:text-2xl">
+                      Details
+                      <span className="ml-1 text-sm text-muted-foreground xs:text-base">
+                        (click below to edit)
+                      </span>
+                    </CardTitle>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="max-h-[50dvh] overflow-auto p-0 px-4 pb-4 sm:px-10">
+                <TripDetails />
+              </CardContent>
+            </Card>
+            {/* <div className="ml-4 divide-y">
+              <div className="mb-2 flex items-start gap-2">
+                <NotepadText className="size-7 shrink-0 text-primary" />
+                <h2 className="text-2xl font-semibold tracking-tight">
+                  Details
+                  <span className="ml-2 text-base font-normal text-muted-foreground">
+                    (click to edit)
+                  </span>
+                </h2>
+              </div>
+
+              <div className="pt-2">
+                <TripDetails />
+              </div>
+            </div> */}
           </div>
         )}
         {activeTab === "polls" && <TripPolls />}
@@ -114,14 +153,14 @@ const LocationCard = ({ trip }: { trip: Doc<"trips"> }) => {
 
   return (
     <>
-      <Card className="flex-1">
-        <CardHeader className="items-start">
-          <div className="flex w-full">
-            <div className="flex size-10 items-center justify-center rounded-full bg-background p-2">
-              <MapPin className="h-5 w-5" />
-            </div>
-            <div className="ml-2 flex flex-col items-start space-y-1.5">
-              <CardTitle>{location.primaryText}</CardTitle>
+      <Card className="bg-background text-foreground">
+        <CardHeader className="items-start p-4">
+          <div className="flex w-full items-start">
+            <MapPin className="size-8 shrink-0 text-primary" />
+            <div className="ml-2 flex flex-col items-start gap-1.5">
+              <CardTitle className="text-lg xs:text-2xl">
+                {location.primaryText}
+              </CardTitle>
               {location.secondaryText && (
                 <CardDescription className="pl-0.5">
                   {location.secondaryText}
@@ -129,7 +168,7 @@ const LocationCard = ({ trip }: { trip: Doc<"trips"> }) => {
               )}
             </div>
             <Button
-              className="ml-auto"
+              className="ml-auto shrink-0"
               variant="ghost"
               size="icon"
               onClick={() => {
@@ -141,16 +180,17 @@ const LocationCard = ({ trip }: { trip: Doc<"trips"> }) => {
           </div>
         </CardHeader>
         {hasContent && (
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
+          <CardContent className="p-0 px-6 pb-4 pr-4 sm:px-12">
+            <div className="flex flex-wrap gap-1">
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
                 href={`https://www.google.com/maps/dir/?api=1&destination=${location.geo ? `${location.geo.lat}%2C${location.geo.lng}` : location.primaryText}&destination_place_id=${location.placeId}`}
                 className={buttonVariants({
                   size: "sm",
-                  variant: "outline",
-                  className: "underline-offset-2 hover:underline",
+                  variant: "secondary",
+                  className:
+                    "text-xs underline-offset-2 hover:underline sm:text-sm",
                 })}
               >
                 <CornerUpRight className="h-4 w-4" />
@@ -163,8 +203,9 @@ const LocationCard = ({ trip }: { trip: Doc<"trips"> }) => {
                   href={location.website}
                   className={buttonVariants({
                     size: "sm",
-                    variant: "outline",
-                    className: "underline-offset-2 hover:underline",
+                    variant: "secondary",
+                    className:
+                      "text-xs underline-offset-2 hover:underline sm:text-sm",
                   })}
                 >
                   <Globe className="h-4 w-4" />
@@ -188,17 +229,18 @@ const DateCard = ({
   const disclosure = useDisclosure();
   return (
     <>
-      <Card>
-        <CardHeader>
-          <div className="flex w-full items-center gap-2">
-            <div className="flex size-10 items-center justify-center rounded-full bg-background p-2">
-              <CalendarIcon className="h-5 w-5" />
+      <Card className="bg-background text-foreground">
+        <CardHeader className="items-start p-4">
+          <div className="flex w-full items-center">
+            <CalendarIcon className="size-7 shrink-0 text-primary" />
+            <div className="ml-2 flex flex-col items-start gap-1.5">
+              <CardTitle className="text-nowrap text-left text-lg xs:text-2xl">
+                {formatDateRange(new Date(dates.start), new Date(dates.end))}
+              </CardTitle>
             </div>
-            <CardTitle className="text-wrap text-left">
-              {formatDateRange(new Date(dates.start), new Date(dates.end))}
-            </CardTitle>
+
             <Button
-              className="ml-auto"
+              className="ml-auto shrink-0"
               variant="ghost"
               size="icon"
               onClick={() => {
@@ -372,7 +414,7 @@ const SetLocationBadge = () => {
     <>
       <Badge
         variant="secondary"
-        className="gap-5 rounded-sm bg-cyan-700 py-2 text-lg text-white hover:bg-cyan-700 dark:bg-cyan-950 hover:dark:bg-cyan-950"
+        className="gap-5 rounded-sm bg-cyan-700 py-2 text-white hover:bg-cyan-700 dark:bg-cyan-950 hover:dark:bg-cyan-950 xs:text-lg"
       >
         <AlertCircle />A location has not been specified
         <Button className="ml-auto w-32" onClick={() => disclosure.setOpened()}>
@@ -389,7 +431,7 @@ const SetDateRangeBadge = () => {
   return (
     <Badge
       variant="secondary"
-      className="gap-5 rounded-sm bg-cyan-700 py-2 text-lg text-white hover:bg-cyan-700 dark:bg-cyan-950 hover:dark:bg-cyan-950"
+      className="gap-5 rounded-sm bg-cyan-700 py-2 text-white hover:bg-cyan-700 dark:bg-cyan-950 hover:dark:bg-cyan-950 xs:text-lg"
     >
       <AlertCircle />
       Dates have not been selected

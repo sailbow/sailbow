@@ -13,12 +13,12 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { useState } from "react";
 import { useActiveTripId } from "@/lib/trip-queries";
 import { useDeleteTrip } from "@/lib/trip-mutations";

@@ -39,7 +39,7 @@ export default function TripDetails() {
   if (!trip) return;
 
   return (
-    <div className="relative flex size-full max-h-full max-w-5xl pb-4">
+    <div className="flex w-full flex-col gap-4">
       <TextEditor
         isEditing={isEditing}
         isEditable={true}
@@ -48,10 +48,12 @@ export default function TripDetails() {
         onTextChange={(newText) => {
           setDescriptionText(newText);
         }}
-        placeholder={"Trip details, extra info, etc."}
+        placeholder={
+          isEditing ? "Trip details, extra info, etc" : "No details yet!"
+        }
       />
       {isEditing && (
-        <div className="absolute right-2 top-1.5 flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <Button
             size="sm"
             variant="outline"
