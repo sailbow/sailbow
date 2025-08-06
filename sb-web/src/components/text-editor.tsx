@@ -22,7 +22,6 @@ import { cn } from "@/lib/utils";
 
 interface BaseTextEditorProps {
   content: string | null;
-  isEditable: boolean;
   placeholder?: string;
   className?: string;
 }
@@ -31,6 +30,11 @@ interface EditableTextEditorProps extends BaseTextEditorProps {
   isEditable: true;
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
+  onTextChange: (newText: string) => void;
+}
+
+interface EditableCompactTextEditorProps extends BaseTextEditorProps {
+  isEditable: true;
   onTextChange: (newText: string) => void;
 }
 
@@ -266,9 +270,18 @@ const TextEditorToolbar = ({
   );
 };
 
-const CompactTextEditor = (props: TextEditorProps & { className?: string }) => {
-  const editor = useTextEditor(props);
+const CompactTextEditor = (
+  props: ReadOnlyTextEditorProps | EditableCompactTextEditorProps,
+) => {
   const [isEditing, setIsEditing] = useState(false);
+  const editor = useTextEditor({
+    ...props,
+    isEditable: props.isEditable,
+    isEditing,
+    setIsEditing: (isEditing) => setIsEditing(isEditing),
+    ...(props.isEditable && { onTextChange: props.onTextChange }),
+  } as TextEditorProps);
+
   const handleFocusIn: FocusEventHandler = (e) => {
     if (!e.currentTarget.contains(e.relatedTarget)) {
       setIsEditing(true);
