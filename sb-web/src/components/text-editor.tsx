@@ -333,7 +333,7 @@ const TextEditor = (props: TextEditorProps) => {
       className={cn(
         "relative flex size-full max-h-full flex-col rounded-sm",
         props.isEditable &&
-          props.isEditing &&
+          !props.isEditing &&
           editor &&
           editor.isEditable &&
           "cursor-text hover:bg-muted hover:text-muted-foreground",
