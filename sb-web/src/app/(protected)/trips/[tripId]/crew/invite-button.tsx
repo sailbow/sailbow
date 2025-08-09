@@ -1,7 +1,13 @@
 "use client";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import InviteForm from "./invite-form";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { type Doc } from "@convex/_generated/dataModel";
 import { useDisclosure } from "@/lib/use-disclosure";
@@ -20,18 +26,27 @@ export const roleValueToDisplay = (
   }
 };
 
-export default function InviteButton() {
+export default function InviteButton({
+  variant = "default",
+  size = "default",
+}: {
+  size?: ButtonProps["size"];
+  variant?: ButtonProps["variant"];
+}) {
   const disclosure = useDisclosure();
-  const isMobile = useIsMobile();
+  // const isMobile = useIsMobile();
   return (
     <Dialog {...disclosure}>
       <DialogTrigger asChild>
-        <Button size={isMobile ? "sm" : "default"}>
-          <Send className="mr-2 size-4" />
+        <Button size={size} variant={variant}>
+          <Send className="size-4" />
           Invite
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-card">
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Invite a user</DialogTitle>
+        </DialogHeader>
         <InviteForm
           onSuccess={disclosure.setClosed}
           onCancel={disclosure.setClosed}

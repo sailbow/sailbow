@@ -68,6 +68,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { CaptainTile, CrewTile } from "./components";
 
 export default function TripOverviewPage() {
   const { data: trip } = useActiveTrip();
@@ -97,44 +98,9 @@ export default function TripOverviewPage() {
       </TripPageHeader>
       <TripPageContent>
         {activeTab === "overview" && (
-          <div className="grid w-full max-w-5xl gap-4">
-            {!trip.location && <SetLocationBadge />}
-            {!trip.dates && <SetDateRangeBadge />}
-            {trip.location && <LocationCard trip={trip} />}
-            {trip.dates && <DateCard dates={trip.dates} />}
-            <Card className="bg-background text-foreground">
-              <CardHeader className="items-start p-4">
-                <div className="flex w-full items-center">
-                  <NotepadText className="size-7 shrink-0 text-primary" />
-                  <div className="ml-2 flex flex-col items-start gap-1.5">
-                    <CardTitle className="inline-flex items-center text-nowrap text-lg xs:text-2xl">
-                      Details
-                      <span className="ml-1 text-sm text-muted-foreground xs:text-base">
-                        (click below to edit)
-                      </span>
-                    </CardTitle>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="max-h-[50dvh] overflow-auto p-0 px-4 pb-4 sm:px-10">
-                <TripDetails />
-              </CardContent>
-            </Card>
-            {/* <div className="ml-4 divide-y">
-              <div className="mb-2 flex items-start gap-2">
-                <NotepadText className="size-7 shrink-0 text-primary" />
-                <h2 className="text-2xl font-semibold tracking-tight">
-                  Details
-                  <span className="ml-2 text-base font-normal text-muted-foreground">
-                    (click to edit)
-                  </span>
-                </h2>
-              </div>
-
-              <div className="pt-2">
-                <TripDetails />
-              </div>
-            </div> */}
+          <div className="grid w-full gap-2 lg:grid-cols-2">
+            <CaptainTile />
+            <CrewTile />
           </div>
         )}
         {activeTab === "polls" && <TripPolls />}

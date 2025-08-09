@@ -81,7 +81,7 @@ export default function InviteForm({ onSuccess, onCancel }: InviteFormProps) {
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center space-x-4">
-                <FormLabel className="text-foreground">Email</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormMessage className="text-xs" />
               </div>
               <FormControl>
@@ -100,7 +100,7 @@ export default function InviteForm({ onSuccess, onCancel }: InviteFormProps) {
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center space-x-4">
-                <FormLabel className="text-foreground">Role</FormLabel>
+                <FormLabel>Role</FormLabel>
               </div>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
