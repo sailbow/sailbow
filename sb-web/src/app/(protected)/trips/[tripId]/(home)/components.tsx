@@ -127,9 +127,9 @@ export const LocationTile = ({ className }: { className?: string }) => {
   const viewGalleryDisclosure = useDisclosure();
 
   const isLoading = isTripLoading || isGooglePlaceLoading;
-  if (isLoading || !trip)
+  if (isLoading || isGooglePlaceLoading || !trip)
     return (
-      <Card className={cn("overflow-hidden", className)}>
+      <Card className={cn("size-full overflow-hidden", className)}>
         <Skeleton className="size-full dark:bg-slate-500" />
       </Card>
     );
@@ -301,7 +301,7 @@ const AvatarGroup = ({
   users: Array<{ firstName: string; lastName: string; imageUrl: string }>;
 }) => {
   return (
-    <TooltipProvider delayDuration={300}>
+    <TooltipProvider delayDuration={100}>
       <div className="flex items-center -space-x-2">
         {users.slice(0, 7).map((user, index) => {
           return (

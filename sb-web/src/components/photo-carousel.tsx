@@ -16,7 +16,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { X } from "lucide-react";
 import Image from "next/image";
 import { type CarouselApi } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
@@ -51,14 +50,14 @@ export default function PhotoCarouselDialog({
           Browse through a collection of beautiful landscape photos
         </DialogDescription>
 
-        <div className="relative">
+        <div className="relative overflow-hidden rounded-md">
           <Carousel className="w-full" setApi={setApi} opts={{ loop: true }}>
-            <CarouselContent>
+            <CarouselContent className="rounded-md">
               {photos.map((photo, ind) => (
                 <CarouselItem key={ind}>
                   <Card className="border-0">
                     <CardContent className="p-0">
-                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md">
+                      <div className="relative aspect-[4/3] w-full">
                         <Image
                           src={photo.src}
                           alt={photo.alt ?? ""}
