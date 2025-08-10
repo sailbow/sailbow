@@ -422,6 +422,7 @@ const SetDateRangeDialog = ({
               to: range?.to,
             });
           }}
+          className="h-[340px]"
         />
         <DialogFooter>
           <Button
