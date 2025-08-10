@@ -104,7 +104,7 @@ export default function TripOverviewPage() {
       </TripPageHeader>
       <TripPageContent>
         {activeTab === "overview" && (
-          <div className="min-h-screen max-w-full overflow-x-hidden">
+          <div className="min-h-[200%] max-w-full overflow-x-hidden">
             <div className="grid size-full gap-4 pb-4 lg:grid-cols-2 lg:grid-rows-6">
               <CaptainTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
               <CrewTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
@@ -118,7 +118,9 @@ export default function TripOverviewPage() {
                 <LocationTile className="lg:row-span-4" />
               </div>
             </div>
-            <TripDetails />
+            <div className="mt-4">
+              <TripDetails />
+            </div>
           </div>
         )}
         {activeTab === "polls" && <TripPolls />}
