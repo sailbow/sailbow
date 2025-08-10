@@ -68,7 +68,13 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { CaptainTile, CrewTile, LocationTile } from "./components";
+import {
+  BudgetTile,
+  CaptainTile,
+  CrewTile,
+  DatesTile,
+  LocationTile,
+} from "./components";
 
 export default function TripOverviewPage() {
   const { data: trip } = useActiveTrip();
@@ -100,9 +106,15 @@ export default function TripOverviewPage() {
         {activeTab === "overview" && (
           <div className="grid gap-4 pb-4 lg:grid-cols-2 lg:grid-rows-6">
             <CaptainTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
-            <Card className="lg:row-span-2 lg:row-start-3">a</Card>
-            <Card className="lg:row-span-2 lg:row-start-5">b</Card>
             <CrewTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
+            <div className="lg:row-span-2 lg:row-start-3">
+              <DatesTile className="size-full" />
+            </div>
+
+            <div className="lg:row-span-2 lg:row-start-5">
+              <BudgetTile className="size-full" />
+            </div>
+
             <div className="lg:row-span-4">
               <LocationTile className="lg:row-span-4" />
             </div>

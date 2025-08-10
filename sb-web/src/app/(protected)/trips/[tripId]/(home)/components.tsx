@@ -3,6 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -25,6 +26,7 @@ import ImageWithLoader from "@/app/_components/image-with-loader";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
+  CalendarIcon,
   CornerUpRight,
   Edit2,
   ExternalLink,
@@ -43,6 +45,19 @@ import { api } from "@convex/_generated/api";
 import { GooglePlaceSearchDialog } from "@/components/google-places";
 import { toast } from "@/components/ui/toast";
 import PhotoCarouselDialog from "@/components/photo-carousel";
+import { format } from "date-fns";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
+import { formatDateRange } from "@/lib/date-utils";
+import LoadingButton from "@/components/loading-button";
 
 export const CaptainTile = ({ className }: { className?: string }) => {
   const { data: crew, isLoading: isCrewLoading } = useCrew();
@@ -175,7 +190,7 @@ export const LocationTile = ({ className }: { className?: string }) => {
               {trip.location.secondaryText !== trip.location.primaryText && (
                 <CardDescription>{trip.location.secondaryText}</CardDescription>
               )}
-              <div className="flex gap-1">
+              <div className="flex gap-1 pt-1">
                 {trip.location?.website && (
                   <Link
                     target="_blank"
@@ -228,15 +243,14 @@ export const LocationTile = ({ className }: { className?: string }) => {
 
   return (
     <>
-      <Card
-        className={cn(
-          "flex size-full  flex-col items-center justify-center hover:cursor-pointer hover:bg-accent hover:text-accent-foreground hover:ring-2",
-        )}
+      <Button
+        className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
+        variant="outline"
         onClick={() => editDisclosure.setOpened()}
       >
         <MapPin className="size-12" />
         No location set (click to edit)
-      </Card>
+      </Button>
       <SetLocationDialog {...editDisclosure} defaultPlace={trip.location} />
     </>
   );
@@ -245,6 +259,190 @@ export const LocationTile = ({ className }: { className?: string }) => {
 export const DatesTile = ({ className }: { className?: string }) => {
   const { data: trip, isLoading: isTripLoading } = useActiveTrip();
   const editDisclosure = useDisclosure();
+
+  if (isTripLoading || !trip)
+    return (
+      <Card className={cn("size-full overflow-hidden", className)}>
+        <Skeleton className="size-full dark:bg-slate-500" />
+      </Card>
+    );
+
+  if (!trip.dates) {
+    return (
+      <>
+        <Button
+          className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
+          variant="outline"
+          onClick={() => editDisclosure.setOpened()}
+        >
+          <CalendarIcon />
+          No date set (click to edit)
+        </Button>
+        <SetDateRangeDialog {...editDisclosure} defaultValue={trip.dates} />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Button
+        className="flex size-full items-center justify-center gap-4 bg-card p-4"
+        variant="outline"
+        onClick={() => editDisclosure.setOpened()}
+      >
+        <div className="flex flex-col items-center justify-center gap-2">
+          <div className="text-4xl font-bold">
+            {format(trip.dates.start, "M/d")}
+          </div>
+          <div className="text-2xl text-muted-foreground">
+            {format(trip.dates.start, "EEEE")}
+          </div>
+        </div>
+        {trip.dates.end && trip.dates.end !== trip.dates.start && (
+          <>
+            <div className="text-4xl font-bold">{"-"}</div>
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="text-4xl font-bold">
+                {format(trip.dates.end, "M/d")}
+              </div>
+              <div className="text-2xl text-muted-foreground">
+                {format(trip.dates.end, "EEEE")}
+              </div>
+            </div>
+          </>
+        )}
+      </Button>
+      <SetDateRangeDialog
+        {...editDisclosure}
+        defaultValue={{
+          from: new Date(trip.dates.start),
+          to: trip.dates.end ? new Date(trip.dates.end) : undefined,
+        }}
+      />
+    </>
+  );
+};
+
+export const BudgetTile = ({ className }: { className?: string }) => {
+  const { data: trip, isLoading: isTripLoading } = useActiveTrip();
+  const editDisclosure = useDisclosure();
+
+  if (isTripLoading || !trip)
+    return (
+      <Card className={cn("size-full overflow-hidden", className)}>
+        <Skeleton className="size-full dark:bg-slate-500" />
+      </Card>
+    );
+
+  return (
+    <Button
+      className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
+      variant="outline"
+    >
+      <div className="text-4xl font-bold text-emerald-500">$250 - $350</div>
+      <div className="text-2xl text-muted-foreground">Estimated budget</div>
+    </Button>
+  );
+};
+
+const SetDateRangeDialog = ({
+  open,
+  onOpenChange,
+  defaultValue,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  defaultValue?: { from: Date | undefined; to: Date | undefined };
+}) => {
+  const tripId = useActiveTripId();
+  const [isSaving, setIsSaving] = useState(false);
+  const isMobile = useIsMobile();
+  const [dates, setDates] = useState<
+    { from: Date | undefined; to: Date | undefined } | undefined
+  >(defaultValue);
+  const mutate = useMutation(
+    api.trips.mutations.updateDates,
+  ).withOptimisticUpdate((localStore, args) => {
+    const current = localStore.getQuery(api.trips.queries.getById, { tripId });
+    if (current) {
+      localStore.setQuery(
+        api.trips.queries.getById,
+        { tripId },
+        { ...current, dates: args.dates },
+      );
+    }
+  });
+
+  const handleSave = () => {
+    if (!dates?.from || !dates?.to) {
+      toast.warning("Must provide a start and end date", {
+        position: "top-center",
+      });
+      return;
+    }
+    setIsSaving(true);
+    mutate({
+      tripId,
+      dates: { start: dates.from.getTime(), end: dates.to.getTime() },
+    })
+      .then(() => {
+        onOpenChange(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Something went wrong there");
+      })
+      .finally(() => {
+        setIsSaving(false);
+      });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="min-w-fit">
+        <DialogHeader className="w-full flex-row items-center justify-center gap-4">
+          <DialogTitle className="min-h-5">
+            {dates?.from && formatDateRange(dates.from, dates.to)}
+          </DialogTitle>
+        </DialogHeader>
+        <Calendar
+          numberOfMonths={isMobile ? 1 : 2}
+          showOutsideDays={isMobile}
+          defaultMonth={defaultValue?.from}
+          mode="range"
+          selected={dates}
+          onSelect={(range) => {
+            setDates({
+              from: range?.from,
+              to: range?.to,
+            });
+          }}
+        />
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              variant="outline"
+              disabled={isSaving}
+              className="w-20"
+              onClick={() => {
+                setDates(defaultValue);
+              }}
+            >
+              Cancel
+            </Button>
+          </DialogClose>
+          <LoadingButton
+            className="w-20"
+            onClick={() => handleSave()}
+            isLoading={isSaving}
+            disabled={!dates?.from || !dates?.to || isSaving}
+          >
+            Save
+          </LoadingButton>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 };
 
 const SetLocationDialog = ({
@@ -295,6 +493,7 @@ const SetLocationDialog = ({
     />
   );
 };
+
 const AvatarGroup = ({
   users,
 }: {

@@ -22,7 +22,7 @@ function Calendar({
       classNames={{
         month: "space-y-4",
         months:
-          "flex flex-col sm:flex-row space-y-4 sm:space-y-0 relative gap-2",
+          "flex flex-col sm:flex-row space-y-4 sm:space-y-0 relative gap-4",
         month_caption: "flex justify-center pt-1 relative items-center",
         month_grid: "w-full border-collapse space-y-1",
         caption_label: "text-sm font-medium",
