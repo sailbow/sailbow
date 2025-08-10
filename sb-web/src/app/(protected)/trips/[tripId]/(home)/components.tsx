@@ -65,7 +65,7 @@ export const CaptainTile = ({ className }: { className?: string }) => {
   const isLoading = isCrewLoading;
   return (
     <Card className={className}>
-      <div className="flex space-x-4 p-4">
+      <div className="flex items-center space-x-4 p-4">
         <div className="flex-shrink-0">
           <Avatar className="size-14 lg:size-20">
             {isLoading ? (
@@ -161,7 +161,7 @@ export const LocationTile = ({ className }: { className?: string }) => {
       <>
         <Card
           className={cn(
-            "flex size-full min-h-[300px] flex-col overflow-hidden",
+            "flex size-full min-h-[300px] flex-col overflow-hidden border border-input",
             className,
           )}
         >
@@ -339,7 +339,7 @@ export const BudgetTile = ({ className }: { className?: string }) => {
       className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
       variant="outline"
     >
-      <div className="text-4xl font-bold text-emerald-500">$250 - $350</div>
+      <div className="text-4xl font-bold text-green-600">$250 - $350</div>
       <div className="text-2xl text-muted-foreground">Estimated budget</div>
     </Button>
   );

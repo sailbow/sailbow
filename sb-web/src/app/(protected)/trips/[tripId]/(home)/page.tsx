@@ -104,7 +104,7 @@ export default function TripOverviewPage() {
       </TripPageHeader>
       <TripPageContent>
         {activeTab === "overview" && (
-          <div className="grid gap-4 pb-4 lg:grid-cols-2 lg:grid-rows-6">
+          <div className="grid size-full gap-4 pb-4 lg:grid-cols-2 lg:grid-rows-6">
             <CaptainTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
             <CrewTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
             <div className="lg:row-span-2 lg:row-start-3">
