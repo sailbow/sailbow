@@ -9,6 +9,7 @@ import { ConvexClientProvider } from "@/ConvexProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { env } from "@/env";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const font = Poppins({
   weight: "500",
   subsets: ["latin"],
@@ -80,6 +81,10 @@ export default function RootLayout({
               </NuqsAdapter>
             </ThemeProvider>
           </body>
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            buttonPosition="top-right"
+          />
         </ConvexClientProvider>
       </ClerkProvider>
     </html>

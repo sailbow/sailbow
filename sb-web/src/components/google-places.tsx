@@ -56,7 +56,7 @@ export const GooglePlaceResultSchema = z.object({
     .optional(),
 });
 
-type GooglePlaceResult = z.infer<typeof GooglePlaceResultSchema>;
+export type GooglePlaceResult = z.infer<typeof GooglePlaceResultSchema>;
 
 export const GooglePlaceSearchPopover = ({
   onSelect,

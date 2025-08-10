@@ -68,7 +68,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { CaptainTile, CrewTile } from "./components";
+import { CaptainTile, CrewTile, LocationTile } from "./components";
 
 export default function TripOverviewPage() {
   const { data: trip } = useActiveTrip();
@@ -98,9 +98,17 @@ export default function TripOverviewPage() {
       </TripPageHeader>
       <TripPageContent>
         {activeTab === "overview" && (
-          <div className="grid w-full gap-2 lg:grid-cols-2">
-            <CaptainTile />
-            <CrewTile />
+          <div className="grid gap-4 pb-4 lg:grid-cols-2 lg:grid-rows-6">
+            <CaptainTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
+            <Card className="lg:row-span-2 lg:row-start-3">a</Card>
+            <Card className="lg:row-span-2 lg:row-start-5">b</Card>
+            <CrewTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
+            <div className="lg:row-span-4">
+              <LocationTile className="lg:row-span-4" />
+            </div>
+            {/* <LocationTile className="lg:row-span-4 lg:row-start-3 lg:row-end-auto" /> */}
+            {/* <CrewTile />
+            <LocationTile />  */}
           </div>
         )}
         {activeTab === "polls" && <TripPolls />}

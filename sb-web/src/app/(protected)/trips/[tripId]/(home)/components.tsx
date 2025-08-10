@@ -8,7 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCrew, usePendingAndDeclinedInvites } from "@/lib/trip-queries";
+import {
+  useActiveTrip,
+  useActiveTripId,
+  useCrew,
+  usePendingAndDeclinedInvites,
+} from "@/lib/trip-queries";
 import InviteButton from "../crew/invite-button";
 import {
   Tooltip,
@@ -16,16 +21,38 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import ImageWithLoader from "@/app/_components/image-with-loader";
+import Link from "next/link";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  CornerUpRight,
+  Edit2,
+  ExternalLink,
+  Globe,
+  Image,
+  ImageIcon,
+  MapPin,
+} from "lucide-react";
+import { useGooglePlace } from "@/hooks/google-places";
+import { useDisclosure } from "@/lib/use-disclosure";
+import { cn } from "@/lib/utils";
+import { Doc } from "@convex/_generated/dataModel";
+import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "@convex/_generated/api";
+import { GooglePlaceSearchDialog } from "@/components/google-places";
+import { toast } from "@/components/ui/toast";
+import PhotoCarouselDialog from "@/components/photo-carousel";
 
-export const CaptainTile = () => {
+export const CaptainTile = ({ className }: { className?: string }) => {
   const { data: crew, isLoading: isCrewLoading } = useCrew();
   const captain = crew?.find((c) => c.role === "captain");
   const isLoading = isCrewLoading;
   return (
-    <Card>
+    <Card className={className}>
       <div className="flex space-x-4 p-4">
         <div className="flex-shrink-0">
-          <Avatar className="size-20">
+          <Avatar className="size-14 lg:size-20">
             {isLoading ? (
               <Skeleton className="size-full rounded-full dark:bg-slate-500" />
             ) : (
@@ -50,7 +77,7 @@ export const CaptainTile = () => {
   );
 };
 
-export const CrewTile = () => {
+export const CrewTile = ({ className }: { className?: string }) => {
   const { data: crew, isLoading: isCrewLoading } = useCrew();
   const { data: invites, isLoading: areInvitesLoading } =
     usePendingAndDeclinedInvites();
@@ -60,7 +87,7 @@ export const CrewTile = () => {
 
   if (isLoading || !crew || !invites)
     return (
-      <Card className="overflow-hidden">
+      <Card className={cn("overflow-hidden", className)}>
         <Skeleton className="size-full dark:bg-slate-500" />
       </Card>
     );
@@ -69,13 +96,16 @@ export const CrewTile = () => {
   const invited = going - 1 + invites.length;
 
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader className="p-4">
-        <div className="flex items-center gap-2">
-          <CardTitle>Crew</CardTitle>
-          <CardDescription>
-            ({going} going, {invited} invited)
-          </CardDescription>
+        <div className="flex gap-2">
+          <div className="flex flex-wrap items-center gap-1 *:text-nowrap">
+            <CardTitle>Crew</CardTitle>
+            <CardDescription>
+              ({going} going, {invited} invited)
+            </CardDescription>
+          </div>
+
           <div className="ml-auto">
             <InviteButton size="sm" variant="outline" />
           </div>
@@ -86,6 +116,185 @@ export const CrewTile = () => {
   );
 };
 
+export const LocationTile = ({ className }: { className?: string }) => {
+  const { data: trip, isLoading: isTripLoading } = useActiveTrip();
+
+  const { data: googlePlace, isLoading: isGooglePlaceLoading } = useGooglePlace(
+    trip?.location?.placeId,
+  );
+
+  const editDisclosure = useDisclosure();
+  const viewGalleryDisclosure = useDisclosure();
+
+  const isLoading = isTripLoading || isGooglePlaceLoading;
+  if (isLoading || !trip)
+    return (
+      <Card className={cn("overflow-hidden", className)}>
+        <Skeleton className="size-full dark:bg-slate-500" />
+      </Card>
+    );
+
+  const photoUrl = googlePlace?.photos?.[0]?.getUrl();
+
+  const photos =
+    googlePlace?.photos?.map((p) => ({
+      src: p.getUrl(),
+    })) ?? [];
+
+  if (trip.location) {
+    return (
+      <>
+        <Card
+          className={cn(
+            "flex size-full min-h-[300px] flex-col overflow-hidden",
+            className,
+          )}
+        >
+          {photoUrl && (
+            <div className="relative flex basis-3/4">
+              <Button
+                className="absolute right-2 top-2 z-10 opacity-85 backdrop-blur-lg"
+                variant="outline"
+                size="icon"
+                onClick={() => editDisclosure.setOpened()}
+              >
+                <Edit2 className="size-4" />
+              </Button>
+              <ImageWithLoader
+                src={photoUrl}
+                alt=""
+                className="rounded-b-none"
+              />
+            </div>
+          )}
+          <div className={cn("flex", photoUrl && "basis-1/4")}>
+            <CardHeader className="p-4">
+              <CardTitle className="flex items-center gap-2">
+                {trip.location.primaryText}
+              </CardTitle>
+              {trip.location.secondaryText !== trip.location.primaryText && (
+                <CardDescription>{trip.location.secondaryText}</CardDescription>
+              )}
+              <div className="flex gap-1">
+                {trip.location?.website && (
+                  <Link
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={trip.location.website}
+                    className={buttonVariants({
+                      size: "sm",
+                      variant: "outline",
+                      className:
+                        "h-fit px-3 py-2 text-xs underline-offset-2 hover:underline",
+                    })}
+                  >
+                    <Globe className="h-4 w-4" />
+                    Website
+                  </Link>
+                )}
+                <Link
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${trip.location.geo ? `${trip.location.geo.lat}%2C${trip.location.geo.lng}` : trip.location.primaryText}&destination_place_id=${trip.location.placeId}`}
+                  className={buttonVariants({
+                    size: "sm",
+                    variant: "outline",
+                    className:
+                      "h-fit px-3 py-2 text-xs underline-offset-2 hover:underline",
+                  })}
+                >
+                  <CornerUpRight className="h-4 w-4" />
+                  Get Directions
+                </Link>
+                {photos.length > 0 && (
+                  <Button
+                    variant="outline"
+                    className="h-fit px-3 py-2 text-xs"
+                    onClick={() => viewGalleryDisclosure.setOpened()}
+                  >
+                    <ImageIcon />
+                    Gallery
+                  </Button>
+                )}
+              </div>
+            </CardHeader>
+          </div>
+        </Card>
+        <SetLocationDialog {...editDisclosure} />
+        <PhotoCarouselDialog photos={photos} {...viewGalleryDisclosure} />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Card
+        className={cn(
+          "flex size-full  flex-col items-center justify-center hover:cursor-pointer hover:bg-accent hover:text-accent-foreground hover:ring-2",
+        )}
+        onClick={() => editDisclosure.setOpened()}
+      >
+        <MapPin className="size-12" />
+        No location set (click to edit)
+      </Card>
+      <SetLocationDialog {...editDisclosure} defaultPlace={trip.location} />
+    </>
+  );
+};
+
+export const DatesTile = ({ className }: { className?: string }) => {
+  const { data: trip, isLoading: isTripLoading } = useActiveTrip();
+  const editDisclosure = useDisclosure();
+};
+
+const SetLocationDialog = ({
+  open,
+  onOpenChange,
+  defaultPlace,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  defaultPlace?: Doc<"trips">["location"];
+}) => {
+  const tripId = useActiveTripId();
+  const [isSaving, setIsSaving] = useState(false);
+
+  const mutate = useMutation(
+    api.trips.mutations.updateLocation,
+  ).withOptimisticUpdate((localStore, args) => {
+    const current = localStore.getQuery(api.trips.queries.getById, { tripId });
+    if (current) {
+      localStore.setQuery(
+        api.trips.queries.getById,
+        { tripId },
+        { ...current, location: args.location },
+      );
+    }
+  });
+
+  return (
+    <GooglePlaceSearchDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      isLoading={isSaving}
+      defaultPlace={defaultPlace}
+      onSave={(place) => {
+        setIsSaving(true);
+        mutate({ tripId, location: place })
+          .then(() => {
+            onOpenChange(false);
+          })
+          .catch((err) => {
+            console.error(err);
+            toast.error("Something went wrong there");
+          })
+          .finally(() => {
+            setIsSaving(false);
+          });
+      }}
+    />
+  );
+};
 const AvatarGroup = ({
   users,
 }: {
@@ -101,7 +310,7 @@ const AvatarGroup = ({
                 <TooltipTrigger asChild>
                   <Avatar
                     key={index}
-                    className={`z-${index} cursor-pointer bg-card ring-2 ring-background transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-105 hover:shadow-lg`}
+                    className={`z-${index} cursor-pointer bg-card ring-2 ring-background transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-105 hover:shadow-lg hover:ring-ring`}
                   >
                     <AvatarImage
                       src={user.imageUrl}
