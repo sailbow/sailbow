@@ -104,23 +104,21 @@ export default function TripOverviewPage() {
       </TripPageHeader>
       <TripPageContent>
         {activeTab === "overview" && (
-          <div className="grid size-full gap-4 pb-4 lg:grid-cols-2 lg:grid-rows-6">
-            <CaptainTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
-            <CrewTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
-            <div className="lg:row-span-2 lg:row-start-3">
-              <DatesTile className="size-full" />
+          <div className="min-h-screen max-w-full overflow-x-hidden">
+            <div className="grid size-full gap-4 pb-4 lg:grid-cols-2 lg:grid-rows-6">
+              <CaptainTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
+              <CrewTile className="lg:row-span-2 lg:row-start-1 lg:content-center" />
+              <div className="lg:row-span-2 lg:row-start-3">
+                <DatesTile className="size-full" />
+              </div>
+              <div className="lg:row-span-2 lg:row-start-5">
+                <BudgetTile className="size-full" />
+              </div>
+              <div className="lg:row-span-4">
+                <LocationTile className="lg:row-span-4" />
+              </div>
             </div>
-
-            <div className="lg:row-span-2 lg:row-start-5">
-              <BudgetTile className="size-full" />
-            </div>
-
-            <div className="lg:row-span-4">
-              <LocationTile className="lg:row-span-4" />
-            </div>
-            {/* <LocationTile className="lg:row-span-4 lg:row-start-3 lg:row-end-auto" /> */}
-            {/* <CrewTile />
-            <LocationTile />  */}
+            <TripDetails />
           </div>
         )}
         {activeTab === "polls" && <TripPolls />}

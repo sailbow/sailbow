@@ -49,23 +49,28 @@ export default function TripDetails() {
           setDescriptionText(newText);
         }}
         placeholder={
-          isEditing ? "Trip details, extra info, etc" : "No details yet!"
+          isEditing
+            ? "Trip details, extra info, etc"
+            : "No details yet... (click to edit)"
         }
       />
       {isEditing && (
-        <div className="flex items-center gap-2">
+        <div className="mb-8 flex items-center gap-2">
           <Button
             size="sm"
             variant="outline"
+            className="w-20"
             disabled={isUpdatingDescription}
             onClick={() => {
               setDescriptionText(trip.description);
               setIsEditing(false);
             }}
+            autoFocus
           >
             Cancel
           </Button>
           <LoadingButton
+            className="w-20"
             size="sm"
             isLoading={isUpdatingDescription}
             onClick={() => {

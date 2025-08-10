@@ -374,16 +374,21 @@ const SetDateRangeDialog = ({
   });
 
   const handleSave = () => {
-    if (!dates?.from || !dates?.to) {
-      toast.warning("Must provide a start and end date", {
-        position: "top-center",
-      });
-      return;
-    }
+    // if (!dates?.from || !dates?.to) {
+    //   toast.warning("Must provide a start and end date", {
+    //     position: "top-center",
+    //   });
+    //   return;
+    // }
     setIsSaving(true);
     mutate({
       tripId,
-      dates: { start: dates.from.getTime(), end: dates.to.getTime() },
+      dates: !dates?.from
+        ? undefined
+        : {
+            start: dates.from.getTime(),
+            end: dates.to?.getTime() ?? dates.from.getTime(),
+          },
     })
       .then(() => {
         onOpenChange(false);
@@ -419,6 +424,14 @@ const SetDateRangeDialog = ({
           }}
         />
         <DialogFooter>
+          <Button
+            variant="outline"
+            disabled={isSaving}
+            className="mr-auto w-20"
+            onClick={() => setDates({ from: undefined, to: undefined })}
+          >
+            Reset
+          </Button>
           <DialogClose asChild>
             <Button
               variant="outline"
@@ -435,7 +448,7 @@ const SetDateRangeDialog = ({
             className="w-20"
             onClick={() => handleSave()}
             isLoading={isSaving}
-            disabled={!dates?.from || !dates?.to || isSaving}
+            disabled={isSaving}
           >
             Save
           </LoadingButton>

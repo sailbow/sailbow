@@ -35,10 +35,12 @@ export const updateDescription = mutation({
 export const updateDates = mutation({
   args: {
     tripId: v.id("trips"),
-    dates: v.object({
-      start: v.number(),
-      end: v.number(),
-    }),
+    dates: v.optional(
+      v.object({
+        start: v.number(),
+        end: v.number(),
+      }),
+    ),
   },
   handler: async ({ auth, db }, args) => {
     return withUser(auth, db, async () => {
