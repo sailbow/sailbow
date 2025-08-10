@@ -80,7 +80,7 @@ export const CaptainTile = ({ className }: { className?: string }) => {
             <Skeleton className="h-full w-full rounded-sm dark:bg-slate-500" />
           ) : (
             <>
-              <CardTitle className="text-nowrap">
+              <CardTitle className="@lg:text-2xl text-lg">
                 {`${captain?.firstName ?? ""} ${captain?.lastName ?? ""}`}
               </CardTitle>
               <CardDescription>Captain</CardDescription>
@@ -112,10 +112,10 @@ export const CrewTile = ({ className }: { className?: string }) => {
 
   return (
     <Card className={className}>
-      <CardHeader className="p-4">
+      <CardHeader>
         <div className="flex gap-2">
           <div className="flex flex-wrap items-center gap-1 *:text-nowrap">
-            <CardTitle>Crew</CardTitle>
+            <CardTitle className="text-2xl">Crew</CardTitle>
             <CardDescription>
               ({going} going, {invited} invited)
             </CardDescription>
@@ -161,12 +161,12 @@ export const LocationTile = ({ className }: { className?: string }) => {
       <>
         <Card
           className={cn(
-            "flex size-full min-h-[300px] flex-col overflow-hidden border border-input",
+            "flex size-full min-h-[300px] flex-col border border-input",
             className,
           )}
         >
           {photoUrl && (
-            <div className="relative flex basis-3/4">
+            <div className="relative flex min-h-[150px]">
               <Button
                 className="absolute right-2 top-2 z-10 opacity-85 backdrop-blur-lg"
                 variant="outline"
@@ -182,35 +182,19 @@ export const LocationTile = ({ className }: { className?: string }) => {
               />
             </div>
           )}
-          <div className={cn("flex", photoUrl && "basis-1/4")}>
-            <CardHeader className="p-4">
-              <CardTitle className="flex items-center gap-2">
-                {trip.location.primaryText}
-              </CardTitle>
-              {trip.location.secondaryText !== trip.location.primaryText && (
-                <CardDescription>{trip.location.secondaryText}</CardDescription>
-              )}
-              <div className="flex gap-1 pt-1">
-                {trip.location?.website && (
-                  <Link
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={trip.location.website}
-                    className={buttonVariants({
-                      size: "sm",
-                      variant: "outline",
-                      className:
-                        "h-fit px-3 py-2 text-xs underline-offset-2 hover:underline",
-                    })}
-                  >
-                    <Globe className="h-4 w-4" />
-                    Website
-                  </Link>
-                )}
+          <CardHeader className="flex flex-1 justify-center p-4">
+            <CardTitle className="@xl:text-xl flex items-center gap-2 text-lg">
+              {trip.location.primaryText}
+            </CardTitle>
+            {trip.location.secondaryText !== trip.location.primaryText && (
+              <CardDescription>{trip.location.secondaryText}</CardDescription>
+            )}
+            <div className="flex flex-wrap gap-1 pt-1">
+              {trip.location?.website && (
                 <Link
                   target="_blank"
                   rel="noopener noreferrer"
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${trip.location.geo ? `${trip.location.geo.lat}%2C${trip.location.geo.lng}` : trip.location.primaryText}&destination_place_id=${trip.location.placeId}`}
+                  href={trip.location.website}
                   className={buttonVariants({
                     size: "sm",
                     variant: "outline",
@@ -218,24 +202,38 @@ export const LocationTile = ({ className }: { className?: string }) => {
                       "h-fit px-3 py-2 text-xs underline-offset-2 hover:underline",
                   })}
                 >
-                  <CornerUpRight className="h-4 w-4" />
-                  Get Directions
+                  <Globe className="h-4 w-4" />
+                  <span className="@xl:block hidden">Website</span>
                 </Link>
-                {photos.length > 0 && (
-                  <Button
-                    variant="outline"
-                    className="h-fit px-3 py-2 text-xs"
-                    onClick={() => viewGalleryDisclosure.setOpened()}
-                  >
-                    <ImageIcon />
-                    Gallery
-                  </Button>
-                )}
-              </div>
-            </CardHeader>
-          </div>
+              )}
+              <Link
+                target="_blank"
+                rel="noopener noreferrer"
+                href={`https://www.google.com/maps/dir/?api=1&destination=${trip.location.geo ? `${trip.location.geo.lat}%2C${trip.location.geo.lng}` : trip.location.primaryText}&destination_place_id=${trip.location.placeId}`}
+                className={buttonVariants({
+                  size: "sm",
+                  variant: "outline",
+                  className:
+                    "h-fit px-3 py-2 text-xs underline-offset-2 hover:underline",
+                })}
+              >
+                <CornerUpRight className="h-4 w-4" />
+                <span className="@xl:block hidden">Directions</span>
+              </Link>
+              {photos.length > 0 && (
+                <Button
+                  variant="outline"
+                  className="h-fit px-3 py-2 text-xs"
+                  onClick={() => viewGalleryDisclosure.setOpened()}
+                >
+                  <ImageIcon />
+                  <span className="@xl:block hidden">Gallery</span>
+                </Button>
+              )}
+            </div>
+          </CardHeader>
         </Card>
-        <SetLocationDialog {...editDisclosure} />
+        <SetLocationDialog {...editDisclosure} defaultPlace={trip.location} />
         <PhotoCarouselDialog photos={photos} {...viewGalleryDisclosure} />
       </>
     );
@@ -295,18 +293,18 @@ export const DatesTile = ({ className }: { className?: string }) => {
             {format(trip.dates.start, "M/d")}
           </div>
           <div className="text-2xl text-muted-foreground">
-            {format(trip.dates.start, "EEEE")}
+            {format(trip.dates.start, "EEE")}
           </div>
         </div>
         {trip.dates.end && trip.dates.end !== trip.dates.start && (
           <>
             <div className="text-4xl font-bold">{"-"}</div>
             <div className="flex flex-col items-center justify-center gap-2">
-              <div className="text-4xl font-bold">
-                {format(trip.dates.end, "M/d")}
+              <div className="text-4xl font-bold tracking-wide">
+                {format(trip.dates.end, "MM/d")}
               </div>
               <div className="text-2xl text-muted-foreground">
-                {format(trip.dates.end, "EEEE")}
+                {format(trip.dates.end, "EEE")}
               </div>
             </div>
           </>
@@ -339,8 +337,12 @@ export const BudgetTile = ({ className }: { className?: string }) => {
       className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
       variant="outline"
     >
-      <div className="text-4xl font-bold text-green-600">$250 - $350</div>
-      <div className="text-2xl text-muted-foreground">Estimated budget</div>
+      <div className="@xl:text-4xl text-xl font-bold text-green-600">
+        $250 - $350
+      </div>
+      <div className="@xl:text-2xl text-lg text-muted-foreground">
+        Estimated budget
+      </div>
     </Button>
   );
 };
@@ -410,20 +412,23 @@ const SetDateRangeDialog = ({
             {dates?.from && formatDateRange(dates.from, dates.to)}
           </DialogTitle>
         </DialogHeader>
-        <Calendar
-          numberOfMonths={isMobile ? 1 : 2}
-          showOutsideDays={isMobile}
-          defaultMonth={defaultValue?.from}
-          mode="range"
-          selected={dates}
-          onSelect={(range) => {
-            setDates({
-              from: range?.from,
-              to: range?.to,
-            });
-          }}
-          className="h-[340px]"
-        />
+        <div className="flex h-fit w-full justify-center">
+          <Calendar
+            numberOfMonths={isMobile ? 1 : 2}
+            showOutsideDays={isMobile}
+            defaultMonth={defaultValue?.from}
+            mode="range"
+            selected={dates}
+            onSelect={(range) => {
+              setDates({
+                from: range?.from,
+                to: range?.to,
+              });
+            }}
+            className="h-[340px]"
+          />
+        </div>
+
         <DialogFooter>
           <Button
             variant="outline"

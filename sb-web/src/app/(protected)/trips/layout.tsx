@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <AppSidebar className="z-40" />
         <SidebarInset className="bg-background">
           <TripSidebarTrigger />
-          <div className="flex-grow">{children}</div>
+          <div className="@container flex-grow">{children}</div>
         </SidebarInset>
       </SidebarProvider>
       <Toaster richColors={true} />

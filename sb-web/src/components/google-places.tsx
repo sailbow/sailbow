@@ -96,7 +96,7 @@ export const GooglePlaceSearchDialog = ({
   isLoading,
   defaultPlace,
 }: {
-  onSave: (place: GooglePlaceResult) => void;
+  onSave: (place: GooglePlaceResult | undefined) => void;
   isLoading: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -104,7 +104,8 @@ export const GooglePlaceSearchDialog = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-[55dvh] max-h-[55-dvh]">
+      <DialogContent className="">
+        <DialogTitle className="sr-only">Location</DialogTitle>
         <div className="relative size-full">
           {isLoading && <Spinner className="absolute right-2 top-2" />}
           <GooglePlaceSearch
@@ -116,6 +117,13 @@ export const GooglePlaceSearchDialog = ({
             clearOnSelect={false}
           />
         </div>
+        {true && (
+          <DialogFooter>
+            <Button variant="outline" onClick={() => onSave(undefined)}>
+              Reset
+            </Button>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

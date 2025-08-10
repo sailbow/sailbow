@@ -602,6 +602,8 @@ const TimePicker = React.forwardRef<TimePickerRef, TimePickerProps>(
       }),
       [minuteRef, hourRef, secondRef],
     );
+    const defaultDate = new Date();
+    defaultDate.setHours(10, 0);
     return (
       <div className="flex items-center justify-center gap-2">
         <label htmlFor="datetime-picker-hour-input" className="cursor-pointer">
@@ -715,7 +717,7 @@ const DateTimePicker = React.forwardRef<
   (
     {
       locale = enUS,
-      defaultPopupValue = new Date(new Date().setHours(0, 0, 0, 0)),
+      defaultPopupValue = new Date(new Date().setHours(9, 0, 0, 0)),
       value,
       onChange,
       onMonthChange,
@@ -847,6 +849,7 @@ const DateTimePicker = React.forwardRef<
           <DateTimeCalendar
             mode="single"
             selected={value}
+            defaultMonth={value ?? defaultPopupValue}
             month={month}
             onSelect={onSelect}
             onMonthChange={handleMonthChange}

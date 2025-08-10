@@ -52,7 +52,7 @@ export const updateDates = mutation({
 export const updateLocation = mutation({
   args: {
     tripId: v.id("trips"),
-    location: locationValidator,
+    location: v.optional(locationValidator),
   },
   handler: async ({ auth, db }, args) => {
     return withUser(auth, db, async () => {
