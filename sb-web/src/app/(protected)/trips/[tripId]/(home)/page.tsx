@@ -111,7 +111,9 @@ export default function TripOverviewPage() {
               <div className="@lg:col-start-2 @lg:row-span-2 @lg:row-start-1">
                 <DatesTile className="size-full" />
               </div>
-              <LocationTile className="@lg:row-span-4" />
+              <div className="@lg:row-span-4">
+                <LocationTile className="size-full" />
+              </div>
 
               <div className="@lg:row-span-2 @lg:row-start-5">
                 <BudgetTile className="@lg:row-span-2 @lg:row-start-5" />

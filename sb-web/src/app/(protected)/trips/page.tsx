@@ -9,7 +9,7 @@ export default function TripsPage() {
   const { data: trips, isPending } = useUserTrips();
 
   return (
-    <div className="relative min-h-dvh w-full">
+    <div className="relative min-h-dvh">
       <div className="container sticky top-0 z-50 mx-4 flex min-h-12 items-center justify-between bg-background py-4 xs:mx-auto">
         <div className="inline-flex break-normal text-2xl font-semibold leading-none tracking-tight sm:text-3xl">
           Trips

@@ -159,7 +159,9 @@ export const LocationTile = ({ className }: { className?: string }) => {
   const isLoading = isTripLoading || isGooglePlaceLoading;
   if (isLoading || isGooglePlaceLoading || !trip)
     return (
-      <Card className={cn("size-full overflow-hidden", className)}>
+      <Card
+        className={cn("size-full min-h-[300px] overflow-hidden", className)}
+      >
         <Skeleton className="size-full dark:bg-slate-500" />
       </Card>
     );
