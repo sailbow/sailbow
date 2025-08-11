@@ -10,9 +10,16 @@ import {
 } from "recharts";
 
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import { Progress } from "@/components/ui/progress";
 import { Poll } from "./types";
 import { Doc, Id } from "@convex/_generated/dataModel";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 type UserData = Omit<Doc<"users">, "externalId">;
 interface DataItem {
@@ -60,105 +67,85 @@ export function PollResultsChart({
     .toArray()
     .sort((a, b) => b.count - a.count);
 
-  const maxCount = Math.max(...flatResponseData.map((item) => item.count));
-  const domain = maxCount === 0 ? [0, 1] : [0, maxCount];
+  const getPercentage = (votes: number): number => {
+    const denominator = poll.settings.allowMultiple
+      ? poll.responses.length
+      : flatResponseData.length;
+    return denominator > 0 ? (votes / denominator) * 100 : 0;
+  };
+
   return (
-    <div className="container p-0 px-1">
-      <ChartContainer
-        config={{
-          count: {
-            label: "Count",
-            color: "hsl(var(--chart-1))",
-          },
-        }}
-      >
-        <BarChart
-          accessibilityLayer
-          data={flatResponseData}
-          layout="vertical"
-          margin={{
-            right: 20,
-          }}
-        >
-          <CartesianGrid horizontal={false} vertical={false} />
-          <XAxis
-            type="number"
-            tickLine={false}
-            axisLine={false}
-            domain={domain}
-            hide
-          />
-          <YAxis
-            dataKey="label"
-            type="category"
-            tickLine={false}
-            axisLine={false}
-            width={80}
-          />
-          {!poll.settings.incognitoResponses && users && (
-            <ChartTooltip content={CustomTooltipContent} />
-          )}
-          <Bar
-            dataKey="count"
-            fill="var(--color-count)"
-            radius={[0, 4, 4, 0]}
-            minPointSize={5}
-            barSize={50}
-          >
-            <LabelList
-              dataKey="count"
-              position="right"
-              offset={8}
-              className="fill-foreground"
-            />
-          </Bar>
-        </BarChart>
-      </ChartContainer>
+    <div className="flex flex-col justify-center space-y-4">
+      <TooltipProvider delayDuration={200}>
+        {flatResponseData.map((option) => {
+          const percentage = getPercentage(option.count);
+
+          return (
+            <Tooltip key={option.id}>
+              <TooltipTrigger asChild>
+                <div key={option.id} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm">{option.label}</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-semibold">
+                        {percentage.toFixed(1)}%
+                      </div>
+                      <div className="text-nowrap text-xs text-muted-foreground">
+                        {option.count.toLocaleString()} vote(s)
+                      </div>
+                    </div>
+                  </div>
+                  <Progress value={percentage} className="h-3 bg-background" />
+                </div>
+              </TooltipTrigger>
+              {!poll.settings.incognitoResponses && (
+                <TooltipContent>
+                  <CustomTooltipContent data={option} />
+                </TooltipContent>
+              )}
+            </Tooltip>
+          );
+        })}
+      </TooltipProvider>
     </div>
   );
 }
 
-function CustomTooltipContent({ active, payload, label }: any) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (active && payload?.length) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const data = payload[0].payload as DataItem;
-
-    return (
-      <div className="max-w-sm rounded-lg border border-border bg-background p-4 shadow-lg">
-        {data.users.length < 1 && (
-          <div className="text-xs font-medium text-muted-foreground">
-            No responses
+function CustomTooltipContent({ data }: { data: DataItem }) {
+  return (
+    <div className="max-w-md">
+      {data.count < 1 && (
+        <div className="text-xs font-medium text-muted-foreground">
+          No responses
+        </div>
+      )}
+      {data.users.length > 0 && (
+        <div>
+          <div className="mb-2 text-xs font-medium text-muted-foreground">
+            Responded by:
           </div>
-        )}
-        {data.users.length > 0 && (
-          <div>
-            <div className="mb-2 text-xs font-medium text-muted-foreground">
-              Responded by:
-            </div>
-            <div className="max-h-32 space-y-2 overflow-y-auto">
-              {data.users.map((user) => (
-                <div key={user._id} className="flex items-center gap-2">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage
-                      src={user.imageUrl || "/placeholder.svg"}
-                      alt={`${user.firstName} ${user.lastName} profile picture`}
-                    />
-                    <AvatarFallback className="text-xs">
-                      {user.firstName} {user.lastName}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-xs">
+          <div className="max-h-32 space-y-2 overflow-y-auto">
+            {data.users.map((user) => (
+              <div key={user._id} className="flex items-center gap-2">
+                <Avatar className="h-6 w-6">
+                  <AvatarImage
+                    src={user.imageUrl || "/placeholder.svg"}
+                    alt={`${user.firstName} ${user.lastName} profile picture`}
+                  />
+                  <AvatarFallback className="text-xs">
                     {user.firstName} {user.lastName}
-                  </span>
-                </div>
-              ))}
-            </div>
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-xs">
+                  {user.firstName} {user.lastName}
+                </span>
+              </div>
+            ))}
           </div>
-        )}
-      </div>
-    );
-  }
-
-  return null;
+        </div>
+      )}
+    </div>
+  );
 }

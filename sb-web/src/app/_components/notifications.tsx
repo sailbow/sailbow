@@ -25,7 +25,7 @@ import { useTrip } from "@/lib/trip-queries";
 import { useDisclosure } from "@/lib/use-disclosure";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
-
+import { formatRelative } from "date-fns";
 type Notification = Doc<"notifications">;
 type InferNotificationType<TType extends Notification["type"]> = Extract<
   Doc<"notifications">,
@@ -50,11 +50,7 @@ const NotificationItem = ({
     >
       <div className="mb-2 flex w-full items-end justify-between">
         <div className="text-xs font-light">
-          {new Date(notification._creationTime).toDateString()} @
-          {new Date(notification._creationTime).toLocaleTimeString(undefined, {
-            hour: "numeric",
-            minute: "2-digit",
-          })}
+          {formatRelative(new Date(notification._creationTime), new Date())}
         </div>
         <Button
           variant="ghost"

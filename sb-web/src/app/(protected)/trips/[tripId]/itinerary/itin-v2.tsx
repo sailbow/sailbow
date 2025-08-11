@@ -377,8 +377,8 @@ const ItinItem = ({
         <Dialog {...pollResultsDisclosure}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Poll results</DialogTitle>
-              <DialogDescription>{poll.title}</DialogDescription>
+              <DialogTitle>{poll.title}</DialogTitle>
+              <DialogDescription>Poll results</DialogDescription>
             </DialogHeader>
             <PollResultsChart
               poll={poll}

@@ -135,10 +135,13 @@ export const TripPolls = () => {
                       View results
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="h-fit">
+                  <DialogContent className="h-fit max-h-[80dvh]">
                     <DialogHeader>
-                      <DialogTitle>Poll results</DialogTitle>
-                      <DialogDescription>{poll.title}</DialogDescription>
+                      <DialogTitle>{poll.title}</DialogTitle>
+                      <DialogDescription>
+                        Poll results ({poll.responses.length}/{crew.length}{" "}
+                        responded)
+                      </DialogDescription>
                     </DialogHeader>
                     <PollResultsChart
                       poll={poll}
