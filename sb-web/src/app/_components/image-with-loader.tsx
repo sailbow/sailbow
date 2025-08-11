@@ -27,9 +27,15 @@ export default function ImageWithLoader(props: ImageWithLoaderProps) {
         alt={props.alt}
         src={props.src}
         className={cn("object-cover", props.className)}
+        data-loaded={isLoaded}
         onLoad={() => setIsLoaded(true)}
       />
-      {!isLoaded && <Skeleton className={cn("size-full", props.className)} />}
+      {!isLoaded && (
+        <Skeleton
+          data-loaded={isLoaded}
+          className={cn("size-full", props.className)}
+        />
+      )}
     </div>
   );
 }

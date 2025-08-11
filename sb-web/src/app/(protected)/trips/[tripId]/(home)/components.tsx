@@ -195,7 +195,7 @@ export const LocationTile = ({ className }: { className?: string }) => {
               <ImageWithLoader
                 src={photoUrl}
                 alt=""
-                className="rounded-b-none"
+                className="rounded-b-none data-[loaded='true']:dark:bg-slate-500"
               />
             </div>
           )}
@@ -259,12 +259,16 @@ export const LocationTile = ({ className }: { className?: string }) => {
   return (
     <>
       <Button
-        className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
+        className="flex size-full flex-col items-center justify-center gap-4 bg-card text-base [&_svg]:size-8 md:[&_svg]:size-12"
         variant="outline"
         onClick={() => editDisclosure.setOpened()}
       >
         <MapPin className="size-12" />
-        No location set (click to edit)
+        <div>
+          {" "}
+          No location set{" "}
+          <span className="text-muted-foreground">(click to edit)</span>
+        </div>
       </Button>
       <SetLocationDialog {...editDisclosure} defaultPlace={trip.location} />
     </>
@@ -286,12 +290,16 @@ export const DatesTile = ({ className }: { className?: string }) => {
     return (
       <>
         <Button
-          className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
+          className="flex size-full flex-col items-center justify-center gap-4 bg-card text-base [&_svg]:size-8 md:[&_svg]:size-12"
           variant="outline"
           onClick={() => editDisclosure.setOpened()}
         >
           <CalendarIcon />
-          No date set (click to edit)
+          <div>
+            {" "}
+            No date set{" "}
+            <span className="text-muted-foreground">(click to edit)</span>
+          </div>
         </Button>
         <SetDateRangeDialog {...editDisclosure} defaultValue={trip.dates} />
       </>
@@ -353,12 +361,16 @@ export const BudgetTile = ({ className }: { className?: string }) => {
     return (
       <>
         <Button
-          className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
+          className="flex size-full flex-col items-center justify-center gap-4 bg-card text-base [&_svg]:size-8 md:[&_svg]:size-12"
           variant="outline"
           onClick={() => editDisclosure.setOpened()}
         >
           <DollarSign />
-          No budget set (click to edit)
+          <div>
+            {" "}
+            No budget set{" "}
+            <span className="text-muted-foreground">(click to edit)</span>
+          </div>
         </Button>
         <SetBudgetDialog {...editDisclosure} />
       </>
