@@ -49,7 +49,7 @@ export const createTripPoll = mutation({
 
       await Promise.all(
         crew.map(async (cm) => {
-          if (true) {
+          if (cm.userId !== user.userId) {
             const targetUser = await ctx.db.get(cm.userId as Id<"users">);
             if (targetUser) {
               await ctx.db.insert("notifications", {

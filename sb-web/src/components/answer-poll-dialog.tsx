@@ -1,6 +1,6 @@
 "use client";
 
-import { Doc, Id } from "@convex/_generated/dataModel";
+import { Id } from "@convex/_generated/dataModel";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
 import { Poll } from "./types";
+import { CircleAlert, Info } from "lucide-react";
 
 export const AnswerPollDialog = ({
   poll,
@@ -43,8 +44,26 @@ export const AnswerPollDialog = ({
   }, [open, initialChoices]);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[80dvh] sm:max-w-[500px]">
-        <DialogHeader className="pb-4">
+      <DialogContent className="max-h-[80dvh]">
+        <DialogHeader className="pb-2">
+          {poll.settings.incognitoResponses && (
+            <div className="-ml-1 mb-2 flex items-center rounded-lg border border-border bg-background p-2 text-foreground">
+              <Info className="mr-2 size-5 shrink-0" />
+              <h3 className="flex-1 text-xs leading-none">
+                Your response will <span className="font-extrabold">not</span>{" "}
+                be visible to others
+              </h3>
+            </div>
+          )}
+          {!poll.settings.incognitoResponses && (
+            <div className="text-destructives-foreground -ml-1 mb-2 flex items-center rounded-lg border border-border bg-amber-500 bg-background p-2 dark:bg-amber-700">
+              <CircleAlert className="mr-2 size-5 shrink-0" />
+              <h3 className="flex-1 text-xs leading-none">
+                Your response <span className="font-extrabold">will</span> be
+                visible to others!
+              </h3>
+            </div>
+          )}
           <DialogTitle>{poll.title}</DialogTitle>
         </DialogHeader>
         {poll.settings.allowMultiple ? (

@@ -1,15 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  LabelList,
-  XAxis,
-  YAxis,
-} from "recharts";
-
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { Progress } from "@/components/ui/progress";
 import { Poll } from "./types";
 import { Doc, Id } from "@convex/_generated/dataModel";
@@ -97,7 +87,10 @@ export function PollResultsChart({
                       </div>
                     </div>
                   </div>
-                  <Progress value={percentage} className="h-3 bg-background" />
+                  <Progress
+                    value={percentage}
+                    className="h-3 dark:bg-background"
+                  />
                 </div>
               </TooltipTrigger>
               {!poll.settings.incognitoResponses && (
