@@ -35,7 +35,7 @@ const TripCard = ({ trip }: { trip: Doc<"trips"> & { crewCount: number } }) => {
         </CardContent>
         <div className="flex basis-1/4 items-center">
           <div className="flex w-full items-center gap-4 p-4">
-            <CardTitle className="line-clamp-1 text-lg font-normal">
+            <CardTitle className="line-clamp-2 text-clip text-lg font-normal">
               {trip.name}
             </CardTitle>
             <div className="ml-auto inline-flex items-center text-sm text-muted-foreground">
