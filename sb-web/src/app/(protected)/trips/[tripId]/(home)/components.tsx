@@ -318,7 +318,7 @@ export const DatesTile = ({ className }: { className?: string }) => {
             <div className="text-4xl font-bold">{"-"}</div>
             <div className="flex flex-col items-center justify-center gap-2">
               <div className="text-4xl font-bold tracking-wide">
-                {format(trip.dates.end, "MM/d")}
+                {format(trip.dates.end, "M/d")}
               </div>
               <div className="text-2xl text-muted-foreground">
                 {format(trip.dates.end, "EEE")}
