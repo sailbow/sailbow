@@ -442,7 +442,7 @@ const SetDateRangeDialog = ({
             {dates?.from && formatDateRange(dates.from, dates.to)}
           </DialogTitle>
         </DialogHeader>
-        <div className="flex h-fit w-full justify-center">
+        <div className="flex h-fit w-full justify-center pb-4">
           <Calendar
             numberOfMonths={isMobile ? 1 : 2}
             showOutsideDays={isMobile}
