@@ -60,7 +60,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
-import { DefaultValues, useForm } from "react-hook-form";
+import { DefaultValues, useForm, useWatch } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -543,6 +543,12 @@ export const AddOrEditItinItemForm = ({
     onSaveSuccess();
   };
 
+  const startDateNumber = form.watch("startDate");
+  let startDate: Date | undefined;
+  if (startDateNumber) {
+    startDate = new Date(startDateNumber);
+  }
+
   return (
     <Form {...form}>
       <form
@@ -590,6 +596,9 @@ export const AddOrEditItinItemForm = ({
                         hourCycle={12}
                         value={field.value ? new Date(field.value) : undefined}
                         onChange={(date) => field.onChange(date?.getTime())}
+                        defaultPopupValue={
+                          field.value ? new Date(field.value) : undefined
+                        }
                         granularity="minute"
                         displayFormat={{
                           hour12: "MM/dd/yy @p",
@@ -619,6 +628,13 @@ export const AddOrEditItinItemForm = ({
                         value={field.value ? new Date(field.value) : undefined}
                         onChange={(date) => field.onChange(date?.getTime())}
                         granularity="minute"
+                        defaultPopupValue={
+                          field.value
+                            ? new Date(new Date(field.value))
+                            : startDate
+                              ? new Date(startDate.setHours(9, 0, 0))
+                              : undefined
+                        }
                         displayFormat={{
                           hour12: "MM/dd/yy @p",
                         }}
