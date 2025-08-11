@@ -71,8 +71,8 @@ export default function PhotoCarouselDialog({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-4 size-10 opacity-80 backdrop-blur-xl" />
-            <CarouselNext className="right-4 size-10 opacity-80 backdrop-blur-xl" />
+            <CarouselPrevious className="left-2 size-10 opacity-80 backdrop-blur-xl" />
+            <CarouselNext className="right-2 size-10 opacity-80 backdrop-blur-xl" />
           </Carousel>
 
           <div className="flex items-center justify-center gap-2 p-4">

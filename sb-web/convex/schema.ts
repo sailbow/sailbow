@@ -38,6 +38,12 @@ export const tripSchema = {
       end: v.number(),
     }),
   ),
+  budget: v.optional(
+    v.object({
+      low: v.float64(),
+      high: v.optional(v.float64()),
+    }),
+  ),
   banner: v.union(
     v.null(),
     v.object({

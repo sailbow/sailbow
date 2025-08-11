@@ -28,6 +28,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import {
   CalendarIcon,
   CornerUpRight,
+  DollarSign,
   Edit2,
   ExternalLink,
   Globe,
@@ -39,7 +40,7 @@ import { useGooglePlace } from "@/hooks/google-places";
 import { useDisclosure } from "@/lib/use-disclosure";
 import { cn } from "@/lib/utils";
 import { Doc } from "@convex/_generated/dataModel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { GooglePlaceSearchDialog } from "@/components/google-places";
@@ -58,6 +59,20 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { formatDateRange } from "@/lib/date-utils";
 import LoadingButton from "@/components/loading-button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormInput,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import DollarInput from "@/components/dollar-input";
 
 export const CaptainTile = ({ className }: { className?: string }) => {
   const { data: crew, isLoading: isCrewLoading } = useCrew();
@@ -182,7 +197,7 @@ export const LocationTile = ({ className }: { className?: string }) => {
               />
             </div>
           )}
-          <CardHeader className="flex flex-1 justify-center p-4">
+          <CardHeader className="flex flex-1 justify-center p-0 px-4 py-2">
             <CardTitle className="@xl:text-xl flex items-center gap-2 text-lg">
               {trip.location.primaryText}
             </CardTitle>
@@ -332,18 +347,37 @@ export const BudgetTile = ({ className }: { className?: string }) => {
       </Card>
     );
 
+  if (!trip.budget) {
+    return (
+      <>
+        <Button
+          className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
+          variant="outline"
+          onClick={() => editDisclosure.setOpened()}
+        >
+          <DollarSign />
+          No budget set (click to edit)
+        </Button>
+        <SetBudgetDialog {...editDisclosure} />
+      </>
+    );
+  }
+
   return (
-    <Button
-      className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
-      variant="outline"
-    >
-      <div className="@xl:text-4xl text-xl font-bold text-green-600">
-        $250 - $350
-      </div>
-      <div className="@xl:text-2xl text-lg text-muted-foreground">
-        Estimated budget
-      </div>
-    </Button>
+    <>
+      <Button
+        className="flex size-full flex-col items-center justify-center gap-4 bg-card [&_svg]:size-8 md:[&_svg]:size-12"
+        variant="outline"
+        onClick={() => editDisclosure.setOpened()}
+      >
+        <div className="@xl:text-4xl text-xl font-bold text-green-600">
+          ${trip.budget.low}
+          {trip.budget.high ? ` - $${trip.budget.high}` : ""}
+        </div>
+        <div className="@xl:text-2xl text-lg text-muted-foreground">Budget</div>
+      </Button>
+      <SetBudgetDialog {...editDisclosure} defaultBudget={trip.budget} />
+    </>
   );
 };
 
@@ -376,12 +410,6 @@ const SetDateRangeDialog = ({
   });
 
   const handleSave = () => {
-    // if (!dates?.from || !dates?.to) {
-    //   toast.warning("Must provide a start and end date", {
-    //     position: "top-center",
-    //   });
-    //   return;
-    // }
     setIsSaving(true);
     mutate({
       tripId,
@@ -513,6 +541,164 @@ const SetLocationDialog = ({
   );
 };
 
+const BudgetSchema = z
+  .object({
+    low: z.coerce.number().nullable(),
+    high: z.coerce.number().nullable(),
+  })
+  .transform((args) => ({
+    low: args.low === 0 ? null : args.low,
+    high: args.high === 0 ? null : args.high,
+  }))
+  .superRefine(({ low, high }, ctx) => {
+    if (low && high && low > high) {
+      ctx.addIssue({
+        path: ["high"],
+        code: "custom",
+        message: "Max cannot be lower than min",
+      });
+    }
+  });
+
+const SetBudgetDialog = ({
+  open,
+  onOpenChange,
+  defaultBudget,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  defaultBudget?: { low: number; high?: number };
+}) => {
+  const tripId = useActiveTripId();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const mutate = useMutation(
+    api.trips.mutations.updateBudget,
+  ).withOptimisticUpdate((localStore, args) => {
+    const current = localStore.getQuery(api.trips.queries.getById, { tripId });
+    if (current) {
+      localStore.setQuery(
+        api.trips.queries.getById,
+        { tripId },
+        { ...current, budget: args.budget },
+      );
+    }
+  });
+
+  const form = useForm({
+    resolver: zodResolver(BudgetSchema),
+    defaultValues: {
+      low: defaultBudget?.low ?? null,
+      high: defaultBudget?.high ?? null,
+    },
+  });
+
+  useEffect(() => {
+    form.reset({
+      low: defaultBudget?.low ?? null,
+      high: defaultBudget?.high ?? null,
+    });
+  }, [open, form, defaultBudget]);
+
+  const handleSave = (budget: z.infer<typeof BudgetSchema>) => {
+    setIsLoading(true);
+    mutate({
+      tripId,
+      budget: budget.low
+        ? { low: budget.low, high: budget.high ?? undefined }
+        : undefined,
+    })
+      .then(() => {
+        onOpenChange(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Something went wrong there");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+        <DialogHeader>
+          <DialogTitle>Set a budget</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSave)}
+            className="flex flex-col space-y-4"
+            autoFocus={false}
+          >
+            <div className="flex gap-4">
+              <FormField
+                control={form.control}
+                name="low"
+                render={({ field }) => {
+                  return (
+                    <FormItem className="flex flex-1 flex-col">
+                      <FormLabel>Min</FormLabel>
+                      <FormControl>
+                        <DollarInput {...field} value={field.value ?? ""} />
+                      </FormControl>
+                      <div className="min-h-6">
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  );
+                }}
+              />
+              <FormField
+                control={form.control}
+                name="high"
+                render={({ field }) => {
+                  return (
+                    <FormItem className="flex flex-1 flex-col">
+                      <FormLabel>
+                        Max{" "}
+                        <span className="text-muted-foreground">
+                          (optional)
+                        </span>
+                      </FormLabel>
+                      <FormControl>
+                        <DollarInput {...field} value={field.value ?? ""} />
+                      </FormControl>
+                      <div className="min-h-6">
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  );
+                }}
+              />
+            </div>
+
+            <div className="mt-auto flex justify-end gap-4 pt-2">
+              <Button
+                variant="outline"
+                className="w-20"
+                onClick={() => {
+                  onOpenChange(false);
+                  form.reset();
+                }}
+              >
+                Cancel
+              </Button>
+              <LoadingButton
+                isLoading={isLoading}
+                type="submit"
+                className="w-20"
+              >
+                Save
+              </LoadingButton>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+};
 const AvatarGroup = ({
   users,
 }: {

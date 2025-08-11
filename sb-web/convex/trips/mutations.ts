@@ -61,6 +61,23 @@ export const updateLocation = mutation({
   },
 });
 
+export const updateBudget = mutation({
+  args: {
+    tripId: v.id("trips"),
+    budget: v.optional(
+      v.object({
+        low: v.float64(),
+        high: v.optional(v.float64()),
+      }),
+    ),
+  },
+  handler: async ({ auth, db }, args) => {
+    return withUser(auth, db, async () => {
+      return db.patch(args.tripId, { budget: args.budget });
+    });
+  },
+});
+
 export const updateTripBanner = mutation({
   args: {
     tripId: v.id("trips"),
