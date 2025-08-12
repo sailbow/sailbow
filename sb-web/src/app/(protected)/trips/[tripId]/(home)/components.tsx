@@ -81,7 +81,7 @@ import {
 import useDebounce from "@/lib/use-debounce";
 
 export const CaptainTile = ({ className }: { className?: string }) => {
-  const { data: crew, isLoading: isCrewLoading } = useCrew();
+  const { data: crew, isPending: isCrewLoading } = useCrew();
   const captain = crew?.find((c) => c.role === "captain");
   const isLoading = isCrewLoading;
   return (
@@ -114,7 +114,7 @@ export const CaptainTile = ({ className }: { className?: string }) => {
 };
 
 export const CrewTile = ({ className }: { className?: string }) => {
-  const { data: crew, isLoading: isCrewLoading } = useCrew();
+  const { data: crew, isPending: isCrewLoading } = useCrew();
   const { data: invites, isLoading: areInvitesLoading } =
     usePendingAndDeclinedInvites();
 
@@ -155,7 +155,7 @@ export const CrewTile = ({ className }: { className?: string }) => {
 };
 
 export const LocationTile = ({ className }: { className?: string }) => {
-  const { data: trip, isLoading: isTripLoading } = useActiveTrip();
+  const { data: trip, isPending: isTripLoading } = useActiveTrip();
 
   const { data: googlePlace, isLoading: isGooglePlaceLoading } = useGooglePlace(
     trip?.location?.placeId,
@@ -284,7 +284,7 @@ export const LocationTile = ({ className }: { className?: string }) => {
 };
 
 export const DatesTile = ({ className }: { className?: string }) => {
-  const { data: trip, isLoading: isTripLoading } = useActiveTrip();
+  const { data: trip, isPending: isTripLoading } = useActiveTrip();
   const editDisclosure = useDisclosure();
 
   if (isTripLoading || !trip)
@@ -355,7 +355,7 @@ export const DatesTile = ({ className }: { className?: string }) => {
 };
 
 export const BudgetTile = ({ className }: { className?: string }) => {
-  const { data: trip, isLoading: isTripLoading } = useActiveTrip();
+  const { data: trip, isPending: isTripLoading } = useActiveTrip();
   const editDisclosure = useDisclosure();
 
   if (isTripLoading || !trip)

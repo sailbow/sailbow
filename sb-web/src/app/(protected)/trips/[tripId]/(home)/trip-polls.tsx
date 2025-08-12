@@ -59,7 +59,7 @@ export const TripPolls = () => {
 
   const {
     data: crew,
-    isLoading: isCrewLoading,
+    isPending: isCrewLoading,
     isError: isCrewError,
     error: crewError,
   } = useCrew();
@@ -100,8 +100,11 @@ export const TripPolls = () => {
           <Card key={index} className="max-w-3xl">
             <CardHeader>
               <div className="flex w-full gap-4">
-                <CardTitle className="flex-1">{poll.title}</CardTitle>
-                <div className="ml-auto flex gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <CardTitle>{poll.title}</CardTitle>
+                  <span className="text-sm font-medium text-muted-foreground">{`(${usersWhoHaveResponded.size}/${crew.length} responded)`}</span>
+                </div>
+                <div className="ml-auto">
                   {!usersWhoHaveResponded.has(me._id) && (
                     <Button
                       size="sm"
@@ -115,20 +118,22 @@ export const TripPolls = () => {
                   <TripPollActions tripPollId={poll.tripPollId} />
                 </div>
               </div>
-              <CardDescription>
-                {`(${usersWhoHaveResponded.size}/${crew.length})`} responses
-              </CardDescription>
             </CardHeader>
             {usersWhoHaveResponded.size > 0 && (
               <CardContent className="space-y-4">
                 {myResponse && (
-                  <div className="inline-flex w-full gap-2 text-sm">
-                    <span className="text-nowrap font-semibold">
-                      You responded:
-                    </span>
-                    {myResponse.choices
-                      .map((c) => poll.options.find((o) => o._id === c)?.value)
-                      .join(", ")}
+                  <div className="flex w-full justify-between gap-4 text-sm">
+                    <div className="inline-flex gap-2">
+                      <span className="text-nowrap text-muted-foreground">
+                        You responded:
+                      </span>
+                      {myResponse.choices
+                        .map(
+                          (c) => poll.options.find((o) => o._id === c)?.value,
+                        )
+                        .join(", ")}
+                    </div>
+
                     <Button
                       size="sm"
                       variant="outline"
@@ -142,7 +147,7 @@ export const TripPolls = () => {
                 )}
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="mt-2">
                       <Eye className="size-4" />
                       View results
                     </Button>

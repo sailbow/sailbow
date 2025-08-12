@@ -9,8 +9,8 @@ export default function NotFoundWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: trip, isLoading } = useActiveTrip();
-  if (isLoading) return <CenteredSpinner />;
+  const { data: trip, isPending } = useActiveTrip();
+  if (isPending) return <CenteredSpinner />;
   if (!trip) {
     return <NotFoundPage />;
   }

@@ -1,7 +1,7 @@
 import { useParams } from "next/navigation";
 import { type Id } from "@convex/_generated/dataModel";
 import { api } from "@convex/_generated/api";
-import { useQ } from "./convex-client-helpers";
+import { useQ, useQueryWithStatus } from "./convex-client-helpers";
 
 export const useActiveTripId = () => {
   const params = useParams<{ tripId: Id<"trips"> }>();
@@ -10,11 +10,17 @@ export const useActiveTripId = () => {
 
 export const useCrew = () => {
   const tripId = useActiveTripId();
-  return useQ({ query: api.trips.queries.getTripCrew, args: { tripId } });
+  return useQueryWithStatus(
+    api.trips.queries.getTripCrew,
+    tripId ? { tripId } : "skip",
+  );
 };
 
 export const useTrip = (tripId: Id<"trips">) => {
-  return useQ({ query: api.trips.queries.getById, args: { tripId } });
+  return useQueryWithStatus(
+    api.trips.queries.getById,
+    Boolean(tripId) ? { tripId } : "skip",
+  );
 };
 
 export const useActiveTrip = () => {
@@ -23,7 +29,7 @@ export const useActiveTrip = () => {
 };
 
 export const useUserTrips = () => {
-  return useQ({ query: api.trips.queries.getUserTrips, args: {} });
+  return useQueryWithStatus(api.trips.queries.getUserTrips);
 };
 
 export const useSearchTrips = (searchText: string) => {

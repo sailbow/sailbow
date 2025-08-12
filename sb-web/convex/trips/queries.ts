@@ -119,15 +119,8 @@ export const searchTrips = query({
     return await withUser(auth, db, async (user) => {
       const memberships = await getMemberships({ user, db });
       if (!text) {
-        let num = 0;
-        const membs = [] as Doc<"crews">[];
-        for (const m of memberships) {
-          if (num >= 5) break;
-          membs.push(m);
-          num++;
-        }
         return pruneNull(
-          await asyncMap(membs, async (membership) => {
+          await asyncMap(memberships, async (membership) => {
             return await db
               .query("trips")
               .withIndex("by_id", (q) => q.eq("_id", membership.tripId))
