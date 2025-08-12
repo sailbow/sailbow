@@ -73,6 +73,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import DollarInput from "@/components/dollar-input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import useDebounce from "@/lib/use-debounce";
 
 export const CaptainTile = ({ className }: { className?: string }) => {
   const { data: crew, isLoading: isCrewLoading } = useCrew();
@@ -140,7 +146,9 @@ export const CrewTile = ({ className }: { className?: string }) => {
             <InviteButton size="sm" variant="outline" />
           </div>
         </div>
-        <AvatarGroup users={crew} />
+        <div className="relative">
+          <AvatarGroup users={crew} />
+        </div>
       </CardHeader>
     </Card>
   );
@@ -718,38 +726,44 @@ const AvatarGroup = ({
 }: {
   users: Array<{ firstName: string; lastName: string; imageUrl: string }>;
 }) => {
+  const [hovered, setHovered] = useState<number | undefined>();
+  const debouncedHover = useDebounce(hovered, 100);
   return (
-    <TooltipProvider delayDuration={100}>
-      <div className="flex items-center -space-x-2">
-        {users.slice(0, 7).map((user, index) => {
-          return (
-            <Tooltip key={index}>
-              <div className="relative">
-                <TooltipTrigger asChild>
-                  <Avatar
-                    key={index}
-                    className={`z-${index} cursor-pointer bg-card ring-2 ring-background transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-105 hover:shadow-lg hover:ring-ring`}
-                  >
-                    <AvatarImage
-                      src={user.imageUrl}
-                      alt={`${user.firstName} ${user.lastName}`}
-                    />
-                    <AvatarFallback>{user.firstName}</AvatarFallback>
-                  </Avatar>
-                </TooltipTrigger>
-                <TooltipContent>{`${user.firstName} ${user.lastName}`}</TooltipContent>
-              </div>
-            </Tooltip>
-          );
-        })}
-        {users.length > 7 && (
-          <Avatar className="z-20 text-sm font-medium text-muted-foreground ring-2 ring-background">
-            <AvatarFallback>
-              +{users.slice(7).reduce((acc) => acc + 1, 0)}
-            </AvatarFallback>
-          </Avatar>
-        )}
-      </div>
-    </TooltipProvider>
+    <div className="relative flex items-center -space-x-2">
+      {users.slice(0, 7).map((user, index) => {
+        return (
+          <Popover open={debouncedHover === index} key={index}>
+            <PopoverTrigger asChild>
+              <Avatar
+                key={index}
+                className={`z-${index} cursor-pointer bg-card ring-2 ring-background transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-105 hover:shadow-lg hover:ring-ring`}
+                onMouseOver={() => setHovered(index)}
+                onMouseLeave={() => setHovered(undefined)}
+              >
+                <AvatarImage
+                  src={user.imageUrl}
+                  alt={`${user.firstName} ${user.lastName}`}
+                />
+                <AvatarFallback>{user.firstName}</AvatarFallback>
+              </Avatar>
+            </PopoverTrigger>
+            <PopoverContent
+              side="top"
+              align="center"
+              className="w-fit text-sm ring-1 ring-border"
+            >
+              {`${user.firstName} ${user.lastName}`}
+            </PopoverContent>
+          </Popover>
+        );
+      })}
+      {users.length > 7 && (
+        <Avatar className="z-20 text-sm font-medium text-muted-foreground ring-2 ring-background">
+          <AvatarFallback>
+            +{users.slice(7).reduce((acc) => acc + 1, 0)}
+          </AvatarFallback>
+        </Avatar>
+      )}
+    </div>
   );
 };
