@@ -223,10 +223,11 @@ export const deleteTripPoll = mutation({
       const poll = await getDetailedPoll(db, tripPoll.pollId);
       const membership = await throwIfNotMember(user, tripPoll.tripId, db);
       if (
-        !["captain", "firstMate"].includes(membership.role) ||
+        !["captain", "firstMate"].includes(membership.role) &&
         poll.owner !== user.userId
-      )
+      ) {
         throw new Error("You are not allowed to delete this poll!");
+      }
       await db.delete(tripPoll._id);
       await Promise.all([
         Promise.all(poll.responses.map((r) => db.delete(r._id))),

@@ -104,7 +104,7 @@ export const TripPolls = () => {
                   <CardTitle>{poll.title}</CardTitle>
                   <span className="text-sm font-medium text-muted-foreground">{`(${usersWhoHaveResponded.size}/${crew.length} responded)`}</span>
                 </div>
-                <div className="ml-auto">
+                <div className="ml-auto flex gap-2">
                   {!usersWhoHaveResponded.has(me._id) && (
                     <Button
                       size="sm"
