@@ -33,7 +33,7 @@ import {
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import LoadingButton from "./loading-button";
-import { Check } from "lucide-react";
+import { Check, Search } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export const GooglePlaceResultSchema = z.object({
@@ -117,7 +117,7 @@ export const GooglePlaceSearchDialog = ({
             clearOnSelect={false}
           />
         </div>
-        {true && (
+        {defaultPlace && (
           <DialogFooter>
             <Button variant="outline" onClick={() => onSave(undefined)}>
               Reset
@@ -226,12 +226,17 @@ const GooglePlaceSearch = ({
   if (!isLoaded || !ready) return <Spinner />;
   return (
     <Command className={cn("min-h-24", className)}>
-      <CommandInput
-        placeholder="e.g. Paris"
-        disabled={!!fetchingPlaceId}
-        onChangeCapture={(e) => setValue(e.currentTarget.value)}
-        value={selectedPlace ? selectedPlace.primaryText : value}
-      />
+      <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+        <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+        <input
+          className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+          placeholder="e.g. Paris"
+          disabled={!!fetchingPlaceId}
+          onChange={(e) => setValue(e.currentTarget.value)}
+          value={value ?? ""}
+        />
+      </div>
+
       <CommandList>
         {loading && <CenteredSpinner />}
         {!loading && !status && (
@@ -257,7 +262,7 @@ const GooglePlaceSearch = ({
                     selectedPlace?.placeId === val.place_id &&
                     "bg-accent text-accent-foreground",
                 )}
-                disabled={!!fetchingPlaceId || !!selectedPlace}
+                disabled={!!fetchingPlaceId}
               >
                 <div className="inline-flex w-full items-center gap-2">
                   {val.structured_formatting.main_text}
