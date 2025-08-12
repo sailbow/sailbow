@@ -230,7 +230,6 @@ const TripPollActions = ({ tripPollId }: { tripPollId: Id<"tripPolls"> }) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {/* <Dialog {...editPollDialogDisclosure}></Dialog> */}
       <Dialog {...deletePollDialogDisclosure}>
         <DialogContent>
           <DialogHeader>

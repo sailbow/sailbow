@@ -51,6 +51,7 @@ import { set, z } from "zod";
 import { useDisclosure } from "@/lib/use-disclosure";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -130,6 +131,7 @@ const ItinItem = ({
   const pollDisclosure = useDisclosure();
   const answerPollDisclosure = useDisclosure();
   const pollResultsDisclosure = useDisclosure();
+  const deleteItemDialogDisclosure = useDisclosure();
   const { data: poll } = useQueryWithStatus(api.polls.getItinItemPoll, {
     itineraryItemId: item._id,
   });
@@ -214,13 +216,9 @@ const ItinItem = ({
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem
-                      onClick={() => deleteItem({ _id: item._id })}
+                      onClick={() => deleteItemDialogDisclosure.setOpened()}
                     >
                       <Trash className="mr-2 size-4" /> Delete item
-                      <Spinner
-                        isVisible={isDeletingItem || deletedItem}
-                        className="ml-2 size-4"
-                      />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -390,6 +388,28 @@ const ItinItem = ({
           </DialogContent>
         </Dialog>
       )}
+      <Dialog {...deleteItemDialogDisclosure}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Are you sure you want to delete this itinerary item?
+            </DialogTitle>
+            <DialogDescription>This action cannot be undone!</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <LoadingButton
+              variant="destructive"
+              isLoading={isDeletingItem || deletedItem}
+              onClick={() => deleteItem({ _id: item._id })}
+            >
+              Yes, delete
+            </LoadingButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
