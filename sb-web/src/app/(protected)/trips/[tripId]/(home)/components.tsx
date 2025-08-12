@@ -101,7 +101,7 @@ export const CaptainTile = ({ className }: { className?: string }) => {
             <Skeleton className="h-full w-full rounded-sm dark:bg-slate-500" />
           ) : (
             <>
-              <CardTitle className="@lg:text-2xl text-lg">
+              <CardTitle className="text-lg @lg:text-2xl">
                 {`${captain?.firstName ?? ""} ${captain?.lastName ?? ""}`}
               </CardTitle>
               <CardDescription>Captain</CardDescription>
@@ -208,7 +208,7 @@ export const LocationTile = ({ className }: { className?: string }) => {
             </div>
           )}
           <CardHeader className="flex flex-1 justify-center p-0 px-4 py-2">
-            <CardTitle className="@xl:text-xl flex items-center gap-2 text-lg">
+            <CardTitle className="flex items-center gap-2 text-lg @xl:text-xl">
               {trip.location.primaryText}
             </CardTitle>
             {trip.location.secondaryText !== trip.location.primaryText && (
@@ -228,7 +228,7 @@ export const LocationTile = ({ className }: { className?: string }) => {
                   })}
                 >
                   <Globe className="h-4 w-4" />
-                  <span className="@xl:block hidden">Website</span>
+                  <span className="hidden @xl:block">Website</span>
                 </Link>
               )}
               <Link
@@ -243,7 +243,7 @@ export const LocationTile = ({ className }: { className?: string }) => {
                 })}
               >
                 <CornerUpRight className="h-4 w-4" />
-                <span className="@xl:block hidden">Directions</span>
+                <span className="hidden @xl:block">Directions</span>
               </Link>
               {photos.length > 0 && (
                 <Button
@@ -252,7 +252,7 @@ export const LocationTile = ({ className }: { className?: string }) => {
                   onClick={() => viewGalleryDisclosure.setOpened()}
                 >
                   <ImageIcon />
-                  <span className="@xl:block hidden">Gallery</span>
+                  <span className="hidden @xl:block">Gallery</span>
                 </Button>
               )}
             </div>
@@ -392,11 +392,11 @@ export const BudgetTile = ({ className }: { className?: string }) => {
         variant="outline"
         onClick={() => editDisclosure.setOpened()}
       >
-        <div className="@xl:text-4xl text-xl font-bold text-green-600">
+        <div className="text-xl font-bold text-green-600 @xl:text-4xl">
           ${trip.budget.low}
           {trip.budget.high ? ` - $${trip.budget.high}` : ""}
         </div>
-        <div className="@xl:text-2xl text-lg text-muted-foreground">Budget</div>
+        <div className="text-lg text-muted-foreground @xl:text-2xl">Budget</div>
       </Button>
       <SetBudgetDialog {...editDisclosure} defaultBudget={trip.budget} />
     </>

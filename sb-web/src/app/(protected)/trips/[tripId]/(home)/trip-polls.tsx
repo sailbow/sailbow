@@ -21,6 +21,7 @@ import {
   Edit,
   Eye,
   MoreHorizontal,
+  Pencil,
   Trash,
 } from "lucide-react";
 import {
@@ -94,13 +95,14 @@ export const TripPolls = () => {
           new Set<Id<"users">>(),
         );
 
+        const myResponse = poll.responses.find((r) => r.userId === me._id);
         return (
           <Card key={index} className="max-w-3xl">
             <CardHeader>
               <div className="flex w-full gap-4">
                 <CardTitle className="flex-1">{poll.title}</CardTitle>
                 <div className="ml-auto flex gap-2">
-                  {!usersWhoHaveResponded.has(me._id) ? (
+                  {!usersWhoHaveResponded.has(me._id) && (
                     <Button
                       size="sm"
                       variant="outline"
@@ -108,15 +110,6 @@ export const TripPolls = () => {
                     >
                       Respond
                       <CircleAlertIcon className="text-secondary-foreground" />
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setSelectedPoll(poll.tripPollId)}
-                    >
-                      Edit response
-                      <Edit className="size-4" />
                     </Button>
                   )}
                   <TripPollActions tripPollId={poll.tripPollId} />
@@ -127,10 +120,29 @@ export const TripPolls = () => {
               </CardDescription>
             </CardHeader>
             {usersWhoHaveResponded.size > 0 && (
-              <CardContent>
+              <CardContent className="space-y-4">
+                {myResponse && (
+                  <div className="inline-flex w-full gap-2 text-sm">
+                    <span className="text-nowrap font-semibold">
+                      You responded:
+                    </span>
+                    {myResponse.choices
+                      .map((c) => poll.options.find((o) => o._id === c)?.value)
+                      .join(", ")}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setSelectedPoll(poll.tripPollId)}
+                      className="ml-auto"
+                    >
+                      <span className="hidden xs:block">Edit</span>
+                      <Pencil className="size-4 shrink-0" />
+                    </Button>
+                  </div>
+                )}
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="outline" size="sm">
                       <Eye className="size-4" />
                       View results
                     </Button>

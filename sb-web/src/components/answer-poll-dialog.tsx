@@ -47,7 +47,7 @@ export const AnswerPollDialog = ({
       <DialogContent className="max-h-[80dvh]">
         <DialogHeader className="pb-2">
           {poll.settings.incognitoResponses && (
-            <div className="-ml-1 mb-2 flex items-center rounded-lg border border-border bg-background p-2 text-foreground">
+            <div className="-ml-1 mb-2 flex w-fit items-center rounded-sm border border-border bg-background py-2 pl-2 pr-4 text-foreground">
               <Info className="mr-2 size-5 shrink-0" />
               <h3 className="flex-1 text-xs leading-none">
                 Your response will <span className="font-extrabold">not</span>{" "}
@@ -56,7 +56,7 @@ export const AnswerPollDialog = ({
             </div>
           )}
           {!poll.settings.incognitoResponses && (
-            <div className="text-destructives-foreground -ml-1 mb-2 flex items-center rounded-lg border border-border bg-amber-500 bg-background p-2 dark:bg-amber-700">
+            <div className="text-destructives-foreground -ml-1 mb-2 flex w-fit items-center rounded-sm border border-border bg-yellow-500 py-2 pl-2 pr-4 dark:bg-yellow-700">
               <CircleAlert className="mr-2 size-5 shrink-0" />
               <h3 className="flex-1 text-xs leading-none">
                 Your response <span className="font-extrabold">will</span> be
