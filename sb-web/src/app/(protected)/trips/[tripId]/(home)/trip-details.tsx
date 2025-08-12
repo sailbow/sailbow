@@ -2,17 +2,15 @@
 
 import CenteredSpinner from "@/app/_components/centered-spinner";
 import LoadingButton from "@/components/loading-button";
-import { CompactTextEditor, TextEditor } from "@/components/text-editor";
+import { TextEditor } from "@/components/text-editor";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { useUpdateDescription } from "@/lib/trip-mutations";
 import { useActiveTripId, useActiveTrip } from "@/lib/trip-queries";
-import { Edit } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function TripDetails() {
-  const { data: trip, isLoading: isTripLoading } = useActiveTrip();
+  const { data: trip, isPending: isTripLoading } = useActiveTrip();
   const [descriptionText, setDescriptionText] = useState<string | null>(null);
   const tripId = useActiveTripId();
 
