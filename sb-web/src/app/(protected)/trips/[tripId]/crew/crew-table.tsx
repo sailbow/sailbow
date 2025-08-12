@@ -17,7 +17,7 @@ import { Ellipsis, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function CrewTable() {
-  const { data: crew, isLoading } = useCrew();
+  const { data: crew, isPending } = useCrew();
   return (
     <div className="flex size-full flex-col overflow-hidden">
       <Table>
@@ -38,7 +38,7 @@ export function CrewTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {isLoading && !crew ? (
+          {isPending && !crew ? (
             <TableRow>
               {Array.from({ length: 4 }).map((_, i) => (
                 <TableCell key={i}>
@@ -47,7 +47,7 @@ export function CrewTable() {
               ))}
             </TableRow>
           ) : (
-            crew!.map((member) => (
+            crew?.map((member) => (
               <TableRow key={member._id}>
                 <TableCell>
                   <Avatar>
