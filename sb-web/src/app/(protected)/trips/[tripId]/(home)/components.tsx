@@ -644,7 +644,7 @@ const SetBudgetDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Set a budget</DialogTitle>
         </DialogHeader>
