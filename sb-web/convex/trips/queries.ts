@@ -117,15 +117,20 @@ export const searchTrips = query({
   },
   handler: async ({ db, auth }, { text }) => {
     return await withUser(auth, db, async (user) => {
-      const memberships = await getMemberships({ user, db });
+      const memberships = (await getMemberships({ user, db })).sort(
+        (a, b) => b._creationTime - a._creationTime,
+      );
       if (!text) {
         return pruneNull(
-          await asyncMap(memberships, async (membership) => {
-            return await db
-              .query("trips")
-              .withIndex("by_id", (q) => q.eq("_id", membership.tripId))
-              .unique();
-          }),
+          await asyncMap(
+            memberships.sort((a, b) => b._creationTime - a._creationTime),
+            async (membership) => {
+              return await db
+                .query("trips")
+                .withIndex("by_id", (q) => q.eq("_id", membership.tripId))
+                .unique();
+            },
+          ),
         );
       }
       const trips = pruneNull(
