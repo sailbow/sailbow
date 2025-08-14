@@ -25,6 +25,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DayPicker, DayPickerProps } from "react-day-picker";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // ---------- utils start ----------
 /**
@@ -818,8 +824,8 @@ const DateTimePicker = React.forwardRef<
     }
 
     return (
-      <Popover>
-        <PopoverTrigger asChild disabled={disabled}>
+      <Dialog>
+        <DialogTrigger asChild disabled={disabled}>
           <Button
             variant="outline"
             className={cn(
@@ -844,8 +850,9 @@ const DateTimePicker = React.forwardRef<
               <span>{placeholder}</span>
             )}
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
+        </DialogTrigger>
+        <DialogContent className="w-auto p-4">
+          <DialogTitle className="sr-only">Select a date and time</DialogTitle>
           <DateTimeCalendar
             mode="single"
             selected={value}
@@ -873,8 +880,8 @@ const DateTimePicker = React.forwardRef<
               />
             </div>
           )}
-        </PopoverContent>
-      </Popover>
+        </DialogContent>
+      </Dialog>
     );
   },
 );

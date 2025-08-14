@@ -603,13 +603,13 @@ export const AddOrEditItinItemForm = ({
               );
             }}
           />
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid gap-2 xs:grid-cols-2">
             <FormField
               control={form.control}
               name="startDate"
               render={({ field, formState }) => {
                 return (
-                  <FormItem>
+                  <FormItem className="max-xs:grid max-xs:grid-cols-[auto_1fr] max-xs:items-center max-xs:gap-4">
                     <FormLabel>Start date</FormLabel>
                     <FormControl>
                       <DateTimePicker
@@ -637,8 +637,8 @@ export const AddOrEditItinItemForm = ({
               name="endDate"
               render={({ field }) => {
                 return (
-                  <FormItem>
-                    <FormLabel>
+                  <FormItem className="max-xs:grid max-xs:grid-cols-[auto_1fr] max-xs:items-center max-xs:gap-4">
+                    <FormLabel className="max-xs:grid max-xs:gap-2">
                       End Date{" "}
                       <span className="text-muted-foreground">(optional)</span>
                     </FormLabel>
@@ -676,7 +676,7 @@ export const AddOrEditItinItemForm = ({
                   variant="outline"
                   className="w-full justify-start pl-3"
                 >
-                  <MapPin className="mr-2 size-4 opacity-50" />
+                  <MapPin className="size-4 opacity-50" />
                   <span
                     className={cn(
                       "w-full text-wrap text-left",
