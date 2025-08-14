@@ -7,7 +7,6 @@ import {
   TripPageTitle,
 } from "../_components/trip-page-components";
 import TripDetails from "./trip-details";
-import TripBannerModal from "../_components/trip-banner-modal";
 import {
   Card,
   CardContent,
@@ -20,14 +19,8 @@ import {
   CalendarIcon,
   CornerUpRight,
   Edit,
-  ExternalLink,
   Globe,
-  ListChecks,
   MapPin,
-  Megaphone,
-  NotepadText,
-  Settings,
-  Users2,
 } from "lucide-react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -35,8 +28,6 @@ import { CoolTabs } from "@/components/ui/cool-tabs";
 import { CreateTripPollDialog } from "./create-trip-poll-dialog";
 import { TripPolls } from "./trip-polls";
 import { useQueryState } from "nuqs";
-import ImageWithLoader from "@/app/_components/image-with-loader";
-import { isEqual as dateIsEqual, format as formatDate } from "date-fns";
 import { Doc } from "@convex/_generated/dataModel";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -46,28 +37,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  GooglePlaceSearchDialog,
-  GooglePlaceSearchPopover,
-} from "@/components/google-places";
+import { GooglePlaceSearchDialog } from "@/components/google-places";
 import { useDisclosure } from "@/lib/use-disclosure";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { toast } from "@/components/ui/toast";
-import { CalendarDialog } from "@/components/ui/calendar-dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import LoadingButton from "@/components/loading-button";
-import { z } from "zod";
 import { formatDateRange } from "@/lib/date-utils";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import {
   BudgetTile,
   CaptainTile,
@@ -94,7 +74,6 @@ export default function TripOverviewPage() {
             tabs={[
               { id: "overview", label: "Overview" },
               { id: "polls", label: "Polls" },
-              { id: "details", label: "Details" },
             ]}
             activeTab={activeTab}
             onChange={setActiveTab}
