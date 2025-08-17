@@ -12,10 +12,15 @@ import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { Itinerary } from "./itin-v2";
 import CenteredSpinner from "@/app/_components/centered-spinner";
+import { useQueryWithStatus } from "@/lib/convex-client-helpers";
+import { Card } from "@/components/ui/card";
 
 export default function Page() {
   const tripId = useActiveTripId();
-  const itinerary = useQuery(api.itinerary.v2.list, { tripId });
+  const { data: itinerary, isPending } = useQueryWithStatus(
+    api.itinerary.v2.list,
+    { tripId },
+  );
   return (
     <TripPageContainer>
       <TripPageHeader>
@@ -25,7 +30,19 @@ export default function Page() {
         </div>
       </TripPageHeader>
       <TripPageContent>
-        {itinerary ? <Itinerary items={itinerary} /> : <CenteredSpinner />}
+        {isPending && <CenteredSpinner />}
+        {!isPending &&
+          itinerary &&
+          (itinerary.length > 0 ? (
+            <Itinerary items={itinerary} />
+          ) : (
+            <Card className="container mx-4 flex flex-col items-center justify-center gap-4 py-8 xs:mx-auto">
+              <h3 className="text-2xl leading-none tracking-tight text-card-foreground/80">
+                No itinerary items have been added!
+              </h3>
+              <NewItinItemButton />
+            </Card>
+          ))}
       </TripPageContent>
     </TripPageContainer>
   );
