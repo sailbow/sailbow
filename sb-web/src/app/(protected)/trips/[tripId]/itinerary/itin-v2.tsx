@@ -92,6 +92,8 @@ import { PollResultsChart } from "@/components/poll-results-chart";
 import { DateTimePicker } from "@/components/ui/datetime-calendar";
 import LoadingButton from "@/components/loading-button";
 import { Separator } from "@/components/ui/separator";
+import RainbowBarChart from "@/components/ui/rainbow-barchart";
+import { useTheme } from "next-themes";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -170,6 +172,8 @@ const ItinItem = ({
       },
     },
   );
+
+  const theme = useTheme();
 
   const hasRespondedToPoll =
     me && poll?.responses.some((v) => v.userId === me._id);
@@ -273,9 +277,15 @@ const ItinItem = ({
               <Accordion type="single" collapsible defaultValue={"item-1"}>
                 <AccordionItem value="item-1" className="w-full border-b-0">
                   <AccordionTrigger className="max-w-full gap-2 p-0">
-                    <div className="inline-flex items-center">
-                      <BarChart2 className="mr-2 text-muted-foreground" />
-                      <span className="text-card-foreground">{poll.title}</span>
+                    <div
+                      className={cn(
+                        "inline-flex items-center font-bold",
+                        theme.theme === "dark" &&
+                          "bg-gradient-to-r from-[#A8EAE1] via-[#FCDDAE] via-55% to-[#F7A9CA] bg-clip-text text-transparent",
+                      )}
+                    >
+                      <RainbowBarChart className="mr-2 size-8" />
+                      <span className="bg-clip-text">{poll.title}</span>
                       &nbsp;
                     </div>
                   </AccordionTrigger>

@@ -56,10 +56,10 @@ export const AnswerPollDialog = ({
             </div>
           )}
           {!poll.settings.incognitoResponses && (
-            <div className="text-destructives-foreground -ml-1 mb-2 flex w-fit items-center rounded-sm border border-border bg-yellow-500 py-2 pl-2 pr-4 dark:bg-yellow-700">
-              <CircleAlert className="mr-2 size-5 shrink-0" />
-              <h3 className="flex-1 text-xs leading-none">
-                Your response <span className="font-extrabold">will</span> be
+            <div className="text-destructives-foreground -ml-1 mb-2 flex w-fit items-center rounded-sm bg-background py-2 pl-2 pr-4 text-foreground ">
+              <CircleAlert className="mr-2 size-5 shrink-0 text-yellow-500 dark:text-yellow-700" />
+              <h3 className="flex-1 text-xs font-extralight leading-none">
+                Your response <em className="font-semibold">will </em> be
                 visible to others!
               </h3>
             </div>
