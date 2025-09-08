@@ -23,6 +23,7 @@ const basePollInput = v.object({
     incognitoResponses: v.boolean(),
   }),
   options: v.array(v.string()),
+  due: v.optional(v.number()),
 });
 
 type PollInput = Infer<typeof basePollInput>;

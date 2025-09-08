@@ -2,12 +2,30 @@
 
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DayPicker } from "react-day-picker";
+import { DayPicker, Locale } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
+import { format } from "date-fns";
+import { enUS } from "date-fns/locale";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+
+function genMonths(
+  locale: Pick<Locale, "options" | "localize" | "formatLong">,
+) {
+  return Array.from({ length: 12 }, (_, i) => ({
+    value: i,
+    label: format(new Date(2021, i), "MMMM", { locale }),
+  }));
+}
 
 function Calendar({
   className,
@@ -15,10 +33,29 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  const today = new Date();
+  const years = Array.from({ length: 50 * 2 + 1 }, (_, i) => ({
+    value: today.getFullYear() - 50 + i,
+    label: (today.getFullYear() - 50 + i).toString(),
+  }));
+
+  const MONTHS = React.useMemo(() => {
+    let locale: Pick<Locale, "options" | "localize" | "formatLong"> = enUS;
+    const { options, localize, formatLong } = props.locale ?? {};
+    if (options && localize && formatLong) {
+      locale = {
+        options,
+        localize,
+        formatLong,
+      };
+    }
+    return genMonths(locale);
+  }, []);
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
+      hideNavigation
       classNames={{
         month: "space-y-4",
         months:
@@ -70,6 +107,53 @@ function Calendar({
           ) : (
             <ChevronRight {...props} className="h-4 w-4" />
           ),
+        MonthCaption: ({ calendarMonth }) => {
+          return (
+            <div className="flex w-full justify-center gap-2">
+              <Select
+                defaultValue={calendarMonth.date.getMonth().toString()}
+                onValueChange={(value) => {
+                  const newDate = new Date(calendarMonth.date);
+                  newDate.setMonth(Number.parseInt(value, 10));
+                  props.onMonthChange?.(newDate);
+                }}
+              >
+                <SelectTrigger className="gap-1 border-none px-2 py-1 focus:bg-accent focus:text-accent-foreground">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {MONTHS.map((month) => (
+                    <SelectItem
+                      key={month.value}
+                      value={month.value.toString()}
+                    >
+                      {month.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select
+                defaultValue={calendarMonth.date.getFullYear().toString()}
+                onValueChange={(value) => {
+                  const newDate = new Date(calendarMonth.date);
+                  newDate.setFullYear(Number.parseInt(value, 10));
+                  props.onMonthChange?.(newDate);
+                }}
+              >
+                <SelectTrigger className="gap-1 border-none p-1 px-2 py-1 focus:bg-accent focus:text-accent-foreground">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map((year) => (
+                    <SelectItem key={year.value} value={year.value.toString()}>
+                      {year.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          );
+        },
       }}
       {...props}
     />

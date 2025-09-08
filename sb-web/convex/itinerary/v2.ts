@@ -30,6 +30,7 @@ export const upsert = mutation({
     type: v.union(v.null(), v.string()),
     location: v.optional(locationValidator),
     details: v.union(v.null(), v.string()),
+    due: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     return await withUser(ctx.auth, ctx.db, async (user) => {

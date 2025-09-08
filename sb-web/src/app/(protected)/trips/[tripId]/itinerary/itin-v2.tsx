@@ -23,6 +23,8 @@ import {
   Eye,
   BarChart2,
   NotepadText,
+  Vote,
+  Pencil,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -44,6 +46,7 @@ import {
   differenceInCalendarYears,
   setHours,
   setMinutes,
+  formatDistanceToNow,
 } from "date-fns";
 import { useActiveTripId, useCrew } from "@/lib/trip-queries";
 import { useMutation } from "convex/react";
@@ -94,6 +97,7 @@ import LoadingButton from "@/components/loading-button";
 import { Separator } from "@/components/ui/separator";
 import RainbowBarChart from "@/components/ui/rainbow-barchart";
 import { useTheme } from "next-themes";
+import { DtDialog } from "@/components/dt-dialog";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -276,69 +280,87 @@ const ItinItem = ({
             {poll && (
               <Accordion type="single" collapsible defaultValue={"item-1"}>
                 <AccordionItem value="item-1" className="w-full border-b-0">
-                  <AccordionTrigger className="max-w-full gap-2 p-0">
-                    <div
-                      className={cn(
-                        "inline-flex items-center font-bold",
-                        theme.theme === "dark" &&
-                          "bg-gradient-to-r from-[#A8EAE1] via-[#FCDDAE] via-55% to-[#F7A9CA] bg-clip-text text-transparent",
-                      )}
-                    >
-                      <RainbowBarChart className="mr-2 size-8" />
-                      <span className="bg-clip-text">{poll.title}</span>
-                      &nbsp;
+                  <AccordionTrigger className="max-w-full items-start gap-2 p-0">
+                    <div className="flex w-full flex-col gap-2 xs:flex-row xs:items-center">
+                      <div
+                        className={cn(
+                          "inline-flex items-center font-bold",
+                          theme.theme === "dark" &&
+                            "bg-gradient-to-r from-[#A8EAE1] via-[#FCDDAE] via-55% to-[#F7A9CA] bg-clip-text text-transparent",
+                        )}
+                      >
+                        <RainbowBarChart className="mr-2 size-8" />
+                        <span className="bg-clip-text">{poll.title}</span>
+                        &nbsp;
+                      </div>
+                      {!poll.closedOn &&
+                        poll.due &&
+                        poll.due > new Date().getTime() && (
+                          <div className="ml-auto mr-1">
+                            <div className="text-amber-00 inline-flex items-center gap-1 text-xs dark:text-amber-700">
+                              <Info className="size-3" />
+                              Poll ends in{" "}
+                              {formatDistanceToNow(poll.due, {
+                                includeSeconds: false,
+                              })}
+                            </div>
+                          </div>
+                        )}
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="ml-8 flex flex-col items-start gap-2 border-t pt-2">
-                    {hasRespondedToPoll && (
-                      <div className="text-sm text-muted-foreground">
-                        You responded:{" "}
-                        <span className="text-card-foreground">
-                          {poll.responses
-                            .find((r) => r.userId === me?._id)
-                            ?.choices.reduce((acc, current) => {
-                              const curValue = poll.options.find(
-                                (o) => o._id === current,
-                              )?.value;
-                              if (Boolean(acc)) {
-                                acc += ", " + curValue;
-                              } else {
-                                acc = curValue ?? "";
-                              }
-                              return acc;
-                            }, "")}
-                        </span>
-                      </div>
-                    )}
-                    <div className="flex gap-2">
-                      {hasRespondedToPoll ? (
+                  <AccordionContent className="ml-8 border-t pt-2">
+                    <div className="flex w-full max-w-sm flex-col items-start gap-2 ">
+                      {hasRespondedToPoll && (
+                        <div className="flex w-full items-center gap-2">
+                          <div className="text-nowrap text-muted-foreground">
+                            You responded:{" "}
+                            <span className="text-card-foreground">
+                              {poll.responses
+                                .find((r) => r.userId === me?._id)
+                                ?.choices.reduce((acc, current) => {
+                                  const curValue = poll.options.find(
+                                    (o) => o._id === current,
+                                  )?.value;
+                                  if (Boolean(acc)) {
+                                    acc += ", " + curValue;
+                                  } else {
+                                    acc = curValue ?? "";
+                                  }
+                                  return acc;
+                                }, "")}
+                            </span>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size={"sm"}
+                            onClick={() => answerPollDisclosure.setOpened()}
+                            className="ml-auto text-xs font-light"
+                          >
+                            <Pencil className="size-4 text-secondary-foreground" />
+                            Edit Response
+                          </Button>
+                        </div>
+                      )}
+                      {!hasRespondedToPoll && (
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => answerPollDisclosure.setOpened()}
                         >
-                          <Edit className="size-4" />
-                          Edit response
-                        </Button>
-                      ) : (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => answerPollDisclosure.setOpened()}
-                        >
-                          <Plus className="size-4 text-secondary-foreground" />
-                          Respond
+                          <Vote className="size-4 text-secondary-foreground" />
+                          Cast Vote
                         </Button>
                       )}
-                      {poll.responses.length > 0 && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => pollResultsDisclosure.setOpened()}
-                        >
-                          <Eye className="size-4" />
-                          View results
-                        </Button>
+                      {poll && poll.responses.length > 0 && (
+                        <div className="mt-2 w-full">
+                          <PollResultsChart
+                            poll={poll}
+                            users={crew?.map((cm) => ({
+                              ...cm,
+                              _id: cm.userId as Id<"users">,
+                            }))}
+                          />
+                        </div>
                       )}
                     </div>
                   </AccordionContent>
@@ -459,6 +481,7 @@ const AddItinPollDialog = ({
               incognitoResponses: data.settings.incognitoResponses,
             },
             options: data.options.map((o) => o.value),
+            due: data.due,
           })
         }
       />
@@ -514,16 +537,26 @@ export const Itinerary = ({ items }: { items: ItinItemV2[] }) => {
   );
 };
 
-const addOrEditSchema = z.object({
-  _id: z.string().min(1).optional(),
-  tripId: z.string().min(1),
-  title: z.string({ message: "Required" }).min(1, { message: "Required" }),
-  details: z.string(),
-  location: GooglePlaceResultSchema.optional(),
-  type: z.string().nullable(),
-  startDate: z.number().min(0, { message: "Required" }),
-  endDate: z.number().nullable(),
-});
+const addOrEditSchema = z
+  .object({
+    _id: z.string().min(1).optional(),
+    tripId: z.string().min(1),
+    title: z.string({ message: "Required" }).min(1, { message: "Required" }),
+    details: z.string(),
+    location: GooglePlaceResultSchema.optional(),
+    type: z.string().nullable(),
+    startDate: z.number().min(0, { message: "Required" }),
+    endDate: z.number().nullable(),
+  })
+  .superRefine(({ startDate, endDate }, ctx) => {
+    if (endDate && endDate < startDate) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["endDate"],
+        message: "Cannot be before start date",
+      });
+    }
+  });
 export const AddOrEditItinItemForm = ({
   onSaveSuccess,
   item,
@@ -566,6 +599,8 @@ export const AddOrEditItinItemForm = ({
     });
     setShowEnd(!!item?.endDate);
   }, [item, activeTripId]);
+
+  const start = form.watch("startDate");
 
   const onSubmit = async (data: UpsertItinItemV2) => {
     await upsertItem(data);
@@ -622,20 +657,10 @@ export const AddOrEditItinItemForm = ({
                   <FormItem className="max-xs:grid max-xs:grid-cols-[auto_1fr] max-xs:items-center max-xs:gap-4">
                     <FormLabel>Start date</FormLabel>
                     <FormControl>
-                      <DateTimePicker
-                        hourCycle={12}
-                        value={field.value ? new Date(field.value) : undefined}
-                        onChange={(date) => field.onChange(date?.getTime())}
-                        defaultPopupValue={
-                          field.value ? new Date(field.value) : undefined
-                        }
-                        granularity="minute"
-                        displayFormat={{
-                          hour12: "MM/dd/yy @p",
-                        }}
-                        className={
-                          formState.errors.startDate && "border-destructive"
-                        }
+                      <DtDialog
+                        defaultValue={field.value}
+                        onChange={field.onChange}
+                        error={!!formState.errors.startDate}
                       />
                     </FormControl>
                   </FormItem>
@@ -645,7 +670,7 @@ export const AddOrEditItinItemForm = ({
             <FormField
               control={form.control}
               name="endDate"
-              render={({ field }) => {
+              render={({ field, formState }) => {
                 return (
                   <FormItem className="max-xs:grid max-xs:grid-cols-[auto_1fr] max-xs:items-center max-xs:gap-4">
                     <FormLabel className="max-xs:grid max-xs:gap-2">
@@ -653,21 +678,14 @@ export const AddOrEditItinItemForm = ({
                       <span className="text-muted-foreground">(optional)</span>
                     </FormLabel>
                     <FormControl>
-                      <DateTimePicker
-                        hourCycle={12}
-                        value={field.value ? new Date(field.value) : undefined}
-                        onChange={(date) => field.onChange(date?.getTime())}
-                        granularity="minute"
-                        defaultPopupValue={
-                          field.value
-                            ? new Date(new Date(field.value))
-                            : startDate
-                              ? new Date(startDate.setHours(9, 0, 0))
-                              : undefined
+                      <DtDialog
+                        defaultValue={field.value ?? undefined}
+                        onChange={field.onChange}
+                        error={!!formState.errors.endDate}
+                        disabled={!start}
+                        disabledDates={
+                          start ? { before: new Date(start) } : undefined
                         }
-                        displayFormat={{
-                          hour12: "MM/dd/yy @p",
-                        }}
                       />
                     </FormControl>
                   </FormItem>

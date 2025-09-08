@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Trash } from "lucide-react";
+import { Plus, Trash, X } from "lucide-react";
 import { z } from "zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,6 +27,8 @@ import {
   FormMessage,
 } from "./ui/form";
 import LoadingButton from "./loading-button";
+import { DateTimePicker } from "./ui/datetime-calendar";
+import { DtDialog } from "./dt-dialog";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Required" }),
@@ -41,6 +43,7 @@ const formSchema = z.object({
       }),
     )
     .min(2, { message: "At least two options must be entered" }),
+  due: z.number().optional(),
 });
 
 export type PollData = z.infer<typeof formSchema>;
@@ -152,7 +155,27 @@ export function PollDialog({
                 )}
               />
             </div>
-
+            <FormField
+              control={form.control}
+              name="due"
+              render={({ field, formState }) => {
+                return (
+                  <FormItem className="flex w-full items-center gap-2">
+                    <FormLabel className="flex flex-col gap-1 text-nowrap xs:flex-row">
+                      Due date{" "}
+                      <span className="text-muted-foreground">(optional)</span>
+                    </FormLabel>
+                    <FormControl className="flex-1">
+                      <DtDialog
+                        defaultValue={field.value}
+                        onChange={field.onChange}
+                        error={!!formState.errors.due}
+                      />
+                    </FormControl>
+                  </FormItem>
+                );
+              }}
+            />
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <Label className="text-sm font-medium">Poll Choices</Label>

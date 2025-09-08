@@ -14,6 +14,7 @@ import { Itinerary } from "./itin-v2";
 import CenteredSpinner from "@/app/_components/centered-spinner";
 import { useQueryWithStatus } from "@/lib/convex-client-helpers";
 import { Card } from "@/components/ui/card";
+import { DtDialog } from "@/components/dt-dialog";
 
 export default function Page() {
   const tripId = useActiveTripId();

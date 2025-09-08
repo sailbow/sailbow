@@ -74,8 +74,8 @@ export function PollResultsChart({
             <Tooltip key={option.id}>
               <TooltipTrigger asChild>
                 <div key={option.id} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
+                  <div className="flex justify-between">
+                    <div className="flex space-x-2">
                       <span className="text-sm">{option.label}</span>
                     </div>
                     <div className="text-right">

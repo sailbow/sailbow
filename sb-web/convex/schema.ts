@@ -156,6 +156,8 @@ export const pollSchema = v.object({
     allowMultiple: v.boolean(),
     incognitoResponses: v.boolean(),
   }),
+  due: v.optional(v.number()),
+  closedOn: v.optional(v.number()),
   owner: v.id("users"),
 });
 
