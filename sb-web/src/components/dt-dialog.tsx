@@ -20,6 +20,8 @@ import { format, setHours, setMinutes, parse } from "date-fns";
 import { useEffect, useState } from "react";
 import { Separator } from "./ui/separator";
 import { Matcher } from "react-day-picker";
+import { useIsMobile } from "@/hooks/use-mobile";
+import MobileCalendarDrawer from "./ui/calendar/mobile-calendar-drawer";
 
 type DtDialogProps = {
   // open: boolean;
@@ -30,6 +32,7 @@ type DtDialogProps = {
   error?: boolean;
   disabled?: boolean;
   disabledDates?: Matcher;
+  defaultMonth?: Date;
   onChange: (value: number | undefined) => void;
 };
 
@@ -43,6 +46,7 @@ export function DtDialog({
   disabled = false,
   error = false,
   disabledDates,
+  defaultMonth,
   onChange,
 }: DtDialogProps) {
   const [date, setDate] = useState<number | undefined>(defaultValue);
@@ -66,6 +70,51 @@ export function DtDialog({
     onChange(date);
   }, [date, onChange]);
 
+  const isMobile = useIsMobile();
+
+  const trigger = (
+    <Button
+      variant="outline"
+      disabled={disabled}
+      className={cn(
+        "w-full justify-start text-left font-normal",
+        !date && "text-muted-foreground",
+        !!error && "border border-destructive",
+      )}
+    >
+      <CalendarIcon className="h-4 w-4" />
+      {date && `${format(date, "PP @p")}`}
+      {!date && <span>Pick a date</span>}
+    </Button>
+  );
+
+  if (isMobile) {
+    return (
+      <MobileCalendarDrawer
+        trigger={trigger}
+        {...disclosure}
+        mode="single"
+        disabled={disabledDates}
+        selected={date ? new Date(date) : undefined}
+        required
+        fixedWeeks
+        defaultMonth={defaultMonth}
+        onSelect={(date) => {
+          if (!date) {
+            setDate(undefined);
+            return;
+          }
+          const [hours, minutes] = time.split(":");
+          setDate(
+            setMinutes(
+              setHours(date, parseInt(hours)),
+              parseInt(minutes),
+            ).getTime(),
+          );
+        }}
+      />
+    );
+  }
   return (
     <Dialog {...disclosure}>
       <DialogTrigger asChild>
@@ -83,10 +132,12 @@ export function DtDialog({
           {!date && <span>Pick a date</span>}
         </Button>
       </DialogTrigger>
-      <DialogContent className="min-w-fit max-w-sm">
+      <DialogContent className="min-w-fit max-w-sm bg-background">
         <DialogTitle className="sr-only">Select a date and time</DialogTitle>
         <div className="flex size-full flex-col items-center gap-4">
           <Calendar
+            fixedWeeks
+            defaultMonth={defaultMonth}
             className="h-[325px]"
             mode="single"
             disabled={disabledDates}

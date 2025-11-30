@@ -4,4 +4,6 @@ import { CalendarProps } from ".";
 export type CalendarDisclosureProps = CalendarProps &
   Disclosure & {
     trigger: React.ReactNode;
+    required?: true | undefined;
+    includeTime?: true | undefined;
   };

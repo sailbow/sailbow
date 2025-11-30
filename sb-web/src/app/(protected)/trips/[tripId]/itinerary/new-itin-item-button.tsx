@@ -13,7 +13,7 @@ export default function NewItinItemButton() {
         <DialogTrigger asChild>
           <Button>Add</Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="bottom-auto left-[50%] right-auto top-[1rem] -translate-x-1/2 translate-y-0">
           <AddOrEditItinItemForm onSaveSuccess={disclosure.setClosed} />
         </DialogContent>
       </Dialog>

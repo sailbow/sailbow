@@ -6,12 +6,17 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
-import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker";
+import {
+  DayButton,
+  DayPicker,
+  DayPickerProps,
+  getDefaultClassNames,
+} from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
+export type CalendarProps = DayPickerProps & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 };
 function Calendar({

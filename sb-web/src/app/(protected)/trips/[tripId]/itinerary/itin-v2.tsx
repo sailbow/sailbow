@@ -686,6 +686,7 @@ export const AddOrEditItinItemForm = ({
                         disabledDates={
                           start ? { before: new Date(start) } : undefined
                         }
+                        defaultMonth={start ? new Date(start) : undefined}
                       />
                     </FormControl>
                   </FormItem>
