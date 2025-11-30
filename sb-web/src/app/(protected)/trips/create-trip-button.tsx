@@ -45,6 +45,7 @@ import {
 import type React from "react";
 import { useEffect } from "react";
 import MobileCalendarDrawer from "@/components/ui/calendar/mobile-calendar-drawer";
+import ResponsiveCalendarDisclosure from "@/components/ui/calendar/responsive-calendar";
 
 const NameSchema = z.object({
   name: z
@@ -202,84 +203,38 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
             <ChevronDown className="ml-auto" />
           </Button>
         );
-        if (isMobile) {
-          return (
-            <FormItem>
-              <FormControl>
-                <div className="flex w-full items-center justify-between gap-2">
-                  <MobileCalendarDrawer
-                    {...disclosure}
-                    {...field}
-                    trigger={trigger}
-                    fixedWeeks
-                    // captionLayout="dropdown"
-                    showOutsideDays={true}
-                    disabled={[]}
-                    mode="range"
-                    selected={{
-                      from: field.value?.from ?? undefined,
-                      to: field.value?.to ?? undefined,
-                    }}
-                    required
-                    min={1}
-                    onSelect={field.onChange}
-                  />
-                  <div className="ml-auto h-8 w-8">
-                    {!!field.value?.from && (
-                      <Button
-                        className="size-full text-foreground"
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => field.onChange({ from: null, to: null })}
-                      >
-                        <X className="size-4" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </FormControl>
-            </FormItem>
-          );
-        }
         return (
-          <Popover {...disclosure}>
-            <FormItem>
-              <FormControl>
-                <div className="flex w-full items-center justify-between  gap-2">
-                  <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-                  <div className="ml-auto h-8 w-8">
-                    {!!field.value?.from && (
-                      <Button
-                        className="size-full text-foreground"
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => field.onChange({ from: null, to: null })}
-                      >
-                        <X className="size-4" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </FormControl>
-              <PopoverContent className="w-auto overflow-hidden p-0">
-                <Calendar
+          <FormItem>
+            <FormControl>
+              <div className="flex w-full items-center justify-between gap-2">
+                <ResponsiveCalendarDisclosure
+                  {...disclosure}
                   {...field}
-                  numberOfMonths={isMobile ? 1 : 2}
-                  showOutsideDays={true}
                   mode="range"
+                  required
                   selected={{
                     from: field.value?.from ?? undefined,
                     to: field.value?.to ?? undefined,
                   }}
-                  required
-                  min={1}
                   onSelect={field.onChange}
+                  trigger={trigger}
                   fixedWeeks
-                  className="rounded-md p-6"
                 />
-              </PopoverContent>
-            </FormItem>
-          </Popover>
+                <div className="ml-auto h-8 w-8">
+                  {!!field.value?.from && (
+                    <Button
+                      className="size-full text-foreground"
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => field.onChange({ from: null, to: null })}
+                    >
+                      <X className="size-4" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </FormControl>
+          </FormItem>
         );
       }}
     />
