@@ -3,10 +3,8 @@ import { useState } from "react";
 export type Disclosure = {
   open: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  setOpened: () => void;
-  setClosed: () => void;
 };
-export const useDisclosure = (): Disclosure => {
+export const useDisclosure = () => {
   const [open, setIsOpen] = useState(false);
 
   function setOpened() {

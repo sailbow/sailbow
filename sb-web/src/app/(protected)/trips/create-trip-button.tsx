@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, LocationEdit, Plus, Search, X } from "lucide-react";
+import { formatDateRange } from "little-date";
+import { CalendarIcon, ChevronDown, Plus, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -13,14 +14,19 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
-import { Step, StepComponent, StepperForm } from "@/components/stepper-form";
+import {
+  Step,
+  StepComponent,
+  StepperForm,
+  useStepperFormData,
+  type StepperFormData,
+} from "@/components/stepper-form";
 import {
   FormField,
   FormItem,
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useCreateTrip } from "@/lib/trip-mutations";
 import { toast } from "@/components/ui/toast";
@@ -31,6 +37,14 @@ import {
   GooglePlaceResultSchema,
   GooglePlaceSearchPopover,
 } from "@/components/google-places";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import type React from "react";
+import { useEffect } from "react";
+import MobileCalendarDrawer from "@/components/ui/calendar/mobile-calendar-drawer";
 
 const NameSchema = z.object({
   name: z
@@ -146,7 +160,7 @@ const DateRangeSchema = z.object({
   dates: z
     .object({
       from: z.date().nullable(),
-      to: z.date().nullable(),
+      to: z.date().nullable().default(null),
     })
     .optional(),
   startDate: z.number().optional(),
@@ -162,39 +176,56 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
     <FormField
       control={form.control}
       name="dates"
-      render={({ field, formState }) => {
-        return (
-          <Dialog {...disclosure}>
+      render={({ field }) => {
+        const trigger = (
+          <Button
+            variant={"outline"}
+            className={cn(
+              "w-full justify-start font-normal",
+              !field.value?.from && "text-muted-foreground",
+            )}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4 opacity-50" />
+            {field.value?.from ? (
+              <span>
+                {formatDateRange(
+                  field.value.from,
+                  field.value.to ?? field.value.from,
+                  {
+                    includeTime: false,
+                  },
+                )}
+              </span>
+            ) : (
+              <span>Set a date range</span>
+            )}
+            <ChevronDown className="ml-auto" />
+          </Button>
+        );
+        if (isMobile) {
+          return (
             <FormItem>
               <FormControl>
-                <div className="flex w-full items-center gap-2">
-                  <DialogTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "relative w-full justify-start pl-3 text-left font-normal",
-                        !field.value?.from && "text-muted-foreground",
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4 opacity-50" />
-                      {field.value?.from && (
-                        <span>
-                          {format(field.value.from, "PPP")}
-                          {" -"}
-                        </span>
-                      )}
-                      {field.value?.to && (
-                        <span className="pl-1">
-                          {format(field.value.to, "PPP")}
-                        </span>
-                      )}
-                      {!field.value?.from && !field.value?.to && (
-                        <span>Set a date range</span>
-                      )}
-                    </Button>
-                  </DialogTrigger>
+                <div className="flex w-full items-center justify-between gap-2">
+                  <MobileCalendarDrawer
+                    {...disclosure}
+                    {...field}
+                    trigger={trigger}
+                    fixedWeeks
+                    // captionLayout="dropdown"
+                    showOutsideDays={true}
+                    disabled={[]}
+                    mode="range"
+                    selected={{
+                      from: field.value?.from ?? undefined,
+                      to: field.value?.to ?? undefined,
+                    }}
+                    required
+                    min={1}
+                    onSelect={field.onChange}
+                  />
                   <div className="ml-auto h-8 w-8">
-                    {!!field.value?.from && !!field.value?.to && (
+                    {!!field.value?.from && (
                       <Button
                         className="size-full text-foreground"
                         size="icon"
@@ -207,18 +238,34 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
                   </div>
                 </div>
               </FormControl>
-              <div className="relative min-h-4">
-                {formState?.errors.dates && (
-                  <div className="absolute left-0 top-0 inline-flex text-xs font-medium italic text-destructive">
-                    Must provide a start and end date
+            </FormItem>
+          );
+        }
+        return (
+          <Popover {...disclosure}>
+            <FormItem>
+              <FormControl>
+                <div className="flex w-full items-center justify-between  gap-2">
+                  <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+                  <div className="ml-auto h-8 w-8">
+                    {!!field.value?.from && (
+                      <Button
+                        className="size-full text-foreground"
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => field.onChange({ from: null, to: null })}
+                      >
+                        <X className="size-4" />
+                      </Button>
+                    )}
                   </div>
-                )}
-              </div>
-              <DialogContent className="min-w-fit">
+                </div>
+              </FormControl>
+              <PopoverContent className="w-auto overflow-hidden p-0">
                 <Calendar
                   {...field}
                   numberOfMonths={isMobile ? 1 : 2}
-                  showOutsideDays={isMobile}
+                  showOutsideDays={true}
                   mode="range"
                   selected={{
                     from: field.value?.from ?? undefined,
@@ -226,19 +273,13 @@ const DateRangeComponent: StepComponent<typeof DateRangeSchema> = ({
                   }}
                   required
                   min={1}
-                  onSelect={(range) => {
-                    if (!field.value) {
-                      field.onChange({ from: range.from });
-                    } else if (range.from === range.to) {
-                      field.onChange({ from: range.from });
-                    } else {
-                      field.onChange(range);
-                    }
-                  }}
+                  onSelect={field.onChange}
+                  fixedWeeks
+                  className="rounded-md p-6"
                 />
-              </DialogContent>
+              </PopoverContent>
             </FormItem>
-          </Dialog>
+          </Popover>
         );
       }}
     />
@@ -343,37 +384,53 @@ export const CreateTripButton = () => {
       console.error(error);
     },
   });
+  const stepperForm = useStepperFormData();
+
+  const { reset } = stepperForm;
+
+  useEffect(() => {
+    if (disclosure.open) {
+      reset();
+    }
+  }, [reset, disclosure.open]);
+
+  const trigger = (
+    <Button
+      size={isMobile ? "sm" : "default"}
+      className="max-xs:size-10 max-xs:rounded-full"
+    >
+      <Plus className="h-6 w-6" />
+      <span className="hidden xs:inline-flex">Create a trip</span>
+    </Button>
+  );
+  const stepper = (
+    <StepperForm
+      {...stepperForm}
+      steps={steps}
+      onSubmit={async (values) => {
+        const data = newTripSchema.parse(values);
+        const dates =
+          !!data.dates?.from && !!data.dates?.to
+            ? {
+                start: data.dates.from.getTime(),
+                end: data.dates.to.getTime(),
+              }
+            : undefined;
+
+        await createTrip({
+          ...data,
+          dates,
+        });
+      }}
+    />
+  );
+
   return (
     <Dialog {...disclosure}>
-      <DialogTrigger asChild>
-        <Button
-          size={isMobile ? "sm" : "default"}
-          className="max-xs:size-10 max-xs:rounded-full"
-        >
-          <Plus className="h-6 w-6" />
-          <span className="hidden xs:inline-flex">Create a trip</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogContent className="bottom-auto left-[50%] right-auto top-[1rem] -translate-x-1/2 translate-y-0">
         <DialogTitle className="sr-only">Create a trip</DialogTitle>
-        <StepperForm
-          steps={steps}
-          onSubmit={async (values) => {
-            const data = newTripSchema.parse(values);
-            const dates =
-              !!data.dates?.from && !!data.dates?.to
-                ? {
-                    start: data.dates.from.getTime(),
-                    end: data.dates.to.getTime(),
-                  }
-                : undefined;
-
-            await createTrip({
-              ...data,
-              dates,
-            });
-          }}
-        />
+        {stepper}
       </DialogContent>
     </Dialog>
   );

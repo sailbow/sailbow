@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,8 +31,12 @@ export interface Step<T extends StepSchema = StepSchema> {
   component: StepComponent<T>;
 }
 
+export interface StepperFormData extends Record<string, unknown> {}
+
 export interface StepperFormProps {
   steps: readonly Step[];
+  data: Record<string, unknown>;
+  setData: React.Dispatch<React.SetStateAction<Record<string, unknown>>>;
   onSubmit: (values: Record<string, unknown>) => Promise<void>;
   submitButtonText?: string;
   nextButtonText?: string;
@@ -40,8 +44,20 @@ export interface StepperFormProps {
   className?: string;
 }
 
+export function useStepperFormData(defaultValues?: StepperFormData) {
+  const [data, setData] = useState<StepperFormData>(defaultValues ?? {});
+  const reset = useCallback(() => setData?.({}), [setData]);
+  return {
+    data,
+    setData,
+    reset,
+  };
+}
+
 export function StepperForm({
   steps,
+  data,
+  setData,
   onSubmit,
   submitButtonText = "Submit",
   nextButtonText = "Next",
@@ -49,13 +65,12 @@ export function StepperForm({
   className,
 }: StepperFormProps) {
   const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState<Record<string, unknown>>({});
   const [isLoading, setIsLoading] = useState(false);
   const currentStep = steps[activeStep];
   // Create form with the current step's schema
   const form = useForm<z.infer<typeof currentStep.schema>>({
     resolver: zodResolver(currentStep.schema),
-    defaultValues: currentStep.schema ?? {},
+    values: data,
   });
 
   // Handle next step
@@ -68,12 +83,12 @@ export function StepperForm({
     const currentValues = form.getValues();
 
     if (activeStep < steps.length - 1) {
-      setFormData((prev) => ({ ...prev, ...currentValues }));
+      setData((prev) => ({ ...prev, ...currentValues }));
       setActiveStep((prev) => prev + 1);
     } else {
       setIsLoading(true);
       try {
-        await onSubmit({ ...formData, ...currentValues });
+        await onSubmit({ ...data, ...currentValues });
       } finally {
         setIsLoading(false);
       }

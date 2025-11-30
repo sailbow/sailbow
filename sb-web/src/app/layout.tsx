@@ -81,10 +81,10 @@ export default function RootLayout({
               </NuqsAdapter>
             </ThemeProvider>
           </body>
-          <ReactQueryDevtools
+          {/* <ReactQueryDevtools
             initialIsOpen={false}
             buttonPosition="top-right"
-          />
+          /> */}
         </ConvexClientProvider>
       </ClerkProvider>
     </html>
