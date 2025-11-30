@@ -83,7 +83,7 @@ export function DtDialog({
       )}
     >
       <CalendarIcon className="h-4 w-4" />
-      {date && `${format(date, "PP @p")}`}
+      {date && `${format(date, "M/d/yy, p")}`}
       {!date && <span>Pick a date</span>}
     </Button>
   );
@@ -117,21 +117,7 @@ export function DtDialog({
   }
   return (
     <Dialog {...disclosure}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          disabled={disabled}
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground",
-            !!error && "border border-destructive",
-          )}
-        >
-          <CalendarIcon className="h-4 w-4" />
-          {date && `${format(date, "PP @p")}`}
-          {!date && <span>Pick a date</span>}
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="min-w-fit max-w-sm bg-background">
         <DialogTitle className="sr-only">Select a date and time</DialogTitle>
         <div className="flex size-full flex-col items-center gap-4">
