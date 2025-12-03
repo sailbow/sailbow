@@ -122,11 +122,14 @@ export const CreateAnnouncementButton = () => {
               }}
             />
             <DialogFooter className="mt-4">
-              <DialogClose>
-                <Button type="button" variant="outline" disabled={isPending}>
-                  Cancel
-                </Button>
-              </DialogClose>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isPending}
+                onClick={disclosure.setClosed}
+              >
+                Cancel
+              </Button>
               <LoadingButton
                 isLoading={isPending}
                 type="submit"

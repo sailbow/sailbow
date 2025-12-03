@@ -28,8 +28,8 @@ const RainbowBarChart = ({ className }: { className?: string }) => (
         y2="2.73928"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#F3951B" />
-        <stop offset="1" stop-color="#FEEBCA" />
+        <stop stopColor="#F3951B" />
+        <stop offset="1" stopColor="#FEEBCA" />
       </linearGradient>
       <linearGradient
         id="paint1_linear_2427_3108"
@@ -39,8 +39,8 @@ const RainbowBarChart = ({ className }: { className?: string }) => (
         y2="9.71425"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#E23CB4" />
-        <stop offset="1" stop-color="#FAB7CE" />
+        <stop stopColor="#E23CB4" />
+        <stop offset="1" stopColor="#FAB7CE" />
       </linearGradient>
       <linearGradient
         id="paint2_linear_2427_3108"
@@ -50,8 +50,8 @@ const RainbowBarChart = ({ className }: { className?: string }) => (
         y2="22.3876"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#A8EAE1" />
-        <stop offset="1" stop-color="#1C9488" />
+        <stop stopColor="#A8EAE1" />
+        <stop offset="1" stopColor="#1C9488" />
       </linearGradient>
     </defs>
   </svg>

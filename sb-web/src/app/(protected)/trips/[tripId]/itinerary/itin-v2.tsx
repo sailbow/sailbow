@@ -81,8 +81,8 @@ import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
+  AccordionContent,
 } from "@/components/ui/accordion";
-import { AccordionContent } from "@radix-ui/react-accordion";
 import { PollDialog } from "@/components/poll-dialog";
 import {
   GooglePlaceResultSchema,
@@ -211,20 +211,29 @@ const ItinItem = ({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DialogTrigger asChild>
-                      <DropdownMenuItem disabled={isDeletingItem}>
+                      <DropdownMenuItem
+                        disabled={isDeletingItem}
+                        onClick={actionMenuDisclosure.setClosed}
+                      >
                         <Edit className="mr-2 size-4" /> Edit details
                       </DropdownMenuItem>
                     </DialogTrigger>
                     {!poll && (
                       <DropdownMenuItem
-                        onClick={() => pollDisclosure.setOpened()}
+                        onClick={() => {
+                          actionMenuDisclosure.setClosed();
+                          pollDisclosure.setOpened();
+                        }}
                       >
                         <ChartNoAxesColumn className="mr-2 size-4" /> Start a
                         poll
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem
-                      onClick={() => deleteItemDialogDisclosure.setOpened()}
+                      onClick={() => {
+                        actionMenuDisclosure.setClosed();
+                        deleteItemDialogDisclosure.setOpened();
+                      }}
                     >
                       <Trash className="mr-2 size-4" /> Delete item
                     </DropdownMenuItem>
@@ -686,7 +695,6 @@ export const AddOrEditItinItemForm = ({
                         disabledDates={
                           start ? { before: new Date(start) } : undefined
                         }
-                        defaultMonth={start ? new Date(start) : undefined}
                       />
                     </FormControl>
                   </FormItem>

@@ -172,9 +172,11 @@ FormMessage.displayName = "FormMessage";
 const FormInput = React.forwardRef<
   HTMLInputElement,
   React.ComponentProps<typeof Input>
->(({ ...props }) => {
+>(({ ...props }, ref) => {
   const { error } = useFormField();
-  return <Input className={error ? "border-destructive" : ""} {...props} />;
+  return (
+    <Input className={error ? "border-destructive" : ""} {...props} ref={ref} />
+  );
 });
 FormInput.displayName = "Input";
 

@@ -71,9 +71,9 @@ const DeleteAnnouncementModal = ({
             <DialogDescription>This action cannot be undone!</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
+            <Button variant="outline" onClick={disclosure.setClosed}>
+              Cancel
+            </Button>
             <LoadingButton
               variant="destructive"
               isLoading={isPending}

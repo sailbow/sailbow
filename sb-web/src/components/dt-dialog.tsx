@@ -72,26 +72,24 @@ export function DtDialog({
 
   const isMobile = useIsMobile();
 
-  const trigger = (
-    <Button
-      variant="outline"
-      disabled={disabled}
-      className={cn(
-        "w-full justify-start text-left font-normal",
-        !date && "text-muted-foreground",
-        !!error && "border border-destructive",
-      )}
-    >
-      <CalendarIcon className="h-4 w-4" />
-      {date && `${format(date, "M/d/yy, p")}`}
-      {!date && <span>Pick a date</span>}
-    </Button>
-  );
-
   if (isMobile) {
     return (
       <MobileCalendarDrawer
-        trigger={trigger}
+        trigger={
+          <Button
+            variant="outline"
+            disabled={disabled}
+            className={cn(
+              "w-full justify-start text-left font-normal",
+              !date && "text-muted-foreground",
+              !!error && "border border-destructive",
+            )}
+          >
+            <CalendarIcon className="h-4 w-4" />
+            {date && `${format(date, "M/d/yy, p")}`}
+            {!date && <span>Pick a date</span>}
+          </Button>
+        }
         {...disclosure}
         mode="single"
         disabled={disabledDates}
@@ -117,14 +115,28 @@ export function DtDialog({
   }
   return (
     <Dialog {...disclosure}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="min-w-fit max-w-sm bg-background">
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          disabled={disabled}
+          className={cn(
+            "w-full justify-start text-left font-normal",
+            !date && "text-muted-foreground",
+            !!error && "border border-destructive",
+          )}
+        >
+          <CalendarIcon className="h-4 w-4" />
+          {date && `${format(date, "M/d/yy, p")}`}
+          {!date && <span>Pick a date</span>}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="bg-background">
         <DialogTitle className="sr-only">Select a date and time</DialogTitle>
         <div className="flex size-full flex-col items-center gap-4">
           <Calendar
             fixedWeeks
+            className="[--cell-size:3rem]"
             defaultMonth={defaultMonth}
-            className="h-[325px]"
             mode="single"
             disabled={disabledDates}
             selected={date ? new Date(date) : undefined}
