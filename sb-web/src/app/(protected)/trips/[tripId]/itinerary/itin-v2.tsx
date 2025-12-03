@@ -154,6 +154,7 @@ const ItinItem = ({
   } = useMut(api.itinerary.v2.deleteItem, {
     onSuccess: () => {
       actionMenuDisclosure.setClosed();
+      deleteItemDialogDisclosure.setClosed();
       toast.success("Deleted itinerary item");
     },
     onError: (err) => {
