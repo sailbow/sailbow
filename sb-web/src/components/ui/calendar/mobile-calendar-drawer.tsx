@@ -31,7 +31,7 @@ const MobileCalendarDrawer = ({
           {...calendarProps}
           numberOfMonths={calendarProps.numberOfMonths ?? 1}
           className={cn(
-            // "mx-auto [--cell-size:clamp(0px,calc(100vw/7.5),52px)]",
+            "mx-auto [--cell-size:clamp(0px,calc(100vw/7.5),52px)]",
             calendarProps.className,
           )}
         />
