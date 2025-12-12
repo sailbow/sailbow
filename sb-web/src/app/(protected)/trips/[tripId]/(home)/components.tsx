@@ -501,6 +501,7 @@ const SetDateRangeDialog = ({
           numberOfMonths={isMobile ? 1 : 2}
           mode="range"
           selected={dates}
+          defaultMonth={defaultValue?.from}
           onSelect={(range) => {
             setDates({
               from: range?.from,
