@@ -53,15 +53,14 @@ import { useMutation } from "convex/react";
 import { set, z } from "zod";
 import { useDisclosure } from "@/lib/use-disclosure";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  RD,
+  RDContent,
+  RDDescription,
+  RDFooter,
+  RDHeader,
+  RDTitle,
+  RDTrigger,
+} from "@/components/ui/responsive-dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
 import { DefaultValues, useForm, useWatch } from "react-hook-form";
@@ -83,14 +82,12 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { PollDialog } from "@/components/poll-dialog";
 import {
   GooglePlaceResultSchema,
   GooglePlaceSearchPopover,
 } from "@/components/google-places";
 import Link from "next/link";
 import { useMe } from "@/lib/user-queries";
-import { AnswerPollDialog } from "@/components/answer-poll-dialog";
 import { PollResultsChart } from "@/components/poll-results-chart";
 import { DateTimePicker } from "@/components/ui/datetime-calendar";
 import LoadingButton from "@/components/loading-button";
@@ -98,6 +95,8 @@ import { Separator } from "@/components/ui/separator";
 import RainbowBarChart from "@/components/ui/rainbow-barchart";
 import { useTheme } from "next-themes";
 import { DtDialog } from "@/components/dt-dialog";
+import { PollDialog } from "@/components/poll-dialog";
+import { AnswerPollDialog } from "@/components/answer-poll-dialog";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -137,7 +136,7 @@ const ItinItem = ({
   const pollDisclosure = useDisclosure();
   const answerPollDisclosure = useDisclosure();
   const pollResultsDisclosure = useDisclosure();
-  const deleteItemDialogDisclosure = useDisclosure();
+  const deleteItemRDDisclosure = useDisclosure();
   const { data: poll } = useQueryWithStatus(api.polls.getItinItemPoll, {
     itineraryItemId: item._id,
   });
@@ -154,7 +153,7 @@ const ItinItem = ({
   } = useMut(api.itinerary.v2.deleteItem, {
     onSuccess: () => {
       actionMenuDisclosure.setClosed();
-      deleteItemDialogDisclosure.setClosed();
+      deleteItemRDDisclosure.setClosed();
       toast.success("Deleted itinerary item");
     },
     onError: (err) => {
@@ -203,7 +202,7 @@ const ItinItem = ({
           <div className="flex gap-2">
             <CardTitle>{item.title}</CardTitle>
             <div className="ml-auto flex gap-2">
-              <Dialog {...editDisclosure}>
+              <RD {...editDisclosure}>
                 <DropdownMenu {...actionMenuDisclosure}>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -211,14 +210,14 @@ const ItinItem = ({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DialogTrigger asChild>
+                    <RDTrigger asChild>
                       <DropdownMenuItem
                         disabled={isDeletingItem}
                         onClick={actionMenuDisclosure.setClosed}
                       >
                         <Edit className="mr-2 size-4" /> Edit details
                       </DropdownMenuItem>
-                    </DialogTrigger>
+                    </RDTrigger>
                     {!poll && (
                       <DropdownMenuItem
                         onClick={() => {
@@ -233,20 +232,20 @@ const ItinItem = ({
                     <DropdownMenuItem
                       onClick={() => {
                         actionMenuDisclosure.setClosed();
-                        deleteItemDialogDisclosure.setOpened();
+                        deleteItemRDDisclosure.setOpened();
                       }}
                     >
                       <Trash className="mr-2 size-4" /> Delete item
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <DialogContent>
+                <RDContent>
                   <AddOrEditItinItemForm
                     item={item}
                     onSaveSuccess={editDisclosure.setClosed}
                   />
-                </DialogContent>
-              </Dialog>
+                </RDContent>
+              </RD>
             </div>
           </div>
           {item?.location && (
@@ -398,7 +397,7 @@ const ItinItem = ({
           </CardContent>
         )}
       </Card>
-      <AddItinPollDialog {...pollDisclosure} itemId={item._id} />
+      <AddItinPollRD {...pollDisclosure} itemId={item._id} />
       {me && poll && (
         <AnswerPollDialog
           {...answerPollDisclosure}
@@ -414,12 +413,12 @@ const ItinItem = ({
         />
       )}
       {poll && poll.responses.length > 0 && (
-        <Dialog {...pollResultsDisclosure}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{poll.title}</DialogTitle>
-              <DialogDescription>Poll results</DialogDescription>
-            </DialogHeader>
+        <RD {...pollResultsDisclosure}>
+          <RDContent>
+            <RDHeader>
+              <RDTitle>{poll.title}</RDTitle>
+              <RDDescription>Poll results</RDDescription>
+            </RDHeader>
             <PollResultsChart
               poll={poll}
               users={crew?.map((cm) => ({
@@ -427,21 +426,24 @@ const ItinItem = ({
                 _id: cm.userId as Id<"users">,
               }))}
             />
-          </DialogContent>
-        </Dialog>
+          </RDContent>
+        </RD>
       )}
-      <Dialog {...deleteItemDialogDisclosure}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
+      <RD {...deleteItemRDDisclosure}>
+        <RDContent>
+          <RDHeader>
+            <RDTitle>
               Are you sure you want to delete this itinerary item?
-            </DialogTitle>
-            <DialogDescription>This action cannot be undone!</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
+            </RDTitle>
+            <RDDescription>This action cannot be undone!</RDDescription>
+          </RDHeader>
+          <RDFooter>
+            <Button
+              variant="outline"
+              onClick={deleteItemRDDisclosure.setClosed}
+            >
+              Cancel
+            </Button>
             <LoadingButton
               variant="destructive"
               isLoading={isDeletingItem || deletedItem}
@@ -449,14 +451,14 @@ const ItinItem = ({
             >
               Yes, delete
             </LoadingButton>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </RDFooter>
+        </RDContent>
+      </RD>
     </div>
   );
 };
 
-const AddItinPollDialog = ({
+const AddItinPollRD = ({
   open,
   onOpenChange,
   itemId,
@@ -632,9 +634,9 @@ export const AddOrEditItinItemForm = ({
           onSubmit({ ...values, startDate: values.startDate! }),
         )}
       >
-        <DialogHeader>
-          <DialogTitle>{item ? "Edit" : "New"} itinerary item</DialogTitle>
-        </DialogHeader>
+        <RDHeader>
+          <RDTitle>{item ? "Edit" : "New"} itinerary item</RDTitle>
+        </RDHeader>
         <div className="flex w-full flex-col gap-2">
           <FormField
             control={form.control}
@@ -761,11 +763,11 @@ export const AddOrEditItinItemForm = ({
           />
         </div>
 
-        <DialogFooter>
+        <RDFooter>
           <LoadingButton isLoading={form.formState.isSubmitting} type="submit">
             Save
           </LoadingButton>
-        </DialogFooter>
+        </RDFooter>
       </form>
     </Form>
   );

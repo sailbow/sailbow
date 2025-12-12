@@ -135,7 +135,7 @@ export function RDTitle({ className, ...props }: RDTitleProps) {
     );
   }
   const Comp = isMobile ? DrawerTitle : DialogTitle;
-  return <Comp {...props} />;
+  return <Comp {...props} className={className} />;
 }
 
 interface RDDescriptionProps
@@ -172,7 +172,7 @@ export function RDFooter({ className, ...props }: RDFooterProps) {
   return (
     <Comp
       {...props}
-      className={cn("w-full flex-row items-center justify-center", className)}
+      className={cn("w-full flex-row items-center justify-end", className)}
     />
   );
 }

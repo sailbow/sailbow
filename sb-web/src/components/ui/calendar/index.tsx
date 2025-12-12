@@ -46,6 +46,7 @@ function Calendar({
           date.toLocaleString("default", { month: "short" }),
         ...formatters,
       }}
+      fixedWeeks={props.fixedWeeks ?? true}
       classNames={{
         root: cn("w-fit", defaultClassNames.root),
         months: cn(

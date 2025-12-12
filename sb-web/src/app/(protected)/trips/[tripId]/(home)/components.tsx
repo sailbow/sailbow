@@ -27,6 +27,7 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   CalendarIcon,
+  ChevronDown,
   CornerUpRight,
   DollarSign,
   Edit2,
@@ -40,7 +41,7 @@ import { useGooglePlace } from "@/hooks/google-places";
 import { useDisclosure } from "@/lib/use-disclosure";
 import { cn } from "@/lib/utils";
 import { Doc } from "@convex/_generated/dataModel";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { GooglePlaceSearchDialog } from "@/components/google-places";
@@ -57,7 +58,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
-import { formatDateRange } from "@/lib/date-utils";
 import LoadingButton from "@/components/loading-button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -79,6 +79,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import useDebounce from "@/lib/use-debounce";
+import {
+  RD,
+  RDContent,
+  RDFooter,
+  RDHeader,
+  RDTitle,
+  RDTrigger,
+} from "@/components/ui/responsive-dialog";
+import { DtDialog } from "@/components/dt-dialog";
+import ResponsiveCalendarDisclosure from "@/components/ui/calendar/responsive-calendar";
+import { formatDateRange } from "little-date";
 
 export const CaptainTile = ({ className }: { className?: string }) => {
   const { data: crew, isPending: isCrewLoading } = useCrew();
@@ -297,60 +308,66 @@ export const DatesTile = ({ className }: { className?: string }) => {
   if (!trip.dates) {
     return (
       <>
-        <Button
-          className="flex size-full flex-col items-center justify-center gap-4 bg-card text-base [&_svg]:size-8 md:[&_svg]:size-12"
-          variant="outline"
-          onClick={() => editDisclosure.setOpened()}
-        >
-          <CalendarIcon />
-          <div>
-            {" "}
-            No date set{" "}
-            <span className="text-muted-foreground">(click to edit)</span>
-          </div>
-        </Button>
-        <SetDateRangeDialog {...editDisclosure} defaultValue={trip.dates} />
+        <SetDateRangeDialog
+          {...editDisclosure}
+          trigger={
+            <Button
+              className="flex size-full flex-col items-center justify-center gap-4 bg-card text-base [&_svg]:size-8 md:[&_svg]:size-12"
+              variant="outline"
+              onClick={() => editDisclosure.setOpened()}
+            >
+              <CalendarIcon />
+              <div>
+                {" "}
+                No date set{" "}
+                <span className="text-muted-foreground">(click to edit)</span>
+              </div>
+            </Button>
+          }
+          defaultValue={trip.dates}
+        />
       </>
     );
   }
 
   return (
-    <>
-      <Button
-        className="flex size-full items-center justify-center gap-4 bg-card p-4"
-        variant="outline"
-        onClick={() => editDisclosure.setOpened()}
-      >
-        <div className="flex flex-col items-center justify-center gap-2">
-          <div className="text-4xl font-bold">
-            {format(trip.dates.start, "M/d")}
-          </div>
-          <div className="text-2xl text-muted-foreground">
-            {format(trip.dates.start, "EEE")}
-          </div>
-        </div>
-        {trip.dates.end && trip.dates.end !== trip.dates.start && (
-          <>
-            <div className="text-4xl font-bold">{"-"}</div>
-            <div className="flex flex-col items-center justify-center gap-2">
-              <div className="text-4xl font-bold tracking-wide">
-                {format(trip.dates.end, "M/d")}
-              </div>
-              <div className="text-2xl text-muted-foreground">
-                {format(trip.dates.end, "EEE")}
-              </div>
-            </div>
-          </>
-        )}
-      </Button>
-      <SetDateRangeDialog
-        {...editDisclosure}
-        defaultValue={{
+    <SetDateRangeDialog
+      {...editDisclosure}
+      defaultValue={
+        trip.dates && {
           from: new Date(trip.dates.start),
-          to: trip.dates.end ? new Date(trip.dates.end) : undefined,
-        }}
-      />
-    </>
+          to: new Date(trip.dates.end),
+        }
+      }
+      trigger={
+        <Button
+          className="flex size-full items-center justify-center gap-4 bg-card p-4"
+          variant="outline"
+        >
+          <div className="flex flex-col items-center justify-center gap-2">
+            <div className="text-4xl font-bold">
+              {format(trip.dates.start, "M/d")}
+            </div>
+            <div className="text-2xl text-muted-foreground">
+              {format(trip.dates.start, "EEE")}
+            </div>
+          </div>
+          {trip.dates.end && trip.dates.end !== trip.dates.start && (
+            <>
+              <div className="text-4xl font-bold">{"-"}</div>
+              <div className="flex flex-col items-center justify-center gap-2">
+                <div className="text-4xl font-bold tracking-wide">
+                  {format(trip.dates.end, "M/d")}
+                </div>
+                <div className="text-2xl text-muted-foreground">
+                  {format(trip.dates.end, "EEE")}
+                </div>
+              </div>
+            </>
+          )}
+        </Button>
+      }
+    />
   );
 };
 
@@ -407,9 +424,11 @@ const SetDateRangeDialog = ({
   open,
   onOpenChange,
   defaultValue,
+  trigger,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  trigger: React.ReactNode;
   defaultValue?: { from: Date | undefined; to: Date | undefined };
 }) => {
   const tripId = useActiveTripId();
@@ -455,62 +474,56 @@ const SetDateRangeDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="min-w-fit">
-        <DialogHeader className="w-full flex-row items-center justify-center gap-4">
-          <DialogTitle className="min-h-5">
-            {dates?.from && formatDateRange(dates.from, dates.to)}
-          </DialogTitle>
-        </DialogHeader>
-        <div className="flex h-fit w-full justify-center pb-4">
-          <Calendar
-            numberOfMonths={isMobile ? 1 : 2}
-            showOutsideDays={isMobile}
-            defaultMonth={defaultValue?.from}
-            mode="range"
-            selected={dates}
-            onSelect={(range) => {
-              setDates({
-                from: range?.from,
-                to: range?.to,
-              });
-            }}
-            className="h-[340px]"
-          />
-        </div>
-
-        <DialogFooter>
+    <RD open={open} onOpenChange={onOpenChange}>
+      <RDTrigger asChild>{trigger}</RDTrigger>
+      <RDContent
+        className={cn(
+          "w-auto min-w-[60vw] justify-center",
+          !isMobile && "bg-background",
+        )}
+      >
+        <RDHeader className="text-center">
+          <RDTitle className="min-h-4 w-full text-center">
+            {dates?.from &&
+              formatDateRange(dates.from, dates.to ?? dates.from, {
+                includeTime: false,
+              })}
+          </RDTitle>
+        </RDHeader>
+        <Calendar
+          className={
+            isMobile
+              ? "mx-auto [--cell-size:clamp(0px,calc(100vw/7.5),52px)]"
+              : "mx-auto bg-background"
+          }
+          required
+          showOutsideDays={isMobile}
+          numberOfMonths={isMobile ? 1 : 2}
+          mode="range"
+          selected={dates}
+          onSelect={(range) => {
+            setDates({
+              from: range?.from,
+              to: range?.to,
+            });
+          }}
+        ></Calendar>
+        <RDFooter className="justify-center">
           <Button
-            variant="outline"
-            disabled={isSaving}
-            className="mr-auto w-20"
+            variant="secondary"
             onClick={() => setDates({ from: undefined, to: undefined })}
           >
             Reset
           </Button>
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              disabled={isSaving}
-              className="w-20"
-              onClick={() => {
-                setDates(defaultValue);
-              }}
-            >
-              Cancel
-            </Button>
-          </DialogClose>
-          <LoadingButton
-            className="w-20"
-            onClick={() => handleSave()}
-            isLoading={isSaving}
-            disabled={isSaving}
-          >
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <LoadingButton onClick={handleSave} isLoading={isSaving}>
             Save
           </LoadingButton>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </RDFooter>
+      </RDContent>
+    </RD>
   );
 };
 
@@ -643,11 +656,11 @@ const SetBudgetDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Set a budget</DialogTitle>
-        </DialogHeader>
+    <RD open={open} onOpenChange={onOpenChange}>
+      <RDContent>
+        <RDHeader>
+          <RDTitle>Set a budget</RDTitle>
+        </RDHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSave)}
@@ -717,8 +730,8 @@ const SetBudgetDialog = ({
             </div>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </RDContent>
+    </RD>
   );
 };
 const AvatarGroup = ({

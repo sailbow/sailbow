@@ -43,6 +43,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDisclosure } from "@/lib/use-disclosure";
 import LoadingButton from "@/components/loading-button";
+import {
+  RD,
+  RDContent,
+  RDDescription,
+  RDHeader,
+  RDTitle,
+  RDTrigger,
+} from "@/components/ui/responsive-dialog";
 
 export const TripPolls = () => {
   const activeTripId = useActiveTripId();
@@ -145,21 +153,21 @@ export const TripPolls = () => {
                     </Button>
                   </div>
                 )}
-                <Dialog>
-                  <DialogTrigger asChild>
+                <RD>
+                  <RDTrigger asChild>
                     <Button variant="outline" size="sm" className="mt-2">
                       <Eye className="size-4" />
                       View results
                     </Button>
-                  </DialogTrigger>
-                  <DialogContent className="h-fit max-h-[80dvh]">
-                    <DialogHeader>
-                      <DialogTitle>{poll.title}</DialogTitle>
-                      <DialogDescription>
+                  </RDTrigger>
+                  <RDContent className="h-fit max-h-[80dvh]">
+                    <RDHeader>
+                      <RDTitle>{poll.title}</RDTitle>
+                      <RDDescription>
                         Poll results ({poll.responses.length}/{crew.length}{" "}
                         responded)
-                      </DialogDescription>
-                    </DialogHeader>
+                      </RDDescription>
+                    </RDHeader>
                     <PollResultsChart
                       poll={poll}
                       users={crew?.map((cm) => ({
@@ -167,8 +175,8 @@ export const TripPolls = () => {
                         _id: cm.userId as Id<"users">,
                       }))}
                     />
-                  </DialogContent>
-                </Dialog>
+                  </RDContent>
+                </RD>
               </CardContent>
             )}
             <AnswerPollDialog

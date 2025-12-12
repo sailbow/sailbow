@@ -5,12 +5,12 @@ import type React from "react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  RD,
+  RDContent,
+  RDFooter,
+  RDHeader,
+  RDTitle,
+} from "@/components/ui/responsive-dialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Plus, Trash, X } from "lucide-react";
@@ -48,7 +48,7 @@ const formSchema = z.object({
 
 export type PollData = z.infer<typeof formSchema>;
 
-interface PollDialogProps {
+interface PollRDProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
@@ -62,7 +62,7 @@ export function PollDialog({
   title,
   onSave,
   isLoading,
-}: PollDialogProps) {
+}: PollRDProps) {
   const form = useForm<PollData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -84,13 +84,13 @@ export function PollDialog({
   }, [open, form]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[80vh] sm:max-w-[500px]">
+    <RD open={open} onOpenChange={onOpenChange}>
+      <RDContent className="max-h-[80vh] sm:max-w-[500px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSave)} className="space-y-4">
-            <DialogHeader>
-              <DialogTitle>{title}</DialogTitle>
-            </DialogHeader>
+            <RDHeader>
+              <RDTitle>{title}</RDTitle>
+            </RDHeader>
             <FormField
               control={form.control}
               name="title"
@@ -228,7 +228,7 @@ export function PollDialog({
               </div>
             </div>
 
-            <DialogFooter className="mt-auto">
+            <RDFooter className="mt-auto">
               <Button
                 type="button"
                 variant="outline"
@@ -242,10 +242,10 @@ export function PollDialog({
               >
                 Create Poll
               </LoadingButton>
-            </DialogFooter>
+            </RDFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </RDContent>
+    </RD>
   );
 }
