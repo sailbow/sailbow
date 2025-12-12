@@ -383,7 +383,7 @@ export const CreateTripButton = () => {
   return (
     <Dialog {...disclosure}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="bottom-auto left-[50%] right-auto top-[1rem] -translate-x-1/2 translate-y-0">
+      <DialogContent position="top">
         <DialogTitle className="sr-only">Create a trip</DialogTitle>
         {stepper}
       </DialogContent>

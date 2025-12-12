@@ -3,14 +3,13 @@
 import { useParams, useRouter } from "next/navigation";
 import { api } from "@convex/_generated/api";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  RD,
+  RDContent,
+  RDDescription,
+  RDFooter,
+  RDHeader,
+  RDTitle,
+} from "@/components/ui/responsive-dialog";
 import CenteredSpinner from "@/app/_components/centered-spinner";
 import { Button } from "@/components/ui/button";
 import NotFoundPage from "@/app/_components/not-found-page";
@@ -22,6 +21,7 @@ import { useInvite } from "@/lib/invitations";
 import { useMe } from "@/lib/user-queries";
 import { useAcceptInvite, useDeclineInvite } from "@/lib/invitations";
 import LoadingButton from "@/components/loading-button";
+import { useDisclosure } from "@/lib/use-disclosure";
 
 type Invite = FunctionReturnType<typeof api.invitations.queries.byId>;
 export default function AcceptInvitePage() {
@@ -47,6 +47,7 @@ export default function AcceptInvitePage() {
     onSuccess: () => {
       router.push(`/trips/${invite!.tripId}`);
       toast.success("Invitation accepted!");
+      disclosure.setClosed();
     },
   });
 
@@ -55,6 +56,7 @@ export default function AcceptInvitePage() {
       onSuccess: () => {
         router.push("/trips");
         toast.warning(`Invitation to join ${invite!.tripName} declined`);
+        disclosure.setClosed();
       },
     });
 
@@ -65,6 +67,8 @@ export default function AcceptInvitePage() {
     }
   }, [invite, router]);
 
+  const disclosure = useDisclosure();
+
   if (isLoading || !me || invite?.status === "accepted")
     return <CenteredSpinner />;
 
@@ -72,32 +76,30 @@ export default function AcceptInvitePage() {
 
   return (
     <div className="w-full pt-4">
-      <Dialog defaultOpen={true}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
+      <RD defaultOpen={true} {...disclosure}>
+        <RDContent>
+          <RDHeader>
+            <RDTitle>
               Invitation to join the trip{" "}
               <span className="font-semibold">{invite.tripName}</span>
-            </DialogTitle>
-            <DialogDescription>
+            </RDTitle>
+            <RDDescription>
               {invite.invitedBy.firstName} {invite.invitedBy.lastName} has
               invited you to join the trip {invite.tripName}. Would you like to
               accept?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <LoadingButton
-                isLoading={isDecliningInvite}
-                variant="outline"
-                onClick={() => declineInvite({ inviteId })}
-                disabled={
-                  isAcceptingInvite || isDecliningInvite || acceptedInvite
-                }
-              >
-                Decline
-              </LoadingButton>
-            </DialogClose>
+            </RDDescription>
+          </RDHeader>
+          <RDFooter>
+            <LoadingButton
+              isLoading={isDecliningInvite}
+              variant="outline"
+              onClick={() => declineInvite({ inviteId })}
+              disabled={
+                isAcceptingInvite || isDecliningInvite || acceptedInvite
+              }
+            >
+              Decline
+            </LoadingButton>
             <LoadingButton
               isLoading={isAcceptingInvite || acceptedInvite}
               disabled={
@@ -107,9 +109,9 @@ export default function AcceptInvitePage() {
             >
               Accept
             </LoadingButton>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </RDFooter>
+        </RDContent>
+      </RD>
     </div>
   );
 }

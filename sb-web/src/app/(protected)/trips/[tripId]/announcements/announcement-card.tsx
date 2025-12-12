@@ -22,6 +22,15 @@ import {
 } from "@/components/ui/dialog";
 import { TextEditor } from "@/components/text-editor";
 import LoadingButton from "@/components/loading-button";
+import {
+  RD,
+  RDContent,
+  RDDescription,
+  RDFooter,
+  RDHeader,
+  RDTitle,
+  RDTrigger,
+} from "@/components/ui/responsive-dialog";
 
 type Announcement = FunctionReturnType<
   typeof api.announcements.queries.get
@@ -55,42 +64,38 @@ const DeleteAnnouncementModal = ({
   });
 
   return (
-    <Dialog {...disclosure}>
-      <DialogTrigger>
+    <RD {...disclosure}>
+      <RDTrigger>
         <Button variant="ghost" size="icon" className="hover:bg-destructive/30">
           <Trash2 className="h-4 w-4" />
           <span className="sr-only">Edit</span>
         </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              Are you sure you want to delete this announcement?
-            </DialogTitle>
-            <DialogDescription>This action cannot be undone!</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={disclosure.setClosed}>
-              Cancel
-            </Button>
-            <LoadingButton
-              variant="destructive"
-              isLoading={isPending}
-              onClick={() =>
-                deleteAnnouncement({
-                  tripId: announcement.tripId,
-                  announcementId: announcement._id,
-                })
-              }
-              disabled={isPending || wasDeleted}
-            >
-              Delete
-            </LoadingButton>
-          </DialogFooter>
-        </DialogContent>
-      </DialogContent>
-    </Dialog>
+      </RDTrigger>
+      <RDContent>
+        <RDHeader>
+          <RDTitle>Are you sure you want to delete this announcement?</RDTitle>
+          <RDDescription>This action cannot be undone!</RDDescription>
+        </RDHeader>
+        <RDFooter>
+          <Button variant="outline" onClick={disclosure.setClosed}>
+            Cancel
+          </Button>
+          <LoadingButton
+            variant="destructive"
+            isLoading={isPending}
+            onClick={() =>
+              deleteAnnouncement({
+                tripId: announcement.tripId,
+                announcementId: announcement._id,
+              })
+            }
+            disabled={isPending || wasDeleted}
+          >
+            Delete
+          </LoadingButton>
+        </RDFooter>
+      </RDContent>
+    </RD>
   );
 };
 

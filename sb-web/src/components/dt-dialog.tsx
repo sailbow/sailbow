@@ -22,6 +22,7 @@ import { Separator } from "./ui/separator";
 import { Matcher } from "react-day-picker";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileCalendarDrawer from "./ui/calendar/mobile-calendar-drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
 
 type DtDialogProps = {
   // open: boolean;
@@ -72,31 +73,15 @@ export function DtDialog({
 
   const isMobile = useIsMobile();
 
-  if (isMobile) {
-    return (
-      <MobileCalendarDrawer
-        trigger={
-          <Button
-            variant="outline"
-            disabled={disabled}
-            className={cn(
-              "w-full justify-start text-left font-normal",
-              !date && "text-muted-foreground",
-              !!error && "border border-destructive",
-            )}
-          >
-            <CalendarIcon className="h-4 w-4" />
-            {date && `${format(date, "M/d/yy, p")}`}
-            {!date && <span>Pick a date</span>}
-          </Button>
-        }
-        {...disclosure}
+  const mainContent = (
+    <div className="flex size-full flex-col items-center gap-4">
+      <Calendar
+        fixedWeeks
+        className="[--cell-size:3rem]"
+        defaultMonth={defaultMonth}
         mode="single"
         disabled={disabledDates}
         selected={date ? new Date(date) : undefined}
-        required
-        fixedWeeks
-        defaultMonth={defaultMonth}
         onSelect={(date) => {
           if (!date) {
             setDate(undefined);
@@ -111,6 +96,44 @@ export function DtDialog({
           );
         }}
       />
+      <Separator className="w-full" />
+      <div className="flex items-center justify-center gap-2">
+        <Clock />
+        <Input
+          type="time"
+          id="time-picker"
+          step="60"
+          disabled={!date}
+          value={time}
+          onChange={(e) => {
+            setTime(e.target.value);
+          }}
+          className="appearance-none bg-background font-mono [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+        />
+      </div>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer {...disclosure}>
+        <DrawerTrigger asChild>
+          <Button
+            variant="outline"
+            disabled={disabled}
+            className={cn(
+              "w-full justify-start text-left font-normal",
+              !date && "text-muted-foreground",
+              !!error && "border border-destructive",
+            )}
+          >
+            <CalendarIcon className="h-4 w-4" />
+            {date && `${format(date, "M/d/yy, p")}`}
+            {!date && <span>Pick a date</span>}
+          </Button>
+        </DrawerTrigger>
+        <DrawerContent className="pb-4">{mainContent}</DrawerContent>
+      </Drawer>
     );
   }
   return (
@@ -132,44 +155,7 @@ export function DtDialog({
       </DialogTrigger>
       <DialogContent className="bg-background">
         <DialogTitle className="sr-only">Select a date and time</DialogTitle>
-        <div className="flex size-full flex-col items-center gap-4">
-          <Calendar
-            fixedWeeks
-            className="[--cell-size:3rem]"
-            defaultMonth={defaultMonth}
-            mode="single"
-            disabled={disabledDates}
-            selected={date ? new Date(date) : undefined}
-            onSelect={(date) => {
-              if (!date) {
-                setDate(undefined);
-                return;
-              }
-              const [hours, minutes] = time.split(":");
-              setDate(
-                setMinutes(
-                  setHours(date, parseInt(hours)),
-                  parseInt(minutes),
-                ).getTime(),
-              );
-            }}
-          />
-          <Separator className="w-full" />
-          <div className="flex items-center justify-center gap-2">
-            <Clock />
-            <Input
-              type="time"
-              id="time-picker"
-              step="60"
-              disabled={!date}
-              value={time}
-              onChange={(e) => {
-                setTime(e.target.value);
-              }}
-              className="appearance-none bg-background font-mono [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-            />
-          </div>
-        </div>
+        {mainContent}
       </DialogContent>
     </Dialog>
   );

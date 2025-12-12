@@ -3,14 +3,13 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  RD,
+  RDContent,
+  RDFooter,
+  RDHeader,
+  RDTitle,
+  RDTrigger,
+} from "@/components/ui/responsive-dialog";
 import {
   Form,
   FormControl,
@@ -75,22 +74,22 @@ export const CreateAnnouncementButton = () => {
   };
 
   return (
-    <Dialog {...disclosure}>
-      <DialogTrigger asChild>
+    <RD {...disclosure}>
+      <RDTrigger asChild>
         <Button onClick={() => form.reset()}>
           <Megaphone className="size-6" />
           <span className="hidden xs:inline-flex">Create announcement</span>
         </Button>
-      </DialogTrigger>
-      <DialogContent>
+      </RDTrigger>
+      <RDContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col"
           >
-            <DialogHeader>
-              <DialogTitle>New announcement</DialogTitle>
-            </DialogHeader>
+            <RDHeader>
+              <RDTitle>New announcement</RDTitle>
+            </RDHeader>
             <FormField
               control={form.control}
               name="text"
@@ -121,7 +120,7 @@ export const CreateAnnouncementButton = () => {
                 );
               }}
             />
-            <DialogFooter className="mt-4">
+            <RDFooter className="mt-4">
               <Button
                 type="button"
                 variant="outline"
@@ -137,11 +136,11 @@ export const CreateAnnouncementButton = () => {
               >
                 Post
               </LoadingButton>
-            </DialogFooter>
+            </RDFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </RDContent>
+    </RD>
   );
 };
 
