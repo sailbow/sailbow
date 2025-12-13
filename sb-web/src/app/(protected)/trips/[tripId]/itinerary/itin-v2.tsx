@@ -97,6 +97,8 @@ import { useTheme } from "next-themes";
 import { DtDialog } from "@/components/dt-dialog";
 import { PollDialog } from "@/components/poll-dialog";
 import { AnswerPollDialog } from "@/components/answer-poll-dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -183,9 +185,9 @@ const ItinItem = ({
     me && poll?.responses.some((v) => v.userId === me._id);
 
   return (
-    <div key={item._id} className="relative flex h-full items-stretch">
-      <div className="relative mr-4 basis-1/6">
-        <div className="flex min-w-16 items-center justify-between gap-2">
+    <div key={item._id} className="relative flex h-full max-lg:flex-col">
+      <div className="relative pb-2 xs:mr-4 xs:basis-1/6">
+        <div className="flex min-w-16 items-center gap-2 max-xs:justify-between">
           <div className="text-nowrap text-sm font-light">
             {format(itemStart, "p")}
           </div>
@@ -194,7 +196,7 @@ const ItinItem = ({
           </div>
         </div>
         {showRail && (
-          <div className="absolute right-5 top-5  h-full w-0.5 bg-accent" />
+          <div className="absolute right-5 top-5 hidden h-full  w-0.5 bg-accent lg:block" />
         )}
       </div>
       <Card className="mb-8 w-full max-w-4xl">
@@ -514,6 +516,8 @@ export const Itinerary = ({ items }: { items: ItinItemV2[] }) => {
     return acc;
   }, new Map<number, ItinItemV2[]>());
 
+  const isMobile = useIsMobile();
+
   return (
     <div className="flex w-full flex-col">
       {itemsByDate
@@ -528,7 +532,13 @@ export const Itinerary = ({ items }: { items: ItinItemV2[] }) => {
               .map((item, index) => {
                 const numItemsInDate = itemsByDate.get(date)?.length ?? 0;
                 const showRail = index < numItemsInDate - 1;
-                return <ItinItem key={index} item={item} showRail={showRail} />;
+                return (
+                  <ItinItem
+                    key={index}
+                    item={item}
+                    showRail={showRail && !isMobile}
+                  />
+                );
               }) ?? [];
           if (items.length < 1) return;
           const showYear =
