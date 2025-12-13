@@ -3,20 +3,20 @@
 import { Button } from "@/components/ui/button";
 import { AddOrEditItinItemForm } from "./itin-v2";
 import { useDisclosure } from "@/lib/use-disclosure";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { RD, RDContent, RDTrigger } from "@/components/ui/responsive-dialog";
 
 export default function NewItinItemButton() {
   const disclosure = useDisclosure();
   return (
     <div className="inline-flex">
-      <Dialog {...disclosure}>
-        <DialogTrigger asChild>
+      <RD {...disclosure}>
+        <RDTrigger asChild>
           <Button>Add</Button>
-        </DialogTrigger>
-        <DialogContent className="bottom-auto left-[50%] right-auto top-[1rem] -translate-x-1/2 translate-y-0">
+        </RDTrigger>
+        <RDContent>
           <AddOrEditItinItemForm onSaveSuccess={disclosure.setClosed} />
-        </DialogContent>
-      </Dialog>
+        </RDContent>
+      </RD>
     </div>
   );
 }
