@@ -49,6 +49,7 @@ interface RDProps {
   children: React.ReactNode;
   desktopMode?: "dialog" | "popover";
   defaultOpen?: boolean;
+  drawerProps?: React.ComponentPropsWithoutRef<typeof Drawer>;
 }
 
 export function RD({
@@ -57,6 +58,7 @@ export function RD({
   children,
   desktopMode = "dialog",
   defaultOpen = false,
+  drawerProps,
 }: RDProps) {
   const isMobile = useIsMobile();
 
@@ -64,7 +66,12 @@ export function RD({
 
   return (
     <RDContext.Provider value={{ isMobile, desktopMode }}>
-      <Comp open={open} onOpenChange={onOpenChange} defaultOpen={defaultOpen}>
+      <Comp
+        open={open}
+        onOpenChange={onOpenChange}
+        defaultOpen={defaultOpen}
+        snapPoints={drawerProps?.snapPoints}
+      >
         {children}
       </Comp>
     </RDContext.Provider>
@@ -87,9 +94,14 @@ export function RDTrigger({ asChild = true, ...props }: RDTriggerProps) {
 }
 
 interface RDContentProps
-  extends React.ComponentPropsWithoutRef<typeof DialogContent> {}
+  extends React.ComponentPropsWithoutRef<typeof DialogContent> {
+  drawerContentClassName?: string;
+}
 
-export function RDContent({ ...props }: RDContentProps) {
+export function RDContent({
+  drawerContentClassName,
+  ...props
+}: RDContentProps) {
   const { isMobile, desktopMode } = useRD();
   const Comp = isMobile
     ? DrawerContent
@@ -98,7 +110,12 @@ export function RDContent({ ...props }: RDContentProps) {
       : DialogContent;
 
   if (isMobile) {
-    return <Comp {...props} className="px-4 pb-4" />;
+    return (
+      <DrawerContent
+        {...props}
+        className={cn("px-4 pb-4", drawerContentClassName)}
+      />
+    );
   }
 
   return <Comp {...props} />;

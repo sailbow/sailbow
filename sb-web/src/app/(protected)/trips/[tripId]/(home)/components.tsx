@@ -477,10 +477,7 @@ const SetDateRangeDialog = ({
     <RD open={open} onOpenChange={onOpenChange}>
       <RDTrigger asChild>{trigger}</RDTrigger>
       <RDContent
-        className={cn(
-          "w-auto min-w-[60vw] justify-center",
-          !isMobile && "bg-background",
-        )}
+        className={cn("w-auto min-w-[60vw]", !isMobile && "bg-background")}
       >
         <RDHeader className="text-center">
           <RDTitle className="min-h-4 w-full text-center">
@@ -493,7 +490,7 @@ const SetDateRangeDialog = ({
         <Calendar
           className={
             isMobile
-              ? "mx-auto [--cell-size:clamp(0px,calc(100vw/7.5),52px)]"
+              ? "[--cell-size:clamp(0px,calc(100vw/7.5),52px)]"
               : "mx-auto bg-background"
           }
           required

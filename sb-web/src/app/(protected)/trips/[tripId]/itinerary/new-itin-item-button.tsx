@@ -9,7 +9,7 @@ export default function NewItinItemButton() {
   const disclosure = useDisclosure();
   return (
     <div className="inline-flex">
-      <RD {...disclosure}>
+      <RD {...disclosure} drawerProps={{ repositionInputs: false }}>
         <RDTrigger asChild>
           <Button>Add</Button>
         </RDTrigger>

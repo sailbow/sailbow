@@ -242,10 +242,12 @@ const ItinItem = ({
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <RDContent>
-                  <AddOrEditItinItemForm
-                    item={item}
-                    onSaveSuccess={editDisclosure.setClosed}
-                  />
+                  <div className="h-[75dvh] w-full">
+                    <AddOrEditItinItemForm
+                      item={item}
+                      onSaveSuccess={editDisclosure.setClosed}
+                    />
+                  </div>
                 </RDContent>
               </RD>
             </div>
