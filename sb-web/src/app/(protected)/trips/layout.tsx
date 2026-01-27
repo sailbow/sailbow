@@ -11,10 +11,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <AppSidebar className="z-40" />
         <SidebarInset className="bg-background">
           <TripSidebarTrigger />
-          <div className="@container flex-grow">{children}</div>
+          <div className="@container flex-grow overflow-x-hidden max-w-full">{children}</div>
         </SidebarInset>
+        <Toaster richColors={true} />
       </SidebarProvider>
-      <Toaster richColors={true} />
+      
     </ConvexAuthenticated>
   );
 }

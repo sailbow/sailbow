@@ -2,6 +2,7 @@ import { mutation } from "../_generated/server";
 import { withUser } from "../authUtils";
 import { locationValidator, tripSchema } from "../schema";
 import { ConvexError, v } from "convex/values";
+import { throwIfNotMember } from "../tripUtils";
 
 export const create = mutation({
   args: tripSchema,
@@ -114,36 +115,23 @@ export const kickMember = mutation({
   args: { tripId: v.id("trips"), memberId: v.id("crews") },
   handler: async ({ auth, db }, { tripId, memberId }) => {
     await withUser(auth, db, async (user) => {
-      const crew = await db
-        .query("crews")
-        .withIndex("by_tripId", (q) => q.eq("tripId", tripId))
-        .collect();
-      const userCrewEntry = crew.find((c) => c.email === user.email);
-      if (userCrewEntry?.role !== "captain") {
+      const membership = await throwIfNotMember(user, tripId, db)
+      console.log(membership)
+      if (membership.role !== "captain" && membership.role !== "firstMate") {
         throw new ConvexError({
           code: "USER_ERROR",
           message: "Only the captain can kick members!",
         });
       }
-      if (userCrewEntry?._id === memberId) {
+      if (membership._id === memberId) {
         throw new ConvexError({
           code: "USER_ERROR",
           message:
             "You can't kick yourself! Try transferring the trip to another member instead.",
         });
       }
+
       await db.delete(memberId);
-      const invitation = await db
-        .query("invitations")
-        .withIndex("by_email_and_tripId", (q) =>
-          q
-            .eq("email", crew.find((cm) => cm._id === memberId)!.email)
-            .eq("tripId", tripId),
-        )
-        .first();
-      if (invitation) {
-        await db.delete(invitation._id);
-      }
     });
   },
 });

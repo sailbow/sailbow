@@ -29,15 +29,9 @@ export default function AcceptInvitePage() {
   const router = useRouter();
   const { data: me } = useMe();
 
-  const [invite, setInvite] = useState<Invite | undefined>();
+  // const [invite, setInvite] = useState<Invite | undefined>();
 
-  const { isLoading, data } = useInvite(inviteId);
-
-  useEffect(() => {
-    if (!invite) {
-      setInvite(data);
-    }
-  }, [invite, data]);
+  const { isLoading, data: invite } = useInvite(inviteId);
 
   const {
     isPending: isAcceptingInvite,
@@ -68,6 +62,11 @@ export default function AcceptInvitePage() {
   }, [invite, router]);
 
   const disclosure = useDisclosure();
+    useEffect(() => {
+    if (invite) {
+      disclosure.setOpened()
+    }
+  }, [invite, disclosure])
 
   if (isLoading || !me || invite?.status === "accepted")
     return <CenteredSpinner />;

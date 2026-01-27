@@ -17,7 +17,7 @@
     "@clerk/nextjs": "^6.27.1",
     "@convex-dev/auth": "^0.0.81",
     "@convex-dev/react-query": "^0.0.0-alpha.8",
-    "@convex-dev/resend": "^0.1.2",
+    "@convex-dev/resend": "^0.1.13",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-aspect-ratio": "^1.0.3",

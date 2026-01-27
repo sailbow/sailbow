@@ -1,3 +1,4 @@
+"use node";
 import { internalAction } from "../_generated/server";
 import { v } from "convex/values";
 import { resend, render } from "../lib/resend";
