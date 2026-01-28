@@ -578,6 +578,7 @@ const SetLocationDialog = ({
         
         <RDFooter>
           <Button
+            disabled={isSaving}
             variant="outline"
             onClick={() => {
               setSelected(undefined);
@@ -586,7 +587,8 @@ const SetLocationDialog = ({
           >
             Cancel
           </Button>
-          <Button
+          <LoadingButton
+            isLoading={isSaving}
             onClick={() => {
               setIsSaving(true);
               mutate({ tripId, location: selected })
@@ -604,7 +606,7 @@ const SetLocationDialog = ({
             }}
           >
             Save
-          </Button>
+          </LoadingButton>
         </RDFooter>
       </RDContent>
     </RD>

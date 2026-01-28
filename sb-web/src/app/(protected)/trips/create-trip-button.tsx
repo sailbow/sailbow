@@ -33,10 +33,7 @@ import { toast } from "@/components/ui/toast";
 import BannerModal from "@/app/_components/banner-modal";
 import ImageWithLoader from "@/app/_components/image-with-loader";
 import { ImageIcon } from "lucide-react";
-import {
-  GooglePlaceResultSchema,
-  GooglePlaceSearchPopover,
-} from "@/components/google-places";
+
 import {
   Popover,
   PopoverContent,
@@ -46,7 +43,7 @@ import type React from "react";
 import { useEffect } from "react";
 import MobileCalendarDrawer from "@/components/ui/calendar/mobile-calendar-drawer";
 import ResponsiveCalendarDisclosure from "@/components/ui/calendar/responsive-calendar";
-import { GoogleLocationSearch } from "@/components/google-location-search";
+import { GoogleLocationSearch, GooglePlaceResultSchema } from "@/components/google-location-search";
 
 const NameSchema = z.object({
   name: z

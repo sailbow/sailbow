@@ -82,10 +82,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import {
-  GooglePlaceResultSchema,
-  GooglePlaceSearchPopover,
-} from "@/components/google-places";
+
 import Link from "next/link";
 import { useMe } from "@/lib/user-queries";
 import { PollResultsChart } from "@/components/poll-results-chart";
@@ -98,7 +95,7 @@ import { DtDialog } from "@/components/dt-dialog";
 import { PollDialog } from "@/components/poll-dialog";
 import { AnswerPollDialog } from "@/components/answer-poll-dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useMediaQuery } from "@/lib/use-media-query";
+import { GoogleLocationSearch, GooglePlaceResultSchema } from "@/components/google-location-search";
 
 type ItinItemV2 = Doc<"itineraryItemsV2">;
 
@@ -746,10 +743,14 @@ export const AddOrEditItinItemForm = ({
                     <span className="text-muted-foreground">(optional)</span>
                   </FormLabel>
                   <FormControl>
-                    <GooglePlaceSearchPopover
+                    <GoogleLocationSearch
+                      onSelect={field.onChange}
+                      defaultPlace={field.value}
+                    />
+                    {/* <GooglePlaceSearchPopover
                       trigger={trigger}
                       onSelect={field.onChange}
-                    />
+                    /> */}
                   </FormControl>
                 </FormItem>
               );

@@ -258,7 +258,7 @@ export function GoogleLocationSearch({
             placeholder={placeholder ?? 'Search for a place, address, etc.'}
             disabled={disabled ?? Boolean(fetchingPlaceId)}
             className={cn(
-              "h-11 w-full rounded-lg border border-input bg-background pl-10 pr-4 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50",
+              "h-11 w-full rounded-lg max-xs:text-base border border-input bg-background pl-10 pr-4 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50",
             )}
             role="combobox"
             aria-expanded={isOpen}
