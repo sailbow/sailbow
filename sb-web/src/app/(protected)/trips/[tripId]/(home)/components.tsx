@@ -44,7 +44,8 @@ import { Doc } from "@convex/_generated/dataModel";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
-import { GooglePlaceSearchDialog } from "@/components/google-places";
+// import { GooglePlaceSearchDialog } from "@/components/google-places";
+import { GoogleLocationSearch } from "@/components/google-location-search";
 import { toast } from "@/components/ui/toast";
 import PhotoCarouselDialog from "@/components/photo-carousel";
 import { format } from "date-fns";
@@ -82,6 +83,7 @@ import useDebounce from "@/lib/use-debounce";
 import {
   RD,
   RDContent,
+  RDDescription,
   RDFooter,
   RDHeader,
   RDTitle,
@@ -197,20 +199,13 @@ export const LocationTile = ({ className }: { className?: string }) => {
       <>
         <Card
           className={cn(
-            "flex size-full min-h-[300px] flex-col border border-input",
+            "flex size-full flex-col border border-input relative",
+            photoUrl && "min-h-[300px]",
             className,
           )}
         >
           {photoUrl && (
             <div className="relative flex min-h-[150px]">
-              <Button
-                className="absolute right-2 top-2 z-10 opacity-85 backdrop-blur-lg"
-                variant="outline"
-                size="icon"
-                onClick={() => editDisclosure.setOpened()}
-              >
-                <Edit2 className="size-4" />
-              </Button>
               <ImageWithLoader
                 src={photoUrl}
                 alt=""
@@ -218,13 +213,24 @@ export const LocationTile = ({ className }: { className?: string }) => {
               />
             </div>
           )}
-          <CardHeader className="flex flex-1 justify-center p-0 px-4 py-2">
-            <CardTitle className="flex items-center gap-2 text-lg @xl:text-xl">
+          <CardHeader className={cn("flex flex-1 p-0 pl-4 pr-8 py-2", photoUrl && "justify-center")}>
+            <div className="flex w-full gap-2">
+              <CardTitle className="flex items-center gap-2 text-lg @xl:text-xl">
               {trip.location.primaryText}
             </CardTitle>
+                            <Button
+                className="ml-auto shrink-0 z-10 opacity-85 backdrop-blur-lg"
+                variant="outline"
+                size="icon"
+                onClick={() => editDisclosure.setOpened()}
+              >
+                <Edit2 className="size-4" />
+              </Button>
+            </div>
+            
             {trip.location.secondaryText !== trip.location.primaryText && (
               <CardDescription>{trip.location.secondaryText}</CardDescription>
-            )}
+            )}  
             <div className="flex flex-wrap gap-1 pt-1">
               {trip.location?.website && (
                 <Link
@@ -550,27 +556,58 @@ const SetLocationDialog = ({
     }
   });
 
+  const [selected, setSelected] = useState(defaultPlace);
+
   return (
-    <GooglePlaceSearchDialog
-      open={open}
-      onOpenChange={onOpenChange}
-      isLoading={isSaving}
-      defaultPlace={defaultPlace}
-      onSave={(place) => {
-        setIsSaving(true);
-        mutate({ tripId, location: place })
-          .then(() => {
-            onOpenChange(false);
-          })
-          .catch((err) => {
-            console.error(err);
-            toast.error("Something went wrong there");
-          })
-          .finally(() => {
-            setIsSaving(false);
-          });
-      }}
-    />
+    <RD open={open} onOpenChange={onOpenChange}>
+      <RDContent>
+        <RDHeader>
+          <RDTitle>{defaultPlace ? "Update" : "Set"} location</RDTitle>
+          {defaultPlace && (
+            <div className="w-full">
+              <RDDescription>
+               {defaultPlace.primaryText}
+              </RDDescription>
+              {defaultPlace.secondaryText && defaultPlace.primaryText !== defaultPlace.secondaryText && <RDDescription>{defaultPlace.secondaryText}</RDDescription>}
+            </div>
+          )}
+        </RDHeader>
+        <div className="flex w-full max-xs:h-[25dvh]">
+<GoogleLocationSearch onSelect={setSelected}  />
+        </div>
+        
+        <RDFooter>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setSelected(undefined);
+              onOpenChange(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              setIsSaving(true);
+              mutate({ tripId, location: selected })
+                .then(() => {
+                  setIsSaving(false)
+                  onOpenChange(false);
+                })
+                .catch((err) => {
+                  console.error(err);
+                  toast.error("Something went wrong there");
+                })
+                .finally(() => {
+                  setIsSaving(false);
+                });
+            }}
+          >
+            Save
+          </Button>
+        </RDFooter>
+      </RDContent>
+    </RD>
   );
 };
 

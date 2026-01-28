@@ -46,6 +46,7 @@ import type React from "react";
 import { useEffect } from "react";
 import MobileCalendarDrawer from "@/components/ui/calendar/mobile-calendar-drawer";
 import ResponsiveCalendarDisclosure from "@/components/ui/calendar/responsive-calendar";
+import { GoogleLocationSearch } from "@/components/google-location-search";
 
 const NameSchema = z.object({
   name: z
@@ -101,50 +102,15 @@ const LocationStep: Step<typeof LocationSchema> = {
         name="location"
         control={form.control}
         render={({ field }) => {
-          const trigger = (
-            <Button
-              ref={field.ref}
-              name={field.name}
-              onBlur={field.onBlur}
-              variant="outline"
-              className="w-full justify-start pl-3"
-              disabled={field.disabled}
-            >
-              <Search className="mr-2 size-4 opacity-50" />
-              <span
-                className={cn(
-                  "w-full text-wrap text-left",
-                  !field.value && "text-muted-foreground",
-                )}
-              >
-                {field.value ? field.value.primaryText : "Search"}
-              </span>
-            </Button>
-          );
           return (
             <FormItem>
               <FormControl>
-                <div className="flex w-full items-center gap-2">
-                  <GooglePlaceSearchPopover
-                    trigger={trigger}
+               <GoogleLocationSearch
                     onSelect={field.onChange}
+                    defaultPlace={field.value}
+                    placeholder={"Search for a place, address, etc."}
+                    clearOnSelect={false}
                   />
-                  <div className="ml-auto h-8 w-8">
-                    {field.value && (
-                      <Button
-                        className="size-full text-foreground"
-                        size="icon"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          field.onChange(undefined);
-                        }}
-                      >
-                        <X className="size-4" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
               </FormControl>
               <div className="relative min-h-4">
                 <FormMessage className="absolute left-0 top-0" />
