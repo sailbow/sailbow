@@ -199,7 +199,7 @@ export const LocationTile = ({ className }: { className?: string }) => {
       <>
         <Card
           className={cn(
-            "flex size-full flex-col border border-input relative",
+            "relative flex size-full flex-col border border-input",
             photoUrl && "min-h-[300px]",
             className,
           )}
@@ -213,13 +213,18 @@ export const LocationTile = ({ className }: { className?: string }) => {
               />
             </div>
           )}
-          <CardHeader className={cn("flex flex-1 p-0 pl-4 pr-8 py-2", photoUrl && "justify-center")}>
+          <CardHeader
+            className={cn(
+              "flex flex-1 p-0 py-2 pl-4 pr-8",
+              photoUrl && "justify-center",
+            )}
+          >
             <div className="flex w-full gap-2">
               <CardTitle className="flex items-center gap-2 text-lg @xl:text-xl">
-              {trip.location.primaryText}
-            </CardTitle>
-                            <Button
-                className="ml-auto shrink-0 z-10 opacity-85 backdrop-blur-lg"
+                {trip.location.primaryText}
+              </CardTitle>
+              <Button
+                className="z-10 ml-auto shrink-0 opacity-85 backdrop-blur-lg"
                 variant="outline"
                 size="icon"
                 onClick={() => editDisclosure.setOpened()}
@@ -227,10 +232,10 @@ export const LocationTile = ({ className }: { className?: string }) => {
                 <Edit2 className="size-4" />
               </Button>
             </div>
-            
+
             {trip.location.secondaryText !== trip.location.primaryText && (
               <CardDescription>{trip.location.secondaryText}</CardDescription>
-            )}  
+            )}
             <div className="flex flex-wrap gap-1 pt-1">
               {trip.location?.website && (
                 <Link
@@ -482,9 +487,7 @@ const SetDateRangeDialog = ({
   return (
     <RD open={open} onOpenChange={onOpenChange}>
       <RDTrigger asChild>{trigger}</RDTrigger>
-      <RDContent
-        className={cn("w-auto min-w-[60vw]", !isMobile && "bg-background")}
-      >
+      <RDContent className={cn(!isMobile && "bg-background")}>
         <RDHeader className="text-center">
           <RDTitle className="min-h-4 w-full text-center">
             {dates?.from &&
@@ -496,8 +499,8 @@ const SetDateRangeDialog = ({
         <Calendar
           className={
             isMobile
-              ? "[--cell-size:clamp(0px,calc(100vw/7.5),52px)]"
-              : "mx-auto bg-background"
+              ? "mx-auto px-0 [--cell-size:clamp(0px,calc(100vw/7.5),45px)]"
+              : "mx-auto bg-background px-0"
           }
           required
           showOutsideDays={isMobile}
@@ -565,17 +568,18 @@ const SetLocationDialog = ({
           <RDTitle>{defaultPlace ? "Update" : "Set"} location</RDTitle>
           {defaultPlace && (
             <div className="w-full">
-              <RDDescription>
-               {defaultPlace.primaryText}
-              </RDDescription>
-              {defaultPlace.secondaryText && defaultPlace.primaryText !== defaultPlace.secondaryText && <RDDescription>{defaultPlace.secondaryText}</RDDescription>}
+              <RDDescription>{defaultPlace.primaryText}</RDDescription>
+              {defaultPlace.secondaryText &&
+                defaultPlace.primaryText !== defaultPlace.secondaryText && (
+                  <RDDescription>{defaultPlace.secondaryText}</RDDescription>
+                )}
             </div>
           )}
         </RDHeader>
         <div className="flex w-full max-xs:h-[25dvh]">
-<GoogleLocationSearch onSelect={setSelected}  />
+          <GoogleLocationSearch onSelect={setSelected} />
         </div>
-        
+
         <RDFooter>
           <Button
             disabled={isSaving}
@@ -593,7 +597,7 @@ const SetLocationDialog = ({
               setIsSaving(true);
               mutate({ tripId, location: selected })
                 .then(() => {
-                  setIsSaving(false)
+                  setIsSaving(false);
                   onOpenChange(false);
                 })
                 .catch((err) => {
