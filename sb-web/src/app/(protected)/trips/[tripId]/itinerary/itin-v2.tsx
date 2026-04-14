@@ -720,6 +720,11 @@ export const AddOrEditItinItemForm = ({
                             ? new Date(item.startDate).getHours()
                             : undefined
                         }
+                        defaultMinute={
+                          field.value
+                            ? new Date(field.value).getMinutes()
+                            : undefined
+                        }
                         onChange={field.onChange}
                         error={!!formState.errors.startDate}
                       />
@@ -741,6 +746,16 @@ export const AddOrEditItinItemForm = ({
                     <FormControl>
                       <DtDialog
                         defaultValue={field.value ?? undefined}
+                        defaultHour={
+                          field.value
+                            ? new Date(field.value).getHours()
+                            : undefined
+                        }
+                        defaultMinute={
+                          field.value
+                            ? new Date(field.value).getMinutes()
+                            : undefined
+                        }
                         onChange={field.onChange}
                         error={!!formState.errors.endDate}
                         disabled={!start}
