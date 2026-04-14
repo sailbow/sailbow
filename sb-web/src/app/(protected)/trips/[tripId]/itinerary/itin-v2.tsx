@@ -718,7 +718,7 @@ export const AddOrEditItinItemForm = ({
                         defaultHour={
                           item?.startDate
                             ? new Date(item.startDate).getHours()
-                            : null
+                            : undefined
                         }
                         onChange={field.onChange}
                         error={!!formState.errors.startDate}
