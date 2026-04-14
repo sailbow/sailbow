@@ -189,11 +189,13 @@ const ItinItem = ({ item }: { item: ItinItemV2 }) => {
   const hasRespondedToPoll =
     me && poll?.responses.some((v) => v.userId === me._id);
 
+  const isMobile = useIsMobile();
+
   return (
-    <TimelineItem>
-      <TimelineDot />
-      <TimelineConnector />
-      <TimelineContent className="space-y-4">
+    <TimelineItem className="[--timeline-dot-size:2.5rem]">
+      {!isMobile && <TimelineDot>{getIcon(item.type)}</TimelineDot>}
+      {!isMobile && <TimelineConnector />}
+      <TimelineContent className="max-w-full space-y-4">
         <TimelineHeader className="gap-2">
           <div className="flex gap-2">
             <div className="flex flex-col gap-2">
@@ -344,8 +346,9 @@ const ItinItem = ({ item }: { item: ItinItemV2 }) => {
                 <div className="flex w-full max-w-sm flex-col items-start gap-2 ">
                   {hasRespondedToPoll && (
                     <div className="flex w-full items-center gap-2">
-                      <div className="text-nowrap text-muted-foreground">
-                        You responded:{" "}
+                      <div className="text-muted-foreground">
+                        You responded:
+                        <br />
                         <span className="text-card-foreground">
                           {poll.responses
                             .find((r) => r.userId === me?._id)
@@ -366,10 +369,10 @@ const ItinItem = ({ item }: { item: ItinItemV2 }) => {
                         variant="outline"
                         size={"sm"}
                         onClick={() => answerPollDisclosure.setOpened()}
-                        className="ml-auto text-xs font-light"
+                        className="ml-auto min-w-fit text-xs font-light"
                       >
                         <Pencil className="size-4 text-secondary-foreground" />
-                        Edit Response
+                        Edit
                       </Button>
                     </div>
                   )}
@@ -459,7 +462,6 @@ const ItinItem = ({ item }: { item: ItinItemV2 }) => {
       </TimelineContent>
     </TimelineItem>
   );
-  // return (
   //   <div key={item._id} className="relative flex h-full max-lg:flex-col">
   //     <div className="relative pb-2 xs:mr-4 xs:basis-1/6">
   //       <div className="flex min-w-16 items-center gap-2 max-xs:justify-between">
