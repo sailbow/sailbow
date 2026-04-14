@@ -294,25 +294,21 @@ const ItinItem = ({ item }: { item: ItinItemV2 }) => {
             </div>
           </>
         )}
-        {item.details &&
-          item.details !== "<p></p>" && (
-              <Accordion type="single" collapsible>
-                <AccordionItem value="item-1" className="border-b-0">
-                  <AccordionTrigger className="gap-2 p-0">
-                    <div className="inline-flex w-full items-center justify-start text-sm text-card-foreground">
-                      <NotepadText className="mr-2 text-muted-foreground" />
-                      Details
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="ml-8 flex flex-col items-start gap-2 rounded-b-sm border-t bg-background">
-                    <EditorContent
-                      editor={editor}
-                      className="border-none p-2"
-                    />
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>,
-            )}
+        {item.details && item.details !== "<p></p>" && (
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1" className="border-b-0">
+              <AccordionTrigger className="gap-2 p-0">
+                <div className="inline-flex w-full items-center justify-start text-sm text-card-foreground">
+                  <NotepadText className="mr-2 text-muted-foreground" />
+                  Details
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="ml-8 flex flex-col items-start gap-2 rounded-b-sm border-t bg-background">
+                <EditorContent editor={editor} className="border-none p-2" />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
         {!!poll && (
           <Accordion type="single" collapsible defaultValue={"item-1"}>
             <AccordionItem value="item-1" className="w-full border-b-0">
