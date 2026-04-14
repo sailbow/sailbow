@@ -243,12 +243,10 @@ const ItinItem = ({ item }: { item: ItinItemV2 }) => {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <RDContent>
-                  <div className="h-[75dvh] w-full">
-                    <AddOrEditItinItemForm
-                      item={item}
-                      onSaveSuccess={editDisclosure.setClosed}
-                    />
-                  </div>
+                  <AddOrEditItinItemForm
+                    item={item}
+                    onSaveSuccess={editDisclosure.setClosed}
+                  />
                 </RDContent>
               </RD>
             </div>
@@ -663,12 +661,6 @@ export const AddOrEditItinItemForm = ({
     toast.success("Itinerary updated");
     onSaveSuccess();
   };
-
-  const startDateNumber = form.watch("startDate");
-  let startDate: Date | undefined;
-  if (startDateNumber) {
-    startDate = new Date(startDateNumber);
-  }
 
   return (
     <Form {...form}>
