@@ -26,6 +26,7 @@ import type * as itinerary_queries from "../itinerary/queries.js";
 import type * as itinerary_v2 from "../itinerary/v2.js";
 import type * as lib_clerk from "../lib/clerk.js";
 import type * as lib_queryUtils from "../lib/queryUtils.js";
+import type * as lib_reactions from "../lib/reactions.js";
 import type * as lib_resend from "../lib/resend.js";
 import type * as lib_tailwindConfig from "../lib/tailwindConfig.js";
 import type * as lib_utils from "../lib/utils.js";
@@ -64,6 +65,7 @@ declare const fullApi: ApiFromModules<{
   "itinerary/v2": typeof itinerary_v2;
   "lib/clerk": typeof lib_clerk;
   "lib/queryUtils": typeof lib_queryUtils;
+  "lib/reactions": typeof lib_reactions;
   "lib/resend": typeof lib_resend;
   "lib/tailwindConfig": typeof lib_tailwindConfig;
   "lib/utils": typeof lib_utils;

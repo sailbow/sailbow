@@ -4,6 +4,7 @@ import { withUser } from "../authUtils";
 import { announcementSchema } from "../schema";
 import { throwIfNotMember } from "../tripUtils";
 import { getOneFromOrThrow } from "convex-helpers/server/relationships";
+import reactions from "../lib/reactions";
 
 export const create = mutation({
   args: announcementSchema,
@@ -69,6 +70,42 @@ export const deleteAnnouncement = mutation({
         });
       }
       await ctx.db.delete(args.announcementId);
+    });
+  },
+});
+
+export const reactToAnnouncement = mutation({
+  args: {
+    announcementId: v.id("announcements"),
+    tripId: v.id("trips"),
+    emoji: v.union(v.string(), v.null()),
+  },
+  handler: async (ctx, args) => {
+    return await withUser(ctx.auth, ctx.db, async (user) => {
+      await throwIfNotMember(user, args.tripId, ctx.db);
+      const targetId = `announcements-${args.announcementId}`;
+      if (!args.emoji) {
+        const existing = await reactions.getUserReactions(
+          ctx,
+          targetId,
+          user.userId,
+          "reactions",
+        );
+        await Promise.all(
+          existing.map((e) =>
+            reactions.remove(ctx, targetId, e, user.userId, "reactions"),
+          ),
+        );
+        return;
+      }
+      await reactions.add(
+        ctx,
+        `announcements-${args.announcementId}`,
+        args.emoji,
+        user.userId,
+        "reactions",
+        false,
+      );
     });
   },
 });
