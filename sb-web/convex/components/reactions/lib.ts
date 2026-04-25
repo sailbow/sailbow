@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { internalMutation, internalQuery } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import type { GenericMutationCtx } from "convex/server";
 import type { DataModel } from "./_generated/dataModel";
 
@@ -9,7 +9,7 @@ import type { DataModel } from "./_generated/dataModel";
  * Set allowMultipleReactions to true to allow a user to have multiple different reactions on the same target.
  * If the exact reaction already exists, this is a no-op.
  */
-export const add = internalMutation({
+export const add = mutation({
   args: {
     targetId: v.string(),
     label: v.string(),
@@ -63,7 +63,7 @@ export const add = internalMutation({
  * Remove a reaction for a user on a target.
  * This is idempotent - if the reaction doesn't exist, it does nothing.
  */
-export const remove = internalMutation({
+export const remove = mutation({
   args: {
     targetId: v.string(),
     label: v.string(),
@@ -95,7 +95,7 @@ export const remove = internalMutation({
 /**
  * Get all reactions for a target, grouped by reaction type with counts.
  */
-export const getCounts = internalQuery({
+export const getCounts = query({
   args: {
     targetId: v.string(),
     namespace: v.optional(v.string()),
@@ -129,7 +129,7 @@ export const getCounts = internalQuery({
  * Get reaction counts for multiple targets in a single query.
  * This is more efficient than calling getCounts multiple times.
  */
-export const getBatchCounts = internalQuery({
+export const getBatchCounts = query({
   args: {
     targets: v.array(
       v.object({
@@ -182,7 +182,7 @@ export const getBatchCounts = internalQuery({
 /**
  * Get all reactions for a target (individual reactions, not aggregated).
  */
-export const list = internalQuery({
+export const list = query({
   args: {
     targetId: v.string(),
     namespace: v.optional(v.string()),
@@ -214,7 +214,7 @@ export const list = internalQuery({
 /**
  * Get all reactions by a specific user on a target.
  */
-export const getUserReactions = internalQuery({
+export const getUserReactions = query({
   args: {
     targetId: v.string(),
     userId: v.string(),
@@ -239,7 +239,7 @@ export const getUserReactions = internalQuery({
 /**
  * Check if a user has reacted with a specific reaction type on a target.
  */
-export const hasUserReacted = internalQuery({
+export const hasUserReacted = query({
   args: {
     targetId: v.string(),
     label: v.string(),
@@ -267,7 +267,7 @@ export const hasUserReacted = internalQuery({
  * Delete all reactions for a target (optionally filtered by namespace).
  * This is useful for cascading deletes when removing content that has reactions.
  */
-export const deleteAllForTarget = internalMutation({
+export const deleteAllForTarget = mutation({
   args: {
     targetId: v.string(),
     namespace: v.optional(v.string()),
