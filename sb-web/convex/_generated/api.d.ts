@@ -12,9 +12,8 @@ import type * as admin_queries from "../admin/queries.js";
 import type * as announcements_mutations from "../announcements/mutations.js";
 import type * as announcements_queries from "../announcements/queries.js";
 import type * as authUtils from "../authUtils.js";
-import type * as components_reactions__generated_api from "../components/reactions/_generated/api.js";
-import type * as components_reactions__generated_server from "../components/reactions/_generated/server.js";
-import type * as components_reactions_lib from "../components/reactions/lib.js";
+import type * as components_reactions_client_index from "../components/reactions/client/index.js";
+import type * as components_reactions_client_types from "../components/reactions/client/types.js";
 import type * as emails_tripInvite from "../emails/tripInvite.js";
 import type * as errorUtils from "../errorUtils.js";
 import type * as http from "../http.js";
@@ -46,22 +45,13 @@ import type {
   FunctionReference,
 } from "convex/server";
 
-/**
- * A utility for referencing Convex functions in your app's API.
- *
- * Usage:
- * ```js
- * const myFunctionReference = api.myModule.myFunction;
- * ```
- */
 declare const fullApi: ApiFromModules<{
   "admin/queries": typeof admin_queries;
   "announcements/mutations": typeof announcements_mutations;
   "announcements/queries": typeof announcements_queries;
   authUtils: typeof authUtils;
-  "components/reactions/_generated/api": typeof components_reactions__generated_api;
-  "components/reactions/_generated/server": typeof components_reactions__generated_server;
-  "components/reactions/lib": typeof components_reactions_lib;
+  "components/reactions/client/index": typeof components_reactions_client_index;
+  "components/reactions/client/types": typeof components_reactions_client_types;
   "emails/tripInvite": typeof emails_tripInvite;
   errorUtils: typeof errorUtils;
   http: typeof http;
@@ -87,214 +77,34 @@ declare const fullApi: ApiFromModules<{
   "users/mutations": typeof users_mutations;
   "users/queries": typeof users_queries;
 }>;
-declare const fullApiWithMounts: typeof fullApi;
 
+/**
+ * A utility for referencing Convex functions in your app's public API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
+ */
 export declare const api: FilterApi<
-  typeof fullApiWithMounts,
+  typeof fullApi,
   FunctionReference<any, "public">
 >;
+
+/**
+ * A utility for referencing Convex functions in your app's internal API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = internal.myModule.myFunction;
+ * ```
+ */
 export declare const internal: FilterApi<
-  typeof fullApiWithMounts,
+  typeof fullApi,
   FunctionReference<any, "internal">
 >;
 
 export declare const components: {
-  resend: {
-    lib: {
-      cancelEmail: FunctionReference<
-        "mutation",
-        "internal",
-        { emailId: string },
-        null
-      >;
-      cleanupAbandonedEmails: FunctionReference<
-        "mutation",
-        "internal",
-        { olderThan?: number },
-        null
-      >;
-      cleanupOldEmails: FunctionReference<
-        "mutation",
-        "internal",
-        { olderThan?: number },
-        null
-      >;
-      createManualEmail: FunctionReference<
-        "mutation",
-        "internal",
-        {
-          from: string;
-          headers?: Array<{ name: string; value: string }>;
-          replyTo?: Array<string>;
-          subject: string;
-          to: string;
-        },
-        string
-      >;
-      get: FunctionReference<
-        "query",
-        "internal",
-        { emailId: string },
-        {
-          complained: boolean;
-          createdAt: number;
-          errorMessage?: string;
-          finalizedAt: number;
-          from: string;
-          headers?: Array<{ name: string; value: string }>;
-          html?: string;
-          opened: boolean;
-          replyTo: Array<string>;
-          resendId?: string;
-          segment: number;
-          status:
-            | "waiting"
-            | "queued"
-            | "cancelled"
-            | "sent"
-            | "delivered"
-            | "delivery_delayed"
-            | "bounced"
-            | "failed";
-          subject: string;
-          text?: string;
-          to: string;
-        } | null
-      >;
-      getStatus: FunctionReference<
-        "query",
-        "internal",
-        { emailId: string },
-        {
-          complained: boolean;
-          errorMessage: string | null;
-          opened: boolean;
-          status:
-            | "waiting"
-            | "queued"
-            | "cancelled"
-            | "sent"
-            | "delivered"
-            | "delivery_delayed"
-            | "bounced"
-            | "failed";
-        } | null
-      >;
-      handleEmailEvent: FunctionReference<
-        "mutation",
-        "internal",
-        { event: any },
-        null
-      >;
-      sendEmail: FunctionReference<
-        "mutation",
-        "internal",
-        {
-          from: string;
-          headers?: Array<{ name: string; value: string }>;
-          html?: string;
-          options: {
-            apiKey: string;
-            initialBackoffMs: number;
-            onEmailEvent?: { fnHandle: string };
-            retryAttempts: number;
-            testMode: boolean;
-          };
-          replyTo?: Array<string>;
-          subject: string;
-          text?: string;
-          to: string;
-        },
-        string
-      >;
-      updateManualEmail: FunctionReference<
-        "mutation",
-        "internal",
-        {
-          emailId: string;
-          errorMessage?: string;
-          resendId?: string;
-          status:
-            | "waiting"
-            | "queued"
-            | "cancelled"
-            | "sent"
-            | "delivered"
-            | "delivery_delayed"
-            | "bounced"
-            | "failed";
-        },
-        null
-      >;
-    };
-  };
-  reactions: {
-    lib: {
-      add: FunctionReference<
-        "mutation",
-        "internal",
-        {
-          allowMultipleReactions?: boolean;
-          label: string;
-          namespace?: string;
-          targetId: string;
-          userId: string;
-        },
-        null
-      >;
-      deleteAllForTarget: FunctionReference<
-        "mutation",
-        "internal",
-        { namespace?: string; targetId: string },
-        null
-      >;
-      getBatchCounts: FunctionReference<
-        "query",
-        "internal",
-        { targets: Array<{ namespace?: string; targetId: string }> },
-        Array<{
-          counts: Array<{ count: number; label: string }>;
-          namespace?: string;
-          targetId: string;
-        }>
-      >;
-      getCounts: FunctionReference<
-        "query",
-        "internal",
-        { namespace?: string; targetId: string },
-        Array<{ count: number; label: string }>
-      >;
-      getUserReactions: FunctionReference<
-        "query",
-        "internal",
-        { namespace?: string; targetId: string; userId: string },
-        Array<string>
-      >;
-      hasUserReacted: FunctionReference<
-        "query",
-        "internal",
-        { label: string; namespace?: string; targetId: string; userId: string },
-        boolean
-      >;
-      list: FunctionReference<
-        "query",
-        "internal",
-        { namespace?: string; targetId: string },
-        Array<{
-          _creationTime: number;
-          _id: string;
-          label: string;
-          namespace?: string;
-          targetId: string;
-          userId: string;
-        }>
-      >;
-      remove: FunctionReference<
-        "mutation",
-        "internal",
-        { label: string; namespace?: string; targetId: string; userId: string },
-        null
-      >;
-    };
-  };
+  resend: import("@convex-dev/resend/_generated/component.js").ComponentApi<"resend">;
+  reactions: import("../components/reactions/component/_generated/component.js").ComponentApi<"reactions">;
 };
