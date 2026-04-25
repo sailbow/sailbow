@@ -12,6 +12,9 @@ import type * as admin_queries from "../admin/queries.js";
 import type * as announcements_mutations from "../announcements/mutations.js";
 import type * as announcements_queries from "../announcements/queries.js";
 import type * as authUtils from "../authUtils.js";
+import type * as components_reactions__generated_api from "../components/reactions/_generated/api.js";
+import type * as components_reactions__generated_server from "../components/reactions/_generated/server.js";
+import type * as components_reactions_lib from "../components/reactions/lib.js";
 import type * as emails_tripInvite from "../emails/tripInvite.js";
 import type * as errorUtils from "../errorUtils.js";
 import type * as http from "../http.js";
@@ -56,6 +59,9 @@ declare const fullApi: ApiFromModules<{
   "announcements/mutations": typeof announcements_mutations;
   "announcements/queries": typeof announcements_queries;
   authUtils: typeof authUtils;
+  "components/reactions/_generated/api": typeof components_reactions__generated_api;
+  "components/reactions/_generated/server": typeof components_reactions__generated_server;
+  "components/reactions/lib": typeof components_reactions_lib;
   "emails/tripInvite": typeof emails_tripInvite;
   errorUtils: typeof errorUtils;
   http: typeof http;
@@ -218,6 +224,75 @@ export declare const components: {
             | "bounced"
             | "failed";
         },
+        null
+      >;
+    };
+  };
+  reactions: {
+    lib: {
+      add: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          allowMultipleReactions?: boolean;
+          label: string;
+          namespace?: string;
+          targetId: string;
+          userId: string;
+        },
+        null
+      >;
+      deleteAllForTarget: FunctionReference<
+        "mutation",
+        "internal",
+        { namespace?: string; targetId: string },
+        null
+      >;
+      getBatchCounts: FunctionReference<
+        "query",
+        "internal",
+        { targets: Array<{ namespace?: string; targetId: string }> },
+        Array<{
+          counts: Array<{ count: number; label: string }>;
+          namespace?: string;
+          targetId: string;
+        }>
+      >;
+      getCounts: FunctionReference<
+        "query",
+        "internal",
+        { namespace?: string; targetId: string },
+        Array<{ count: number; label: string }>
+      >;
+      getUserReactions: FunctionReference<
+        "query",
+        "internal",
+        { namespace?: string; targetId: string; userId: string },
+        Array<string>
+      >;
+      hasUserReacted: FunctionReference<
+        "query",
+        "internal",
+        { label: string; namespace?: string; targetId: string; userId: string },
+        boolean
+      >;
+      list: FunctionReference<
+        "query",
+        "internal",
+        { namespace?: string; targetId: string },
+        Array<{
+          _creationTime: number;
+          _id: string;
+          label: string;
+          namespace?: string;
+          targetId: string;
+          userId: string;
+        }>
+      >;
+      remove: FunctionReference<
+        "mutation",
+        "internal",
+        { label: string; namespace?: string; targetId: string; userId: string },
         null
       >;
     };
