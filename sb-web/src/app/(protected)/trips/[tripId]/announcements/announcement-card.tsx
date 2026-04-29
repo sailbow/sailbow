@@ -31,6 +31,7 @@ import {
   RDTitle,
   RDTrigger,
 } from "@/components/ui/responsive-dialog";
+import { Reactions } from "@/components/reactions";
 
 type Announcement = FunctionReturnType<
   typeof api.announcements.queries.get
@@ -105,7 +106,7 @@ export default function AnnouncementCard({
   announcement: Announcement;
 }) {
   return (
-    <Card className="max-w-2xl">
+    <Card className="max-w-2xl bg-background text-foreground">
       <CardHeader className="px-2 pt-2 sm:px-4 sm:pt-4">
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
@@ -132,7 +133,19 @@ export default function AnnouncementCard({
         </div>
       </CardHeader>
       <CardContent>
-        <TextEditor isEditable={false} content={announcement.text} />
+        <div className="flex flex-col gap-2">
+          <TextEditor isEditable={false} content={announcement.text} />
+          <Reactions
+            reactions={{
+              "👍": { users: ["Jacob"], isActive: true },
+              "🔥": { users: [], isActive: false },
+            }}
+            onClickReaction={(emoji) => {
+              console.log(emoji);
+            }}
+            className="max-w-xs"
+          />
+        </div>
       </CardContent>
     </Card>
   );
