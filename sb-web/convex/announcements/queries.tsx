@@ -21,6 +21,7 @@ export const get = query({
         const announcementReactions = await reactions.list(
           ctx,
           `announcements-${announcement._id}`,
+          "reactions",
         );
         return {
           ...announcement,

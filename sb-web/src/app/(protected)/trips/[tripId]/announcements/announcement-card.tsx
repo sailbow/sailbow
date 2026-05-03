@@ -3,7 +3,7 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { type FunctionReturnType } from "convex/server";
-import { type api } from "@convex/_generated/api";
+import { api } from "@convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDisclosure } from "@/lib/use-disclosure";
@@ -32,6 +32,10 @@ import {
   RDTrigger,
 } from "@/components/ui/responsive-dialog";
 import { Reactions } from "@/components/reactions";
+import { useActiveTripId, useCrew } from "@/lib/trip-queries";
+import { ComponentProps } from "react";
+import { useMe } from "@/lib/user-queries";
+import { useMutation } from "convex/react";
 
 type Announcement = FunctionReturnType<
   typeof api.announcements.queries.get
@@ -105,8 +109,49 @@ export default function AnnouncementCard({
 }: {
   announcement: Announcement;
 }) {
+  const { data: crew } = useCrew();
+  const { data: me } = useMe();
+  const activeTripId = useActiveTripId();
+  const reactions =
+    !me || !crew || !announcement.reactions
+      ? {}
+      : announcement.reactions.reduce(
+          (acc, r) => {
+            const cm = crew.find((c) => c.userId === r.userId);
+            const existing = acc[r.label];
+            const label = cm ? `${cm.firstName} ${cm.lastName}` : r.userId;
+            const isActive = existing?.isActive ?? r.userId === me._id;
+            if (existing) {
+              acc[r.label] = {
+                users: [...existing.users, label],
+                isActive,
+              };
+            } else {
+              acc[r.label] = {
+                users: [label],
+                isActive,
+              };
+            }
+            return acc;
+          },
+          {} as ComponentProps<typeof Reactions>["reactions"],
+        );
+
+  const reactToAnnouncement = useMutation(
+    api.announcements.mutations.reactToAnnouncement,
+  );
+
+  const onClickReaction = (emoji: string) => {
+    console.log(`Hello ${emoji}`);
+    void reactToAnnouncement({
+      tripId: activeTripId,
+      announcementId: announcement._id,
+      emoji,
+    });
+  };
+
   return (
-    <Card className="max-w-2xl bg-background text-foreground">
+    <Card className="max-w-2xl">
       <CardHeader className="px-2 pt-2 sm:px-4 sm:pt-4">
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
@@ -136,14 +181,9 @@ export default function AnnouncementCard({
         <div className="flex flex-col gap-2">
           <TextEditor isEditable={false} content={announcement.text} />
           <Reactions
-            reactions={{
-              "👍": { users: ["Jacob"], isActive: true },
-              "🔥": { users: [], isActive: false },
-            }}
-            onClickReaction={(emoji) => {
-              console.log(emoji);
-            }}
-            className="max-w-xs"
+            reactions={reactions}
+            onClickReaction={onClickReaction}
+            className="max-w-md"
           />
         </div>
       </CardContent>

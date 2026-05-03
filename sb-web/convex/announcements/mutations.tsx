@@ -84,13 +84,14 @@ export const reactToAnnouncement = mutation({
     return await withUser(ctx.auth, ctx.db, async (user) => {
       await throwIfNotMember(user, args.tripId, ctx.db);
       const targetId = `announcements-${args.announcementId}`;
-      if (!args.emoji) {
-        const existing = await reactions.getUserReactions(
-          ctx,
-          targetId,
-          user.userId,
-          "reactions",
-        );
+      const existing = await reactions.getUserReactions(
+        ctx,
+        targetId,
+        user.userId,
+        "reactions",
+      );
+
+      if (!args.emoji || existing.some((e) => e === args.emoji)) {
         await Promise.all(
           existing.map((e) =>
             reactions.remove(ctx, targetId, e, user.userId, "reactions"),
@@ -98,6 +99,7 @@ export const reactToAnnouncement = mutation({
         );
         return;
       }
+
       await reactions.add(
         ctx,
         `announcements-${args.announcementId}`,

@@ -28,16 +28,17 @@ interface ReactionsProps {
 export const Reactions = (props: ReactionsProps) => {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   return (
-    <div className={cn("flex flex-wrap gap-2", props.className)}>
+    <div className={cn("flex flex-wrap gap-1.5", props.className)}>
       {Object.entries(props.reactions).map(([emoji, data]) => {
         return (
           <Button
             key={emoji}
-            variant="secondary"
+            variant={"outline"}
             className={cn(
               "aspect-square size-10 shrink-0 p-2",
               data.isActive && "ring-2 ring-ring",
             )}
+            onClick={() => props.onClickReaction(emoji)}
           >
             {emoji}
             {data.users.length ? <span>{data.users.length}</span> : undefined}
