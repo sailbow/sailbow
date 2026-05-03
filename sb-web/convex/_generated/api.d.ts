@@ -12,6 +12,8 @@ import type * as admin_queries from "../admin/queries.js";
 import type * as announcements_mutations from "../announcements/mutations.js";
 import type * as announcements_queries from "../announcements/queries.js";
 import type * as authUtils from "../authUtils.js";
+import type * as components_reactions_client_index from "../components/reactions/client/index.js";
+import type * as components_reactions_client_types from "../components/reactions/client/types.js";
 import type * as emails_tripInvite from "../emails/tripInvite.js";
 import type * as errorUtils from "../errorUtils.js";
 import type * as http from "../http.js";
@@ -24,6 +26,7 @@ import type * as itinerary_queries from "../itinerary/queries.js";
 import type * as itinerary_v2 from "../itinerary/v2.js";
 import type * as lib_clerk from "../lib/clerk.js";
 import type * as lib_queryUtils from "../lib/queryUtils.js";
+import type * as lib_reactions from "../lib/reactions.js";
 import type * as lib_resend from "../lib/resend.js";
 import type * as lib_tailwindConfig from "../lib/tailwindConfig.js";
 import type * as lib_utils from "../lib/utils.js";
@@ -43,19 +46,13 @@ import type {
   FunctionReference,
 } from "convex/server";
 
-/**
- * A utility for referencing Convex functions in your app's API.
- *
- * Usage:
- * ```js
- * const myFunctionReference = api.myModule.myFunction;
- * ```
- */
 declare const fullApi: ApiFromModules<{
   "admin/queries": typeof admin_queries;
   "announcements/mutations": typeof announcements_mutations;
   "announcements/queries": typeof announcements_queries;
   authUtils: typeof authUtils;
+  "components/reactions/client/index": typeof components_reactions_client_index;
+  "components/reactions/client/types": typeof components_reactions_client_types;
   "emails/tripInvite": typeof emails_tripInvite;
   errorUtils: typeof errorUtils;
   http: typeof http;
@@ -68,6 +65,7 @@ declare const fullApi: ApiFromModules<{
   "itinerary/v2": typeof itinerary_v2;
   "lib/clerk": typeof lib_clerk;
   "lib/queryUtils": typeof lib_queryUtils;
+  "lib/reactions": typeof lib_reactions;
   "lib/resend": typeof lib_resend;
   "lib/tailwindConfig": typeof lib_tailwindConfig;
   "lib/utils": typeof lib_utils;
@@ -81,145 +79,34 @@ declare const fullApi: ApiFromModules<{
   "users/mutations": typeof users_mutations;
   "users/queries": typeof users_queries;
 }>;
-declare const fullApiWithMounts: typeof fullApi;
 
+/**
+ * A utility for referencing Convex functions in your app's public API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
+ */
 export declare const api: FilterApi<
-  typeof fullApiWithMounts,
+  typeof fullApi,
   FunctionReference<any, "public">
 >;
+
+/**
+ * A utility for referencing Convex functions in your app's internal API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = internal.myModule.myFunction;
+ * ```
+ */
 export declare const internal: FilterApi<
-  typeof fullApiWithMounts,
+  typeof fullApi,
   FunctionReference<any, "internal">
 >;
 
 export declare const components: {
-  resend: {
-    lib: {
-      cancelEmail: FunctionReference<
-        "mutation",
-        "internal",
-        { emailId: string },
-        null
-      >;
-      cleanupAbandonedEmails: FunctionReference<
-        "mutation",
-        "internal",
-        { olderThan?: number },
-        null
-      >;
-      cleanupOldEmails: FunctionReference<
-        "mutation",
-        "internal",
-        { olderThan?: number },
-        null
-      >;
-      createManualEmail: FunctionReference<
-        "mutation",
-        "internal",
-        {
-          from: string;
-          headers?: Array<{ name: string; value: string }>;
-          replyTo?: Array<string>;
-          subject: string;
-          to: string;
-        },
-        string
-      >;
-      get: FunctionReference<
-        "query",
-        "internal",
-        { emailId: string },
-        {
-          complained: boolean;
-          createdAt: number;
-          errorMessage?: string;
-          finalizedAt: number;
-          from: string;
-          headers?: Array<{ name: string; value: string }>;
-          html?: string;
-          opened: boolean;
-          replyTo: Array<string>;
-          resendId?: string;
-          segment: number;
-          status:
-            | "waiting"
-            | "queued"
-            | "cancelled"
-            | "sent"
-            | "delivered"
-            | "delivery_delayed"
-            | "bounced"
-            | "failed";
-          subject: string;
-          text?: string;
-          to: string;
-        } | null
-      >;
-      getStatus: FunctionReference<
-        "query",
-        "internal",
-        { emailId: string },
-        {
-          complained: boolean;
-          errorMessage: string | null;
-          opened: boolean;
-          status:
-            | "waiting"
-            | "queued"
-            | "cancelled"
-            | "sent"
-            | "delivered"
-            | "delivery_delayed"
-            | "bounced"
-            | "failed";
-        } | null
-      >;
-      handleEmailEvent: FunctionReference<
-        "mutation",
-        "internal",
-        { event: any },
-        null
-      >;
-      sendEmail: FunctionReference<
-        "mutation",
-        "internal",
-        {
-          from: string;
-          headers?: Array<{ name: string; value: string }>;
-          html?: string;
-          options: {
-            apiKey: string;
-            initialBackoffMs: number;
-            onEmailEvent?: { fnHandle: string };
-            retryAttempts: number;
-            testMode: boolean;
-          };
-          replyTo?: Array<string>;
-          subject: string;
-          text?: string;
-          to: string;
-        },
-        string
-      >;
-      updateManualEmail: FunctionReference<
-        "mutation",
-        "internal",
-        {
-          emailId: string;
-          errorMessage?: string;
-          resendId?: string;
-          status:
-            | "waiting"
-            | "queued"
-            | "cancelled"
-            | "sent"
-            | "delivered"
-            | "delivery_delayed"
-            | "bounced"
-            | "failed";
-        },
-        null
-      >;
-    };
-  };
+  resend: import("@convex-dev/resend/_generated/component.js").ComponentApi<"resend">;
+  reactions: import("../components/reactions/component/_generated/component.js").ComponentApi<"reactions">;
 };
