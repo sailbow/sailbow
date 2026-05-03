@@ -18,6 +18,7 @@ import {
 } from "./ui/emoji-picker";
 import { cn } from "@/lib/utils";
 import { RD, RDContent, RDTrigger } from "./ui/responsive-dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ReactionsProps {
   reactions: Record<string, { users: string[]; isActive: boolean }>;
@@ -27,6 +28,7 @@ interface ReactionsProps {
 
 export const Reactions = (props: ReactionsProps) => {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const isMobile = useIsMobile();
   return (
     <div className={cn("flex flex-wrap gap-1.5", props.className)}>
       {Object.entries(props.reactions).map(([emoji, data]) => {
@@ -67,7 +69,7 @@ export const Reactions = (props: ReactionsProps) => {
                 setIsPickerOpen(false);
               }}
             >
-              <EmojiPickerSearch autoFocus />
+              <EmojiPickerSearch autoFocus={!isMobile} />
               <EmojiPickerContent />
               <EmojiPickerFooter />
             </EmojiPicker>
