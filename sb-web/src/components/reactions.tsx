@@ -59,7 +59,7 @@ export const Reactions = (props: ReactionsProps) => {
         </RDTrigger>
         <RDContent
           className="max-w-fit p-0"
-          drawerContentClassName="justify-center"
+          drawerContentClassName="justify-center max-h-75vh"
         >
           <div className="flex items-center justify-center">
             <EmojiPicker
