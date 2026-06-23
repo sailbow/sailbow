@@ -29,11 +29,13 @@ import type * as lib_queryUtils from "../lib/queryUtils.js";
 import type * as lib_reactions from "../lib/reactions.js";
 import type * as lib_resend from "../lib/resend.js";
 import type * as lib_tailwindConfig from "../lib/tailwindConfig.js";
+import type * as lib_twilio from "../lib/twilio.js";
 import type * as lib_utils from "../lib/utils.js";
 import type * as migrations from "../migrations.js";
 import type * as notifications_mutations from "../notifications/mutations.js";
 import type * as notifications_queries from "../notifications/queries.js";
 import type * as polls from "../polls.js";
+import type * as sms_index from "../sms/index.js";
 import type * as tripUtils from "../tripUtils.js";
 import type * as trips_mutations from "../trips/mutations.js";
 import type * as trips_queries from "../trips/queries.js";
@@ -68,11 +70,13 @@ declare const fullApi: ApiFromModules<{
   "lib/reactions": typeof lib_reactions;
   "lib/resend": typeof lib_resend;
   "lib/tailwindConfig": typeof lib_tailwindConfig;
+  "lib/twilio": typeof lib_twilio;
   "lib/utils": typeof lib_utils;
   migrations: typeof migrations;
   "notifications/mutations": typeof notifications_mutations;
   "notifications/queries": typeof notifications_queries;
   polls: typeof polls;
+  "sms/index": typeof sms_index;
   tripUtils: typeof tripUtils;
   "trips/mutations": typeof trips_mutations;
   "trips/queries": typeof trips_queries;
@@ -109,4 +113,5 @@ export declare const internal: FilterApi<
 export declare const components: {
   resend: import("@convex-dev/resend/_generated/component.js").ComponentApi<"resend">;
   reactions: import("../components/reactions/component/_generated/component.js").ComponentApi<"reactions">;
+  twilio: import("@convex-dev/twilio/_generated/component.js").ComponentApi<"twilio">;
 };
