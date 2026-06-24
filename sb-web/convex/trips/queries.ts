@@ -4,9 +4,16 @@ import { withUser } from "../authUtils";
 import { SbError } from "../errorUtils";
 import { asyncMap, pruneNull } from "convex-helpers";
 import { getOneFrom } from "convex-helpers/server/relationships";
-import { type GenericDatabaseReader } from "convex/server";
+import {
+  paginationOptsValidator,
+  PaginationResult,
+  type GenericDatabaseReader,
+} from "convex/server";
 import { v } from "convex/values";
 import { throwIfNotMember } from "../tripUtils";
+import { query as fluentQuery } from "../lib/queryUtils";
+import { debug } from "util";
+import { getChannelMessages } from "../lib/messageChannels";
 
 const getMemberships = async ({
   user,
@@ -120,6 +127,7 @@ export const searchTrips = query({
       const memberships = (await getMemberships({ user, db })).sort(
         (a, b) => b._creationTime - a._creationTime,
       );
+      db;
       if (!text) {
         return pruneNull(
           await asyncMap(
@@ -147,6 +155,31 @@ export const searchTrips = query({
         ),
       );
       return trips;
+    });
+  },
+});
+
+export const getTripConversation = fluentQuery({
+  args: {
+    tripId: v.id("trips"),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async ({ db, q, auth }, { tripId, paginationOpts }) => {
+    return await withUser(auth, db, async (user) => {
+      await throwIfNotMember(user, tripId, db);
+      const trip = await q.trips.by_id(tripId).unique();
+      if (!trip.messageChannelId) {
+        return {
+          continueCursor: "",
+          isDone: true,
+          page: [],
+        } satisfies PaginationResult<Doc<"messageChannelMessages">>;
+      }
+      return await getChannelMessages({
+        q,
+        channelId: trip.messageChannelId,
+        paginationOpts,
+      });
     });
   },
 });

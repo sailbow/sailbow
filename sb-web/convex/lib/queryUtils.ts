@@ -1,45 +1,30 @@
-import { z, ZodUndefined, type ZodTypeAny } from "zod";
-import { NoOp } from "convex-helpers/server/customFunctions";
-import { zCustomQuery } from "convex-helpers/server/zod";
-import { query } from "../_generated/server";
-import { type Value } from "convex/values";
+import {
+  customCtx,
+  customMutation,
+  customQuery,
+} from "convex-helpers/server/customFunctions";
+import {
+  query as baseQuery,
+  mutation as baseMutation,
+} from "../_generated/server";
+import { DataModel } from "../_generated/dataModel";
+import schema from "../schema";
 
-export const zodQuery = zCustomQuery(query, NoOp);
+import { createQueryFacade, QueryFacade } from "@davidtkramer/convex-relations";
+import { DbReader, DbWriter } from "../dbUtils";
 
-const errorSchema  = z.discriminatedUnion("code", [
-  z.object({ code: z.literal("NOT_FOUND")}),
-  z.object({ code: z.literal("BAD_REQUEST"), message: z.string()})
-]);
+export const query = customQuery(
+  baseQuery,
+  customCtx((ctx: { db: DbReader }) => ({
+    q: createQueryFacade<DataModel>(ctx.db, schema),
+  })),
+);
 
-type ErrorData = z.infer<typeof errorSchema>
+export const mutation = customMutation(
+  baseMutation,
+  customCtx((ctx: { db: DbReader }) => ({
+    q: createQueryFacade<DataModel>(ctx.db, schema),
+  })),
+);
 
-export const outputSchema = <Output extends ZodTypeAny>(output: Output) => {
-  return z.union([
-    z.object({
-      error: errorSchema
-    }),
-    z.object({
-      data: output,
-    })
-  ]);
-}
-
-export type SuccessfulResult<TData extends Exclude<Value, null>> = { error: null, data: TData };
-type ErrorResult = { data: null, error: z.infer<typeof errorSchema> }
-type Result<TData extends Exclude<Value,null>> =
-| SuccessfulResult<TData>
-| ErrorResult
-
-export const notFound = (): ErrorResult => ({ data: null, error: { code: "NOT_FOUND" } })
-export const badRequest = (message: string): ErrorResult => ({ data: null, error: { code: "BAD_REQUEST", message}});
-
-export const success = <TData extends NonNullable<Value>> (data: TData) => ({
-  data: data,
-  error: null
-})
-
-export const valueOrNotFound = <TValue extends Value>(value: TValue) => {
-  if (!value) {
-    return notFound();
-  }
-}
+export type FluentQuery = QueryFacade<DataModel>;

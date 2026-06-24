@@ -55,7 +55,15 @@ export const tripSchema = {
     }),
   ),
   location: v.optional(locationValidator),
+  messageChannelId: v.optional(v.id("messageChannels")),
 };
+
+export const tripChatSchema = {
+  message: v.string(),
+  userId: v.id("users"),
+};
+
+export const messageChannelSchema = {};
 
 export const inviteSchema = {
   tripId: v.id("trips"),
@@ -223,4 +231,14 @@ export default defineSchema({
     itineraryItemId: v.id("itineraryItemsV2"),
     pollId: v.id("polls"),
   }).index("byItineraryItemId", ["itineraryItemId"]),
+  messageChannels: defineTable({}),
+  messageChannelMessages: defineTable({
+    userId: v.id("users"),
+    messageChannelId: v.id("messageChannels"),
+    message: v.string(),
+  }).index("byMessageChannelId", ["messageChannelId"]),
+  tripMessageChannels: defineTable({
+    tripId: v.id("trips"),
+    messageChannelId: v.id("messageChannel"),
+  }).index("byTripId", ["tripId"]),
 });

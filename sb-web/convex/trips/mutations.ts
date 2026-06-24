@@ -3,6 +3,13 @@ import { withUser } from "../authUtils";
 import { locationValidator, tripSchema } from "../schema";
 import { ConvexError, v } from "convex/values";
 import { throwIfNotMember } from "../tripUtils";
+import { paginationOptsValidator, PaginationResult } from "convex/server";
+import { mutation as fluentMutation } from "../lib/queryUtils";
+import {
+  getChannelMessages,
+  getOrCreateMessageChannel,
+} from "../lib/messageChannels";
+import { Doc } from "../_generated/dataModel";
 
 export const create = mutation({
   args: tripSchema,
@@ -115,8 +122,8 @@ export const kickMember = mutation({
   args: { tripId: v.id("trips"), memberId: v.id("crews") },
   handler: async ({ auth, db }, { tripId, memberId }) => {
     await withUser(auth, db, async (user) => {
-      const membership = await throwIfNotMember(user, tripId, db)
-      console.log(membership)
+      const membership = await throwIfNotMember(user, tripId, db);
+      console.log(membership);
       if (membership.role !== "captain" && membership.role !== "firstMate") {
         throw new ConvexError({
           code: "USER_ERROR",
@@ -172,6 +179,57 @@ export const changeMemberRole = mutation({
         });
       }
       await db.patch(memberId, { role });
+    });
+  },
+});
+
+export const getTripConversation = fluentMutation({
+  args: {
+    tripId: v.id("trips"),
+    pagination: paginationOptsValidator,
+  },
+  handler: async ({ db, q, auth }, { tripId, pagination }) => {
+    return await withUser(auth, db, async (user) => {
+      await throwIfNotMember(user, tripId, db);
+      const trip = await q.trips.by_id(tripId).unique();
+      if (!trip.messageChannelId)
+        return {
+          continueCursor: "",
+          isDone: true,
+          page: [],
+        } satisfies PaginationResult<Doc<"messageChannelMessages">>;
+      return await getChannelMessages({
+        q,
+        channelId: trip.messageChannelId,
+        pagination,
+      });
+    });
+  },
+});
+
+export const sendTripConversationMessage = fluentMutation({
+  args: {
+    tripId: v.id("trips"),
+    message: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return withUser(ctx.auth, ctx.db, async (user) => {
+      await throwIfNotMember(user, args.tripId, ctx.db);
+      const trip = await ctx.q.trips.by_id(args.tripId).unique();
+      const { messageChannel, created } = await getOrCreateMessageChannel(
+        ctx.db,
+        trip.messageChannelId,
+      );
+      if (created) {
+        await ctx.db.patch("trips", args.tripId, {
+          messageChannelId: messageChannel._id,
+        });
+      }
+      await ctx.db.insert("messageChannelMessages", {
+        messageChannelId: messageChannel._id,
+        message: args.message,
+        userId: user.userId,
+      });
     });
   },
 });
