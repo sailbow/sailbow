@@ -2,6 +2,7 @@ import { useParams } from "next/navigation";
 import { type Id } from "@convex/_generated/dataModel";
 import { api } from "@convex/_generated/api";
 import { useQ, useQueryWithStatus } from "./convex-client-helpers";
+import { usePaginatedQuery } from "convex-helpers/react";
 
 export const useActiveTripId = () => {
   const params = useParams<{ tripId: Id<"trips"> }>();
@@ -51,4 +52,13 @@ export const usePendingAndDeclinedInvites = () => {
     query: api.invitations.queries.listPendingAndDeclined,
     args: { tripId },
   });
+};
+
+export const useTripConversation = () => {
+  const tripId = useActiveTripId();
+  return usePaginatedQuery(
+    api.trips.queries.getTripConversation,
+    { tripId },
+    { initialNumItems: 50 },
+  );
 };

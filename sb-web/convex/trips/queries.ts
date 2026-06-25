@@ -177,6 +177,7 @@ export const getTripConversation = fluentQuery({
       }
       return await getChannelMessages({
         q,
+        currentUserId: user.userId,
         channelId: trip.messageChannelId,
         paginationOpts,
       });

@@ -183,30 +183,6 @@ export const changeMemberRole = mutation({
   },
 });
 
-export const getTripConversation = fluentMutation({
-  args: {
-    tripId: v.id("trips"),
-    pagination: paginationOptsValidator,
-  },
-  handler: async ({ db, q, auth }, { tripId, pagination }) => {
-    return await withUser(auth, db, async (user) => {
-      await throwIfNotMember(user, tripId, db);
-      const trip = await q.trips.by_id(tripId).unique();
-      if (!trip.messageChannelId)
-        return {
-          continueCursor: "",
-          isDone: true,
-          page: [],
-        } satisfies PaginationResult<Doc<"messageChannelMessages">>;
-      return await getChannelMessages({
-        q,
-        channelId: trip.messageChannelId,
-        pagination,
-      });
-    });
-  },
-});
-
 export const sendTripConversationMessage = fluentMutation({
   args: {
     tripId: v.id("trips"),
