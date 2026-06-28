@@ -218,6 +218,7 @@ const Sidebar = React.forwardRef<
         </div>
       );
     }
+    // if (isMobile) return null;
 
     if (isMobile) {
       return (

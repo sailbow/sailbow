@@ -48,7 +48,9 @@ export const MessageChannel = ({
   }, [messages]);
 
   return (
-    <div className={cn("flex max-w-md flex-col overflow-hidden", className)}>
+    <div
+      className={cn("flex w-full max-w-md flex-col overflow-hidden", className)}
+    >
       <div
         ref={scrollRef}
         className="flex flex-1 flex-col gap-3 overflow-y-auto p-4"
@@ -180,7 +182,7 @@ export function MessageComposer({
     if (!trimmed) return;
     if (isLoading) return;
     setIsLoading(true);
-    sendMessage(value)
+    void sendMessage(value)
       .then(() => setValue(""))
       .finally(() => setIsLoading(false));
   }

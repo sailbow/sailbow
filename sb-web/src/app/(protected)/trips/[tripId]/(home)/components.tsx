@@ -563,7 +563,7 @@ const SetLocationDialog = ({
 
   return (
     <RD open={open} onOpenChange={onOpenChange}>
-      <RDContent>
+      <RDContent drawerContentClassName="h-[50dvh]">
         <RDHeader>
           <RDTitle>{defaultPlace ? "Update" : "Set"} location</RDTitle>
           {defaultPlace && (

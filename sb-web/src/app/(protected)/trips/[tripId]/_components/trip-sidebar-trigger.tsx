@@ -1,5 +1,6 @@
 "use client";
 
+import TripChatDrawer from "@/app/_components/trip-chat-drawer";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import {
@@ -8,7 +9,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { MessagesSquare, PanelRightClose } from "lucide-react";
+import { useState } from "react";
 
 export default function TripSidebarTrigger() {
   const { open, isMobile, openMobile } = useSidebar("primary");
@@ -26,16 +29,30 @@ export default function TripSidebarTrigger() {
 
 export const TripChatSidebarTrigger = () => {
   const { toggleSidebar, open } = useSidebar("tripChat");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const isMobile = useIsMobile();
   return (
-    <Button
-      data-sidebar="trigger"
-      size="icon"
-      variant="outline"
-      onClick={toggleSidebar}
-      className="absolute bottom-4 right-4 z-50 size-10 [&_svg]:size-6"
-    >
-      {open ? <PanelRightClose /> : <MessagesSquare />}
-      <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+    <>
+      <Button
+        data-sidebar="trigger"
+        size="icon"
+        variant="outline"
+        onClick={() => {
+          if (isMobile) {
+            setDrawerOpen((cur) => !cur);
+          } else {
+            toggleSidebar();
+          }
+        }}
+        className="absolute bottom-4 right-4 z-50 size-10 [&_svg]:size-6"
+      >
+        {open ? <PanelRightClose /> : <MessagesSquare />}
+        <span className="sr-only">Toggle Sidebar</span>
+      </Button>
+      <TripChatDrawer
+        open={drawerOpen && isMobile}
+        onOpenChange={setDrawerOpen}
+      />
+    </>
   );
 };
