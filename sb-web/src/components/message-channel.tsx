@@ -1,11 +1,22 @@
 "use client";
-import { useState, type FormEvent, type KeyboardEvent } from "react";
+import React, {
+  ReactNode,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+} from "react";
 import { SendHorizontal } from "lucide-react";
 import { Doc, type Id } from "@convex/_generated/dataModel";
 import { useEffect, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { cn } from "@/lib/utils";
-import { format, formatISO, formatRelative } from "date-fns";
+import {
+  format,
+  formatISO,
+  formatRelative,
+  isSameDay,
+  isSameYear,
+} from "date-fns";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,14 +75,27 @@ export const MessageChannel = ({
             </p>
           </div>
         ) : (
-          messages.map((message) => (
-            <ChatMessage
-              key={message._id}
-              message={message}
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-              onDelete={(id) => {}}
-            />
-          ))
+          messages.map((message, index, array) => {
+            let dateNode: ReactNode | undefined;
+            const lastMessage = index <= 0 ? null : array[index - 1];
+            const showDate =
+              index === 0 ||
+              (lastMessage &&
+                !isSameDay(lastMessage._creationTime, message._creationTime));
+            return (
+              <React.Fragment key={index}>
+                <div className="inline-flex w-full items-center justify-center py-2 text-xs text-muted-foreground">
+                  {showDate && format(message._creationTime, "EEE LLL do, y")}
+                </div>
+                <ChatMessage
+                  key={message._id}
+                  message={message}
+                  // eslint-disable-next-line @typescript-eslint/no-empty-function
+                  onDelete={(id) => {}}
+                />
+              </React.Fragment>
+            );
+          })
         )}
       </div>
     </div>
