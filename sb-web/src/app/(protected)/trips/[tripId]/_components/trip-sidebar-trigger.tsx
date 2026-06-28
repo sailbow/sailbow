@@ -46,7 +46,11 @@ export const TripChatSidebarTrigger = () => {
         }}
         className="absolute bottom-4 right-4 z-50 size-10 [&_svg]:size-6"
       >
-        {open ? <PanelRightClose /> : <MessagesSquare />}
+        {(open && !isMobile) || (drawerOpen && isMobile) ? (
+          <PanelRightClose />
+        ) : (
+          <MessagesSquare />
+        )}
         <span className="sr-only">Toggle Sidebar</span>
       </Button>
       <TripChatDrawer

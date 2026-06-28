@@ -59,7 +59,9 @@ export const MessageChannel = ({
           <CenteredSpinner />
         ) : !messagesLoading && messages.length === 0 ? (
           <div className="flex flex-1 items-center justify-center">
-            <p className="text-sm text-muted-foreground">No messages yet.</p>
+            <p className="text-center text-sm text-muted-foreground">
+              No messages yet.
+            </p>
           </div>
         ) : (
           messages.map((message) => (
@@ -67,7 +69,7 @@ export const MessageChannel = ({
               key={message._id}
               message={message}
               // eslint-disable-next-line @typescript-eslint/no-empty-function
-              onDelete={() => {}}
+              onDelete={(id) => {}}
             />
           ))
         )}

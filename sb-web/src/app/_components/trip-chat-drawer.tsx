@@ -20,17 +20,12 @@ export default function TripChatDrawer({
   onOpenChange: (open: boolean) => void;
 }) {
   return (
-    <Drawer
-      open={open}
-      onOpenChange={onOpenChange}
-      direction="bottom"
-      modal={false}
-    >
+    <Drawer open={open} onOpenChange={onOpenChange} direction="bottom">
       <DrawerContent>
         <DrawerHeader className="justify-center">
           <DrawerTitle>Trip chat</DrawerTitle>
         </DrawerHeader>
-        <div className="flex min-h-[30dvh] w-full overflow-y-auto">
+        <div className="flex min-h-[30dvh] w-full justify-center overflow-y-auto">
           <TripChatMessageContainer />
         </div>
 
