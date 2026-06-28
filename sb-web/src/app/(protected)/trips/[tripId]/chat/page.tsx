@@ -34,7 +34,7 @@ const TripChat = () => {
   const sendMessage = async (message: string) => {
     if (isSendMessageLoading) return;
     setIsSendMessageLoading(true);
-    sendMessageMutation({
+    await sendMessageMutation({
       tripId: activeTripId,
       message,
     }).finally(() => setIsSendMessageLoading(false));
@@ -45,6 +45,7 @@ const TripChat = () => {
         className="size-full max-w-xl pb-2"
         messages={results}
         messagesLoading={isLoading}
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         onDeleteMessage={() => {}}
       />
       <MessageComposer sendMessage={sendMessage} />

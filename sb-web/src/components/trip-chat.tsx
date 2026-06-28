@@ -10,6 +10,7 @@ export const TripChatMessageContainer = () => {
     <MessageChannel
       messagesLoading={isLoading}
       messages={results}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       onDeleteMessage={() => {}}
     />
   );

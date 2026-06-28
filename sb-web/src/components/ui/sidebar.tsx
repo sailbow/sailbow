@@ -572,7 +572,7 @@ export const sidebarMenuButtonVariants = cva(
 const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button"> & {
-    sidebarId: SidebarId;
+    sidebarId?: SidebarId;
     asChild?: boolean;
     isActive?: boolean;
     tooltip?: string | React.ComponentProps<typeof TooltipContent>;
@@ -585,7 +585,7 @@ const SidebarMenuButton = React.forwardRef<
       variant = "default",
       size = "default",
       tooltip,
-      sidebarId,
+      sidebarId = "primary",
       className,
       ...props
     },

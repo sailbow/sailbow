@@ -66,7 +66,8 @@ export const MessageChannel = ({
             <ChatMessage
               key={message._id}
               message={message}
-              onDelete={(id) => {}}
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
+              onDelete={() => {}}
             />
           ))
         )}
