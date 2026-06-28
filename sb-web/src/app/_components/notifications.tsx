@@ -229,7 +229,10 @@ export default function NotificationsDropdown() {
   return (
     <DropdownMenu {...disclosure}>
       <DropdownMenuTrigger asChild>
-        <SidebarMenuButton aria-label="Toggle notifications menu">
+        <SidebarMenuButton
+          aria-label="Toggle notifications menu"
+          sidebarId="primary"
+        >
           <div className="relative mr-2 size-4">
             <Bell className="h-4 w-4" />
             {data && data.length > 0 && (
