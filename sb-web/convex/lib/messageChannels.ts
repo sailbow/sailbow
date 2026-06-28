@@ -40,22 +40,20 @@ export const getChannelMessages = async ({
   const result = await q.messageChannelMessages
     .byMessageChannelId(channelId)
     .with(({ userId }) => ({
-      user: q.users.findOrNull(userId),
+      user: q.users.find(userId),
     }))
-    .order("desc")
     .paginate(paginationOpts);
   return {
     ...result,
     page: result.page.map((m) => ({
       ...m,
-      user: !m.user
-        ? null
-        : {
-            firstName: m.user.firstName,
-            lastName: m.user.lastName,
-            imageUrl: m.user.imageUrl,
-            isMe: m.user._id === currentUserId,
-          },
+      user: {
+        _id: m.user._id,
+        firstName: m.user.firstName,
+        lastName: m.user.lastName,
+        imageUrl: m.user.imageUrl,
+        isMe: m.user._id === currentUserId,
+      },
     })),
   };
 };

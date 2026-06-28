@@ -27,7 +27,7 @@ const SidebarLinkWithDismiss = React.forwardRef<
   HTMLAnchorElement,
   React.ComponentProps<typeof Link>
 >((props, ref) => {
-  const { isMobile, toggleSidebar } = useSidebar();
+  const { isMobile, toggleSidebar } = useSidebar("primary");
   return (
     <Link
       ref={ref}
@@ -46,9 +46,11 @@ const SidebarLinkWithDismiss = React.forwardRef<
 
 SidebarLinkWithDismiss.displayName = "SidebarLinkWithDismiss";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  ...props
+}: Omit<React.ComponentProps<typeof Sidebar>, "sidebarId">) {
   return (
-    <Sidebar {...props}>
+    <Sidebar {...props} sidebarId="primary">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-4 pl-2 pt-2">
@@ -81,7 +83,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarTriggerButton />
         </SidebarMenu>
       </SidebarFooter>
-      <SidebarRail />
+      <SidebarRail sidebarId="primary" />
     </Sidebar>
   );
 }

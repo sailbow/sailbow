@@ -66,42 +66,40 @@ export function PollResultsChart({
 
   return (
     <div className="flex flex-col justify-center space-y-4">
-      <TooltipProvider delayDuration={200}>
-        {flatResponseData.map((option) => {
-          const percentage = getPercentage(option.count);
+      {flatResponseData.map((option) => {
+        const percentage = getPercentage(option.count);
 
-          return (
-            <Tooltip key={option.id}>
-              <TooltipTrigger asChild>
-                <div key={option.id} className="space-y-2">
-                  <div className="flex justify-between">
-                    <div className="flex space-x-2">
-                      <span className="text-sm">{option.label}</span>
+        return (
+          <Tooltip key={option.id}>
+            <TooltipTrigger asChild>
+              <div key={option.id} className="space-y-2">
+                <div className="flex justify-between">
+                  <div className="flex space-x-2">
+                    <span className="text-sm">{option.label}</span>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-semibold">
+                      {percentage.toFixed(1)}%
                     </div>
-                    <div className="text-right">
-                      <div className="text-sm font-semibold">
-                        {percentage.toFixed(1)}%
-                      </div>
-                      <div className="text-nowrap text-xs text-muted-foreground">
-                        {option.count.toLocaleString()} vote(s)
-                      </div>
+                    <div className="text-nowrap text-xs text-muted-foreground">
+                      {option.count.toLocaleString()} vote(s)
                     </div>
                   </div>
-                  <Progress
-                    value={percentage}
-                    className="h-3 dark:bg-background"
-                  />
                 </div>
-              </TooltipTrigger>
-              {!poll.settings.incognitoResponses && (
-                <TooltipContent>
-                  <CustomTooltipContent data={option} />
-                </TooltipContent>
-              )}
-            </Tooltip>
-          );
-        })}
-      </TooltipProvider>
+                <Progress
+                  value={percentage}
+                  className="h-3 dark:bg-background"
+                />
+              </div>
+            </TooltipTrigger>
+            {!poll.settings.incognitoResponses && (
+              <TooltipContent>
+                <CustomTooltipContent data={option} />
+              </TooltipContent>
+            )}
+          </Tooltip>
+        );
+      })}
     </div>
   );
 }

@@ -42,10 +42,15 @@ type SidebarContextProps = {
   toggleSidebar: () => void;
 };
 
-const SidebarContext = React.createContext<SidebarContextProps | null>(null);
+const SidebarContexts = {
+  primary: React.createContext<SidebarContextProps | null>(null),
+  tripChat: React.createContext<SidebarContextProps | null>(null),
+} as const;
 
-function useSidebar() {
-  const context = React.useContext(SidebarContext);
+type SidebarId = keyof typeof SidebarContexts;
+
+function useSidebar(sidebarId?: SidebarId) {
+  const context = React.useContext(SidebarContexts[sidebarId ?? "primary"]);
   if (!context) {
     throw new Error("useSidebar must be used within a SidebarProvider.");
   }
@@ -59,6 +64,8 @@ const SidebarProvider = React.forwardRef<
     defaultOpen?: boolean;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
+    sidebarId: SidebarId;
+    width?: string;
   }
 >(
   (
@@ -66,8 +73,10 @@ const SidebarProvider = React.forwardRef<
       defaultOpen = true,
       open: openProp,
       onOpenChange: setOpenProp,
+      sidebarId,
       className,
       style,
+      width = SIDEBAR_WIDTH,
       children,
       ...props
     },
@@ -90,7 +99,7 @@ const SidebarProvider = React.forwardRef<
         }
 
         // This sets the cookie to keep the sidebar state.
-        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+        // document.cookie = `${SIDEBAR_COOKIE_NAME}_${sidebarId}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
       },
       [setOpenProp, open],
     );
@@ -131,6 +140,7 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
+        sidebarId,
       }),
       [
         state,
@@ -140,30 +150,30 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
+        sidebarId,
       ],
     );
 
+    const SidebarContext = SidebarContexts[sidebarId];
     return (
       <SidebarContext.Provider value={contextValue}>
-        <TooltipProvider delayDuration={0}>
-          <div
-            style={
-              {
-                "--sidebar-width": SIDEBAR_WIDTH,
-                "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
-                ...style,
-              } as React.CSSProperties
-            }
-            className={cn(
-              "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
-              className,
-            )}
-            ref={ref}
-            {...props}
-          >
-            {children}
-          </div>
-        </TooltipProvider>
+        <div
+          style={
+            {
+              "--sidebar-width": width,
+              "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+              ...style,
+            } as React.CSSProperties
+          }
+          className={cn(
+            "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+            className,
+          )}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </div>
       </SidebarContext.Provider>
     );
   },
@@ -176,10 +186,12 @@ const Sidebar = React.forwardRef<
     side?: "left" | "right";
     variant?: "sidebar" | "floating" | "inset";
     collapsible?: "offcanvas" | "icon" | "none";
+    sidebarId: SidebarId;
   }
 >(
   (
     {
+      sidebarId,
       side = "left",
       variant = "sidebar",
       collapsible = "offcanvas",
@@ -189,7 +201,8 @@ const Sidebar = React.forwardRef<
     },
     ref,
   ) => {
-    const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+    const { isMobile, state, openMobile, setOpenMobile } =
+      useSidebar(sidebarId);
 
     if (collapsible === "none") {
       return (
@@ -279,15 +292,17 @@ Sidebar.displayName = "Sidebar";
 
 const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
-  React.ComponentProps<typeof Button>
->(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar();
+  React.ComponentProps<typeof Button> & {
+    sidebarId: SidebarId;
+  }
+>(({ sidebarId, className, onClick, ...props }, ref) => {
+  const { toggleSidebar } = useSidebar(sidebarId);
 
   return (
     <Button
       ref={ref}
       data-sidebar="trigger"
-      variant="ghost"
+      variant="outline"
       size="icon"
       className={cn("h-7 w-7", className)}
       onClick={(event) => {
@@ -305,9 +320,11 @@ SidebarTrigger.displayName = "SidebarTrigger";
 
 const SidebarRail = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<"button">
->(({ className, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar();
+  React.ComponentProps<"button"> & {
+    sidebarId: SidebarId;
+  }
+>(({ sidebarId, className, ...props }, ref) => {
+  const { toggleSidebar } = useSidebar(sidebarId);
 
   return (
     <button
@@ -554,6 +571,7 @@ export const sidebarMenuButtonVariants = cva(
 const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button"> & {
+    sidebarId: SidebarId;
     asChild?: boolean;
     isActive?: boolean;
     tooltip?: string | React.ComponentProps<typeof TooltipContent>;
@@ -566,13 +584,14 @@ const SidebarMenuButton = React.forwardRef<
       variant = "default",
       size = "default",
       tooltip,
+      sidebarId,
       className,
       ...props
     },
     ref,
   ) => {
     const Comp = asChild ? Slot : "button";
-    const { isMobile, state } = useSidebar();
+    const { isMobile, state } = useSidebar(sidebarId);
 
     const button = (
       <Comp
@@ -755,10 +774,12 @@ SidebarMenuSubButton.displayName = "SidebarMenuSubButton";
 
 const SidebarMenuItemWithDismiss = ({
   children,
+  sidebarId,
 }: {
+  sidebarId: SidebarId;
   children: React.ReactNode;
 }) => {
-  const { isMobile, toggleSidebar } = useSidebar();
+  const { isMobile, toggleSidebar } = useSidebar(sidebarId);
 
   return (
     <SidebarMenuItem

@@ -63,7 +63,7 @@ export default function TripSearch() {
   const query = useDebounce(searchTerm, 500);
   const { isFetching, data: trips } = useSearchTrips(query);
   const isMobile = useIsMobile();
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar } = useSidebar("primary");
 
   const tripResults = useMemo(() => {
     return trips?.filter((t) => t._id !== trip?._id);
@@ -85,7 +85,7 @@ export default function TripSearch() {
     <SidebarMenuItem>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <SidebarMenuButton size="lg" className="gap-4">
+          <SidebarMenuButton size="lg" className="gap-4" sidebarId="primary">
             <span className="mr-2 truncate font-semibold">{trip.name}</span>
             <ChevronsUpDown className="ml-auto" />
           </SidebarMenuButton>

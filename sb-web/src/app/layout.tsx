@@ -62,7 +62,7 @@ export default function RootLayout({
         <ConvexClientProvider>
           <body
             className={cn(
-              "h-screen w-screen bg-background font-sans antialiased overflow-x-hidden",
+              "h-screen w-screen overflow-x-hidden bg-background font-sans antialiased",
               font.variable,
             )}
           >

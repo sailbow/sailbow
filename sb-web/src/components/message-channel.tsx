@@ -1,10 +1,11 @@
+"use client";
 import { useState, type FormEvent, type KeyboardEvent } from "react";
 import { SendHorizontal } from "lucide-react";
 import { Doc, type Id } from "@convex/_generated/dataModel";
 import { useEffect, useRef } from "react";
-import { AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { cn } from "@/lib/utils";
-import { formatISO, formatRelative } from "date-fns";
+import { format, formatISO, formatRelative } from "date-fns";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +15,8 @@ import {
 import { buttonVariants } from "./ui/button";
 import { MoreVertical, Trash2 } from "lucide-react";
 import { Spinner } from "@/app/_components/spinner";
+import { Skeleton } from "./ui/skeleton";
+import CenteredSpinner from "@/app/_components/centered-spinner";
 
 type Message = Doc<"messageChannelMessages"> & {
   user: {
@@ -25,18 +28,15 @@ type Message = Doc<"messageChannelMessages"> & {
   };
 };
 interface MessageChannelProps {
-  messageChannelId: Id<"messageChannels">;
   messages: Array<Message>;
-  sendMessage: (message: string) => Promise<void>;
-  sendMessageLoading: boolean;
   onDeleteMessage: (messageId: Id<"messageChannelMessages">) => void;
+  messagesLoading: boolean;
   className?: string;
 }
 export const MessageChannel = ({
   className,
   messages,
-  sendMessage,
-  sendMessageLoading,
+  messagesLoading,
 }: MessageChannelProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -48,17 +48,14 @@ export const MessageChannel = ({
   }, [messages]);
 
   return (
-    <div
-      className={cn(
-        "w-full max-w-md flex-col overflow-hidden rounded-xl bg-card",
-        className,
-      )}
-    >
+    <div className={cn("flex max-w-md flex-col overflow-hidden", className)}>
       <div
         ref={scrollRef}
-        className="flex flex-1 flex-col gap-5 overflow-y-auto p-4"
+        className="flex flex-1 flex-col gap-3 overflow-y-auto p-4"
       >
-        {messages.length === 0 ? (
+        {messagesLoading ? (
+          <CenteredSpinner />
+        ) : !messagesLoading && messages.length === 0 ? (
           <div className="flex flex-1 items-center justify-center">
             <p className="text-sm text-muted-foreground">No messages yet.</p>
           </div>
@@ -72,7 +69,6 @@ export const MessageChannel = ({
           ))
         )}
       </div>
-      <MessageComposer sendMessage={sendMessage} />
     </div>
   );
 };
@@ -87,15 +83,18 @@ export function ChatMessage({
   return (
     <div
       className={cn(
-        "group flex items-start gap-3",
+        "group flex items-start gap-3 py-1",
         message.user.isMe && "flex-row-reverse",
       )}
     >
-      <AvatarImage
-        src={message.user.imageUrl}
-        alt={`${message.user.firstName} ${message.user.lastName}`}
-      />
-      <AvatarFallback>{message.user.firstName}</AvatarFallback>
+      <Avatar className="size-6">
+        <AvatarImage
+          src={message.user.imageUrl}
+          alt={`${message.user.firstName} ${message.user.lastName}`}
+        />
+        <AvatarFallback>{message.user.firstName}</AvatarFallback>
+      </Avatar>
+
       <div
         className={cn(
           "flex max-w-[75%] flex-col gap-1",
@@ -115,7 +114,7 @@ export function ChatMessage({
             className="text-xs text-muted-foreground"
             dateTime={formatISO(message._creationTime)}
           >
-            {formatRelative(message._creationTime, new Date())}
+            {format(message._creationTime, "h:mm aaa")}
           </time>
         </div>
 
@@ -130,29 +129,34 @@ export function ChatMessage({
               "rounded-2xl px-4 py-2 text-sm leading-relaxed",
               message.user.isMe
                 ? "rounded-tr-sm bg-primary text-primary-foreground"
-                : "rounded-tl-sm bg-muted text-foreground",
+                : "rounded-tl-sm bg-accent text-foreground",
             )}
           >
             {message.message}
           </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon" }),
-                "size-4 shrink-0 text-muted-foreground opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100 aria-expanded:opacity-100",
-              )}
-            >
-              <MoreVertical className="size-4" />
-              <span className="sr-only">Message options</span>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align={message.user.isMe ? "start" : "end"}>
-              <DropdownMenuItem onClick={() => onDelete(message._id)}>
-                <Trash2 className="size-4" />
-                Delete message
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {message.user.isMe && (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "icon" }),
+                  "size-4 shrink-0 text-muted-foreground opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100 aria-expanded:opacity-100",
+                )}
+              >
+                <MoreVertical className="size-4" />
+                <span className="sr-only">Message options</span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side={"top"}
+                align={message.user.isMe ? "end" : "start"}
+              >
+                <DropdownMenuItem onClick={() => onDelete(message._id)}>
+                  <Trash2 className="mr-2 size-4" />
+                  Delete message
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
     </div>
@@ -161,9 +165,13 @@ export function ChatMessage({
 
 type MessageComposerProps = {
   sendMessage: (message: string) => Promise<void>;
+  className?: string;
 };
 
-export function MessageComposer({ sendMessage }: MessageComposerProps) {
+export function MessageComposer({
+  sendMessage,
+  className,
+}: MessageComposerProps) {
   const [value, setValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -193,7 +201,7 @@ export function MessageComposer({ sendMessage }: MessageComposerProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-end gap-2 border-t border-border bg-card p-3"
+      className={cn("flex max-w-md items-end gap-2", className)}
     >
       <label htmlFor="message-input" className="sr-only">
         Message
