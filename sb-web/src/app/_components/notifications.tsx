@@ -26,6 +26,13 @@ import { useDisclosure } from "@/lib/use-disclosure";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { formatRelative } from "date-fns";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 type Notification = Doc<"notifications">;
 type InferNotificationType<TType extends Notification["type"]> = Extract<
   Doc<"notifications">,
@@ -78,7 +85,11 @@ const NotificationsList = ({
   closeNotifications: () => void;
 }) => {
   if (notifications.length === 0) {
-    return <p className="mt-2 w-full text-center font-light">All caught up!</p>;
+    return (
+      <p className="mt-2 w-full text-center text-muted-foreground">
+        All caught up!
+      </p>
+    );
   }
   return (
     <div className="grid grid-cols-1 space-y-2 divide-y divide-secondary">
@@ -219,6 +230,39 @@ function InviteNotification({
         </Link>
       </div>
     </NotificationItem>
+  );
+}
+
+export function MobileNotifications() {
+  const { data, isLoading } = useUnreadNotifications();
+  const disclosure = useDisclosure();
+  return (
+    <Drawer {...disclosure}>
+      <DrawerTrigger asChild>
+        <button
+          type="button"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-xs font-medium text-card-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          <span className="flex size-9 items-center justify-center rounded-full bg-accent text-accent-foreground">
+            <Bell className="size-4" aria-hidden="true" />
+          </span>
+          Notifications
+        </button>
+      </DrawerTrigger>
+      <DrawerContent className="h-[90vh]">
+        <DrawerHeader>
+          <DrawerTitle>Notifications</DrawerTitle>
+        </DrawerHeader>
+        {isLoading ? (
+          <CenteredSpinner />
+        ) : (
+          <NotificationsList
+            notifications={data ?? []}
+            closeNotifications={disclosure.setClosed}
+          />
+        )}
+      </DrawerContent>
+    </Drawer>
   );
 }
 
