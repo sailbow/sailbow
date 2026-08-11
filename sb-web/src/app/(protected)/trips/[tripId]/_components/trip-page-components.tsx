@@ -7,7 +7,7 @@ const TripPageContainer = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex size-full flex-col", className)}
+    className={cn("flex size-full flex-col pl-4 pr-14", className)}
     {...props}
   />
 ));
@@ -21,7 +21,7 @@ const TripPageHeader = React.forwardRef<
   <header
     ref={ref}
     className={cn(
-      "container sticky top-0 z-50 mx-auto flex min-h-12 items-center justify-between border-b bg-background py-3",
+      "sticky top-0 z-50 mb-8 mr-auto mt-3 flex min-h-12 w-full max-w-5xl justify-between rounded-sm bg-card p-8 text-card-foreground",
       className,
     )}
     {...props}
@@ -52,7 +52,7 @@ const TripPageContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("relative flex-1", className)}>
     <div
-      className="container absolute left-0 top-4  mx-auto size-full pb-4"
+      className="mb-8 mt-4 size-full max-w-5xl rounded-sm bg-card p-8 text-card-foreground"
       {...props}
     />
   </div>

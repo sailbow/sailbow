@@ -45,6 +45,7 @@ type SidebarContextProps = {
 const SidebarContexts = {
   primary: React.createContext<SidebarContextProps | null>(null),
   tripChat: React.createContext<SidebarContextProps | null>(null),
+  tripOverview: React.createContext<SidebarContextProps | null>(null),
 } as const;
 
 type SidebarId = keyof typeof SidebarContexts;
