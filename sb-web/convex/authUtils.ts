@@ -76,6 +76,7 @@ export const withUser = async <Output>(
   );
   return await callback({
     ...user,
+    email: dbUser.email,
     userId: dbUser._id,
     fullName: `${dbUser.firstName} ${dbUser.lastName}`,
   });
