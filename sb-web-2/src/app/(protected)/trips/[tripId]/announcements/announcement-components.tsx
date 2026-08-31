@@ -1,0 +1,159 @@
+"use client";
+import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  RD,
+  RDContent,
+  RDFooter,
+  RDHeader,
+  RDTitle,
+  RDTrigger,
+} from "@/components/ui/responsive-dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/toast";
+import { useCreateAnnouncement } from "@/lib/trip-mutations";
+import { useActiveTripId } from "@/lib/trip-queries";
+import { useAnnouncements } from "@/lib/announcements";
+import { useDisclosure } from "@/lib/use-disclosure";
+import { cn } from "@/lib/utils";
+import { type Id } from "@convex/_generated/dataModel";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ConvexError } from "convex/values";
+import { Megaphone } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import AnnouncementCard from "./announcement-card";
+import { CompactTextEditor } from "@/components/text-editor";
+import LoadingButton from "@/components/loading-button";
+import CenteredSpinner from "@/app/_components/centered-spinner";
+
+const createAnnouncementSchema = z.object({
+  tripId: z.custom<Id<"trips">>(),
+  text: z.string().min(1, "Required"),
+});
+type CreateAnnouncement = z.infer<typeof createAnnouncementSchema>;
+
+export const CreateAnnouncementButton = () => {
+  const activeTripId = useActiveTripId();
+  const disclosure = useDisclosure();
+
+  const { mutate: createAnnouncement, isPending } = useCreateAnnouncement({
+    onSuccess: () => {
+      toast.success("Announcement posted!");
+      disclosure.setClosed();
+    },
+    onError: (error) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error instanceof ConvexError && error.data?.code === "USER_ERROR") {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+        toast.error(error.data.message);
+      } else {
+        toast.error("Something went wrong there, please try again later");
+      }
+    },
+  });
+  const form = useForm<CreateAnnouncement>({
+    resolver: zodResolver(createAnnouncementSchema),
+    defaultValues: {
+      tripId: activeTripId,
+    },
+  });
+
+  const onSubmit = (values: CreateAnnouncement) => {
+    createAnnouncement(values);
+  };
+
+  return (
+    <RD {...disclosure}>
+      <RDTrigger asChild>
+        <Button onClick={() => form.reset()}>
+          <Megaphone className="size-6" />
+          <span className="hidden xs:inline-flex">Create announcement</span>
+        </Button>
+      </RDTrigger>
+      <RDContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col"
+          >
+            <RDHeader>
+              <RDTitle>New announcement</RDTitle>
+            </RDHeader>
+            <FormField
+              control={form.control}
+              name="text"
+              render={({ field, formState }) => {
+                const error = formState.errors.text;
+
+                return (
+                  <FormItem>
+                    <div className="mt-1 flex max-h-4 min-h-4 items-center gap-4">
+                      <FormLabel className="sr-only">
+                        Announcement input
+                      </FormLabel>
+                      <FormMessage />
+                    </div>
+                    <FormControl>
+                      <CompactTextEditor
+                        content={field.value}
+                        onTextChange={field.onChange}
+                        isEditable={true}
+                        placeholder="What would you like to say?"
+                        className={cn(
+                          "mt-3 min-h-40",
+                          error && "border-destructive",
+                        )}
+                      />
+                    </FormControl>
+                  </FormItem>
+                );
+              }}
+            />
+            <RDFooter className="mt-4">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isPending}
+                onClick={disclosure.setClosed}
+              >
+                Cancel
+              </Button>
+              <LoadingButton
+                isLoading={isPending}
+                type="submit"
+                disabled={isPending}
+              >
+                Post
+              </LoadingButton>
+            </RDFooter>
+          </form>
+        </Form>
+      </RDContent>
+    </RD>
+  );
+};
+
+export const AnnouncementList = () => {
+  const { data: announcements, isLoading } = useAnnouncements();
+  if (isLoading) return <CenteredSpinner />;
+  if (!announcements) return;
+
+  return (
+    <div className="mt-4 grid w-full grid-cols-1 gap-4">
+      {announcements.map((a) => (
+        <AnnouncementCard key={a._id} announcement={a} />
+      ))}
+    </div>
+  );
+};

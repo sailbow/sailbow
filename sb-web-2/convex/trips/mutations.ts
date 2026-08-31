@@ -15,7 +15,6 @@ export const create = mutation({
   args: tripSchema,
   handler: async ({ auth, db }, args) => {
     return await withUser(auth, db, async (user) => {
-      console.log(JSON.stringify(user, null, 2));
       const tripId = await db.insert("trips", args);
       await db.insert("crews", {
         tripId,
