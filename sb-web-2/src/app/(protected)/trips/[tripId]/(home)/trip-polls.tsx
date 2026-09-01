@@ -51,25 +51,18 @@ import {
   RDTitle,
   RDTrigger,
 } from "@/components/ui/responsive-dialog";
+import { useQuery } from "convex/react";
 
 export const TripPolls = () => {
   const activeTripId = useActiveTripId();
-  const { isPending, isError, data, error } = useQueryWithStatus(
+  const polls = useQuery(
     api.polls.getTripPolls,
     { tripId: activeTripId },
   );
-  const {
-    data: me,
-    isPending: isMePending,
-    isError: getMeError,
-    error: meError,
-  } = useQueryWithStatus(api.users.queries.me);
+  const me = useQuery(api.users.queries.me, {});
 
   const {
     data: crew,
-    isPending: isCrewLoading,
-    isError: isCrewError,
-    error: crewError,
   } = useCrew();
 
   const { mutateAsync: respondToPoll, isPending: isRespondingToPoll } = useMut(
@@ -89,15 +82,11 @@ export const TripPolls = () => {
     Id<"tripPolls"> | undefined
   >();
 
-  if (isError) throw error;
-  if (getMeError) throw meError;
-  if (isCrewError) throw crewError;
-  if (isPending || isMePending || !me || isCrewLoading || !crew)
-    return <CenteredSpinner />;
+  if (!crew || !me) return <CenteredSpinner />;
 
   return (
     <div className="flex w-full flex-col gap-4">
-      {data.map((poll, index) => {
+      {polls?.map((poll, index) => {
         const usersWhoHaveResponded = poll.responses.reduce(
           (acc, value) => acc.add(value.userId),
           new Set<Id<"users">>(),

@@ -9,7 +9,7 @@ export const me = query({
     });
 
     return await ctx.db.query("users")
-      .withIndex("by_email", q => q.eq("email", user.email!))
+      .withIndex("by_externalId", q => q.eq("externalId", user.tokenIdentifier.slice(user.tokenIdentifier.indexOf("|") + 1)))
       .unique();
   }
 })

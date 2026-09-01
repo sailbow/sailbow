@@ -204,7 +204,7 @@ export const getTripPolls = query({
           },
         ),
       ).sort((a, b) => b._creationTime - a._creationTime);
-    });
+    }) ?? []
   },
 });
 
