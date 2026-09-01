@@ -149,6 +149,17 @@ export const AnnouncementList = () => {
   if (isLoading) return <CenteredSpinner />;
   if (!announcements) return;
 
+  if (announcements.length === 0) {
+    return (
+      <Card className="container mx-4 flex flex-col items-center justify-center gap-4 py-8 xs:mx-auto">
+        <h3 className="text-2xl leading-none tracking-tight text-card-foreground/80">
+          No announcements have been posted yet!
+        </h3>
+        <CreateAnnouncementButton />
+      </Card>
+    );
+  }
+
   return (
     <div className="mt-4 grid w-full grid-cols-1 gap-4">
       {announcements.map((a) => (

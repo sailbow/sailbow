@@ -52,6 +52,7 @@ import {
   RDTrigger,
 } from "@/components/ui/responsive-dialog";
 import { useQuery } from "convex/react";
+import { CreateTripPollDialog } from "./create-trip-poll-dialog";
 
 export const TripPolls = () => {
   const activeTripId = useActiveTripId();
@@ -83,10 +84,22 @@ export const TripPolls = () => {
   >();
 
   if (!crew || !me) return <CenteredSpinner />;
+  if (!polls) return <CenteredSpinner />;
+
+  if (polls.length === 0) {
+    return (
+      <Card className="container mx-4 flex flex-col items-center justify-center gap-4 py-8 xs:mx-auto">
+        <h3 className="text-2xl leading-none tracking-tight text-card-foreground/80">
+          No polls have been created yet!
+        </h3>
+        <CreateTripPollDialog />
+      </Card>
+    );
+  }
 
   return (
     <div className="flex w-full flex-col gap-4">
-      {polls?.map((poll, index) => {
+      {polls.map((poll, index) => {
         const usersWhoHaveResponded = poll.responses.reduce(
           (acc, value) => acc.add(value.userId),
           new Set<Id<"users">>(),
