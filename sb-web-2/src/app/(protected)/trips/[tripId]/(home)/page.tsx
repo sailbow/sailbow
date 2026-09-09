@@ -36,6 +36,7 @@ export default function TripOverviewPage() {
           <CoolTabs
             tabs={[
               { id: "overview", label: "Overview" },
+              { id: "details", label: "Details" },
               { id: "polls", label: "Polls" },
             ]}
             activeTab={activeTab}
@@ -46,7 +47,7 @@ export default function TripOverviewPage() {
       </TripPageHeader>
       <TripPageContent>
         {activeTab === "overview" && (
-          <div className="min-h-[200%] @container">
+          <div className="@container">
             <div className="grid size-full gap-4 pb-4 @lg:grid-cols-2 @lg:grid-rows-6">
               <CaptainTile className="col-start-1 @lg:row-span-2 @lg:row-start-1 @lg:content-center" />
               <CrewTile className="@lg:row-span-2 @lg:row-start-3 @lg:content-center" />
@@ -60,9 +61,6 @@ export default function TripOverviewPage() {
               <div className="@lg:row-span-2 @lg:row-start-5">
                 <BudgetTile className="@lg:row-span-2 @lg:row-start-5" />
               </div>
-            </div>
-            <div className="mt-4">
-              <TripDetails />
             </div>
           </div>
         )}
